@@ -4,7 +4,6 @@ import re
 import subprocess
 import gzip
 from data_models import *
-
         
 class EnvironmentHandler:
     def __init__(self,
@@ -414,7 +413,9 @@ class WorkflowOrchestrator:
         
         mapping_df["plink_map_file"] = plink_map_file
         
+        
         return mapping_df
+
 
     
     

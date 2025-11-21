@@ -1,10 +1,11 @@
-from config import TEMP_DIR, PLINK_PREFIX, PLINK_MAP_PATH, BEAGLE_REFERENCE_DIR, test_file, GWAS_CATALOG_SNPS, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA
+import os
+from config import TEMP_DIR, PLINK_PREFIX, PLINK_MAP_PATH, BEAGLE_REFERENCE_DIR, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA
 from harmonizer_classes import EnvironmentHandler, DataContainer, WorkflowOrchestrator
 
 
 environment_handler = EnvironmentHandler(
     working_dir=TEMP_DIR,
-    user_upload_file=test_file,
+    user_upload_file=TEST_FILE,
     plink_1_9_path=PLINK_1_9_PATH,
     plink_2_0_path=PLINK_2_0_PATH,
     plink_map_file=PLINK_MAP_PATH,
@@ -69,5 +70,10 @@ print("Creating VCF to reference mapping...")
 vcf_reference_mapping_df = workflow_orchestrator.create_vcf_reference_mapping()
 print("VCF to reference mapping created:")
 print(vcf_reference_mapping_df)
+
+print("Writing VCF to reference mapping to output file...")
+os.makedirs(os.path.join(workflow_orchestrator.working_dir, "results"), exist_ok=True)
+vcf_reference_mapping_df.to_parquet(os.path.join(workflow_orchestrator.working_dir, "results/vcf_reference_mapping.parquet"))
+print("VCF to reference mapping written to output file.")
 
 
