@@ -420,11 +420,11 @@ class WorkflowOrchestrator:
     
 
 if __name__ == "__main__":
-    from config import TEMP_DIR, PLINK_PREFIX, PLINK_MAP_PATH, BEAGLE_REFERENCE_DIR, test_file, GWAS_CATALOG_SNPS, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA
+    from config import TEMP_DIR, PLINK_PREFIX, PLINK_MAP_PATH, BEAGLE_REFERENCE_DIR, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA
     
     environment_handler = EnvironmentHandler(
         working_dir=TEMP_DIR,
-        user_upload_file=test_file,
+        user_upload_file=TEST_FILE,
         plink_1_9_path=PLINK_1_9_PATH,
         plink_2_0_path=PLINK_2_0_PATH,
         plink_map_file=PLINK_MAP_PATH,
