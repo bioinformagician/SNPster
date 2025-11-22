@@ -11,11 +11,12 @@ class EnvironmentHandler:
                  user_upload_file: str,
                  plink_1_9_path: str,
                  plink_2_0_path: str,
-                 plink_map_file: str,
+                 plink_map_dir: str,
                  pvar_ref_file: str,
                  PLINK_PREFIX: str,
                  plink_reference_fasta: str,
                  beagle_references: str,
+                 plink_map_files: dict[str, str] = None,
                  chromosome_split_files: dict = None,
                  vcf_plink_reference_mapping: pd.DataFrame = None,
                  user_snp_list_path: str = None,
@@ -29,7 +30,7 @@ class EnvironmentHandler:
         self.user_upload_file = user_upload_file
         self.plink_1_9_path = plink_1_9_path
         self.plink_2_0_path = plink_2_0_path
-        self.plink_map_file = plink_map_file
+        self.plink_map_dir = plink_map_dir
         self.PLINK_PREFIX = PLINK_PREFIX
         self.plink_reference_fasta = plink_reference_fasta
         self.chromosome_split_files = chromosome_split_files
@@ -41,7 +42,9 @@ class EnvironmentHandler:
         self.bed_file_paths = bed_file_paths
         self.vcf_file_paths = vcf_file_paths
         self.beagle_references = beagle_references
+        self.plink_map_files = plink_map_files
         self.validate_paths()
+        self.set_plink_map_files()
     
     
     def validate_paths(self) -> None:
@@ -51,7 +54,7 @@ class EnvironmentHandler:
             self.user_upload_file,
             self.plink_1_9_path,
             self.plink_2_0_path,
-            self.plink_map_file,
+            self.plink_map_dir,
             self.pvar_ref_file,
             self.plink_reference_fasta
         ]:
@@ -68,6 +71,16 @@ class EnvironmentHandler:
             
         self.beagle_references = beagle_files
     
+    
+    def set_plink_map_files(self) -> dict:
+        plink_map_files = {}
+        for file in os.listdir(self.plink_map_dir):
+            if file.endswith(".map"):
+                chrom = re.search(r"chr(\d+)[^/]*\.map$", file)
+                if chrom:
+                    plink_map_files[chrom.group(1)] = os.path.join(self.plink_map_dir, file)
+        
+        self.plink_map_files = plink_map_files
     
     
     def normalize_file(self) -> pd.DataFrame:
@@ -388,9 +401,6 @@ class WorkflowOrchestrator:
         mapping_df = pd.DataFrame()
         
         
-        print(list(self.environment_handler.vcf_file_paths.items()))
-        print("-----------------")
-        print(list(self.environment_handler.beagle_references.items()))
         vcf_files_df=pd.DataFrame(
             list(self.environment_handler.vcf_file_paths.items()),
             columns=["chromosome_number", "vcf_file"]
@@ -401,7 +411,10 @@ class WorkflowOrchestrator:
             columns=["chromosome_number", "reference_file"]
         )
         
-        plink_map_file = [self.environment_handler.plink_map_file] * len(vcf_files_df)
+        plink_map_files=pd.DataFrame(
+            list(self.environment_handler.plink_map_files.items()),
+            columns=["chromosome_number", "plink_map_file"]
+        )
         
         #join vcf and mapping_df
         mapping_df = pd.merge(
@@ -411,8 +424,14 @@ class WorkflowOrchestrator:
             how="inner"
         )
         
-        mapping_df["plink_map_file"] = plink_map_file
+        mapping_df = pd.merge(
+            mapping_df,
+            plink_map_files,
+            on="chromosome_number",
+            how="inner"
+        )
         
+
         
         return mapping_df
 

@@ -1,5 +1,5 @@
 import os
-from config import TEMP_DIR, PLINK_PREFIX, PLINK_MAP_PATH, BEAGLE_REFERENCE_DIR, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA
+from config import TEMP_DIR, PLINK_PREFIX, PLINK_MAP_DIR, BEAGLE_REFERENCE_DIR, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA
 from harmonizer_classes import EnvironmentHandler, DataContainer, WorkflowOrchestrator
 
 
@@ -8,7 +8,7 @@ environment_handler = EnvironmentHandler(
     user_upload_file=TEST_FILE,
     plink_1_9_path=PLINK_1_9_PATH,
     plink_2_0_path=PLINK_2_0_PATH,
-    plink_map_file=PLINK_MAP_PATH,
+    plink_map_dir=PLINK_MAP_DIR,
     PLINK_PREFIX=PLINK_PREFIX,
     plink_reference_fasta=PLINK_REFERENCE_FASTA,
     pvar_ref_file=PVAR_REF_FILE,

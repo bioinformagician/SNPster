@@ -1,7 +1,7 @@
 GWAS_CATALOG_SNPS = r"C:\Users\frezz\Desktop\dependencies\harmonized_gwas_catalog_risk_snps.txt"
 TEMP_DIR = r"C:\Users\frezz\pipeline_testing"
 PLINK_PREFIX = "plink_temp"
-PLINK_MAP_PATH = r"C:\Users\frezz\Desktop\dependencies\plink.GRCh37.map"#r"C:\Users\frezz\Desktop\genome_scraping\pipeline\plink.GRCh37.map"
+PLINK_MAP_DIR = r"C:\Users\frezz\Desktop\dependencies\plink.GRCh37.map"#r"C:\Users\frezz\Desktop\genome_scraping\pipeline\plink.GRCh37.map"
 PLINK_REFERENCE_FASTA = r"C:\Users\frezz\Desktop\dependencies\hs37d5.fa.zst"
 BEAGLE_REFERENCE_DIR = r"C:\Users\frezz\Desktop\dependencies\beagle_references"
 TEST_FILE = r"C:\Users\frezz\Desktop\dependencies\genome_Frederik_FangelTolberg_v5_Full_20241117223640.txt"
