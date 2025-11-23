@@ -1,0 +1,8 @@
+# Core data processing
+pandas>=1.5.0
+
+# File format support for pandas (parquet files)
+pyarrow>=10.0.0
+
+# Optional: For better performance with large datasets
+numpy>=1.21.0

@@ -1,10 +1,11 @@
 import os
-from config import TEMP_DIR, PLINK_PREFIX, PLINK_MAP_DIR, BEAGLE_REFERENCE_DIR, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA
+from config import PLINK_PREFIX, PLINK_MAP_DIR, BEAGLE_REFERENCE_DIR, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA
 from harmonizer_classes import EnvironmentHandler, DataContainer, WorkflowOrchestrator
 
+base = os.getcwd()
 
 environment_handler = EnvironmentHandler(
-    working_dir=TEMP_DIR,
+    working_dir=base,
     user_upload_file=TEST_FILE,
     plink_1_9_path=PLINK_1_9_PATH,
     plink_2_0_path=PLINK_2_0_PATH,
@@ -23,11 +24,11 @@ workflow_orchestrator = WorkflowOrchestrator(
     
     environment_handler=environment_handler,
     data_container=data_container,
-    working_dir=TEMP_DIR
+    working_dir=base
 )
 
 
-workflow_orchestrator.initiate_working_directory()
+#workflow_orchestrator.initiate_working_directory()
 print(f"Working directory initialized at: {workflow_orchestrator.working_dir}")
 
 workflow_orchestrator.set_microarray_data()

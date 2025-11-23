@@ -1,10 +1,36 @@
-GWAS_CATALOG_SNPS = r"C:\Users\frezz\Desktop\dependencies\harmonized_gwas_catalog_risk_snps.txt"
-TEMP_DIR = r"C:\Users\frezz\pipeline_testing"
-PLINK_PREFIX = "plink_temp"
-PLINK_MAP_DIR = r"C:\Users\frezz\Desktop\dependencies\plink.GRCh37.map"#r"C:\Users\frezz\Desktop\genome_scraping\pipeline\plink.GRCh37.map"
-PLINK_REFERENCE_FASTA = r"C:\Users\frezz\Desktop\dependencies\hs37d5.fa.zst"
-BEAGLE_REFERENCE_DIR = r"C:\Users\frezz\Desktop\dependencies\beagle_references"
-TEST_FILE = r"C:\Users\frezz\Desktop\dependencies\genome_Frederik_FangelTolberg_v5_Full_20241117223640.txt"
-PVAR_REF_FILE = r"C:\Users\frezz\Desktop\dependencies\all_phase3.pvar.zst"
-PLINK_1_9_PATH = r"C:\Users\frezz\Desktop\dependencies\plink.exe"
-PLINK_2_0_PATH = r"C:\Users\frezz\Desktop\dependencies\plink2.exe"
+import os
+
+GWAS_CATALOG_SNPS = os.getenv(
+    "GWAS_CATALOG_SNPS",
+    "/data/harmonized_gwas_catalog_risk_snps.txt",
+)
+TEMP_DIR = os.getenv("TEMP_DIR", "/tmp")
+PLINK_PREFIX = os.getenv("PLINK_PREFIX", "plink_temp")
+PLINK_MAP_DIR = os.getenv(
+    "PLINK_MAP_DIR",
+    "/data/plink.GRCh37.map",
+)
+PLINK_REFERENCE_FASTA = os.getenv(
+    "PLINK_REFERENCE_FASTA",
+    "/data/hs37d5.fa.zst",
+)
+BEAGLE_REFERENCE_DIR = os.getenv(
+    "BEAGLE_REFERENCE_DIR",
+    "/data/beagle_references",
+)
+TEST_FILE = os.getenv(
+    "TEST_FILE",
+    "/app/dependencies/genome_Frederik_FangelTolberg_v5_Full_20241117223640.txt",
+)
+PVAR_REF_FILE = os.getenv(
+    "PVAR_REF_FILE",
+    "/data/all_phase3.pvar.zst",
+)
+PLINK_1_9_PATH = os.getenv(
+    "PLINK_1_9_PATH",
+    "/app/dependencies/plink",
+)
+PLINK_2_0_PATH = os.getenv(
+    "PLINK_2_0_PATH",
+    "/app/dependencies/plink2",
+)
