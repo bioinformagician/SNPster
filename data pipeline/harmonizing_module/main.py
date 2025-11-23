@@ -24,7 +24,6 @@ workflow_orchestrator = WorkflowOrchestrator(
     environment_handler=environment_handler,
     data_container=data_container,
     working_dir=TEMP_DIR
-    
 )
 
 
@@ -72,8 +71,8 @@ print("VCF to reference mapping created:")
 print(vcf_reference_mapping_df)
 
 print("Writing VCF to reference mapping to output file...")
-os.makedirs(os.path.join(workflow_orchestrator.working_dir, "results"), exist_ok=True)
-vcf_reference_mapping_df.to_parquet(os.path.join(workflow_orchestrator.working_dir, "results/vcf_reference_mapping.parquet"))
+os.makedirs(os.path.join(workflow_orchestrator.working_dir, "harmonization_results"), exist_ok=True)
+vcf_reference_mapping_df.to_parquet(os.path.join(workflow_orchestrator.working_dir, "harmonization_results/vcf_reference_mapping.parquet"))
 print("VCF to reference mapping written to output file.")
 
 

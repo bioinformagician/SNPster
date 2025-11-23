@@ -8,10 +8,10 @@ import numpy as np
 
 @dataclass(frozen=True)
 class QCThresholds:
-    gp_min: float = 0.90
-    ds_tol: float = 0.10
-    snps_only: bool = True
-    biallelic_only: bool = True
+    gp_min: float
+    ds_tol: float
+    snps_only: bool
+    biallelic_only: bool
 
 
 
@@ -85,13 +85,12 @@ class DataContainer:
         pct = (kept / total * 100.0) if total else 0.0
         print(f"{pct:.1f}% of input variants passed qc requirements")
 
-        out = qc[["rsid", "ref", "alt", "GT"]].rename(columns={"GT": "gt"})
-        self.qced_imputed_data = out
+        # keep full QC'ed dataframe (all columns)
+        self.qced_imputed_data = qc
+
         end_time = pd.Timestamp.now()
-        
         duration = end_time - start_time
         print(f"QC of imputed data completed in {duration}")
-
     
     
     
@@ -108,7 +107,9 @@ class EnvironmentHandler:
                  threads: int,
                  vcf_plink_reference_mapping: pd.DataFrame,
                  imputed_dir: str = None,
-                 imputed_files: dict[str,str] = None
+                 imputed_files: dict[str,str] = None,
+                 qc_imputed_dir: str = None,
+                 qc_imputed_files: dict[str,str] = None
                  ):
         
         self.working_dir = working_dir
@@ -119,9 +120,12 @@ class EnvironmentHandler:
         self.heap_gb = heap_gb
         self.threads = threads
         self.imputed_files = imputed_files
+        self.qc_imputed_files = qc_imputed_files
+        self.qc_imputed_dir = qc_imputed_dir
         self.validate_paths()
         self.read_parquet()
         self.make_imputed_directory()
+        self.make_qc_imputed_directory()
     
 
     def read_parquet(self) -> pd.DataFrame:
@@ -130,7 +134,12 @@ class EnvironmentHandler:
     def make_imputed_directory(self) -> None:
         imputed_dir = os.path.join(self.working_dir, "imputed")
         os.makedirs(imputed_dir, exist_ok=True)
-        self.working_dir = imputed_dir
+        self.imputed_dir = imputed_dir
+    
+    def make_qc_imputed_directory(self) -> None:
+        qc_imputed_dir =  os.path.join(self.working_dir, "qc_imputed")
+        os.makedirs(qc_imputed_dir, exist_ok=True)
+        self.qc_imputed_dir = qc_imputed_dir
 
     def validate_paths(self) -> None:
         
@@ -171,7 +180,7 @@ class WorkflowOrchestrator:
                         ref_panel: str, chr_number) -> None:
         
 
-        out = os.path.join(f"{self.environment_handler.working_dir}/imputed_chr{chr_number}.risk")
+        out = os.path.join(f"{self.environment_handler.imputed_dir}/imputed_chr{chr_number}.risk")
         
         cmd = [
             self.environment_handler.java_exe, f"-Xmx{self.environment_handler.heap_gb}g", "-jar", str(self.environment_handler.beagle_jar),
@@ -281,44 +290,140 @@ class WorkflowOrchestrator:
         dataframe = pd.DataFrame(all_rows)
         self.data_container.imputed_data = dataframe
     
+    
+    
+    def write_pandas_to_vcf(self) -> None:
+        """
+        Write qced_imputed_data to one VCF file per chromosome (1-sample).
+        Produces files like: {working_dir}/qc_imputed/imputed_chr{chrom}.vcf
+
+        Expects columns:
+        chrom, pos, rsid, ref, alt, qual, filter,
+        DR2, AF, GT, DS, GP_00, GP_01, GP_11, IMP
+        """
+
+        df = self.data_container.qced_imputed_data
+        if df is None or df.empty:
+            raise ValueError("qced_imputed_data is empty; run qc_imputed_data() first.")
+
+        sample_id = "imputed_sample"
+
+        # group by chromosome
+        for chrom, df_chr in df.groupby("chrom"):
+            print(f"Writing QC'ed imputed data for chromosome {chrom}...")
+
+            # sort within chromosome
+            df_chr = df_chr.sort_values("pos")
+
+            # ---- build columns needed for VCF body (vectorized) ----
+
+            # CHROM, POS, ID, REF, ALT
+            chrom_col = df_chr["chrom"].astype(str)
+            pos_col   = df_chr["pos"].astype(int)
+            id_col    = df_chr["rsid"].fillna(".").astype(str)
+            ref_col   = df_chr["ref"].astype(str)
+            alt_col   = df_chr["alt"].astype(str)
+
+            # QUAL & FILTER
+            qual_raw = df_chr.get("qual", ".")
+            qual_col = qual_raw.where(~pd.isna(qual_raw), ".").astype(str)
+
+            filter_raw = df_chr.get("filter", "PASS")
+            filter_col = filter_raw.where(~pd.isna(filter_raw), "PASS").astype(str)
+
+            # ---- INFO field: DR2, AF, IMP ----
+            info = pd.Series("", index=df_chr.index, dtype="object")
+
+            # DR2
+            if "DR2" in df_chr.columns:
+                dr2 = df_chr["DR2"]
+                mask_dr2 = dr2.notna()
+                if mask_dr2.any():
+                    dr2_str = dr2.round(4).astype(str)
+                    info[mask_dr2] = "DR2=" + dr2_str[mask_dr2]
+
+            # AF
+            if "AF" in df_chr.columns:
+                af = df_chr["AF"]
+                mask_af = af.notna()
+                if mask_af.any():
+                    af_str = af.round(6).astype(str)
+                    sep = np.where(info[mask_af] != "", ";", "")
+                    info.loc[mask_af] = info[mask_af] + sep + "AF=" + af_str[mask_af]
+
+            # IMP flag
+            if "IMP" in df_chr.columns:
+                mask_imp = df_chr["IMP"].fillna(False).astype(bool)
+                if mask_imp.any():
+                    sep = np.where(info[mask_imp] != "", ";", "")
+                    info.loc[mask_imp] = info[mask_imp] + sep + "IMP"
+
+            info_col = info.replace("", ".")
+
+            # ---- FORMAT + sample field ----
+            # GT
+            gt_col = df_chr["GT"].fillna("./.").astype(str)
+
+            # DS
+            ds = df_chr["DS"] if "DS" in df_chr.columns else pd.Series(index=df_chr.index, dtype=float)
+            ds_str = ds.round(4).astype(str)
+            ds_str = ds_str.where(~ds.isna(), ".")
+
+            # GP
+            gp00 = df_chr.get("GP_00")
+            gp01 = df_chr.get("GP_01")
+            gp11 = df_chr.get("GP_11")
+
+            # default all GP to "."
+            gp_str = pd.Series(".", index=df_chr.index, dtype="object")
+            if gp00 is not None and gp01 is not None and gp11 is not None:
+                mask_gp = gp00.notna() & gp01.notna() & gp11.notna()
+                if mask_gp.any():
+                    gp00_str = gp00.round(4).astype(str)
+                    gp01_str = gp01.round(4).astype(str)
+                    gp11_str = gp11.round(4).astype(str)
+                    gp_str.loc[mask_gp] = (
+                        gp00_str[mask_gp] + "," +
+                        gp01_str[mask_gp] + "," +
+                        gp11_str[mask_gp]
+                    )
+
+            format_col = pd.Series("GT:DS:GP", index=df_chr.index)
+            sample_col = gt_col + ":" + ds_str + ":" + gp_str
+
+            # assemble final VCF body dataframe
+            body = pd.DataFrame({
+                "#CHROM": chrom_col,
+                "POS": pos_col,
+                "ID": id_col,
+                "REF": ref_col,
+                "ALT": alt_col,
+                "QUAL": qual_col,
+                "FILTER": filter_col,
+                "INFO": info_col,
+                "FORMAT": format_col,
+                sample_id: sample_col,
+            })
+
+            out_path = os.path.join(self.environment_handler.qc_imputed_dir, f"imputed_chr{chrom}.vcf")
+            with open(out_path, "w", encoding="utf-8", newline="") as f:
+                # --- minimal header ---
+                f.write("##fileformat=VCFv4.2\n")
+                f.write('##INFO=<ID=DR2,Number=1,Type=Float,Description="Imputation quality (Beagle DR2)">\n')
+                f.write('##INFO=<ID=AF,Number=1,Type=Float,Description="Allele frequency of ALT allele">\n')
+                f.write('##INFO=<ID=IMP,Number=0,Type=Flag,Description="Imputed variant">\n')
+                f.write('##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">\n')
+                f.write('##FORMAT=<ID=DS,Number=1,Type=Float,Description="Dosage of ALT allele">\n')
+                f.write('##FORMAT=<ID=GP,Number=3,Type=Float,Description="Genotype probabilities for 0/0,0/1,1/1">\n')
+                f.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t" + sample_id + "\n")
+
+                # write body in one go (no Python row loop)
+                body.to_csv(f, sep="\t", index=False, header=False)
+
+            self.environment_handler.qc_imputed_files[chrom] = out_path
+
+    
 
 
-if __name__ == "__main__":
-    from config import BEAGLE_JAR, JAVA_EXE, HEAP_GB, THREADS, GP_MIN, DS_TOL, SNPS_ONLY, BIALLELIC_ONLY
-    
-    environment_handler = EnvironmentHandler(
-        working_dir=r"C:\Users\frezz\pipeline_testing\temp_working_dir_7213",
-        java_exe=JAVA_EXE,
-        beagle_jar=BEAGLE_JAR,
-        heap_gb=HEAP_GB,
-        threads=THREADS,
-        vcf_plink_reference_mapping = r"C:\Users\frezz\pipeline_testing\temp_working_dir_7213\results\vcf_reference_mapping.parquet",
-        imputed_files = {}
-    )
-    
-    qc_thresholds = QCThresholds(
-        gp_min=GP_MIN,
-        ds_tol=DS_TOL,
-        snps_only=SNPS_ONLY,
-        biallelic_only=BIALLELIC_ONLY
-    )
-    
-    data_container = DataContainer(
-        qc_thresholds=qc_thresholds
-    )
-    
-    orchestrator = WorkflowOrchestrator(
-        environment_handler=environment_handler,
-        data_container=data_container
-    )
-    
-    orchestrator.impute_vcf_files()
-    
-    orchestrator.load_vcf_to_df()
-    
-    orchestrator.data_container.qc_imputed_data()
-    
-    print(orchestrator.data_container.qced_imputed_data.head())
-    
     
 
