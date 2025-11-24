@@ -1,10 +1,6 @@
 import os
 
-GWAS_CATALOG_SNPS = os.getenv(
-    "GWAS_CATALOG_SNPS",
-    "/data/harmonized_gwas_catalog_risk_snps.txt",
-)
-TEMP_DIR = os.getenv("TEMP_DIR", "/tmp")
+
 PLINK_PREFIX = os.getenv("PLINK_PREFIX", "plink_temp")
 PLINK_MAP_DIR = os.getenv(
     "PLINK_MAP_DIR",

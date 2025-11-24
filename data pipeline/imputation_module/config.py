@@ -1,5 +1,11 @@
-BEAGLE_JAR = r"C:\Users\frezz\Desktop\genome_scraping\pipeline\beagle.27Feb25.75f.jar"
-JAVA_EXE = r"C:\Program Files (x86)\Common Files\Oracle\Java\java8path\java.exe"
+import os
+
+BEAGLE_JAR = os.getenv("BEAGLE_JAR", "/data/beagle.27Feb25.75f.jar")
+
+JAVA_EXE = os.getenv("JAVA_EXE", "/usr/bin/java")
+
+
+
 HEAP_GB = 8
 THREADS = 2
 GP_MIN = 0.90

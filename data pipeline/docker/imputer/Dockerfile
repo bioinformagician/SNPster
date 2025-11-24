@@ -1,26 +1,30 @@
 # Use Python base image
 FROM python:3.9-slim
+FROM java:8-jre-slim
 
 # Set working directory
 WORKDIR /app
 
 # Copy and install Python requirements
-COPY ../../harmonizing_module/requirements.txt .
+COPY ../../imputation_module/requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copy all project files from harmonizing_module
-COPY ../../harmonizing_module/ .
+# Copy all project files from imputation_module
+COPY ../../imputation_module/ .
 
 # ---- Paths *inside the container* ----
 # These three are baked into the image
-ENV PLINK_1_9_PATH=/app/dependencies/plink
-ENV PLINK_2_0_PATH=/app/dependencies/plink2
-ENV TEST_FILE=/app/dependencies/genome_Frederik_FangelTolberg_v5_Full_20241117223640.txt
+ENV BEAGLE_JAR=/data/beagle.27Feb25.75f.jar
+ENV JAVA_EXE=/usr/bin/java
+ENV HEAP_GB=8
+ENV THREADS=2
+ENV GP_MIN=0.90
+ENV DS_TOL=0.05
+ENV SNPS_ONLY=True
+ENV BIALLELIC_ONLY=True
 
 # These big files are NOT in the image.
 # We expect them to appear under /data via a volume mount at runtime.
-
-ENV PLINK_PREFIX=plink_temp
 ENV PLINK_MAP_DIR=/data/plink.GRCh37.map
 ENV PLINK_REFERENCE_FASTA=/data/hs37d5.fa.zst
 ENV BEAGLE_REFERENCE_DIR=/data/beagle_references
