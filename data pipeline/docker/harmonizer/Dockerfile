@@ -5,11 +5,11 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy and install Python requirements
-COPY ../../harmonizing_module/requirements.txt .
+COPY harmonizing_module/requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy all project files from harmonizing_module
-COPY ../../harmonizing_module/ .
+COPY harmonizing_module/ .
 
 # ---- Paths *inside the container* ----
 # These three are baked into the image
