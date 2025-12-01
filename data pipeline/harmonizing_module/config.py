@@ -1,7 +1,7 @@
 import os
 
-
 PLINK_PREFIX = os.getenv("PLINK_PREFIX", "plink_temp")
+
 PLINK_MAP_DIR = os.getenv(
     "PLINK_MAP_DIR",
     "/data/plink.GRCh37.map",

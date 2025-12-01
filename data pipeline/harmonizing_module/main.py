@@ -1,10 +1,18 @@
 import os
 from config import PLINK_PREFIX, PLINK_MAP_DIR, BEAGLE_REFERENCE_DIR, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA
 from harmonizer_classes import EnvironmentHandler, DataContainer, WorkflowOrchestrator
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--working_dir', type=str, required=False, default=os.getcwd())
+parser.add_argument('--microarray_file', type=str, required=False, default = TEST_FILE, help='Path to the user microarray data file (e.g., 23andMe, Ancestry, Myheritage...).')
+
+args = parser.parse_args()
 
 environment_handler = EnvironmentHandler(
-    working_dir=os.getcwd(),
-    user_upload_file=TEST_FILE,
+    working_dir=args.working_dir,
+    user_upload_file=args.microarray_file,
     plink_1_9_path=PLINK_1_9_PATH,
     plink_2_0_path=PLINK_2_0_PATH,
     plink_map_dir=PLINK_MAP_DIR,
@@ -19,15 +27,13 @@ environment_handler.set_beagle_files()
 data_container = DataContainer()
 
 workflow_orchestrator = WorkflowOrchestrator(
-    
     environment_handler=environment_handler,
-    data_container=data_container,
-    working_dir=os.getcwd() #remove this later
+    data_container=data_container
 )
 
 
 #workflow_orchestrator.initiate_working_directory()
-print(f"Working directory initialized at: {workflow_orchestrator.working_dir}")
+print(f"Working directory initialized at: {workflow_orchestrator.environment_handler.working_dir}")
 
 workflow_orchestrator.set_microarray_data()
 print("Microarray data set in data container:")
@@ -70,8 +76,8 @@ print("VCF to reference mapping created:")
 print(vcf_reference_mapping_df)
 
 print("Writing VCF to reference mapping to output file...")
-os.makedirs(os.path.join(workflow_orchestrator.working_dir, "harmonization_results"), exist_ok=True)
-vcf_reference_mapping_df.to_parquet(os.path.join(workflow_orchestrator.working_dir, "harmonization_results/vcf_reference_mapping.parquet"))
+os.makedirs(os.path.join(args.working_dir, "harmonization_results"), exist_ok=True)
+vcf_reference_mapping_df.to_parquet(os.path.join(args.working_dir, "harmonization_results/vcf_reference_mapping.parquet"))
 print("VCF to reference mapping written to output file.")
 
 

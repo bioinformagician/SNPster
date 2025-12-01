@@ -1,16 +1,21 @@
 # Use Python base image
 FROM python:3.9-slim
-FROM java:8-jre-slim
+
+# cant use multiple FROM statements in a single Dockerfile, so instaall java on top of python base image
+RUN apt-get update && \
+    apt-get install -y default-jre-headless && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
 # Copy and install Python requirements
-COPY ../../imputation_module/requirements.txt .
+COPY imputation_module/requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy all project files from imputation_module
-COPY ../../imputation_module/ .
+COPY imputation_module/ .
 
 # ---- Paths *inside the container* ----
 # These three are baked into the image

@@ -17,7 +17,7 @@ class QCThresholds:
 
 @dataclass
 class DataContainer:
-    qc_thresholds: QCThresholds = QCThresholds()
+    qc_thresholds: QCThresholds = QCThresholds(None, None, False, False)
     imputed_data: pd.DataFrame = None,
     qced_imputed_data: pd.DataFrame = None
     

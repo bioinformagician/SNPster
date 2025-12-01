@@ -1,13 +1,14 @@
+import os
 from imputation_classes import EnvironmentHandler, QCThresholds, DataContainer, WorkflowOrchestrator
 from config import BEAGLE_JAR, JAVA_EXE, HEAP_GB, THREADS, GP_MIN, DS_TOL, SNPS_ONLY, BIALLELIC_ONLY
 
 environment_handler = EnvironmentHandler(
-    working_dir=r"C:\Users\frezz\pipeline_testing\temp_working_dir_8666",
+    working_dir=os.getcwd(),
     java_exe=JAVA_EXE,
     beagle_jar=BEAGLE_JAR,
     heap_gb=HEAP_GB,
     threads=THREADS,
-    vcf_plink_reference_mapping = r"C:\Users\frezz\pipeline_testing\temp_working_dir_8666\harmonization_results\vcf_reference_mapping.parquet",
+    vcf_plink_reference_mapping = r"C:\Users\frezz\pipeline_testing\temp_working_dir_8666\harmonization_results\vcf_reference_mapping.parquet", #this will be a volume mounted in docker
     imputed_files = {},
     qc_imputed_files= {}
 )

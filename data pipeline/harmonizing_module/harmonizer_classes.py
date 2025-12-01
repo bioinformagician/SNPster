@@ -1,4 +1,3 @@
-import random
 import os
 import re
 import subprocess
@@ -225,29 +224,18 @@ class EnvironmentHandler:
 class WorkflowOrchestrator:
     def __init__(self,
                     environment_handler: EnvironmentHandler,
-                    data_container: DataContainer,
-                    working_dir: str
+                    data_container: DataContainer
                     ):
         
         self.environment_handler = environment_handler
         self.data_container = data_container
-        self.working_dir = working_dir
 
-
-    def initiate_working_directory(self) -> None:
-        
-        random_dir = f"temp_working_dir_{random.randint(1000,9999)}"
-        if not os.path.exists(f"{self.environment_handler.working_dir}/{random_dir}"):
-            os.makedirs(f"{self.environment_handler.working_dir}/{random_dir}")
-            self.working_dir = f"{self.environment_handler.working_dir}/{random_dir}"
-        else:
-            self.initiate_working_directory()
     
     def set_microarray_data(self) -> pd.DataFrame:
         self.data_container.microarray_data = self.environment_handler.normalize_file()
         
     def create_user_snp_list(self) -> None:
-        user_snps_path = os.path.join(self.working_dir, "user_snps.txt")
+        user_snps_path = os.path.join(self.environment_handler.working_dir, "user_snps.txt")
         self.data_container.microarray_data["# rsid"].to_csv(user_snps_path, sep="\t", index=False, header=False)
         self.environment_handler.user_snp_list_path = user_snps_path
 
@@ -264,11 +252,11 @@ class WorkflowOrchestrator:
             "--pvar", self.environment_handler.pvar_ref_file,
             "--extract", self.environment_handler.user_snp_list_path,
             "--make-just-pvar",
-            "--out", f"{self.working_dir}/subset_hg37"
+            "--out", f"{self.environment_handler.working_dir}/subset_hg37"
         ]
         
         self.run_command(command)
-        self.environment_handler.reference_data_path = f"{self.working_dir}/subset_hg37.pvar"
+        self.environment_handler.reference_data_path = f"{self.environment_handler.working_dir}/subset_hg37.pvar"
     
     
     
@@ -320,7 +308,7 @@ class WorkflowOrchestrator:
         #beware of the 
         
         #make new dir for harmonized chromosome files
-        harmonized_dir = os.path.join(self.working_dir, "harmonized_chromosomes")
+        harmonized_dir = os.path.join(self.environment_handler.working_dir, "harmonized_chromosomes")
         os.makedirs(harmonized_dir, exist_ok=True)
         
         output_filepaths = {}
@@ -342,7 +330,7 @@ class WorkflowOrchestrator:
         """Convert 23andMe text file to PLINK binary format."""
 
 
-        output_dir = os.path.join(self.working_dir, "bed_files")
+        output_dir = os.path.join(self.environment_handler.working_dir, "bed_files")
         os.makedirs(output_dir, exist_ok=True)
         output_paths = {}
         

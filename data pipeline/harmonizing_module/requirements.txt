@@ -6,3 +6,5 @@ pyarrow>=10.0.0
 
 # Optional: For better performance with large datasets
 numpy>=1.21.0
+
+argparse>=1.1.0
