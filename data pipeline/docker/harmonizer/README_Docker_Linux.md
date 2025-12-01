@@ -83,4 +83,11 @@ Make sure your `/data/` volume contains:
 3. **Memory**: Genomic data processing can be memory-intensive. Consider using `--memory` flag when running the container.
 
 
-quick test: docker run -it -v "C:\Users\frezz\Desktop\dependencies:/data" -v "C:\Users\frezz\Desktop\genome_scraping\pipeline\SNPster\data pipeline\harmonizing_module\docker_test:/workspace" -w /workspace harmonizer-module:latest python /app/main.py
+quick test: docker run -it --rm -v "C:\Users\frezz\Desktop\dependencies:/data" -v "C:\Users\frezz\Desktop\genome_scraping\scraped_genomes\unzipped:/input" -v "C:\Users\frezz\Desktop\docker_testing:/work" harmonizer python main.py --microarray_file /input/MyHeritage_raw_dna_data.csv --working_dir /work
+
+# to do next:
+1. make dependency volumes that are specific for harmonization and imputation module. Move the responsibility of creating the mapping df from the harmonizing module to the imputation module, the harmonization module should only output the harmonized chromosomes
+
+2. add argparse to imputation module
+
+3. create nextflow script to combine the two containers m

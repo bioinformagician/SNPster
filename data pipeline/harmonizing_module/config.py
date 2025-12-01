@@ -1,5 +1,7 @@
 import os
 
+#use docker environment variables or default values
+
 PLINK_PREFIX = os.getenv("PLINK_PREFIX", "plink_temp")
 
 PLINK_MAP_DIR = os.getenv(

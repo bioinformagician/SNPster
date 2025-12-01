@@ -17,9 +17,12 @@ RUN pip install -r requirements.txt
 # Copy all project files from imputation_module
 COPY imputation_module/ .
 
+# Create directories for volume mounts
+RUN mkdir -p /data /work /output
+
 # ---- Paths *inside the container* ----
-# These three are baked into the image
-ENV BEAGLE_JAR=/data/beagle.27Feb25.75f.jar
+# Beagle JAR is baked into the image at /app/dependencies/
+ENV BEAGLE_JAR=/app/dependencies/beagle.27Feb25.75f.jar
 ENV JAVA_EXE=/usr/bin/java
 ENV HEAP_GB=8
 ENV THREADS=2
@@ -34,6 +37,9 @@ ENV PLINK_MAP_DIR=/data/plink.GRCh37.map
 ENV PLINK_REFERENCE_FASTA=/data/hs37d5.fa.zst
 ENV BEAGLE_REFERENCE_DIR=/data/beagle_references
 ENV PVAR_REF_FILE=/data/all_phase3.pvar.zst
+
+# Output directory for imputed results
+ENV OUTPUT_DIR=/output
 
 # Run your script
 CMD ["python", "main.py"]

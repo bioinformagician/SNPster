@@ -1,6 +1,8 @@
 import os
 from imputation_classes import EnvironmentHandler, QCThresholds, DataContainer, WorkflowOrchestrator
-from config import BEAGLE_JAR, JAVA_EXE, HEAP_GB, THREADS, GP_MIN, DS_TOL, SNPS_ONLY, BIALLELIC_ONLY
+from config import BEAGLE_JAR, JAVA_EXE, HEAP_GB, THREADS, GP_MIN, DS_TOL, SNPS_ONLY, BIALLELIC_ONLY, VCF_REFERENCE_MAPPING, OUTPUT_DIR
+
+
 
 environment_handler = EnvironmentHandler(
     working_dir=os.getcwd(),
@@ -8,7 +10,8 @@ environment_handler = EnvironmentHandler(
     beagle_jar=BEAGLE_JAR,
     heap_gb=HEAP_GB,
     threads=THREADS,
-    vcf_plink_reference_mapping = r"C:\Users\frezz\pipeline_testing\temp_working_dir_8666\harmonization_results\vcf_reference_mapping.parquet", #this will be a volume mounted in docker
+    output_dir=OUTPUT_DIR,
+    vcf_plink_reference_mapping = VCF_REFERENCE_MAPPING, #this will be a volume mounted in docker
     imputed_files = {},
     qc_imputed_files= {}
 )

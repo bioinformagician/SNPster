@@ -106,9 +106,9 @@ class EnvironmentHandler:
                  heap_gb: int,
                  threads: int,
                  vcf_plink_reference_mapping: pd.DataFrame,
+                 output_dir: str,
                  imputed_dir: str = None,
                  imputed_files: dict[str,str] = None,
-                 qc_imputed_dir: str = None,
                  qc_imputed_files: dict[str,str] = None
                  ):
         
@@ -121,11 +121,10 @@ class EnvironmentHandler:
         self.threads = threads
         self.imputed_files = imputed_files
         self.qc_imputed_files = qc_imputed_files
-        self.qc_imputed_dir = qc_imputed_dir
+        self.output_dir = output_dir
         self.validate_paths()
         self.read_parquet()
         self.make_imputed_directory()
-        self.make_qc_imputed_directory()
     
 
     def read_parquet(self) -> pd.DataFrame:
@@ -136,10 +135,6 @@ class EnvironmentHandler:
         os.makedirs(imputed_dir, exist_ok=True)
         self.imputed_dir = imputed_dir
     
-    def make_qc_imputed_directory(self) -> None:
-        qc_imputed_dir =  os.path.join(self.working_dir, "qc_imputed")
-        os.makedirs(qc_imputed_dir, exist_ok=True)
-        self.qc_imputed_dir = qc_imputed_dir
 
     def validate_paths(self) -> None:
         
@@ -147,7 +142,8 @@ class EnvironmentHandler:
             self.working_dir,
             self.java_exe,
             self.beagle_jar,
-            self.vcf_plink_reference_mapping
+            self.vcf_plink_reference_mapping,
+            self.output_dir
         ]:
             if not os.path.exists(path):
                 raise FileNotFoundError(f"Required path does not exist: {path}")
@@ -405,7 +401,7 @@ class WorkflowOrchestrator:
                 sample_id: sample_col,
             })
 
-            out_path = os.path.join(self.environment_handler.qc_imputed_dir, f"imputed_chr{chrom}.vcf")
+            out_path = os.path.join(self.environment_handler.output_dir, f"imputed_chr{chrom}.vcf")
             with open(out_path, "w", encoding="utf-8", newline="") as f:
                 # --- minimal header ---
                 f.write("##fileformat=VCFv4.2\n")
