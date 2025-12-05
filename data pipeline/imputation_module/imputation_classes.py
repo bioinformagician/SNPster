@@ -417,6 +417,7 @@ class WorkflowOrchestrator:
                 body.to_csv(f, sep="\t", index=False, header=False)
 
             self.environment_handler.qc_imputed_files[chrom] = out_path
+            print(f"Wrote QC'ed imputed data for chromosome {chrom} to {out_path}")
 
     
 

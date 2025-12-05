@@ -15,6 +15,7 @@ class EnvironmentHandler:
                  PLINK_PREFIX: str,
                  plink_reference_fasta: str,
                  beagle_references: str,
+                 plink_1_9_memory_mb: str,
                  plink_map_files: dict[str, str] = None,
                  chromosome_split_files: dict = None,
                  vcf_plink_reference_mapping: pd.DataFrame = None,
@@ -42,6 +43,7 @@ class EnvironmentHandler:
         self.vcf_file_paths = vcf_file_paths
         self.beagle_references = beagle_references
         self.plink_map_files = plink_map_files
+        self.plink_1_9_memory_mb = plink_1_9_memory_mb
         self.validate_paths()
         self.set_plink_map_files()
     
@@ -344,6 +346,7 @@ class WorkflowOrchestrator:
                 self.environment_handler.plink_1_9_path,
                 "--23file", file,
                 "FAM001", "ID001",
+                "--memory", self.environment_handler.plink_1_9_memory_mb,
                 "--make-bed",
                 "--allow-no-sex",
                 "--out", output_path

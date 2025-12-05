@@ -16,6 +16,7 @@ COPY harmonizing_module/ .
 ENV PLINK_1_9_PATH=/app/dependencies/plink
 ENV PLINK_2_0_PATH=/app/dependencies/plink2
 ENV TEST_FILE=/app/dependencies/genome_Frederik_FangelTolberg_v5_Full_20241117223640.txt
+ENV PLINK_1_9_MEMORY_MB=4000
 
 # These big files are NOT in the image.
 # We expect them to appear under /data via a volume mount at runtime.

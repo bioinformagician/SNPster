@@ -24,7 +24,7 @@ RUN mkdir -p /data /work /output
 # Beagle JAR is baked into the image at /app/dependencies/
 ENV BEAGLE_JAR=/app/dependencies/beagle.27Feb25.75f.jar
 ENV JAVA_EXE=/usr/bin/java
-ENV HEAP_GB=8
+ENV HEAP_GB=6
 ENV THREADS=2
 ENV GP_MIN=0.90
 ENV DS_TOL=0.05

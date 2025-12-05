@@ -28,6 +28,12 @@ PLINK_1_9_PATH = os.getenv(
     "PLINK_1_9_PATH",
     "/app/dependencies/plink",
 )
+
+PLINK_1_9_MEMORY_MB = os.getenv(
+    "PLINK_1_9_MEMORY_MB",
+    "4000",
+)
+
 PLINK_2_0_PATH = os.getenv(
     "PLINK_2_0_PATH",
     "/app/dependencies/plink2",

@@ -1,0 +1,9 @@
+Dec-05 12:48:58.883 [main] DEBUG nextflow.cli.Launcher - $> nextflow run pipeline_orchestrator.nf
+Dec-05 12:48:58.935 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.10.0
+Dec-05 12:48:58.943 [main] DEBUG nextflow.scm.ProviderConfig - Using SCM config path: /home/tolberg/.nextflow/scm
+Dec-05 12:48:58.951 [main] DEBUG nextflow.cli.Launcher - Operation aborted
+nextflow.exception.AbortOperationException: Cannot find script file: pipeline_orchestrator.nf
+	at nextflow.cli.CmdRun.getScriptFile(CmdRun.groovy:577)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:327)
+	at nextflow.cli.Launcher.run(Launcher.groovy:515)
+	at nextflow.cli.Launcher.main(Launcher.groovy:675)

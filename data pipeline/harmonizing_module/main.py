@@ -1,5 +1,5 @@
 import os
-from config import PLINK_PREFIX, PLINK_MAP_DIR, BEAGLE_REFERENCE_DIR, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA
+from config import PLINK_PREFIX, PLINK_MAP_DIR, BEAGLE_REFERENCE_DIR, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA, PLINK_1_9_MEMORY_MB
 from harmonizer_classes import EnvironmentHandler, DataContainer, WorkflowOrchestrator
 import argparse
 
@@ -19,7 +19,8 @@ environment_handler = EnvironmentHandler(
     PLINK_PREFIX=PLINK_PREFIX,
     plink_reference_fasta=PLINK_REFERENCE_FASTA,
     pvar_ref_file=PVAR_REF_FILE,
-    beagle_references=BEAGLE_REFERENCE_DIR
+    beagle_references=BEAGLE_REFERENCE_DIR,
+    plink_1_9_memory_mb=PLINK_1_9_MEMORY_MB
 )
 
 environment_handler.set_beagle_files()
