@@ -135,7 +135,6 @@ class EnvironmentHandler:
         self.vcf_files_dir = vcf_files_dir
         self.vcf_file_paths = vcf_file_paths
         self.validate_paths()
-        self.read_parquet()
         self.make_imputed_directory()
         self.set_beagle_files()
         self.set_plink_map_files()
@@ -172,9 +171,6 @@ class EnvironmentHandler:
         
         self.vcf_file_paths = vcf_files
     
-
-    def read_parquet(self) -> pd.DataFrame:
-        self.vcf_plink_reference_mapping = pd.read_parquet(self.vcf_plink_reference_mapping)
     
     def make_imputed_directory(self) -> None:
         imputed_dir = os.path.join(self.working_dir, "imputed")
@@ -188,7 +184,6 @@ class EnvironmentHandler:
             self.working_dir,
             self.java_exe,
             self.beagle_jar,
-            self.vcf_plink_reference_mapping,
             self.output_dir,
             self.beagle_reference_dir,
             self.plink_map_dir,

@@ -40,7 +40,7 @@ ENV PVAR_REF_FILE=/data/all_phase3.pvar.zst
 
 
 #output of harmonization step
-ENV VCF_FILES_DIR=/work/vcf_files
+ENV VCF_FILES_DIR=/harmonizer_output
 
 # Output directory for imputed results
 ENV OUTPUT_DIR=/output
