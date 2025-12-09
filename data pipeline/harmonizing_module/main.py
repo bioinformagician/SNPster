@@ -23,7 +23,6 @@ environment_handler = EnvironmentHandler(
     plink_1_9_memory_mb=PLINK_1_9_MEMORY_MB
 )
 
-environment_handler.set_beagle_files()
 
 data_container = DataContainer()
 

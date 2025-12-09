@@ -1,6 +1,6 @@
 import os
 from imputation_classes import EnvironmentHandler, QCThresholds, DataContainer, WorkflowOrchestrator
-from config import BEAGLE_JAR, JAVA_EXE, HEAP_GB, THREADS, GP_MIN, DS_TOL, SNPS_ONLY, BIALLELIC_ONLY, VCF_REFERENCE_MAPPING, OUTPUT_DIR
+from config import BEAGLE_JAR, JAVA_EXE, HEAP_GB, THREADS, GP_MIN, DS_TOL, SNPS_ONLY, BIALLELIC_ONLY, OUTPUT_DIR, BEAGLE_REFERENCE_DIR, PLINK_MAP_DIR, VCF_FILES_DIR
 
 
 
@@ -11,7 +11,9 @@ environment_handler = EnvironmentHandler(
     heap_gb=HEAP_GB,
     threads=THREADS,
     output_dir=OUTPUT_DIR,
-    vcf_plink_reference_mapping = VCF_REFERENCE_MAPPING, #this will be a volume mounted in docker
+    beagle_reference_dir=BEAGLE_REFERENCE_DIR, #mounted
+    plink_map_dir=PLINK_MAP_DIR, #mounted
+    vcf_files_dir=VCF_FILES_DIR, #mounted from harmonization step
     imputed_files = {},
     qc_imputed_files= {}
 )

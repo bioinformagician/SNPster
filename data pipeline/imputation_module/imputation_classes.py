@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import gzip
 import subprocess
 import numpy as np
-
+import re
 
 @dataclass(frozen=True)
 class QCThresholds:
@@ -105,11 +105,17 @@ class EnvironmentHandler:
                  beagle_jar: str,
                  heap_gb: int,
                  threads: int,
-                 vcf_plink_reference_mapping: pd.DataFrame,
+                 vcf_files_dir: str,
                  output_dir: str,
+                 beagle_reference_dir: str,
+                 plink_map_dir: str,
+                 vcf_file_paths: dict[str, str] = None,
+                 beagle_references: dict[str, str] = None,
+                 plink_map_files: dict[str, str] = None,
                  imputed_dir: str = None,
                  imputed_files: dict[str,str] = None,
-                 qc_imputed_files: dict[str,str] = None
+                 qc_imputed_files: dict[str,str] = None,
+                 vcf_plink_reference_mapping: pd.DataFrame = None
                  ):
         
         self.working_dir = working_dir
@@ -122,9 +128,49 @@ class EnvironmentHandler:
         self.imputed_files = imputed_files
         self.qc_imputed_files = qc_imputed_files
         self.output_dir = output_dir
+        self.beagle_reference_dir = beagle_reference_dir
+        self.plink_map_dir = plink_map_dir
+        self.plink_map_files = plink_map_files
+        self.beagle_references = beagle_references
+        self.vcf_files_dir = vcf_files_dir
+        self.vcf_file_paths = vcf_file_paths
         self.validate_paths()
         self.read_parquet()
         self.make_imputed_directory()
+        self.set_beagle_files()
+        self.set_plink_map_files()
+        self.set_vcf_files()
+        
+        
+    def set_beagle_files(self) -> dict:
+        beagle_files = {}
+        for file in os.listdir(self.beagle_reference_dir):
+            if file.endswith(".bref3"):
+                chrom = re.search(r"chr(\d+)\.", file)
+                if chrom:
+                    beagle_files[chrom.group(1)] = os.path.join(self.beagle_reference_dir, file)
+            
+        self.beagle_references = beagle_files
+    
+    def set_plink_map_files(self) -> dict:
+        plink_map_files = {}
+        for file in os.listdir(self.plink_map_dir):
+            if file.endswith(".map"):
+                chrom = re.search(r"chr(\d+)[^/]*\.map$", file)
+                if chrom:
+                    plink_map_files[chrom.group(1)] = os.path.join(self.plink_map_dir, file)
+        
+        self.plink_map_files = plink_map_files
+    
+    def set_vcf_files(self) -> dict:
+        vcf_files = {}
+        for file in os.listdir(self.vcf_files_dir):
+            if file.endswith(".vcf.gz"):
+                chrom = re.search(r"chr(\d+)(?=\.vcf(?:\.gz)?$)", file)
+                if chrom:
+                    vcf_files[chrom.group(1)] = os.path.join(self.vcf_files_dir, file)
+        
+        self.vcf_file_paths = vcf_files
     
 
     def read_parquet(self) -> pd.DataFrame:
@@ -143,7 +189,10 @@ class EnvironmentHandler:
             self.java_exe,
             self.beagle_jar,
             self.vcf_plink_reference_mapping,
-            self.output_dir
+            self.output_dir,
+            self.beagle_reference_dir,
+            self.plink_map_dir,
+            self.vcf_files_dir
         ]:
             if not os.path.exists(path):
                 raise FileNotFoundError(f"Required path does not exist: {path}")
@@ -157,6 +206,7 @@ class WorkflowOrchestrator:
         
         self.environment_handler = environment_handler
         self.data_container = data_container
+        self.create_vcf_reference_mapping()
         
     def run_command(self, command: list[str]) -> None:
         """Run a command in the subprocess and handle errors."""
@@ -418,6 +468,45 @@ class WorkflowOrchestrator:
 
             self.environment_handler.qc_imputed_files[chrom] = out_path
             print(f"Wrote QC'ed imputed data for chromosome {chrom} to {out_path}")
+    
+    def create_vcf_reference_mapping(self) -> None:
+        
+        mapping_df = pd.DataFrame()
+        
+        
+        vcf_files_df=pd.DataFrame(
+            list(self.environment_handler.vcf_file_paths.items()),
+            columns=["chromosome_number", "vcf_file"]
+        )
+        
+        beagle_reference_df=pd.DataFrame(
+            list(self.environment_handler.beagle_references.items()),
+            columns=["chromosome_number", "reference_file"]
+        )
+        
+        plink_map_files=pd.DataFrame(
+            list(self.environment_handler.plink_map_files.items()),
+            columns=["chromosome_number", "plink_map_file"]
+        )
+        
+        #join vcf and mapping_df
+        mapping_df = pd.merge(
+            vcf_files_df,
+            beagle_reference_df,
+            on="chromosome_number",
+            how="inner"
+        )
+        
+        mapping_df = pd.merge(
+            mapping_df,
+            plink_map_files,
+            on="chromosome_number",
+            how="inner"
+        )
+        
+
+        
+        self.environment_handler.vcf_plink_reference_mapping = mapping_df
 
     
 

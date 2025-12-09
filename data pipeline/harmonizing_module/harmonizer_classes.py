@@ -46,6 +46,7 @@ class EnvironmentHandler:
         self.plink_1_9_memory_mb = plink_1_9_memory_mb
         self.validate_paths()
         self.set_plink_map_files()
+        self.set_beagle_files()
     
     
     def validate_paths(self) -> None:

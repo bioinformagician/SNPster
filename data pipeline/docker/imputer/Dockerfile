@@ -38,6 +38,10 @@ ENV PLINK_REFERENCE_FASTA=/data/hs37d5.fa.zst
 ENV BEAGLE_REFERENCE_DIR=/data/beagle_references
 ENV PVAR_REF_FILE=/data/all_phase3.pvar.zst
 
+
+#output of harmonization step
+ENV VCF_FILES_DIR=/work/vcf_files
+
 # Output directory for imputed results
 ENV OUTPUT_DIR=/output
 
