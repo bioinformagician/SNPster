@@ -388,44 +388,6 @@ class WorkflowOrchestrator:
             if not os.path.exists(path):
                 raise FileNotFoundError(f"Harmonized chromosome file not found: {path}")
     
-    def create_vcf_reference_mapping(self) -> pd.DataFrame:
-        
-        mapping_df = pd.DataFrame()
-        
-        
-        vcf_files_df=pd.DataFrame(
-            list(self.environment_handler.vcf_file_paths.items()),
-            columns=["chromosome_number", "vcf_file"]
-        )
-        
-        beagle_reference_df=pd.DataFrame(
-            list(self.environment_handler.beagle_references.items()),
-            columns=["chromosome_number", "reference_file"]
-        )
-        
-        plink_map_files=pd.DataFrame(
-            list(self.environment_handler.plink_map_files.items()),
-            columns=["chromosome_number", "plink_map_file"]
-        )
-        
-        #join vcf and mapping_df
-        mapping_df = pd.merge(
-            vcf_files_df,
-            beagle_reference_df,
-            on="chromosome_number",
-            how="inner"
-        )
-        
-        mapping_df = pd.merge(
-            mapping_df,
-            plink_map_files,
-            on="chromosome_number",
-            how="inner"
-        )
-        
-
-        
-        return mapping_df
 
 
     
