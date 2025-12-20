@@ -1,5 +1,5 @@
 import os
-from config import PLINK_PREFIX, PLINK_MAP_DIR, BEAGLE_REFERENCE_DIR, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA, PLINK_1_9_MEMORY_MB
+from config import PLINK_PREFIX, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA, PLINK_1_9_MEMORY_MB
 from harmonizer_classes import EnvironmentHandler, DataContainer, WorkflowOrchestrator
 import argparse
 
@@ -15,11 +15,9 @@ environment_handler = EnvironmentHandler(
     user_upload_file=args.microarray_file,
     plink_1_9_path=PLINK_1_9_PATH,
     plink_2_0_path=PLINK_2_0_PATH,
-    plink_map_dir=PLINK_MAP_DIR,
     PLINK_PREFIX=PLINK_PREFIX,
     plink_reference_fasta=PLINK_REFERENCE_FASTA,
     pvar_ref_file=PVAR_REF_FILE,
-    beagle_references=BEAGLE_REFERENCE_DIR,
     plink_1_9_memory_mb=PLINK_1_9_MEMORY_MB
 )
 
@@ -66,22 +64,5 @@ print("Converting BED files to VCF format...")
 workflow_orchestrator.convert_bed_to_vcf()
 workflow_orchestrator.confirm_paths_exist(workflow_orchestrator.environment_handler.vcf_file_paths)
 
-"""
-legacy - kept for reference. The responsibility of creating the file mapping has been moved to imputation module.
 
-print("Conversion to VCF format complete. VCF file paths:")
-print(workflow_orchestrator.environment_handler.vcf_file_paths)
-print(workflow_orchestrator.environment_handler.split_harmonized_file_paths)
-
-
-print("Creating VCF to reference mapping...")
-vcf_reference_mapping_df = workflow_orchestrator.create_vcf_reference_mapping()
-print("VCF to reference mapping created:")
-print(vcf_reference_mapping_df)
-
-print("Writing VCF to reference mapping to output file...")
-os.makedirs(os.path.join(args.working_dir, "harmonization_results"), exist_ok=True)
-vcf_reference_mapping_df.to_parquet(os.path.join(args.working_dir, "harmonization_results/vcf_reference_mapping.parquet"))
-print("VCF to reference mapping written to output file.")
-"""
 

@@ -22,9 +22,7 @@ ENV PLINK_1_9_MEMORY_MB=4000
 # We expect them to appear under /data via a volume mount at runtime.
 
 ENV PLINK_PREFIX=plink_temp
-ENV PLINK_MAP_DIR=/data/plink.GRCh37.map
 ENV PLINK_REFERENCE_FASTA=/data/hs37d5.fa.zst
-ENV BEAGLE_REFERENCE_DIR=/data/beagle_references
 ENV PVAR_REF_FILE=/data/all_phase3.pvar.zst
 
 # Run your script

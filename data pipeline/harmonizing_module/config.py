@@ -4,18 +4,12 @@ import os
 
 PLINK_PREFIX = os.getenv("PLINK_PREFIX", "plink_temp")
 
-PLINK_MAP_DIR = os.getenv(
-    "PLINK_MAP_DIR",
-    "/data/plink.GRCh37.map",
-)
+
 PLINK_REFERENCE_FASTA = os.getenv(
     "PLINK_REFERENCE_FASTA",
     "/data/hs37d5.fa.zst",
 )
-BEAGLE_REFERENCE_DIR = os.getenv(
-    "BEAGLE_REFERENCE_DIR",
-    "/data/beagle_references",
-)
+
 TEST_FILE = os.getenv(
     "TEST_FILE",
     "/app/dependencies/genome_Frederik_FangelTolberg_v5_Full_20241117223640.txt",

@@ -1,6 +1,11 @@
 import os
+import argparse
 from imputation_classes import EnvironmentHandler, QCThresholds, DataContainer, WorkflowOrchestrator
 from config import BEAGLE_JAR, JAVA_EXE, HEAP_GB, THREADS, GP_MIN, DS_TOL, SNPS_ONLY, BIALLELIC_ONLY, OUTPUT_DIR, BEAGLE_REFERENCE_DIR, PLINK_MAP_DIR, VCF_FILES_DIR
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--vcf_files', type=str, required=False, default=VCF_FILES_DIR)
+args = parser.parse_args()
 
 
 
@@ -13,7 +18,7 @@ environment_handler = EnvironmentHandler(
     output_dir=OUTPUT_DIR,
     beagle_reference_dir=BEAGLE_REFERENCE_DIR, #mounted
     plink_map_dir=PLINK_MAP_DIR, #mounted
-    vcf_files_dir=VCF_FILES_DIR, #mounted from harmonization step
+    vcf_files_dir=args.vcf_files, #mounted from harmonization step
     imputed_files = {},
     qc_imputed_files= {}
 )
