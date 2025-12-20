@@ -255,7 +255,8 @@ class WorkflowOrchestrator:
             "--pvar", self.environment_handler.pvar_ref_file,
             "--extract", self.environment_handler.user_snp_list_path,
             "--make-just-pvar",
-            "--memory ", self.environment_handler.plink_1_9_memory_mb,
+            "--threads", "1",
+            "--memory", "8000", #self.environment_handler.plink_1_9_memory_mb,
             "--out", f"{self.environment_handler.working_dir}/subset_hg37"
         ]
         
@@ -272,7 +273,10 @@ class WorkflowOrchestrator:
             print(result.stdout)
         except subprocess.CalledProcessError as e:
             raise RuntimeError(
-                f"Error running command: {' '.join(command)}\n{e.stderr}"
+                f"Error running command: {' '.join(command)}\n"
+                f"Return code: {e.returncode}\n"
+                f"STDOUT:\n{e.stdout}\n"
+                f"STDERR:\n{e.stderr}\n"
             )
     
     def read_vcf_like_to_df(self) -> pd.DataFrame:
