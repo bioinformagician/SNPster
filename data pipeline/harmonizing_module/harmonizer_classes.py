@@ -255,6 +255,7 @@ class WorkflowOrchestrator:
             "--pvar", self.environment_handler.pvar_ref_file,
             "--extract", self.environment_handler.user_snp_list_path,
             "--make-just-pvar",
+            "--memory ", self.environment_handler.plink_1_9_memory_mb,
             "--out", f"{self.environment_handler.working_dir}/subset_hg37"
         ]
         
