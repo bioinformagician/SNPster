@@ -1,0 +1,66 @@
+Dec-22 20:53:04.429 [main] DEBUG nextflow.cli.Launcher - $> nextflow run pipeline_orchestrator.nf
+Dec-22 20:53:04.578 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.04.8
+Dec-22 20:53:04.613 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/frederiktolberg/.nextflow/plugins; core-plugins: nf-amazon@2.15.0-patch2,nf-azure@1.16.0-patch1,nf-cloudcache@0.4.3,nf-codecommit@0.2.3,nf-console@1.2.1,nf-google@1.21.1,nf-k8s@1.0.1,nf-tower@1.11.4-patch2,nf-wave@1.12.1
+Dec-22 20:53:04.652 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Dec-22 20:53:04.679 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Dec-22 20:53:04.684 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Dec-22 20:53:04.721 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Dec-22 20:53:04.754 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /mnt/c/Users/frezz/Downloads/snpster/data pipeline/nextflow/nextflow.config
+Dec-22 20:53:04.757 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /mnt/c/Users/frezz/Downloads/snpster/data pipeline/nextflow/nextflow.config
+Dec-22 20:53:04.808 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/frederiktolberg/.nextflow/secrets/store.json
+Dec-22 20:53:04.814 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@76911385] - activable => nextflow.secret.LocalSecretsProvider@76911385
+Dec-22 20:53:04.824 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Dec-22 20:53:05.533 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 by global default
+Dec-22 20:53:05.552 [main] DEBUG nextflow.cli.CmdRun - Launching `pipeline_orchestrator.nf` [curious_easley] DSL2 - revision: fd9e28b3d4
+Dec-22 20:53:05.554 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Dec-22 20:53:05.555 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Dec-22 20:53:05.630 [main] DEBUG nextflow.Session - Session UUID: f5a4d49e-bcf2-4eee-a497-8f51506e7588
+Dec-22 20:53:05.631 [main] DEBUG nextflow.Session - Run name: curious_easley
+Dec-22 20:53:05.632 [main] DEBUG nextflow.Session - Executor pool size: 24
+Dec-22 20:53:05.648 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Dec-22 20:53:05.657 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=72; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Dec-22 20:53:05.690 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 25.04.8 build 5956
+  Created: 06-10-2025 21:19 UTC (23:19 CEST)
+  System: Linux 6.6.87.2-microsoft-standard-WSL2
+  Runtime: Groovy 4.0.26 on OpenJDK 64-Bit Server VM 21.0.8+9-Ubuntu-0ubuntu124.04.1
+  Encoding: UTF-8 (UTF-8)
+  Process: 4560@Frederik-PC [127.0.1.1]
+  CPUs: 24 - Mem: 15.2 GB (11.5 GB) - Swap: 4 GB (4 GB)
+Dec-22 20:53:05.788 [main] DEBUG nextflow.Session - Work-dir: /home/frederiktolberg/nf_work [ext2/ext3]
+Dec-22 20:53:05.789 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /mnt/c/Users/frezz/Downloads/snpster/data pipeline/nextflow/bin
+Dec-22 20:53:05.805 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Dec-22 20:53:05.817 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Dec-22 20:53:05.828 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Dec-22 20:53:05.875 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Dec-22 20:53:05.886 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 25; maxThreads: 1000
+Dec-22 20:53:06.041 [main] DEBUG nextflow.Session - Session start
+Dec-22 20:53:06.492 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Dec-22 20:53:06.668 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:HARMONIZE` matches process HARMONIZE
+Dec-22 20:53:06.681 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Dec-22 20:53:06.683 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Dec-22 20:53:06.689 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Dec-22 20:53:06.700 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=24; memory=15.2 GB; capacity=24; pollInterval=100ms; dumpInterval=5m
+Dec-22 20:53:06.704 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Dec-22 20:53:06.740 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'HARMONIZE': maxForks=4; fair=false; array=0
+Dec-22 20:53:06.807 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:IMPUTE` matches process IMPUTE
+Dec-22 20:53:06.809 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Dec-22 20:53:06.810 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Dec-22 20:53:06.813 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'IMPUTE': maxForks=2; fair=false; array=0
+Dec-22 20:53:06.816 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: HARMONIZE, IMPUTE
+Dec-22 20:53:06.821 [main] DEBUG nextflow.Session - Igniting dataflow network (3)
+Dec-22 20:53:06.829 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > HARMONIZE
+Dec-22 20:53:06.831 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > IMPUTE
+Dec-22 20:53:06.831 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: mnt/Users/frezz/Desktop/microarray_data/testing/; pattern: *; options: [:]
+Dec-22 20:53:06.835 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_ad164c6549098837: /mnt/c/Users/frezz/Downloads/snpster/data pipeline/nextflow/pipeline_orchestrator.nf
+Dec-22 20:53:06.860 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Dec-22 20:53:06.861 [main] DEBUG nextflow.Session - Session await
+Dec-22 20:53:06.867 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - No such file or directory: mnt/Users/frezz/Desktop/microarray_data/testing/ -- Skipping visit
+Dec-22 20:53:06.888 [main] DEBUG nextflow.Session - Session await > all processes finished
+Dec-22 20:53:06.913 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Dec-22 20:53:06.914 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Dec-22 20:53:06.928 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=0; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=0ms; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=0; peakCpus=0; peakMemory=0; ]
+Dec-22 20:53:07.105 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Dec-22 20:53:07.172 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'FileTransfer' shutdown completed (hard=false)
+Dec-22 20:53:07.174 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

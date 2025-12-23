@@ -5,13 +5,13 @@ import argparse
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--working_dir', type=str, required=False, default=os.getcwd())
+parser.add_argument('--output_dir', type=str, required=False, default=os.getcwd())
 parser.add_argument('--microarray_file', type=str, required=False, default = TEST_FILE, help='Path to the user microarray data file (e.g., 23andMe, Ancestry, Myheritage...).')
 
 args = parser.parse_args()
 
 environment_handler = EnvironmentHandler(
-    working_dir=args.working_dir,
+    output_dir=args.output_dir,
     user_upload_file=args.microarray_file,
     plink_1_9_path=PLINK_1_9_PATH,
     plink_2_0_path=PLINK_2_0_PATH,
@@ -31,7 +31,7 @@ workflow_orchestrator = WorkflowOrchestrator(
 
 
 #workflow_orchestrator.initiate_working_directory()
-print(f"Working directory initialized at: {workflow_orchestrator.environment_handler.working_dir}")
+print(f"Working directory initialized at: {workflow_orchestrator.environment_handler.output_dir}")
 
 workflow_orchestrator.set_microarray_data()
 print("Microarray data set in data container:")

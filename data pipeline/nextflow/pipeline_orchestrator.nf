@@ -1,27 +1,25 @@
 #!/usr/bin/env nextflow
 
-params.dependencies_dir = "/mnt/c/Users/frezz/Desktop/dependencies"
-params.genefile_dir     = "/mnt/c/Users/frezz/Desktop/genome_scraping/scraped_genomes/subset"
+params.harmonizer_dependencies = "/mnt/c/Users/frezz/Desktop/harmonizer_dependencies"
+params.imputation_dependencies = "/mnt/c/Users/frezz/Desktop/imputer_dependencies"
+params.genefile_dir     = "/mnt/c/Users/frezz/Desktop/microarray_data/testing"
 params.output_dir       = "/mnt/c/Users/frezz/Desktop/docker_testing/nf_output"
 
-process harmonizer {
+process HARMONIZE {
 
-    errorStrategy 'ignore'
+    //errorStrategy 'ignore'
 
     publishDir params.output_dir, mode: 'copy', overwrite: true
 
     container 'harmonizer:latest'
-    containerOptions "-v ${params.dependencies_dir}:/data -v ${params.genefile_dir}:/input"
+    containerOptions "-v ${params.harmonizer_dependencies}:/data -v ${params.genefile_dir}:/input"
 
     input:
         path microarray_file
     
     output:
-        // 1) The parquet mapping file (named channel: parquet)
-        path 'harmonization_results/vcf_reference_mapping.parquet', emit: parquet
-
-        // 2) All compressed VCFs from bed_files (named channel: vcfs)
-        path 'bed_files/*.vcf.gz', emit: vcfs
+        // 1) The files needed to be parsed to the imputer (named channel: vcfs)
+        path "/${PWD}/bed_files/*.vcf.gz", emit: vcfs
 
     script:
     """
@@ -43,9 +41,7 @@ process harmonizer {
 
     echo "===== RUNNING PYTHON ====="
 
-    python /app/main.py \
-        --microarray_file /input/"${microarray_file.getName()}" \
-        --working_dir "\$PWD"
+    python /app/main.py --microarray_file /input/"${microarray_file.getName()}" --working_dir "/$PWD"
 
     echo "===== AFTER PYTHON ====="
     echo "Listing harmonization_results:"
@@ -59,26 +55,21 @@ process harmonizer {
 
 
 
-process impute {
+process IMPUTE {
 
 
-    // Imputed files will end up under:
-    //   /mnt/c/Users/frezz/Desktop/docker_testing/nf_output/impute/...
     publishDir "${params.output_dir}/impute", mode: 'copy', overwrite: true
 
     container 'imputer:latest'
 
     // Mount deps and nf_output as /work (like your manual docker run)
-    containerOptions "-v ${params.dependencies_dir}:/data -v ${params.output_dir}:/work"
+    containerOptions "-v ${params.imputation_dependencies}:/data -v ${params.output_dir}:/work"
 
     input:
-        // We don't actually need the parquet path in the command,
-        // but we use it as a dependency so impute runs *after* harmonizer.
-        path vcf_mapping_parquet
+        path vcf_files
 
     output:
-        // Adjust this pattern to match what imputer actually writes.
-        // For now we assume it produces gzipped VCFs under /work/impute_results or similar.
+
         path 'imputed/*.vcf.gz', optional: true
 
     script:
@@ -115,7 +106,7 @@ workflow {
 
     microarray_ch = Channel.fromPath("${params.genefile_dir}/*")
 
-    harmonizer_out = harmonizer(microarray_ch)
+    HARMONIZE(microarray_ch)
 
-    impute( harmonizer_out.parquet )
+    IMPUTE(HARMONIZE.out.vcfs)
 }
