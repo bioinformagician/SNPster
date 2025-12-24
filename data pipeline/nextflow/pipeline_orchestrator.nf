@@ -19,7 +19,7 @@ process HARMONIZE {
     
     output:
         // 1) The files needed to be parsed to the imputer (named channel: vcfs)
-        path "/${PWD}/bed_files/*.vcf.gz", emit: vcfs
+        path "bed_files/*.vcf.gz", emit: vcfs
 
     script:
     """
@@ -41,7 +41,7 @@ process HARMONIZE {
 
     echo "===== RUNNING PYTHON ====="
 
-    python /app/main.py --microarray_file /input/"${microarray_file.getName()}" --working_dir "/$PWD"
+    python /app/main.py --microarray_file /input/"${microarray_file.getName()}"
 
     echo "===== AFTER PYTHON ====="
     echo "Listing harmonization_results:"
@@ -57,16 +57,24 @@ process HARMONIZE {
 
 process IMPUTE {
 
+    debug true  // Print stdout/stderr in real-time
 
     publishDir "${params.output_dir}/impute", mode: 'copy', overwrite: true
 
-    container 'imputer:latest'
+    container 'imputer-full:latest'
 
-    // Mount deps and nf_output as /work (like your manual docker run)
-    containerOptions "-v ${params.imputation_dependencies}:/data -v ${params.output_dir}:/work"
+    
+    //for when mounting huge dependencies as volumes
+    //containerOptions "-v ${params.imputation_dependencies}:/data -v ${params.output_dir}:/work --memory=12g"
+
+    // when the dependencies are baked into the image
+    //containerOptions "-v ${params.output_dir}:/work --memory=12g"
+    containerOptions "--memory=10g"
+
 
     input:
         path vcf_files
+
 
     output:
 
@@ -84,13 +92,11 @@ process IMPUTE {
     echo "Listing /work:"
     ls -lah /work || true
 
-    echo "vcf_mapping_parquet seen by Nextflow as: ${vcf_mapping_parquet}"
-
     echo "===== RUNNING IMPUTER ====="
 
-    # This mirrors: python main.py
-    # but we use /app/main.py so it doesn't depend on the current working dir.
-    python /app/main.py
+    # VCF files are staged in PWD by Nextflow
+    # Pass current directory as the vcf_files location
+    python /app/main.py --vcf_files .
 
     echo "===== AFTER IMPUTER ====="
     echo "Listing /work:"
@@ -107,6 +113,5 @@ workflow {
     microarray_ch = Channel.fromPath("${params.genefile_dir}/*")
 
     HARMONIZE(microarray_ch)
-
     IMPUTE(HARMONIZE.out.vcfs)
 }

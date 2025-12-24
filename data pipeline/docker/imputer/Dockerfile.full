@@ -14,15 +14,19 @@ WORKDIR /app
 COPY imputation_module/requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copy Python files (exclude large dependencies)
-COPY imputation_module/*.py .
+# Copy all project files from imputation_module
+COPY imputation_module/ .
 
-# Copy only needed dependencies (Beagle JAR and test data)
-COPY imputation_module/dependencies/beagle.27Feb25.75f.jar ./dependencies/
-COPY imputation_module/dependencies/test_data ./dependencies/test_data
 
 # Create directories for volume mounts
-RUN mkdir -p /data /work /output
+RUN mkdir -p /data /work /output /test_files
+
+#copy big files from local directory to the data 
+COPY imputation_module/dependencies/beagle_references /data/beagle_references
+COPY imputation_module/dependencies/plink.GRCh37.map /data/plink.GRCh37.map
+ENV PLINK_MAP_DIR=/data/plink.GRCh37.map
+ENV BEAGLE_REFERENCE_DIR=/data/beagle_references
+
 
 # ---- Paths *inside the container* ----
 # Beagle JAR is baked into the image at /app/dependencies/
@@ -38,14 +42,14 @@ ENV SNPS_ONLY=True
 ENV BIALLELIC_ONLY=True
 
 # These big files are NOT in the image.
-#expect them to appear under /data via a volume mount at runtime.
-ENV PLINK_MAP_DIR=/data/plink.GRCh37.map
-ENV BEAGLE_REFERENCE_DIR=/data/beagle_references
+# We expect them to appear under /data via a volume mount at runtime.
+#ENV PLINK_MAP_DIR=/data/plink.GRCh37.map
+#ENV BEAGLE_REFERENCE_DIR=/data/beagle_references
 
 
 
-#default test data for testing
-ENV VCF_FILES_DIR=/app/dependencies/test_data
+#output of harmonization step
+ENV VCF_FILES_DIR=/work/bed_files
 
 # Output directory for imputed results
 ENV OUTPUT_DIR=/output
