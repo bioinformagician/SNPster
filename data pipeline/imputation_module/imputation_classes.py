@@ -5,6 +5,9 @@ import gzip
 import subprocess
 import numpy as np
 import re
+import gc
+import polars as pl
+
 
 @dataclass(frozen=True)
 class QCThresholds:
@@ -19,52 +22,40 @@ class QCThresholds:
 class DataContainer:
     qc_thresholds: QCThresholds = QCThresholds(None, None, False, False)
     imputed_data: pd.DataFrame = None,
-    qced_imputed_data: pd.DataFrame = None
+    qc_status: bool = False
     
     
 
     def qc_imputed_data(self) -> None:
-        
         print("starting qc of imputed data...")
-        start_time = pd.Timestamp.now()
         
         x = self.imputed_data
         n = len(x)
 
         if n == 0:
             print("0.0% of input variants passed qc requirements (no variants)")
-            self.qced_imputed_data = x.iloc[0:0][["rsid", "ref", "alt", "GT"]].rename(columns={"GT": "gt"})
+            self.qc_status = False
             return
 
-        # ---- build a single mask instead of chaining slices ----
+        # ---- build COMPLETE mask for all filters ----
         keep_mask = np.ones(n, dtype=bool)
 
         # SNP-only: ref and alt length == 1
         if self.qc_thresholds.snps_only:
-            ref_len = x["ref"].str.len().to_numpy()
-            alt_len = x["alt"].str.len().to_numpy()
+            ref_len = x["REF"].str.len().to_numpy()
+            alt_len = x["ALT"].str.len().to_numpy()
             keep_mask &= (ref_len == 1) & (alt_len == 1)
 
         # biallelic-only: no ',' in alt
         if self.qc_thresholds.biallelic_only:
-            has_comma = x["alt"].str.contains(",").to_numpy()
+            has_comma = x["ALT"].str.contains(",").to_numpy()
             keep_mask &= ~has_comma
 
-        # apply SNP/biallelic filters once
-        x = x.loc[keep_mask]
-        n = len(x)
-        if n == 0:
-            print("0.0% of input variants passed qc requirements (after SNP/biallelic filter)")
-            self.qced_imputed_data = self.imputed_data.iloc[0:0][["rsid", "ref", "alt", "GT"]].rename(columns={"GT": "gt"})
-            return
-
-        # ---- GP certainty (already numeric) ----
+        # GP and genotype filters - compute on original data
         gp = x[["GP_00", "GP_01", "GP_11"]].to_numpy()
         gpmax = gp.max(axis=1)
-
-        # ---- genotype classes ----
+        
         gt = x["GT"].astype(str).to_numpy()
-
         is_hom_ref = (gt == "0|0") | (gt == "0/0")
         is_het     = (gt == "0|1") | (gt == "1|0") | (gt == "0/1") | (gt == "1/0")
         is_hom_alt = (gt == "1|1") | (gt == "1/1")
@@ -76,21 +67,25 @@ class DataContainer:
         het_ok     = is_het & (gp01 >= self.qc_thresholds.gp_min) & (ds >= 1 - self.qc_thresholds.ds_tol) & (ds <= 1 + self.qc_thresholds.ds_tol)
         hom_alt_ok = is_hom_alt & (ds >= 2 - self.qc_thresholds.ds_tol)
 
-        keep = (gpmax >= self.qc_thresholds.gp_min) & (hom_ref_ok | het_ok | hom_alt_ok)
+        # Combine ALL filters into one mask
+        keep_mask &= (gpmax >= self.qc_thresholds.gp_min) & (hom_ref_ok | het_ok | hom_alt_ok)
 
-        qc = x.loc[keep]
-
-        kept = len(qc)
-        total = len(x)
-        pct = (kept / total * 100.0) if total else 0.0
+        # Apply filter ONCE
+        kept = keep_mask.sum()
+        pct = (kept / n * 100.0) if n else 0.0
+        
+        if kept == 0:
+            print("0.0% of input variants passed qc requirements")
+            self.qc_status = False
+            return
+        
         print(f"{pct:.1f}% of input variants passed qc requirements")
 
-        # keep full QC'ed dataframe (all columns)
-        self.qced_imputed_data = qc
+        # Single filter operation - only ONE new DataFrame created
+        self.imputed_data = x.loc[keep_mask]
+        self.qc_status = True
 
-        end_time = pd.Timestamp.now()
-        duration = end_time - start_time
-        print(f"QC of imputed data completed in {duration}")
+        print("QC of imputed data completed")
     
     
     
@@ -168,6 +163,8 @@ class EnvironmentHandler:
                 chrom = re.search(r"chr(\d+)(?=\.vcf(?:\.gz)?$)", file)
                 if chrom:
                     vcf_files[chrom.group(1)] = os.path.join(self.vcf_files_dir, file)
+        
+        #order dict keys
         
         self.vcf_file_paths = vcf_files
     
@@ -256,213 +253,279 @@ class WorkflowOrchestrator:
             
             self.environment_handler.imputed_files[chr_number] = out
             
-            
     
     
-    def _parse_info(self, info_str: str) -> dict:
-            # INFO like: "DR2=0.98;AF=0.12;IMP"
-            d = {}
-            for kv in info_str.split(";"):
-                if "=" in kv:
-                    k, v = kv.split("=", 1)
-                    d[k] = v
-                else:
-                    # flag field (e.g. IMP)
-                    d[kv] = True
-            return d
+    def load_vcf_to_df_pandas(self, imputed_file) -> None:
+        
+        """stats from benchmarking loading and qc'ing 3 chromosomes separately:
+                    Wall time: 24.98s
+                    Peak RAM:  1332.8 MB
+                    Avg CPU:   99.6%
+                    Peak CPU:  141.1%
+        """
+        
+        dataframe = pd.read_csv(
+            imputed_file,
+            sep="\t",
+            comment="#",
+            compression="gzip",
+            header=None
+        )
+        dataframe.columns = ["CHROM","POS","ID","REF","ALT","QUAL","FILTER","INFO","FORMAT","FAM001_ID001"]
 
-    def _parse_format(self, fmt: str, sample: str) -> dict:
-        # e.g. fmt: "GT:DS:GP", sample: "0/1:1.02:0.01,0.95,0.04"
-        keys = fmt.split(":")
-        vals = sample.split(":")
-        return dict(zip(keys, vals))
+        # ---- FORMAT: GT / DS / GP ----
+        fmt = dataframe["FAM001_ID001"].str.split(":", n=2, expand=True)
+        dataframe["GT"] = fmt[0]
 
-    def load_vcf_to_df(self) -> None:
-        keep_info = ("DR2", "AF")
-        keep_format = ("GT", "DS", "GP")
+        # DS: keep first value only
+        dataframe["DS"] = pd.to_numeric(fmt[1].str.split(",", n=1).str[0], errors="coerce")
 
-        all_rows = []
+        gplist = fmt[2].astype(str).str.split(",")
+        dataframe["GP_00"] = pd.to_numeric(gplist.str[0], errors="coerce")
+        dataframe["GP_01"] = pd.to_numeric(gplist.str[1], errors="coerce")
+        dataframe["GP_11"] = pd.to_numeric(gplist.str[2], errors="coerce")
 
-        for imputed_file in self.environment_handler.imputed_files.values():
+        dataframe.drop(columns=["FAM001_ID001", "FORMAT"], inplace=True)
 
-            with gzip.open(imputed_file, "rt", encoding="utf-8", newline="") as f:
-                for line in f:
-                    # skip all header lines
-                    if line.startswith("#"):
-                        continue
+        # ---- INFO: DR2 / AF / IMP ----
+        info = dataframe["INFO"].astype(str)
 
-                    toks = line.rstrip("\n").split("\t")
-                    chrom, pos, rsid, ref, alt, qual, flt, info, fmt, sample_str = toks[:10]
+        # DR2: extract value after DR2=, then take first comma-separated entry
+        dataframe["DR2"] = pd.to_numeric(
+            info.str.extract(r"(?:^|;)DR2=([^;]+)", expand=False).str.split(",", n=1).str[0],
+            errors="coerce",
+        )
 
-                    info_map = self._parse_info(info)
-                    fmt_map = self._parse_format(fmt, sample_str)
+        # AF: extract value after AF=, then take first comma-separated entry
+        dataframe["AF"] = pd.to_numeric(
+            info.str.extract(r"(?:^|;)AF=([^;]+)", expand=False).str.split(",", n=1).str[0],
+            errors="coerce",
+        )
 
-                    rec = {
-                        "chrom": chrom,
-                        "pos": int(pos),
-                        "rsid": rsid,
-                        "ref": ref,
-                        "alt": alt,
-                        "qual": qual,
-                        "filter": flt,
-                    }
+        # IMP flag
+        dataframe["IMP"] = info.str.contains(r"(?:^|;)IMP(?:;|$)", regex=True, na=False)
 
-                    # selected INFO fields (assumed always present + numeric)
-                    for k in keep_info:
-                        rec[k] = float(info_map[k].split(",")[0])
-
-                    # selected FORMAT fields (assumed always present)
-                    for k in keep_format:
-                        rec[k] = fmt_map[k]
-
-                    # split GP into three floats (assumed always valid)
-                    gp_vals = [float(v) for v in fmt_map["GP"].split(",")[:3]]
-                    gp0, gp1, gp2 = gp_vals
-                    rec["GP_00"] = gp0
-                    rec["GP_01"] = gp1
-                    rec["GP_11"] = gp2 
-                    rec["DS"] = float(rec["DS"].split(",")[0])
-
-                    # IMP flag: present in INFO => True, else False
-                    rec["IMP"] = bool(info_map.get("IMP", False))
-
-                    all_rows.append(rec)
-
-        dataframe = pd.DataFrame(all_rows)
+        dataframe.drop(columns=["INFO"], inplace=True)
+        
         self.data_container.imputed_data = dataframe
     
     
     
-    def write_pandas_to_vcf(self) -> None:
+    def load_vcf_to_df_polars(self, imputed_file) -> None:
+        
+        """stats from benchmarking loading and qc'ing 3 chromosomes separately:
+                    Wall time: 5.48s
+                    Peak RAM:  1856.5 MB
+                    Avg CPU:   98.0%
+                    Peak CPU:  140.8%
         """
-        Write qced_imputed_data to one VCF file per chromosome (1-sample).
-        Produces files like: {working_dir}/qc_imputed/imputed_chr{chrom}.vcf
+        
+        polars = (
+            pl.read_csv(
+                gzip.open(imputed_file, "rt", encoding="utf-8", newline=""),
+                separator="\t",
+                comment_prefix="#",
+                has_header=False,
+                new_columns=["CHROM","POS","ID","REF","ALT","QUAL","FILTER","INFO","FORMAT","FAM001_ID001"],
+            )
 
-        Expects columns:
-        chrom, pos, rsid, ref, alt, qual, filter,
-        DR2, AF, GT, DS, GP_00, GP_01, GP_11, IMP
+            # -------- FORMAT parsing --------
+            .with_columns(
+                pl.col("FAM001_ID001").str.split_exact(":", 2).alias("s"),
+            )
+            .with_columns(
+                pl.col("s").struct.field("field_0").alias("GT"),
+
+                # DS: keep FIRST value only
+                pl.col("s")
+                .struct.field("field_1")
+                .str.split(",")
+                .list.first()
+                .cast(pl.Float64)
+                .alias("DS"),
+
+                pl.col("s").struct.field("field_2").alias("GP"),
+            )
+            .drop(["FAM001_ID001", "FORMAT", "s"])
+
+            # -------- INFO parsing --------
+            .with_columns(
+                # DR2: extract value, keep FIRST
+                pl.col("INFO")
+                .str.extract(r"(?:^|;)DR2=([^;]+)", 1)
+                .str.split(",")
+                .list.first()
+                .cast(pl.Float64)
+                .alias("DR2"),
+
+                # AF: extract value, keep FIRST
+                pl.col("INFO")
+                .str.extract(r"(?:^|;)AF=([^;]+)", 1)
+                .str.split(",")
+                .list.first()
+                .cast(pl.Float64)
+                .alias("AF"),
+
+                # IMP flag
+                pl.col("INFO")
+                .str.contains(r"(?:^|;)IMP(?:;|$)")
+                .alias("IMP"),
+            )
+            .drop(["INFO"])
+
+            # -------- GP parsing --------
+            .with_columns(
+                pl.col("GP").str.split(",").alias("g"),
+            )
+            .with_columns(
+                pl.col("g").list.get(0).cast(pl.Float64).alias("GP_00"),
+                pl.col("g").list.get(1).cast(pl.Float64).alias("GP_01"),
+                pl.col("g").list.get(2).cast(pl.Float64).alias("GP_11"),
+            )
+            .drop(["GP", "g"])
+        ).to_pandas()
+        
+        self.data_container.imputed_data = polars
+        
+        
+        
+    def write_pandas_to_vcf(self, chunk_size: int = 200_000) -> None:
+        """
+        Stream-write imputed_data to a single 1-sample VCF file in chunks.
+        Much lower peak RAM than building a full string 'body' DataFrame.
         """
 
-        df = self.data_container.qced_imputed_data
+        if self.data_container.qc_status is False:
+            raise ValueError("Data has not passed QC; cannot write to VCF.")
+
+        df = self.data_container.imputed_data
         if df is None or df.empty:
-            raise ValueError("qced_imputed_data is empty; run qc_imputed_data() first.")
+            raise ValueError("imputed data is empty; run qc_imputed_data() first.")
 
         sample_id = "imputed_sample"
+        chrom_key = str(df["CHROM"].iloc[0])
+        out_path = os.path.join(self.environment_handler.output_dir, "imputed_qced.vcf")
 
-        # group by chromosome
-        for chrom, df_chr in df.groupby("chrom"):
-            print(f"Writing QC'ed imputed data for chromosome {chrom}...")
+        with open(out_path, "w", encoding="utf-8", newline="") as f:
+            # --- header ---
+            f.write("##fileformat=VCFv4.2\n")
+            f.write('##INFO=<ID=DR2,Number=1,Type=Float,Description="Imputation quality (Beagle DR2)">\n')
+            f.write('##INFO=<ID=AF,Number=1,Type=Float,Description="Allele frequency of ALT allele">\n')
+            f.write('##INFO=<ID=IMP,Number=0,Type=Flag,Description="Imputed variant">\n')
+            f.write('##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">\n')
+            f.write('##FORMAT=<ID=DS,Number=1,Type=Float,Description="Dosage of ALT allele">\n')
+            f.write('##FORMAT=<ID=GP,Number=3,Type=Float,Description="Genotype probabilities for 0/0,0/1,1/1">\n')
+            f.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t" + sample_id + "\n")
 
-            # sort within chromosome
-            df_chr = df_chr.sort_values("pos")
+            n = len(df)
+            for start in range(0, n, chunk_size):
+                chunk = df.iloc[start:start + chunk_size]
 
-            # ---- build columns needed for VCF body (vectorized) ----
+                # core fields
+                chrom_col = chunk["CHROM"].astype(str)
+                pos_col   = chunk["POS"].astype(int)
+                id_col    = chunk["ID"].fillna(".").astype(str)
+                ref_col   = chunk["REF"].astype(str)
+                alt_col   = chunk["ALT"].astype(str)
 
-            # CHROM, POS, ID, REF, ALT
-            chrom_col = df_chr["chrom"].astype(str)
-            pos_col   = df_chr["pos"].astype(int)
-            id_col    = df_chr["rsid"].fillna(".").astype(str)
-            ref_col   = df_chr["ref"].astype(str)
-            alt_col   = df_chr["alt"].astype(str)
+                qual_raw = chunk.get("QUAL", ".")
+                qual_col = qual_raw.where(qual_raw.notna(), ".").astype(str)
 
-            # QUAL & FILTER
-            qual_raw = df_chr.get("qual", ".")
-            qual_col = qual_raw.where(~pd.isna(qual_raw), ".").astype(str)
+                filter_raw = chunk.get("FILTER", "PASS")
+                filter_col = filter_raw.where(filter_raw.notna(), "PASS").astype(str)
 
-            filter_raw = df_chr.get("filter", "PASS")
-            filter_col = filter_raw.where(~pd.isna(filter_raw), "PASS").astype(str)
+                # INFO: build minimally
+                info = pd.Series(".", index=chunk.index, dtype="object")
 
-            # ---- INFO field: DR2, AF, IMP ----
-            info = pd.Series("", index=df_chr.index, dtype="object")
+                if "DR2" in chunk.columns:
+                    dr2 = chunk["DR2"]
+                    m = dr2.notna()
+                    if m.any():
+                        info.loc[m] = "DR2=" + dr2.round(4).astype(str).loc[m]
 
-            # DR2
-            if "DR2" in df_chr.columns:
-                dr2 = df_chr["DR2"]
-                mask_dr2 = dr2.notna()
-                if mask_dr2.any():
-                    dr2_str = dr2.round(4).astype(str)
-                    info[mask_dr2] = "DR2=" + dr2_str[mask_dr2]
+                if "AF" in chunk.columns:
+                    af = chunk["AF"]
+                    m = af.notna()
+                    if m.any():
+                        add = "AF=" + af.round(6).astype(str).loc[m]
+                        info.loc[m] = info.loc[m].where(info.loc[m] != ".", "")  # "." -> ""
+                        sep = np.where(info.loc[m] != "", ";", "")
+                        info.loc[m] = info.loc[m] + sep + add
+                        info.loc[m] = info.loc[m].replace("", ".")  # restore if empty
 
-            # AF
-            if "AF" in df_chr.columns:
-                af = df_chr["AF"]
-                mask_af = af.notna()
-                if mask_af.any():
-                    af_str = af.round(6).astype(str)
-                    sep = np.where(info[mask_af] != "", ";", "")
-                    info.loc[mask_af] = info[mask_af] + sep + "AF=" + af_str[mask_af]
+                if "IMP" in chunk.columns:
+                    m = chunk["IMP"].fillna(False).astype(bool)
+                    if m.any():
+                        info.loc[m] = info.loc[m].where(info.loc[m] != ".", "")  # "." -> ""
+                        sep = np.where(info.loc[m] != "", ";", "")
+                        info.loc[m] = info.loc[m] + sep + "IMP"
+                        info.loc[m] = info.loc[m].replace("", ".")
 
-            # IMP flag
-            if "IMP" in df_chr.columns:
-                mask_imp = df_chr["IMP"].fillna(False).astype(bool)
-                if mask_imp.any():
-                    sep = np.where(info[mask_imp] != "", ";", "")
-                    info.loc[mask_imp] = info[mask_imp] + sep + "IMP"
+                # FORMAT + sample
+                gt_col = chunk["GT"].fillna("./.").astype(str)
 
-            info_col = info.replace("", ".")
+                ds = chunk["DS"] if "DS" in chunk.columns else pd.Series(index=chunk.index, dtype=float)
+                ds_str = ds.round(4).astype(str).where(ds.notna(), ".")
 
-            # ---- FORMAT + sample field ----
-            # GT
-            gt_col = df_chr["GT"].fillna("./.").astype(str)
+                gp_str = pd.Series(".", index=chunk.index, dtype="object")
+                if all(k in chunk.columns for k in ("GP_00", "GP_01", "GP_11")):
+                    gp00, gp01, gp11 = chunk["GP_00"], chunk["GP_01"], chunk["GP_11"]
+                    m = gp00.notna() & gp01.notna() & gp11.notna()
+                    if m.any():
+                        gp_str.loc[m] = (
+                            gp00.round(4).astype(str).loc[m] + "," +
+                            gp01.round(4).astype(str).loc[m] + "," +
+                            gp11.round(4).astype(str).loc[m]
+                        )
 
-            # DS
-            ds = df_chr["DS"] if "DS" in df_chr.columns else pd.Series(index=df_chr.index, dtype=float)
-            ds_str = ds.round(4).astype(str)
-            ds_str = ds_str.where(~ds.isna(), ".")
+                format_col = "GT:DS:GP"
+                sample_col = gt_col + ":" + ds_str + ":" + gp_str
 
-            # GP
-            gp00 = df_chr.get("GP_00")
-            gp01 = df_chr.get("GP_01")
-            gp11 = df_chr.get("GP_11")
+                # write chunk (no huge full-body dataframe stored beyond chunk)
+                out_df = pd.DataFrame({
+                    "#CHROM": chrom_col,
+                    "POS": pos_col,
+                    "ID": id_col,
+                    "REF": ref_col,
+                    "ALT": alt_col,
+                    "QUAL": qual_col,
+                    "FILTER": filter_col,
+                    "INFO": info,
+                    "FORMAT": format_col,
+                    sample_id: sample_col,
+                })
 
-            # default all GP to "."
-            gp_str = pd.Series(".", index=df_chr.index, dtype="object")
-            if gp00 is not None and gp01 is not None and gp11 is not None:
-                mask_gp = gp00.notna() & gp01.notna() & gp11.notna()
-                if mask_gp.any():
-                    gp00_str = gp00.round(4).astype(str)
-                    gp01_str = gp01.round(4).astype(str)
-                    gp11_str = gp11.round(4).astype(str)
-                    gp_str.loc[mask_gp] = (
-                        gp00_str[mask_gp] + "," +
-                        gp01_str[mask_gp] + "," +
-                        gp11_str[mask_gp]
-                    )
+                out_df.to_csv(f, sep="\t", index=False, header=False)
 
-            format_col = pd.Series("GT:DS:GP", index=df_chr.index)
-            sample_col = gt_col + ":" + ds_str + ":" + gp_str
+        self.environment_handler.qc_imputed_files[chrom_key] = out_path
+        print(f"Wrote QC'ed imputed data to {out_path}")
 
-            # assemble final VCF body dataframe
-            body = pd.DataFrame({
-                "#CHROM": chrom_col,
-                "POS": pos_col,
-                "ID": id_col,
-                "REF": ref_col,
-                "ALT": alt_col,
-                "QUAL": qual_col,
-                "FILTER": filter_col,
-                "INFO": info_col,
-                "FORMAT": format_col,
-                sample_id: sample_col,
-            })
+        
+        
 
-            out_path = os.path.join(self.environment_handler.output_dir, f"imputed_chr{chrom}.vcf")
-            with open(out_path, "w", encoding="utf-8", newline="") as f:
-                # --- minimal header ---
-                f.write("##fileformat=VCFv4.2\n")
-                f.write('##INFO=<ID=DR2,Number=1,Type=Float,Description="Imputation quality (Beagle DR2)">\n')
-                f.write('##INFO=<ID=AF,Number=1,Type=Float,Description="Allele frequency of ALT allele">\n')
-                f.write('##INFO=<ID=IMP,Number=0,Type=Flag,Description="Imputed variant">\n')
-                f.write('##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">\n')
-                f.write('##FORMAT=<ID=DS,Number=1,Type=Float,Description="Dosage of ALT allele">\n')
-                f.write('##FORMAT=<ID=GP,Number=3,Type=Float,Description="Genotype probabilities for 0/0,0/1,1/1">\n')
-                f.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t" + sample_id + "\n")
 
-                # write body in one go (no Python row loop)
-                body.to_csv(f, sep="\t", index=False, header=False)
+    
+    def run_qc_on_imputed_data(self, engine) -> None:
+        
+        #Per chromsome approach to save memory
+        
+        for chromosome, file in self.environment_handler.imputed_files.items():
+            print(f"Converting chromosome {chromosome} to pandas DataFrame...")
+            
+            if engine == "pandas":
+                self.load_vcf_to_df_pandas(file)
+            else:
+                self.load_vcf_to_df_polars(file)
+            
+            print(f"Running QC on chromosome {chromosome} imputed data...")
+            self.data_container.qc_imputed_data()
+            print(f"Writing QC'ed imputed data for chromosome {chromosome} to VCF...")
+            self.write_pandas_to_vcf()
+            
+            # Force garbage collection to free memory, otherwise it will ramp up
+            gc.collect()
+            print(f"Completed chromosome {chromosome}. Memory freed.")
 
-            self.environment_handler.qc_imputed_files[chrom] = out_path
-            print(f"Wrote QC'ed imputed data for chromosome {chrom} to {out_path}")
     
     def create_vcf_reference_mapping(self) -> None:
         

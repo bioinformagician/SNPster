@@ -40,7 +40,8 @@ ENV GP_MIN=0.90
 ENV DS_TOL=0.05
 ENV SNPS_ONLY=True
 ENV BIALLELIC_ONLY=True
-
+ENV POLARS_MAX_THREADS=1
+ENV DF_ENGINE=polars
 # These big files are NOT in the image.
 # We expect them to appear under /data via a volume mount at runtime.
 #ENV PLINK_MAP_DIR=/data/plink.GRCh37.map
@@ -49,7 +50,7 @@ ENV BIALLELIC_ONLY=True
 
 
 #output of harmonization step
-ENV VCF_FILES_DIR=/work/bed_files
+ENV VCF_FILES_DIR=/app/dependencies/test_data
 
 # Output directory for imputed results
 ENV OUTPUT_DIR=/output

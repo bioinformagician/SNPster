@@ -36,6 +36,9 @@ ENV GP_MIN=0.90
 ENV DS_TOL=0.05
 ENV SNPS_ONLY=True
 ENV BIALLELIC_ONLY=True
+ENV POLARS_MAX_THREADS=1
+ENV DF_ENGINE=polars
+#otherwise polars will use all cores available
 
 # These big files are NOT in the image.
 #expect them to appear under /data via a volume mount at runtime.

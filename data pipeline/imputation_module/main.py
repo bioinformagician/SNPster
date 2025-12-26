@@ -1,13 +1,15 @@
 import os
 import argparse
 from imputation_classes import EnvironmentHandler, QCThresholds, DataContainer, WorkflowOrchestrator
-from config import BEAGLE_JAR, JAVA_EXE, HEAP_GB, THREADS, GP_MIN, DS_TOL, SNPS_ONLY, BIALLELIC_ONLY, OUTPUT_DIR, BEAGLE_REFERENCE_DIR, PLINK_MAP_DIR, VCF_FILES_DIR
+from config import BEAGLE_JAR, JAVA_EXE, HEAP_GB, THREADS, GP_MIN, DS_TOL, SNPS_ONLY, BIALLELIC_ONLY, OUTPUT_DIR, BEAGLE_REFERENCE_DIR, PLINK_MAP_DIR, VCF_FILES_DIR, DF_ENGINE, ACCEPTED_DF_ENGINES
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--vcf_files', type=str, required=False, default=VCF_FILES_DIR)
+parser.add_argument('--vcf_files', type=str, required=False, default=VCF_FILES_DIR) #default is vcf files for testing baked into image
+parser.add_argument('--df_engine', type=str, required=False, default=DF_ENGINE)
 args = parser.parse_args()
 
-
+if args.df_engine not in ACCEPTED_DF_ENGINES:
+    raise ValueError(f"df_engine must be one of {ACCEPTED_DF_ENGINES}")
 
 environment_handler = EnvironmentHandler(
     working_dir=os.getcwd(),
@@ -41,10 +43,6 @@ orchestrator = WorkflowOrchestrator(
 
 orchestrator.impute_vcf_files()
 
-orchestrator.load_vcf_to_df()
+orchestrator.run_qc_on_imputed_data(args.df_engine)
 
-orchestrator.data_container.qc_imputed_data()
-
-print(orchestrator.data_container.qced_imputed_data.head())
-
-orchestrator.write_pandas_to_vcf()
+print("Imputation and QC pipeline completed successfully.")
