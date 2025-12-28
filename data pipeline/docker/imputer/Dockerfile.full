@@ -22,8 +22,8 @@ COPY imputation_module/ .
 RUN mkdir -p /data /work /output /test_files
 
 #copy big files from local directory to the data 
-COPY imputation_module/dependencies/beagle_references /data/beagle_references
-COPY imputation_module/dependencies/plink.GRCh37.map /data/plink.GRCh37.map
+COPY imputation_module/big_dependencies/beagle_references /data/beagle_references
+COPY imputation_module/big_dependencies/plink.GRCh37.map /data/plink.GRCh37.map
 ENV PLINK_MAP_DIR=/data/plink.GRCh37.map
 ENV BEAGLE_REFERENCE_DIR=/data/beagle_references
 

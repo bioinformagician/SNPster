@@ -1,9 +1,9 @@
 import os
-import re
 import subprocess
 import gzip
 from data_models import *
-        
+
+
 class EnvironmentHandler:
     def __init__(self,
                  output_dir: str,
@@ -14,6 +14,7 @@ class EnvironmentHandler:
                  PLINK_PREFIX: str,
                  plink_reference_fasta: str,
                  plink_1_9_memory_mb: str,
+                 plink_1_9_threads: str,
                  chromosome_split_files: dict = None,
                  user_snp_list_path: str = None,
                  reference_data_path: str = None,
@@ -36,6 +37,7 @@ class EnvironmentHandler:
         self.bed_file_paths = bed_file_paths
         self.vcf_file_paths = vcf_file_paths
         self.plink_1_9_memory_mb = plink_1_9_memory_mb
+        self.plink_1_9_threads = plink_1_9_threads
         self.create_output_directory()
         self.validate_paths()
         
@@ -58,144 +60,6 @@ class EnvironmentHandler:
                 raise FileNotFoundError(f"Required path does not exist: {path}")
     
     
-    
-    
-    
-    def normalize_file(self) -> pd.DataFrame:
-            
-            #'#rsidchromosomepositiongenotype'
-            normalized_header = ['# rsid', 'chromosome', 'position', 'genotype']
-            allowed_headers = [
-                '#rsidchromosomepositiongenotype', #23andme
-                'rsidchromosomepositiongenotype', #23andme without #
-                'rsidchromosomepositionallele1allele2', #ancestry
-                'RSID,CHROMOSOME,POSITION,RESULT', #ftdna
-                'Name,Variation,Chromosome,Position,Strand,YourCode' #myheritage
-            ]
-            
-            header = self.extract_header()
-            
-            if header not in allowed_headers:
-                raise ValueError(f"Header format not recognized. Found: {header}")
-            
-            data = self.extract_data()
-            
-            
-            if header == '#rsidchromosomepositiongenotype': #is 23andme
-                data.columns = normalized_header
-            
-            if header == 'rsidchromosomepositiongenotype': #is 23andme without #
-                #rename header to standardized header
-                data.rename(columns={'rsid': '# rsid'}, inplace=True)
-
-            elif header == 'rsidchromosomepositionallele1allele2': #is ancestry
-                data.columns = ['rsid', 'chromosome', 'position', 'allele1', 'allele2']
-                #combine allele1 and allele2 into genotype
-                data['genotype'] = data['allele1'] + data['allele2']
-                data = data.drop(columns=['allele1', 'allele2'])
-            
-            elif header == 'RSID,CHROMOSOME,POSITION,RESULT': #is ftdna
-                data= data.rename(columns={'RESULT': 'genotype'})
-                data.columns = [col.lower() for col in data.columns]
-            
-            elif header == 'Name,Variation,Chromosome,Position,Strand,YourCode': #is myheritage
-                data.drop(columns=['Strand', 'Variation'], inplace=True)
-                data.rename(columns={'Position': 'position', 'Chromosome': 'chromosome', 'YourCode': 'genotype', 'Name': '# rsid'}, inplace=True)
-                
-            
-            
-            #keep only clean genotypes
-            data = data[data['genotype'].str.match("^[ATCG]{1,2}$")]
-
-            # clean rsids
-            
-            data = data.rename(columns={'rsid': '# rsid'})
-
-            data = data[data['# rsid'].str.match("^rs[0-9]{1,}$")]
-
-
-            #last step to ensure correct column order
-            data = data[['# rsid','chromosome','position','genotype']]
-
-
-            return data
-        
-    
-    
-    def extract_header(self) -> str:
-        """
-        Find the first line that contains an rsxxxx pattern (rs followed by digits)
-        and return the line immediately above it with all whitespace removed.
-        """
-        pattern = re.compile(r'\brs\d+\b', flags=re.IGNORECASE)
-
-        with open(self.user_upload_file, 'r') as file:
-            lines = file.readlines()
-
-        # Find the first line that matches the rs pattern
-        rs_line_index = None
-        for i, line in enumerate(lines):
-            if pattern.search(line):
-                rs_line_index = i
-                break
-
-        if rs_line_index is None:
-            raise ValueError("No line containing an rsxxxx pattern was found.")
-
-        if rs_line_index == 0:
-            raise ValueError("The rsxxxx pattern appears on the first line; no line above to extract.")
-
-        header_line = lines[rs_line_index - 1]
-
-        # Flatten: remove all whitespace characters (spaces, tabs, newlines)
-        header_line = re.sub(r'\s+', '', header_line)
-
-        return header_line
-    
-    def extract_data(self) -> pd.DataFrame:
-        try: 
-            #check if a # is present in the first line
-            with open(self.user_upload_file, 'r') as file:
-                first_line = file.readline()
-                has_hash = first_line.startswith('#')
-            
-            
-            if has_hash:
-                df = pd.read_csv(self.user_upload_file, sep=r'\s+', comment="#", dtype=str, low_memory=False)
-            else:
-                #no comment, has header
-                df = pd.read_csv(self.user_upload_file, sep=r'\s+', dtype=str, low_memory=False)
-            
-            #check number of columns
-            if df.shape[1] < 4:
-
-                    df = pd.read_csv(
-                        self.user_upload_file,
-                        sep=',',
-                        engine='c',
-                        dtype=str,
-                        low_memory=True,
-                        header=0,       # the CSV header line (e.g., RSID,CHROMOSOME,POSITION,RESULT)
-                    )
-                    # strip quotes if present
-                    for c in df.columns:
-                        df[c] = df[c].astype(str).str.replace('"', '', regex=False)
-
-            if df.shape[1] < 4:
-                raise ValueError("File does not have enough columns to extract rsid, chromosome, position, and genotype.")
-            
-        except pd.errors.ParserError:
-                df = pd.read_csv(
-                    self.user_upload_file,
-                    comment="#",          # skip the header blurb
-                    sep=",",              # CSV
-                    quotechar='"',        # quoted fields like "rs4477212"
-                    dtype=str,            # keep everything as strings
-                    keep_default_na=False,# don't convert strings like "NA" to NaN
-                    engine="c",           # fast
-                )
-
-        return df
         
 
 
@@ -203,15 +67,22 @@ class EnvironmentHandler:
 class WorkflowOrchestrator:
     def __init__(self,
                     environment_handler: EnvironmentHandler,
-                    data_container: DataContainer
+                    data_container: DataContainer,
+                    file_handler: FileHandler
                     ):
         
         self.environment_handler = environment_handler
         self.data_container = data_container
+        self.file_handler = file_handler
 
+    def set_vendor(self) -> None:
+        self.data_container.vendor = self.file_handler.identify_vendor()
+    
+    def set_genome_build(self) -> None:
+        self.data_container.genome_build = self.file_handler.identify_genome_build()
     
     def set_microarray_data(self) -> pd.DataFrame:
-        self.data_container.microarray_data = self.environment_handler.normalize_file()
+        self.data_container.microarray_data = self.file_handler.normalize_file()
         
     def create_user_snp_list(self) -> None:
         user_snps_path = os.path.join(self.environment_handler.output_dir, "user_snps.txt")
@@ -289,7 +160,6 @@ class WorkflowOrchestrator:
     
     
     def create_harmonized_chromosome_files(self) -> None:
-        #beware of the 
         
         #make new dir for harmonized chromosome files
         harmonized_dir = os.path.join(self.environment_handler.output_dir, "harmonized_chromosomes")
@@ -329,6 +199,7 @@ class WorkflowOrchestrator:
                 "--23file", file,
                 "FAM001", "ID001",
                 "--memory", self.environment_handler.plink_1_9_memory_mb,
+                "--threads", self.environment_handler.plink_1_9_threads,
                 "--make-bed",
                 "--allow-no-sex",
                 "--out", output_path
@@ -368,6 +239,29 @@ class WorkflowOrchestrator:
         for path in paths.values():
             if not os.path.exists(path):
                 raise FileNotFoundError(f"Harmonized chromosome file not found: {path}")
+    
+    
+    def run_harmonization_workflow(self) -> None:
+        
+        """In the future the genome build should also be evaluated to ensure proper harmonization"""
+        
+        if self.data_container.is_forward_strand is False:
+        
+            self.create_user_snp_list()
+            print("User SNP list created.")
+            print("Extracting reference data...")
+            self.extract_reference_data() #extracts refernce data based on snp list
+            self.data_container.reference_data = self.read_vcf_like_to_df() #reads extracted refernce data
+            print("Reference data extracted and set in data container")
+            print("Harmonizing data...")
+            self.data_container.harmonize_data()
+            print("Data harmonization complete. Harmonized data:")
+            print(self.data_container.harmonization_stats)
+            print(self.data_container.harmonized_data.head())
+        else:
+            print("Data is already in forward strand orientation. Skipping harmonization workflow...")
+            self.data_container.harmonized_data = self.data_container.microarray_data
+
     
 
 

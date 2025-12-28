@@ -21,7 +21,7 @@ class QCThresholds:
 @dataclass
 class DataContainer:
     qc_thresholds: QCThresholds = QCThresholds(None, None, False, False)
-    imputed_data: pd.DataFrame = None,
+    imputed_data: pd.DataFrame = None
     qc_status: bool = False
     
     
@@ -404,7 +404,7 @@ class WorkflowOrchestrator:
 
         sample_id = "imputed_sample"
         chrom_key = str(df["CHROM"].iloc[0])
-        out_path = os.path.join(self.environment_handler.output_dir, "imputed_qced.vcf")
+        out_path = os.path.join(f"{self.environment_handler.output_dir}", f"{chrom_key}_imputed_qced.vcf")
 
         with open(out_path, "w", encoding="utf-8", newline="") as f:
             # --- header ---

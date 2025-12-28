@@ -1,6 +1,6 @@
 import os
-from config import PLINK_PREFIX, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA, PLINK_1_9_MEMORY_MB
-from harmonizer_classes import EnvironmentHandler, DataContainer, WorkflowOrchestrator
+from config import PLINK_PREFIX, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA, PLINK_1_9_MEMORY_MB, ACCEPTED_VENDORS_DICT, GENOME_BUILD_DICT, PLINK_1_9_THREADS
+from harmonizer_classes import EnvironmentHandler, DataContainer, FileHandler, WorkflowOrchestrator
 import argparse
 
 
@@ -18,38 +18,38 @@ environment_handler = EnvironmentHandler(
     PLINK_PREFIX=PLINK_PREFIX,
     plink_reference_fasta=PLINK_REFERENCE_FASTA,
     pvar_ref_file=PVAR_REF_FILE,
-    plink_1_9_memory_mb=PLINK_1_9_MEMORY_MB
+    plink_1_9_memory_mb=PLINK_1_9_MEMORY_MB,
+    plink_1_9_threads=PLINK_1_9_THREADS
 )
 
+
+file_handler = FileHandler(
+    user_file=args.microarray_file,
+    accepted_vendors_dict=ACCEPTED_VENDORS_DICT,
+    genome_build_dict=GENOME_BUILD_DICT
+)
 
 data_container = DataContainer()
 
 workflow_orchestrator = WorkflowOrchestrator(
     environment_handler=environment_handler,
-    data_container=data_container
+    data_container=data_container,
+    file_handler=file_handler
 )
 
 
 #workflow_orchestrator.initiate_working_directory()
 print(f"Working directory initialized at: {workflow_orchestrator.environment_handler.output_dir}")
 
+workflow_orchestrator.set_vendor()
+workflow_orchestrator.set_genome_build()
 workflow_orchestrator.set_microarray_data()
+
 print("Microarray data set in data container:")
 print(workflow_orchestrator.data_container.microarray_data.head())
 
-workflow_orchestrator.create_user_snp_list()
-print("User SNP list created.")
 
-print("Extracting reference data...")
-workflow_orchestrator.extract_reference_data()
-workflow_orchestrator.data_container.reference_data = workflow_orchestrator.read_vcf_like_to_df()
-print("Reference data extracted and set in data container")
-
-print("Harmonizing data...")
-workflow_orchestrator.data_container.harmonize_data()
-print("Data harmonization complete. Harmonized data:")
-print(workflow_orchestrator.data_container.harmonization_stats)
-print(workflow_orchestrator.data_container.harmonized_data.head())
+workflow_orchestrator.run_harmonization_workflow() #harmonize data if is_forward_strand is false (not implemented yet) or skip if true
 
 print("Splitting harmonized data into chromosome-specific files...")
 workflow_orchestrator.create_harmonized_chromosome_files()

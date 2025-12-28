@@ -1,7 +1,5 @@
-# Large dependency files
-data pipeline/harmonizing_module/dependencies/all_phase3.pvar.zst
-data pipeline/harmonizing_module/dependencies/hs37d5.fa.zst
 data pipeline/imputation_module/big_dependencies
+data pipeline/harmonizing_module/big_dependencies
 data pipeline/.nextflow
 data pipeline/nextflow/.nextflow
 data pipeline/nextflow/results
