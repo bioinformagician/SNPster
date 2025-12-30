@@ -34,6 +34,8 @@ class DataContainer:
         df["chromosome"] = new_chrom
         df["position"]   = new_pos
         
+        print(df)
+        
         
 
 
@@ -170,7 +172,8 @@ class FileHandler:
             
             data = data[data['chromosome'].str.match("^[0-9]{1,2}$")]
             
-            
+            #rename # rsid to rsid
+            data = data.rename(columns={'# rsid': 'rsid'})
 
 
             return data

@@ -16,7 +16,8 @@ data_container = DataContainer()
 environment_handler = EnvironmentHandler(
     chain_file_dict=CHAIN_FILE_DICT,
     grch_to_hg_identifier_dict=GRCH_TO_HG_IDENTIFIER_DICT,
-    user_file = args.microarray_file
+    user_file = args.microarray_file,
+    output_dir = args.output_dir
 )
 
 
@@ -33,18 +34,13 @@ workflow_orchestrator = WorkflowOrchestrator(
     environment_handler=environment_handler
 )
 
-
+workflow_orchestrator.environment_handler.validate_environment()
 workflow_orchestrator.check_dictionary_coherence()
 workflow_orchestrator.evaluate_zipping()
 workflow_orchestrator.set_genome_build()
 workflow_orchestrator.set_vendor()
 workflow_orchestrator.set_microarray_data()
-
-print(workflow_orchestrator.data_container.microarray_data)
-
 workflow_orchestrator.evaluate_liftover()
+workflow_orchestrator.write_parquet_output()
 
 
-print(workflow_orchestrator.data_container.microarray_data)
-
-    

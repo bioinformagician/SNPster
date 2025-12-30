@@ -1,10 +1,10 @@
 import os
 
 
-TEST_FILE = os.getenv("TEST_FILES", r"C:\Users\frezz\Downloads\snpster\data pipeline\standardizer_module\dependencies\test_file\23andMe_Full_20140502164209.zip")
+TEST_FILE = os.getenv("TEST_FILE", r"C:\Users\frezz\Downloads\snpster\data pipeline\standardizer_module\dependencies\test_file\23andMe_Full_20140502164209.zip")
+HG18_TO_HG38_CHAIN_FILE = os.getenv("HG18_TO_HG38_CHAIN_FILE", r"C:\Users\frezz\Downloads\snpster\data pipeline\standardizer_module\dependencies\hg18ToHg38.over.chain.gz")
+HG19_TO_HG38_CHAIN_FILE = os.getenv("HG19_TO_HG38_CHAIN_FILE", r"C:\Users\frezz\Downloads\snpster\data pipeline\standardizer_module\dependencies\hg19ToHg38.over.chain.gz")
 
-HG18_TO_HG38_CHAIN_FILE = r"C:\Users\frezz\Downloads\snpster\data pipeline\standardizer_module\dependencies\hg18ToHg38.over.chain.gz"
-HG19_TO_HG38_CHAIN_FILE = r"C:\Users\frezz\Downloads\snpster\data pipeline\standardizer_module\dependencies\hg19ToHg38.over.chain.gz"
 
 ACCEPTED_VENDORS_DICT = { #setup is key = vendor and value = identifier substring
     '23andme': '23andme',
