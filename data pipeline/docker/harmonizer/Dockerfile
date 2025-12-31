@@ -9,7 +9,7 @@ WORKDIR /app
 # These three are baked into the image
 ENV PLINK_1_9_PATH=/app/dependencies/plink
 ENV PLINK_2_0_PATH=/app/dependencies/plink2
-ENV TEST_FILE=/app/dependencies/genome_Frederik_FangelTolberg_v5_Full_20241117223640.txt
+ENV TEST_FILE=/app/dependencies/standardized_microarray_data.parquet
 ENV PLINK_1_9_MEMORY_MB=1000
 ENV PLINK_1_9_THREADS=1
 
@@ -17,7 +17,7 @@ ENV PLINK_1_9_THREADS=1
 # We expect them to appear under /data via a volume mount at runtime.
 
 ENV PLINK_PREFIX=plink_temp
-ENV PLINK_REFERENCE_FASTA=/data/hs37d5.fa.zst
+ENV PLINK_REFERENCE_FASTA=/data/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
 ENV PVAR_REF_FILE=/data/all_phase3.pvar.zst
 
 # Copy and install Python requirements

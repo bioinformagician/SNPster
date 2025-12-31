@@ -1,5 +1,7 @@
 from data_models import DataContainer, FileHandler, pd, os
 from pyliftover import LiftOver
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 class EnvironmentHandler:
     
@@ -77,8 +79,29 @@ class WorkflowOrchestrator:
     
     def write_parquet_output(self) -> None:
         output_path = os.path.join(self.environment_handler.output_dir, "standardized_microarray_data.parquet")
-        self.data_container.microarray_data.to_parquet(output_path)
+        
+        # Convert DataFrame to PyArrow Table
+        table = pa.Table.from_pandas(self.data_container.microarray_data)
+        
+        # Add custom metadata
+        metadata = {
+            b'vendor': self.data_container.vendor.encode('utf-8'),
+            b'genome_build': self.data_container.genome_build.encode('utf-8'),
+            b'needs_harmonization': str(self.data_container.vendor in ['MyHeritage', 'AncestryDNA']).encode('utf-8')
+        }
+        
+        # Merge with existing schema metadata
+        existing_metadata = table.schema.metadata or {}
+        combined_metadata = {**existing_metadata, **metadata}
+        
+        # Create new schema with metadata
+        new_schema = table.schema.with_metadata(combined_metadata)
+        table = table.cast(new_schema)
+        
+        # Write parquet with metadata
+        pq.write_table(table, output_path)
         print(f"Standardized data written to {output_path}")
+        print(f"Metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, needs_harmonization={self.data_container.vendor in ['MyHeritage', 'AncestryDNA']}")
             
         
             

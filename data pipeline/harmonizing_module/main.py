@@ -1,6 +1,6 @@
 import os
-from config import PLINK_PREFIX, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA, PLINK_1_9_MEMORY_MB, ACCEPTED_VENDORS_DICT, GENOME_BUILD_DICT, PLINK_1_9_THREADS
-from harmonizer_classes import EnvironmentHandler, DataContainer, FileHandler, WorkflowOrchestrator
+from config import PLINK_PREFIX, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA, PLINK_1_9_MEMORY_MB, PLINK_1_9_THREADS
+from harmonizer_classes import EnvironmentHandler, DataContainer, WorkflowOrchestrator
 import argparse
 
 
@@ -23,31 +23,22 @@ environment_handler = EnvironmentHandler(
 )
 
 
-file_handler = FileHandler(
-    user_file=args.microarray_file,
-    accepted_vendors_dict=ACCEPTED_VENDORS_DICT,
-    genome_build_dict=GENOME_BUILD_DICT
-)
-
 data_container = DataContainer()
 
 workflow_orchestrator = WorkflowOrchestrator(
     environment_handler=environment_handler,
-    data_container=data_container,
-    file_handler=file_handler
+    data_container=data_container
 )
 
 
 #workflow_orchestrator.initiate_working_directory()
 print(f"Working directory initialized at: {workflow_orchestrator.environment_handler.output_dir}")
 
-workflow_orchestrator.set_vendor()
-workflow_orchestrator.set_genome_build()
-workflow_orchestrator.set_microarray_data()
+
+workflow_orchestrator.read_parquet()
 
 print("Microarray data set in data container:")
 print(workflow_orchestrator.data_container.microarray_data.head())
-
 
 workflow_orchestrator.run_harmonization_workflow() #harmonize data if is_forward_strand is false (not implemented yet) or skip if true
 

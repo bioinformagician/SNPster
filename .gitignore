@@ -4,4 +4,6 @@ data pipeline/.nextflow
 data pipeline/nextflow/.nextflow
 data pipeline/nextflow/results
 data pipeline/nextflow/work
+vcf_ref_files
+
 

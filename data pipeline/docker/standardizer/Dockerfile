@@ -9,7 +9,7 @@ WORKDIR /app
 # These three are baked into the image
 ENV HG18_TO_HG38_CHAIN_FILE=/app/dependencies/hg18ToHg38.over.chain.gz
 ENV HG19_TO_HG38_CHAIN_FILE=/app/dependencies/hg19ToHg38.over.chain.gz
-ENV TEST_FILE=/app/dependencies/test_file/23andMe.zip
+ENV TEST_FILE=/app/dependencies/test_file/genome_Frederik_FangelTolberg_v5_Full_20241117223640.txt
 
 
 

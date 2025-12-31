@@ -2,7 +2,7 @@ import os
 import subprocess
 import gzip
 from data_models import *
-
+import pyarrow.parquet as pq
 
 class EnvironmentHandler:
     def __init__(self,
@@ -68,21 +68,27 @@ class WorkflowOrchestrator:
     def __init__(self,
                     environment_handler: EnvironmentHandler,
                     data_container: DataContainer,
-                    file_handler: FileHandler
                     ):
         
         self.environment_handler = environment_handler
         self.data_container = data_container
-        self.file_handler = file_handler
 
-    def set_vendor(self) -> None:
-        self.data_container.vendor = self.file_handler.identify_vendor()
-    
-    def set_genome_build(self) -> None:
-        self.data_container.genome_build = self.file_handler.identify_genome_build()
-    
-    def set_microarray_data(self) -> pd.DataFrame:
-        self.data_container.microarray_data = self.file_handler.normalize_file()
+    def read_parquet(self) -> None:
+        
+        
+        # Read parquet file with metadata
+        parquet_file = pq.read_table(self.environment_handler.user_upload_file)
+        self.data_container.microarray_data = parquet_file.to_pandas()
+        
+        # Extract custom metadata from schema
+        metadata = parquet_file.schema.metadata
+
+        self.data_container.vendor = metadata[b'vendor'].decode('utf-8')
+        self.data_container.genome_build = metadata[b'genome_build'].decode('utf-8')
+        needs_harmonization = metadata[b'needs_harmonization'].decode('utf-8') == 'True'
+        self.data_container.is_forward_strand = not needs_harmonization
+        
+        print(f"Loaded parquet with metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, is_forward_strand={self.data_container.is_forward_strand}")
         
     def create_user_snp_list(self) -> None:
         user_snps_path = os.path.join(self.environment_handler.output_dir, "user_snps.txt")
@@ -222,7 +228,7 @@ class WorkflowOrchestrator:
                 command = [
                     self.environment_handler.plink_2_0_path,
                     "--bfile", filename,
-                    "--split-par", "b37", #hg38 for grch38 genome build 
+                    "--split-par", "b38", #hg38 for grch38 genome build 
                     "--fa", self.environment_handler.plink_reference_fasta,
                     "--ref-from-fa",
                     "--export", "vcf", "bgz",

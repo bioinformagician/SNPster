@@ -7,9 +7,9 @@ WORKDIR /app
 RUN mkdir -p /data
 
 COPY harmonizing_module/big_dependencies/all_phase3.pvar.zst /data/all_phase3.pvar.zst
-COPY harmonizing_module/big_dependencies/hs37d5.fa.zst /data/hs37d5.fa.zst
+COPY harmonizing_module/big_dependencies/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz /data/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
 
-ENV PLINK_REFERENCE_FASTA=/data/hs37d5.fa.zst
+ENV PLINK_REFERENCE_FASTA=/data/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
 ENV PVAR_REF_FILE=/data/all_phase3.pvar.zst
 ENV PLINK_PREFIX=plink_temp
 

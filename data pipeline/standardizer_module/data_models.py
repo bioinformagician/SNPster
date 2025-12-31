@@ -34,6 +34,12 @@ class DataContainer:
         df["chromosome"] = new_chrom
         df["position"]   = new_pos
         
+        # Filter to keep only standard chromosomes (1-22, X, Y, MT)
+        # This removes alternate contigs like chr14_GL000009v2_random
+        standard_chroms_pattern = "^([0-9]{1,2}|X|Y|MT)$"
+        df = df[df["chromosome"].str.match(standard_chroms_pattern, na=False)]
+        self.microarray_data = df
+        
         print(df)
         
         
@@ -172,8 +178,6 @@ class FileHandler:
             
             data = data[data['chromosome'].str.match("^[0-9]{1,2}$")]
             
-            #rename # rsid to rsid
-            data = data.rename(columns={'# rsid': 'rsid'})
 
 
             return data
