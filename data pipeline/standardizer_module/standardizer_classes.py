@@ -48,6 +48,10 @@ class WorkflowOrchestrator:
             if key not in self.file_handler.genome_build_dict.values():
                 raise ValueError(f"Genome build '{key}' in grch_to_hg_identifier_dict does not have a corresponding entry in file_handler.genome_build_dict")
         
+        for vendor in self.file_handler.forward_strand_vendors:
+            if vendor not in self.file_handler.accepted_vendors_dict.keys():
+                raise ValueError(f"Vendor '{vendor}' in forward_strand_vendors is not in accepted_vendors_dict")
+        
     def set_vendor(self) -> None:
         self.data_container.vendor = self.file_handler.identify_vendor()
         print(f"Identified vendor: {self.data_container.vendor}")
@@ -58,6 +62,11 @@ class WorkflowOrchestrator:
         
         if self.data_container.genome_build != 'GRCh38':
             self.data_container.lift_over = True
+    
+    def set_strand_direction(self) -> None:
+        if self.data_container.vendor is None:
+            raise ValueError("Vendor must be set before determining strand direction.")
+        self.data_container.is_forward_strand = self.data_container.vendor in self.file_handler.forward_strand_vendors
             
     
     def set_microarray_data(self) -> pd.DataFrame:
@@ -87,7 +96,7 @@ class WorkflowOrchestrator:
         metadata = {
             b'vendor': self.data_container.vendor.encode('utf-8'),
             b'genome_build': self.data_container.genome_build.encode('utf-8'),
-            b'needs_harmonization': str(self.data_container.vendor in ['MyHeritage', 'AncestryDNA']).encode('utf-8')
+            b'is_forward_strand': str(self.data_container.is_forward_strand).encode('utf-8')
         }
         
         # Merge with existing schema metadata
@@ -101,7 +110,7 @@ class WorkflowOrchestrator:
         # Write parquet with metadata
         pq.write_table(table, output_path)
         print(f"Standardized data written to {output_path}")
-        print(f"Metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, needs_harmonization={self.data_container.vendor in ['MyHeritage', 'AncestryDNA']}")
+        print(f"Metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, is_forward_strand={self.data_container.is_forward_strand}")
             
         
             

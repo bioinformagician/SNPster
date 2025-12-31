@@ -9,6 +9,7 @@ import zipfile
 class DataContainer:
     vendor: Optional[str] = None
     genome_build: Optional[str] = None
+    is_forward_strand: Optional[bool] = None
     lift_over: bool = False
     microarray_data: Optional[pd.DataFrame] = None
 
@@ -50,12 +51,14 @@ class FileHandler:
     def __init__(self, 
                  user_file: Optional[str],
                  accepted_vendors_dict: dict[str, str],
-                 genome_build_dict: dict[str, str]
+                 genome_build_dict: dict[str, str],
+                 forward_strand_vendors: list[str]
                  ):
         
         self.user_file = user_file
         self.accepted_vendors_dict = accepted_vendors_dict
         self.genome_build_dict = genome_build_dict
+        self.forward_strand_vendors = forward_strand_vendors
     
     def is_zipped_file(self) -> bool:
         return zipfile.is_zipfile(self.user_file)
@@ -101,6 +104,9 @@ class FileHandler:
                         return build_code
     
         raise ValueError("Genome build could not be identified from the file header.")
+    
+    
+        
     
     
     

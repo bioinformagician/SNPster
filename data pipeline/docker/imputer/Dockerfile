@@ -42,7 +42,7 @@ ENV DF_ENGINE=polars
 
 # These big files are NOT in the image.
 #expect them to appear under /data via a volume mount at runtime.
-ENV PLINK_MAP_DIR=/data/plink.GRCh37.map
+ENV PLINK_MAP_DIR=/data/plink.GRCh38.map
 ENV BEAGLE_REFERENCE_DIR=/data/beagle_references
 
 

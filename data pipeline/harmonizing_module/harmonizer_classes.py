@@ -85,8 +85,13 @@ class WorkflowOrchestrator:
 
         self.data_container.vendor = metadata[b'vendor'].decode('utf-8')
         self.data_container.genome_build = metadata[b'genome_build'].decode('utf-8')
-        needs_harmonization = metadata[b'needs_harmonization'].decode('utf-8') == 'True'
-        self.data_container.is_forward_strand = not needs_harmonization
+        
+        self.data_container.is_forward_strand = metadata[b'is_forward_strand'].decode('utf-8')
+        if self.data_container.is_forward_strand == 'True':
+            self.data_container.is_forward_strand = True
+        else:
+            self.data_container.is_forward_strand = False
+
         
         print(f"Loaded parquet with metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, is_forward_strand={self.data_container.is_forward_strand}")
         
@@ -252,7 +257,7 @@ class WorkflowOrchestrator:
         """In the future the genome build should also be evaluated to ensure proper harmonization"""
         
         if self.data_container.is_forward_strand is False:
-        
+            print("Data is not in forward strand orientation. Proceeding with harmonization workflow...")
             self.create_user_snp_list()
             print("User SNP list created.")
             print("Extracting reference data...")

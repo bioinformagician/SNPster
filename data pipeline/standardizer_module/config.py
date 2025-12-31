@@ -6,7 +6,7 @@ HG18_TO_HG38_CHAIN_FILE = os.getenv("HG18_TO_HG38_CHAIN_FILE", r"C:\Users\frezz\
 HG19_TO_HG38_CHAIN_FILE = os.getenv("HG19_TO_HG38_CHAIN_FILE", r"C:\Users\frezz\Downloads\snpster\data pipeline\standardizer_module\dependencies\hg19ToHg38.over.chain.gz")
 
 
-ACCEPTED_VENDORS_DICT = { #setup is key = vendor and value = identifier substring
+ACCEPTED_VENDORS_DICT = { #setup is key = vendor and value = identifier substring in user upload files
     '23andme': '23andme',
     'AncestryDNA': 'ancestry',
     'ftdna': 'ftdna',
@@ -15,6 +15,8 @@ ACCEPTED_VENDORS_DICT = { #setup is key = vendor and value = identifier substrin
     'SelfDecode': 'selfdecode',
     'Genes for Good': 'genesforgood',
 }
+
+FORWARD_STRAND_VENDORS = ['23andme', 'AncestryDNA', 'ftdna', 'MyHeritage', 'livingdna', 'SelfDecode', 'Genes for Good']
 
 GENOME_BUILD_DICT = {
     'build 38' : 'GRCh38',
