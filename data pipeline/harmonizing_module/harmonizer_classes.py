@@ -85,6 +85,7 @@ class WorkflowOrchestrator:
 
         self.data_container.vendor = metadata[b'vendor'].decode('utf-8')
         self.data_container.genome_build = metadata[b'genome_build'].decode('utf-8')
+        self.data_container.identifier = metadata[b'identifier'].decode('utf-8')
         
         self.data_container.is_forward_strand = metadata[b'is_forward_strand'].decode('utf-8')
         if self.data_container.is_forward_strand == 'True':
@@ -241,7 +242,7 @@ class WorkflowOrchestrator:
                 ]
                 
                 self.run_command(command)
-                output_vcf_files[chr_number] = rf"{filename}.vcf.gz"
+                output_vcf_files[chr_number] = rf"{filename}_{self.data_container.identifier}.vcf.gz"
 
                 
         self.environment_handler.vcf_file_paths = output_vcf_files

@@ -7,11 +7,11 @@ from config import TEST_FILE, ACCEPTED_VENDORS_DICT, GENOME_BUILD_DICT, CHAIN_FI
 parser = argparse.ArgumentParser()
 parser.add_argument('--output_dir', type=str, required=False, default=os.getcwd())
 parser.add_argument('--microarray_file', type=str, required=False, default = TEST_FILE, help='Path to the user microarray data file (e.g., 23andMe, Ancestry, Myheritage...).')
-
+parser. add_argument('--identifier', type=str, help='A unique identifier for the current standardization run (e.g., user ID or timestamp).', default=str(pd.Timestamp.now().timestamp()))
 args = parser.parse_args()
 
 
-data_container = DataContainer()
+data_container = DataContainer(identifier=args.identifier)
 
 environment_handler = EnvironmentHandler(
     chain_file_dict=CHAIN_FILE_DICT,

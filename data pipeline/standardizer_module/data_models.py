@@ -7,6 +7,7 @@ import zipfile
 
 @dataclass
 class DataContainer:
+    identifier: Optional[str] = None
     vendor: Optional[str] = None
     genome_build: Optional[str] = None
     is_forward_strand: Optional[bool] = None

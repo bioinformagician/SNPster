@@ -87,7 +87,7 @@ class WorkflowOrchestrator:
             self.environment_handler.user_file = unzipped_file
     
     def write_parquet_output(self) -> None:
-        output_path = os.path.join(self.environment_handler.output_dir, "standardized_microarray_data.parquet")
+        output_path = os.path.join(self.environment_handler.output_dir, f"standardized_microarray_data_user_{self.data_container.identifier}.parquet")
         
         # Convert DataFrame to PyArrow Table
         table = pa.Table.from_pandas(self.data_container.microarray_data)
@@ -96,7 +96,8 @@ class WorkflowOrchestrator:
         metadata = {
             b'vendor': self.data_container.vendor.encode('utf-8'),
             b'genome_build': self.data_container.genome_build.encode('utf-8'),
-            b'is_forward_strand': str(self.data_container.is_forward_strand).encode('utf-8')
+            b'is_forward_strand': str(self.data_container.is_forward_strand).encode('utf-8'),
+            b'identifier': str(self.data_container.identifier).encode('utf-8')
         }
         
         # Merge with existing schema metadata
@@ -110,7 +111,7 @@ class WorkflowOrchestrator:
         # Write parquet with metadata
         pq.write_table(table, output_path)
         print(f"Standardized data written to {output_path}")
-        print(f"Metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, is_forward_strand={self.data_container.is_forward_strand}")
+        print(f"Metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, is_forward_strand={self.data_container.is_forward_strand}, identifier={self.data_container.identifier}")
             
         
             
