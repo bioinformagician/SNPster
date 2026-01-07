@@ -12,8 +12,9 @@ PLINK_REFERENCE_FASTA = os.getenv(
 
 TEST_FILE = os.getenv(
     "TEST_FILE",
-    r"C:\Users\frezz\Downloads\snpster\data pipeline\harmonizing_module\dependencies\standardized_microarray_data.parquet",
+    r"C:\Users\frezz\Downloads\snpster\data pipeline\harmonizing_module\dependencies\standardized_microarray_data_user_20260107155118.parquet",
 )
+
 PVAR_REF_FILE = os.getenv(
     "PVAR_REF_FILE",
     r"C:\Users\frezz\Desktop\harmonizer_dependencies\all_phase3.pvar.zst",

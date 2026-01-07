@@ -204,7 +204,7 @@ class WorkflowOrchestrator:
             print(f"Converting file: {file} to BED format")
 
             filename = os.path.basename(file)
-            output_path = os.path.join(output_dir, f"{self.environment_handler.PLINK_PREFIX}_{filename.replace('.txt', '')}")
+            output_path = os.path.join(output_dir, f"{self.environment_handler.PLINK_PREFIX}_{filename.replace('.txt', '')}_{self.data_container.identifier}")
             
             command = [
                 self.environment_handler.plink_1_9_path,
@@ -229,7 +229,8 @@ class WorkflowOrchestrator:
         for chr_number, file in self.environment_handler.bed_file_paths.items():
                 print(f"Processing BED file: {file} to VCF format")
                 
-                filename = file.replace(".bed", "") #the extension is removed because the plink program will need the .bed, .bim, and .fam files, therefore we provide the generic filename. It will find all three files automatically from the generic filename 
+                filename = f"{file.replace(".bed", "")}" #the extension is removed because the plink program will need the .bed, .bim, and .fam files, therefore we provide the generic filename. It will find all three files automatically from the generic filename
+                 
                 """Convert PLINK binary files to VCF format using a reference genome."""
                 command = [
                     self.environment_handler.plink_2_0_path,
@@ -242,7 +243,7 @@ class WorkflowOrchestrator:
                 ]
                 
                 self.run_command(command)
-                output_vcf_files[chr_number] = rf"{filename}_{self.data_container.identifier}.vcf.gz"
+                output_vcf_files[chr_number] = rf"{filename}.vcf.gz"
 
                 
         self.environment_handler.vcf_file_paths = output_vcf_files
