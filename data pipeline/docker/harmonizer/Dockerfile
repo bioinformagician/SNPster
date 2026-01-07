@@ -9,7 +9,7 @@ WORKDIR /app
 # These three are baked into the image
 ENV PLINK_1_9_PATH=/app/dependencies/plink
 ENV PLINK_2_0_PATH=/app/dependencies/plink2
-ENV TEST_FILE=/app/dependencies/standardized_microarray_data.parquet
+ENV TEST_FILE=/app/dependencies/standardized_microarray_data_user_20260107155118.parquet
 ENV PLINK_1_9_MEMORY_MB=1000
 ENV PLINK_1_9_THREADS=1
 
