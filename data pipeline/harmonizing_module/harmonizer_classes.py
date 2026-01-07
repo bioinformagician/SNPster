@@ -209,7 +209,7 @@ class WorkflowOrchestrator:
             command = [
                 self.environment_handler.plink_1_9_path,
                 "--23file", file,
-                "FAM001", "ID001",
+                "FAM001", self.data_container.identifier,
                 "--memory", self.environment_handler.plink_1_9_memory_mb,
                 "--threads", self.environment_handler.plink_1_9_threads,
                 "--make-bed",
