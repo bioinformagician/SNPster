@@ -5,17 +5,38 @@ params.imputation_dependencies = "/mnt/c/Users/frezz/Desktop/imputer_dependencie
 params.genefile_dir     = "/mnt/c/Users/frezz/Desktop/microarray_data/testing"
 params.output_dir       = "/mnt/c/Users/frezz/Desktop/docker_testing/nf_output"
 
+
+
+
+process STANDARDIZE {
+
+    errorStrategy 'ignore'
+        
+    container 'standardizer:latest'
+    input:
+        path microarray_file
+    output:
+        path "*.parquet", emit: parquet_file
+    script:
+    """
+    python /app/main.py --microarray_file "${microarray_file}"
+    """
+}
+
+
+
+
 process HARMONIZE {
 
-    //errorStrategy 'ignore'
 
     publishDir params.output_dir, mode: 'copy', overwrite: true
 
-    container 'harmonizer:latest'
-    containerOptions "-v ${params.harmonizer_dependencies}:/data -v ${params.genefile_dir}:/input"
+    container 'harmonizer-full:latest'
+    //containerOptions "-v ${params.harmonizer_dependencies}:/data -v ${params.genefile_dir}:/input"
+    //containerOptions "-v ${params.genefile_dir}:/input"
 
     input:
-        path microarray_file
+        path parquet_file
     
     output:
         // 1) The files needed to be parsed to the imputer (named channel: vcfs)
@@ -41,7 +62,7 @@ process HARMONIZE {
 
     echo "===== RUNNING PYTHON ====="
 
-    python /app/main.py --microarray_file /input/"${microarray_file.getName()}"
+    python /app/main.py --microarray_file "${parquet_file}"
 
     echo "===== AFTER PYTHON ====="
     echo "Listing harmonization_results:"
@@ -111,7 +132,11 @@ process IMPUTE {
 workflow {
 
     microarray_ch = Channel.fromPath("${params.genefile_dir}/*")
+    standardized_ch = STANDARDIZE(microarray_ch)
+    harmonized_ch = HARMONIZE(standardized_ch.parquet_file)
+    IMPUTE(harmonized_ch.vcfs)
 
-    HARMONIZE(microarray_ch)
-    IMPUTE(HARMONIZE.out.vcfs)
+    /*STANDARDIZE(microarray_ch)
+    HARMONIZE(STANDARDIZE.out.parquet_file)
+    IMPUTE(HARMONIZE.out.vcfs)*/
 }

@@ -237,7 +237,7 @@ class WorkflowOrchestrator:
                     "--bfile", filename,
                     "--split-par", "b38", #hg38 for grch38 genome build 
                     "--fa", self.environment_handler.plink_reference_fasta,
-                    "--ref-from-fa",
+                    "--ref-from-fa", "force",
                     "--export", "vcf", "bgz",
                     "--out", rf"{filename}"
                 ]

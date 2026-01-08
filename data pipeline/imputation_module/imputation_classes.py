@@ -158,13 +158,14 @@ class EnvironmentHandler:
     
     def set_vcf_files(self) -> dict:
         vcf_files = {}
+        pattern = re.compile(r"_chr(1?\d|2[0-2])_")
+
         for file in os.listdir(self.vcf_files_dir):
             if file.endswith(".vcf.gz"):
-                chrom = re.search(r"chr(\d+)(?=\.vcf(?:\.gz)?$)", file)
-                if chrom:
-                    vcf_files[chrom.group(1)] = os.path.join(self.vcf_files_dir, file)
-        
-        #order dict keys
+                match = pattern.search(file)
+                if match:
+                    chrom = match.group(1)
+                    vcf_files[chrom] = os.path.join(self.vcf_files_dir, file)
         
         self.vcf_file_paths = vcf_files
     
