@@ -229,7 +229,7 @@ class WorkflowOrchestrator:
         for chr_number, file in self.environment_handler.bed_file_paths.items():
                 print(f"Processing BED file: {file} to VCF format")
                 
-                filename = f"{file.replace(".bed", "")}" #the extension is removed because the plink program will need the .bed, .bim, and .fam files, therefore we provide the generic filename. It will find all three files automatically from the generic filename
+                filename = file.replace(".bed", "") #the extension is removed because the plink program will need the .bed, .bim, and .fam files, therefore we provide the generic filename. It will find all three files automatically from the generic filename
                  
                 """Convert PLINK binary files to VCF format using a reference genome."""
                 command = [
