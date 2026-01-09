@@ -1,0 +1,86 @@
+Jan-09 18:28:24.952 [main] DEBUG nextflow.cli.Launcher - $> nextflow run nextflow/pipeline_orchestrator.nf --genefile_dir /mnt/c/Users/frezz/Desktop/genome_scraping/scraped_genomes/test
+Jan-09 18:28:25.057 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.10.0
+Jan-09 18:28:25.105 [main] DEBUG nextflow.config.ConfigBuilder - Found config base: /mnt/c/Users/frezz/SNPster/data pipeline/nextflow/nextflow.config
+Jan-09 18:28:25.108 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /mnt/c/Users/frezz/SNPster/data pipeline/nextflow/nextflow.config
+Jan-09 18:28:25.131 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Jan-09 18:28:25.547 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/tolberg/.nextflow/plugins; core-plugins: nf-amazon@3.4.1,nf-azure@1.20.2,nf-cloudcache@0.5.0,nf-codecommit@0.5.0,nf-console@1.3.0,nf-google@1.23.3,nf-k8s@1.2.2,nf-tower@1.17.1,nf-wave@1.16.1
+Jan-09 18:28:25.560 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jan-09 18:28:25.561 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jan-09 18:28:25.564 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Jan-09 18:28:25.579 [main] DEBUG nextflow.util.RetryConfig - Missing nextflow session - using default retry config
+Jan-09 18:28:25.738 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jan-09 18:28:25.740 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jan-09 18:28:25.740 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Jan-09 18:28:25.758 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/tolberg/.nextflow/secrets/store.json
+Jan-09 18:28:25.760 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@2fd954f] - activable => nextflow.secret.LocalSecretsProvider@2fd954f
+Jan-09 18:28:25.782 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 by global default
+Jan-09 18:28:25.800 [main] DEBUG nextflow.cli.CmdRun - Launching `nextflow/pipeline_orchestrator.nf` [loving_magritte] DSL2 - revision: e4129a0750
+Jan-09 18:28:25.848 [main] DEBUG nextflow.Session - Session UUID: 5109bc83-4a50-4b4a-bda9-619f2147615a
+Jan-09 18:28:25.848 [main] DEBUG nextflow.Session - Run name: loving_magritte
+Jan-09 18:28:25.849 [main] DEBUG nextflow.Session - Executor pool size: 15
+Jan-09 18:28:25.855 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Jan-09 18:28:25.860 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=45; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Jan-09 18:28:25.885 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 25.10.0 build 10289
+  Created: 22-10-2025 16:26 UTC (18:26 CEST)
+  System: Linux 6.6.87.2-microsoft-standard-WSL2
+  Runtime: Groovy 4.0.28 on OpenJDK 64-Bit Server VM 21.0.9+10-Ubuntu-124.04
+  Encoding: UTF-8 (UTF-8)
+  Process: 1633@BeefBox [127.0.1.1]
+  CPUs: 15 - Mem: 56.9 GB (5.7 GB) - Swap: 16 GB (16 GB)
+Jan-09 18:28:25.920 [main] DEBUG nextflow.Session - Work-dir: /home/tolberg/nf_work [ext2/ext3]
+Jan-09 18:28:25.921 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /mnt/c/Users/frezz/SNPster/data pipeline/nextflow/bin
+Jan-09 18:28:25.928 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jan-09 18:28:25.937 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Jan-09 18:28:25.940 [main] DEBUG nextflow.Session - Observer factory (v2): DefaultObserverFactory
+Jan-09 18:28:25.976 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Jan-09 18:28:25.985 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 16; maxThreads: 1000
+Jan-09 18:28:26.095 [main] DEBUG nextflow.Session - Session start
+Jan-09 18:28:26.314 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jan-09 18:28:26.409 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:STANDARDIZE` matches process STANDARDIZE
+Jan-09 18:28:26.411 [main] WARN  n.script.dsl.ProcessConfigBuilder - Unknown directive `queueSize` for process `STANDARDIZE`
+Jan-09 18:28:26.417 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jan-09 18:28:26.417 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jan-09 18:28:26.425 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Jan-09 18:28:26.431 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=15; memory=56.9 GB; capacity=15; pollInterval=100ms; dumpInterval=5m
+Jan-09 18:28:26.434 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Jan-09 18:28:26.455 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'STANDARDIZE': maxForks=1; fair=false; array=0
+Jan-09 18:28:26.487 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:HARMONIZE` matches process HARMONIZE
+Jan-09 18:28:26.488 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jan-09 18:28:26.488 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jan-09 18:28:26.489 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'HARMONIZE': maxForks=0; fair=false; array=0
+Jan-09 18:28:26.491 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:IMPUTE` matches process IMPUTE
+Jan-09 18:28:26.492 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jan-09 18:28:26.492 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jan-09 18:28:26.493 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'IMPUTE': maxForks=0; fair=false; array=0
+Jan-09 18:28:26.495 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: STANDARDIZE, HARMONIZE, IMPUTE
+Jan-09 18:28:26.497 [main] DEBUG nextflow.Session - Igniting dataflow network (4)
+Jan-09 18:28:26.501 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > STANDARDIZE
+Jan-09 18:28:26.502 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: /mnt/c/Users/frezz/Desktop/genome_scraping/scraped_genomes/test/; pattern: *; options: [:]
+Jan-09 18:28:26.503 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > HARMONIZE
+Jan-09 18:28:26.503 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > IMPUTE
+Jan-09 18:28:26.504 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_f4565a756652838f: /mnt/c/Users/frezz/SNPster/data pipeline/nextflow/pipeline_orchestrator.nf
+Jan-09 18:28:26.505 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Jan-09 18:28:26.505 [main] DEBUG nextflow.Session - Session await
+Jan-09 18:28:26.657 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jan-09 18:28:26.661 [Task submitter] INFO  nextflow.Session - [1c/822bfe] Submitted process > STANDARDIZE (1)
+Jan-09 18:28:34.543 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: STANDARDIZE (1); status: COMPLETED; exit: 0; error: -; workDir: /home/tolberg/nf_work/1c/822bfe259f26189afed2ac4aa4ed72]
+Jan-09 18:28:34.544 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=45; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Jan-09 18:28:34.573 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jan-09 18:28:34.574 [Task submitter] INFO  nextflow.Session - [bf/179866] Submitted process > HARMONIZE (1)
+Jan-09 18:30:23.818 [SIGINT handler] DEBUG nextflow.Session - Session aborted -- Cause: SIGINT
+Jan-09 18:30:23.831 [SIGINT handler] DEBUG nextflow.Session - The following nodes are still active:
+[process] IMPUTE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: vcf_files
+  port 1: (cntrl) -     ; channel: $
+
+Jan-09 18:30:23.837 [SIGINT handler] WARN  n.processor.TaskPollingMonitor - Killing running tasks (1)
+Jan-09 18:30:23.851 [SIGINT handler] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=1; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=1; succeedDuration=39s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=1; peakCpus=10; peakMemory=0; ]
+Jan-09 18:30:23.859 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Jan-09 18:30:24.025 [main] DEBUG nextflow.Session - Session await > all processes finished
+Jan-09 18:30:24.026 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Jan-09 18:30:24.028 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=1; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=1; succeedDuration=39s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=1; peakCpus=10; peakMemory=0; ]
+Jan-09 18:30:24.036 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Jan-09 18:30:24.059 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
