@@ -23,6 +23,7 @@ class DataContainer:
     qc_thresholds: QCThresholds = QCThresholds(None, None, False, False)
     imputed_data: pd.DataFrame = None
     qc_status: bool = False
+    user_id: str = None
     
     
 
@@ -562,11 +563,45 @@ class WorkflowOrchestrator:
             on="chromosome_number",
             how="inner"
         )
-        
+    
 
         
         self.environment_handler.vcf_plink_reference_mapping = mapping_df
+        
+        
+    def set_user_id_from_vcf(self) -> None:
+        vcf_file = self.environment_handler.vcf_file_paths["22"]  # smallest chr
+        opener = gzip.open if vcf_file.endswith(".gz") else open
 
+        with opener(vcf_file, "rt") as f:  # <-- text mode
+            for line in f:
+                if line.startswith("#CHROM"):
+                    sample_id = line.rstrip("\n").split("\t")[-1]
+                    self.data_container.user_id = sample_id.split("_", 1)[1]
+                    break
+        
+        
+    
+    def create_samplesheet(self) -> None:
+        
+        base_vcf_name = os.path.basename(
+            list(self.environment_handler.vcf_file_paths.values())[0]
+        )
+        
+        chr_numbers = list(self.environment_handler.vcf_file_paths.keys())
+
+        samplesheet_df = pd.DataFrame({
+            "sampleset": self.data_container.user_id,
+            "path_prefix": base_vcf_name,
+            "chrom": chr_numbers,
+            "format": "vcf",
+        })
+        
+        samplesheet_df.to_csv(
+            os.path.join(self.environment_handler.imputed_dir, "samplesheet.csv"),
+            index=False
+        )
+        
     
 
 

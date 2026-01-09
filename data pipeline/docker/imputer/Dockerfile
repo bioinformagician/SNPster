@@ -51,7 +51,7 @@ ENV BEAGLE_REFERENCE_DIR=/data/beagle_references
 ENV VCF_FILES_DIR=/app/dependencies/test_data
 
 # Output directory for imputed results
-ENV OUTPUT_DIR=/output
+ENV OUTPUT_DIR=app/output
 
 # Run your script
 CMD ["python", "main.py"]

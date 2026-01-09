@@ -29,7 +29,7 @@ process STANDARDIZE {
 process HARMONIZE {
 
 
-    publishDir params.output_dir, mode: 'copy', overwrite: true
+    //publishDir params.output_dir, mode: 'copy', overwrite: true only for testing
 
     container 'harmonizer-full:latest'
     //containerOptions "-v ${params.harmonizer_dependencies}:/data -v ${params.genefile_dir}:/input"
@@ -44,32 +44,9 @@ process HARMONIZE {
 
     script:
     """
-    echo "===== DEBUG START ====="
-    echo "PWD:"
-    pwd
-
-    echo "Listing here:"
-    ls -lah
-
-    echo "Listing /app:"
-    ls -lah /app || true
-
-    echo "Listing /input:"
-    ls -lah /input || true
-
-    echo "Listing /data:"
-    ls -lah /data || true
-
-    echo "===== RUNNING PYTHON ====="
 
     python /app/main.py --microarray_file "${parquet_file}"
 
-    echo "===== AFTER PYTHON ====="
-    echo "Listing harmonization_results:"
-    ls -lah harmonization_results || true
-
-    echo "Listing bed_files:"
-    ls -lah bed_files || true
     """
 }
 
@@ -78,9 +55,7 @@ process HARMONIZE {
 
 process IMPUTE {
 
-    debug true  // Print stdout/stderr in real-time
-
-    publishDir "${params.output_dir}/impute", mode: 'copy', overwrite: true
+    publishDir "${params.output_dir}", mode: 'copy'
 
     container 'imputer-full:latest'
 
@@ -99,32 +74,14 @@ process IMPUTE {
 
     output:
 
-        path 'imputed/*.vcf.gz', optional: true
+        path 'output/*.vcf', emit: imputed_vcfs //might have to be just /*.vcf.gz depending on where imputer writes files
+        path 'output/*.csv', emit: samplesheet
 
     script:
     """
-    echo "===== IMPUTE START ====="
-    echo "PWD:"
-    pwd
 
-    echo "Listing /data:"
-    ls -lah /data || true
-
-    echo "Listing /work:"
-    ls -lah /work || true
-
-    echo "===== RUNNING IMPUTER ====="
-
-    # VCF files are staged in PWD by Nextflow
-    # Pass current directory as the vcf_files location
     python /app/main.py --vcf_files .
 
-    echo "===== AFTER IMPUTER ====="
-    echo "Listing /work:"
-    ls -lah /work || true
-
-    echo "Listing possible impute output dir:"
-    ls -lah /work/impute_results || true
     """
 }
 

@@ -42,8 +42,12 @@ orchestrator = WorkflowOrchestrator(
 )
 
 
+orchestrator.set_user_id_from_vcf()
+
 orchestrator.impute_vcf_files()
 
 orchestrator.run_qc_on_imputed_data(args.df_engine)
+
+orchestrator.create_samplesheet()
 
 print("Imputation and QC pipeline completed successfully.")
