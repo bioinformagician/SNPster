@@ -586,15 +586,18 @@ class WorkflowOrchestrator:
     
     def create_samplesheet(self) -> None:
         
-        base_vcf_name = os.path.basename(
-            list(self.environment_handler.vcf_file_paths.values())[0]
-        )
+        vcf_paths= list(self.environment_handler.qc_imputed_files.values())
         
-        chr_numbers = list(self.environment_handler.vcf_file_paths.keys())
+        vcf_filenames = [os.path.basename(path) for path in vcf_paths]
+        
+        vcf_base_names = [name.split(".", 1)[0] for name in vcf_filenames]
+        
+        
+        chr_numbers = list(self.environment_handler.qc_imputed_files.keys())
 
         samplesheet_df = pd.DataFrame({
             "sampleset": self.data_container.user_id,
-            "path_prefix": base_vcf_name,
+            "path_prefix": vcf_base_names,
             "chrom": chr_numbers,
             "format": "vcf",
         })
