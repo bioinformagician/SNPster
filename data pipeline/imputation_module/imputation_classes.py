@@ -179,11 +179,13 @@ class EnvironmentHandler:
 
     def validate_paths(self) -> None:
         
+        # Create output directory if it doesn't exist
+        os.makedirs(self.output_dir, exist_ok=True)
+        
         for path in [
             self.working_dir,
             self.java_exe,
             self.beagle_jar,
-            self.output_dir,
             self.beagle_reference_dir,
             self.plink_map_dir,
             self.vcf_files_dir
@@ -406,7 +408,7 @@ class WorkflowOrchestrator:
 
         sample_id = "imputed_sample"
         chrom_key = str(df["CHROM"].iloc[0])
-        out_path = os.path.join(f"{self.environment_handler.output_dir}", f"{chrom_key}_imputed_qced.vcf")
+        out_path = os.path.join(f"{self.environment_handler.output_dir}", f"chr{chrom_key}_imputed_qced_{self.data_container.user_id}.vcf")
 
         with open(out_path, "w", encoding="utf-8", newline="") as f:
             # --- header ---
@@ -598,7 +600,7 @@ class WorkflowOrchestrator:
         })
         
         samplesheet_df.to_csv(
-            os.path.join(self.environment_handler.imputed_dir, "samplesheet.csv"),
+            os.path.join(self.environment_handler.output_dir, "samplesheet.csv"),
             index=False
         )
         

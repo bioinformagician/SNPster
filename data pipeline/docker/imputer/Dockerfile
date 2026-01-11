@@ -23,7 +23,6 @@ COPY imputation_module/dependencies/test_data ./dependencies/test_data
 
 # Create directories for volume mounts
 RUN mkdir -p /data /work /output
-
 # ---- Paths *inside the container* ----
 # Beagle JAR is baked into the image at /app/dependencies/
 
@@ -51,7 +50,7 @@ ENV BEAGLE_REFERENCE_DIR=/data/beagle_references
 ENV VCF_FILES_DIR=/app/dependencies/test_data
 
 # Output directory for imputed results
-ENV OUTPUT_DIR=app/output
+ENV OUTPUT_DIR=output
 
 # Run your script
 CMD ["python", "main.py"]

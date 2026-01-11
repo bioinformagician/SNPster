@@ -57,7 +57,7 @@ process IMPUTE {
 
     publishDir "${params.output_dir}", mode: 'copy'
 
-    container 'imputer-full:latest'
+    container 'imputer:latest'
 
     
     //for when mounting huge dependencies as volumes
@@ -65,7 +65,7 @@ process IMPUTE {
 
     // when the dependencies are baked into the image
     //containerOptions "-v ${params.output_dir}:/work --memory=12g"
-    containerOptions "--memory=10g"
+    containerOptions "-v${params.imputation_dependencies}:/data"
 
 
     input:
