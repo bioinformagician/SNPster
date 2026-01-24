@@ -2,7 +2,7 @@
 
 params.harmonizer_dependencies = "/mnt/c/Users/frezz/Desktop/harmonizer_dependencies"
 params.imputation_dependencies = "/mnt/c/Users/frezz/Desktop/imputer_dependencies"
-params.genefile_dir     = "/mnt/c/Users/frezz/Desktop/microarray_data/testing"
+params.genefile_dir     = "/mnt/c/Users/frezz/Desktop/genome_scraping/scraped_genomes/test"
 params.output_dir       = "/mnt/c/Users/frezz/Desktop/docker_testing/nf_output"
 
 
@@ -10,7 +10,7 @@ params.output_dir       = "/mnt/c/Users/frezz/Desktop/docker_testing/nf_output"
 
 process STANDARDIZE {
 
-    errorStrategy 'ignore'
+    //errorStrategy 'ignore'
         
     container 'standardizer:latest'
     input:
@@ -31,8 +31,8 @@ process HARMONIZE {
 
     //publishDir params.output_dir, mode: 'copy', overwrite: true only for testing
 
-    container 'harmonizer-full:latest'
-    //containerOptions "-v ${params.harmonizer_dependencies}:/data -v ${params.genefile_dir}:/input"
+    container 'harmonizer:latest'
+    containerOptions "-v ${params.harmonizer_dependencies}:/data"
     //containerOptions "-v ${params.genefile_dir}:/input"
 
     input:
@@ -74,7 +74,8 @@ process IMPUTE {
 
     output:
 
-        path 'output/*.vcf', emit: imputed_vcfs //might have to be just /*.vcf.gz depending on where imputer writes files
+        path 'imputed/*.vcf.gz', emit: imputed_vcfs, optional: true
+        path 'output/*.vcf*', emit: output_vcfs, optional: true  
         path 'output/*.csv', emit: samplesheet
 
     script:
