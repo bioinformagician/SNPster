@@ -58,6 +58,13 @@ class EnvironmentHandler:
         ]:
             if not os.path.exists(path):
                 raise FileNotFoundError(f"Required path does not exist: {path}")
+        
+        for binary_path in [self.plink_1_9_path, self.plink_2_0_path]:
+            if os.path.isfile(binary_path) and not os.access(binary_path, os.X_OK):
+                try:
+                    os.chmod(binary_path, os.stat(binary_path).st_mode | 0o111)
+                except PermissionError:
+                    pass
     
     
         
@@ -127,6 +134,11 @@ class WorkflowOrchestrator:
     def run_command(self, command: list[str]) -> None:
         """Run a command in the subprocess and handle errors."""
         try:
+            if command and os.path.isfile(command[0]) and not os.access(command[0], os.X_OK):
+                try:
+                    os.chmod(command[0], os.stat(command[0]).st_mode | 0o111)
+                except PermissionError:
+                    pass
             print(f"Running command: {' '.join(command)}")
             result = subprocess.run(command, check=True, capture_output=True, text=True)
             print(result.stdout)

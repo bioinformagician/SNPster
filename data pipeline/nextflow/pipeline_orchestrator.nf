@@ -1,9 +1,14 @@
 #!/usr/bin/env nextflow
 
-params.harmonizer_dependencies = "/mnt/c/Users/frezz/Desktop/harmonizer_dependencies"
-params.imputation_dependencies = "/mnt/c/Users/frezz/Desktop/imputer_dependencies"
-params.genefile_dir     = "/mnt/c/Users/frezz/Desktop/genome_scraping/scraped_genomes/test"
-params.output_dir       = "/mnt/c/Users/frezz/Desktop/docker_testing/nf_output"
+//params.harmonizer_dependencies = "/mnt/c/Users/frezz/Desktop/harmonizer_dependencies"
+//params.imputation_dependencies = "/mnt/c/Users/frezz/Desktop/imputer_dependencies"
+//params.genefile_dir     = "/mnt/c/Users/frezz/Desktop/genome_scraping/scraped_genomes/test"
+//params.output_dir       = "/mnt/c/Users/frezz/Desktop/docker_testing/nf_output"
+
+params.harmonizer_dependencies = "/home/frederik/shared_drive/snpster_dependencies/harmonizer_dependencies"
+params.imputation_dependencies = "/home/frederik/shared_drive/snpster_dependencies/imputer_dependencies"
+params.genefile_dir     = "/home/frederik/snpster_project/test_run"
+params.output_dir       = "/home/frederik/snpster_project/nf_output"
 
 
 
@@ -55,7 +60,7 @@ process HARMONIZE {
 
 process IMPUTE {
 
-    publishDir "${params.output_dir}", mode: 'copy'
+    publishDir { "${params.output_dir}/${vcf_files[0].baseName}_${workflow.start.format('yyyyMMddHHmmss')}" }, mode: 'copy' // create sub folder in output dir for each imputation run
 
     container 'imputer:latest'
 
@@ -65,7 +70,7 @@ process IMPUTE {
 
     // when the dependencies are baked into the image
     //containerOptions "-v ${params.output_dir}:/work --memory=12g"
-    containerOptions "-v${params.imputation_dependencies}:/data"
+    containerOptions "-v${params.imputation_dependencies}:/data -e HEAP_GB=8"
 
 
     input:
@@ -89,7 +94,7 @@ process IMPUTE {
 
 workflow {
 
-    microarray_ch = Channel.fromPath("${params.genefile_dir}/*")
+    microarray_ch = channel.fromPath("${params.genefile_dir}/*")
     standardized_ch = STANDARDIZE(microarray_ch)
     harmonized_ch = HARMONIZE(standardized_ch.parquet_file)
     IMPUTE(harmonized_ch.vcfs)

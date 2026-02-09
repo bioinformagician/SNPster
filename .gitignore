@@ -1,6 +1,7 @@
 data pipeline/imputation_module/big_dependencies
 data pipeline/harmonizing_module/big_dependencies
 data pipeline/.nextflow
+data pipeline/nextflow/.nextflow*
 data pipeline/nextflow/.nextflow
 data pipeline/nextflow/results
 data pipeline/nextflow/work
