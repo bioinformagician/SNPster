@@ -3,11 +3,15 @@ import argparse
 import os
 from config import TEST_FILE, ACCEPTED_VENDORS_DICT, GENOME_BUILD_DICT, CHAIN_FILE_DICT, GRCH_TO_HG_IDENTIFIER_DICT, FORWARD_STRAND_VENDORS
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--output_dir', type=str, required=False, default=os.getcwd())
 parser.add_argument('--microarray_file', type=str, required=False, default = TEST_FILE, help='Path to the user microarray data file (e.g., 23andMe, Ancestry, Myheritage...).')
-parser. add_argument('--identifier', type=str, help='A unique identifier for the current standardization run (e.g., user ID or timestamp).', default=str(pd.Timestamp.now().strftime("%Y%m%d%H%M%S"))) #human readable timestamp with seconds
+parser.add_argument(
+    '--identifier',
+    type=str,
+    help='A unique identifier for the current standardization run (e.g., user ID or timestamp).',
+    default=f"{pd.Timestamp.now().strftime('%Y%m%d%H%M%S')}_{os.urandom(8).hex()}",
+)
 
 args = parser.parse_args()
 
@@ -45,5 +49,6 @@ workflow_orchestrator.set_strand_direction()
 workflow_orchestrator.set_microarray_data()
 workflow_orchestrator.evaluate_liftover()
 workflow_orchestrator.write_parquet_output()
+workflow_orchestrator.write_meta_data_output()
 
 

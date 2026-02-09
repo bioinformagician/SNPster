@@ -60,36 +60,28 @@ process HARMONIZE {
 
 process IMPUTE {
 
-    publishDir { "${params.output_dir}/${vcf_files[0].baseName}_${workflow.start.format('yyyyMMddHHmmss')}" }, mode: 'copy' // create sub folder in output dir for each imputation run
+  publishDir params.output_dir, mode: 'copy'
 
-    container 'imputer:latest'
+  container 'imputer:latest'
+  containerOptions "-v ${params.imputation_dependencies}:/data -e HEAP_GB=8"
 
-    
-    //for when mounting huge dependencies as volumes
-    //containerOptions "-v ${params.imputation_dependencies}:/data -v ${params.output_dir}:/work --memory=12g"
+  input:
+    path vcf_files
 
-    // when the dependencies are baked into the image
-    //containerOptions "-v ${params.output_dir}:/work --memory=12g"
-    containerOptions "-v${params.imputation_dependencies}:/data -e HEAP_GB=8"
+  output:
+    path 'user_id_*', type: 'dir'
 
+  script:
+  """
+  python /app/main.py --vcf_files .
 
-    input:
-        path vcf_files
-
-
-    output:
-
-        path 'imputed/*.vcf.gz', emit: imputed_vcfs, optional: true
-        path 'output/*.vcf*', emit: output_vcfs, optional: true  
-        path 'output/*.csv', emit: samplesheet
-
-    script:
-    """
-
-    python /app/main.py --vcf_files .
-
-    """
+  # extract the single nested output directory and bring it to task root
+  cp -a output/* .
+  """
 }
+
+
+
 
 
 workflow {

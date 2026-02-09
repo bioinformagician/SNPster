@@ -135,7 +135,7 @@ class EnvironmentHandler:
         self.set_beagle_files()
         self.set_plink_map_files()
         self.set_vcf_files()
-        
+
         
     def set_beagle_files(self) -> dict:
         beagle_files = {}
@@ -215,7 +215,12 @@ class WorkflowOrchestrator:
                 f"Error running command: {' '.join(command)}\n{e.stderr}"
             )
 
-
+    def make_result_subdir(self) -> None:
+        result_dir = os.path.join(self.environment_handler.output_dir, f"user_id_{self.data_container.user_id}")
+        os.makedirs(result_dir, exist_ok=False)
+        
+        self.environment_handler.output_dir = result_dir
+        print(f"Created result directory: {result_dir}")
 
 
     def impute_data(self, gt_vcf: str, map_file: str,

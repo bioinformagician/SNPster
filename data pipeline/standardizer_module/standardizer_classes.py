@@ -112,7 +112,16 @@ class WorkflowOrchestrator:
         pq.write_table(table, output_path)
         print(f"Standardized data written to {output_path}")
         print(f"Metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, is_forward_strand={self.data_container.is_forward_strand}, identifier={self.data_container.identifier}")
-            
+    
+    
+    def write_meta_data_output(self) -> None:
+        meta_data_path = os.path.join(self.environment_handler.output_dir, f"metadata_user_{self.data_container.identifier}.txt")
+        with open(meta_data_path, 'w') as f:
+            f.write(f"Vendor: {self.data_container.vendor}\n")
+            f.write(f"Genome Build: {self.data_container.genome_build}\n")
+            f.write(f"Is Forward Strand: {self.data_container.is_forward_strand}\n")
+            f.write(f"Identifier: {self.data_container.identifier}\n")
+        print(f"Metadata written to {meta_data_path}")
         
             
         
