@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/*
 
 # apptainer/singularity so i can use pgs pipeline from prs catalog inside container (to avoid docker in docker issues)
+ARG APPTAINER_VER=1.4.5
 RUN set -eux; \
     cd /tmp; \
     wget -q https://github.com/apptainer/apptainer/releases/download/v${APPTAINER_VER}/apptainer_${APPTAINER_VER}_amd64.deb; \
