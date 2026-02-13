@@ -27,8 +27,8 @@ class PGSCalculator_Config:
     
     def set_pgs_id_str(self):
         
-        with open('myfile.txt') as f:
-            first_line = f.readline()
+        with open(self.environment_handler.pgs_id_file) as f:
+            first_line = f.readline().strip()
         
         #check if pgs substring contained in first line
         if 'PGS' not in first_line:
@@ -59,12 +59,13 @@ class PGSCalculator:
         
         command = [
             "nextflow", "run", "pgscatalog/pgsc_calc",
-            "-profile", "docker",
+            "-profile", "singularity",
             "--input", self.environment_handler.samplesheet_path,
             "--target_build", self.pgscalculator_config.target_build,
             "--pgs_id", self.pgscalculator_config.pgs_id_str,
             "--run_ancestry", self.environment_handler.reference_data_path,
-            "--outdir", self.environment_handler.output_dir
+            "--outdir", self.environment_handler.output_dir,
+            "--min_overlap", "0.5"
         ]
         
         try:
