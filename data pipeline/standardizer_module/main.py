@@ -10,7 +10,7 @@ parser.add_argument(
     '--identifier',
     type=str,
     help='A unique identifier for the current standardization run (e.g., user ID or timestamp).',
-    default=f"{pd.Timestamp.now().strftime('%Y%m%d%H%M%S')}_{os.urandom(8).hex()}",
+    default=f"{pd.Timestamp.now().strftime('%Y%m%d%H%M%S')}-{os.urandom(8).hex()}",
 )
 
 args = parser.parse_args()

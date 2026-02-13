@@ -216,7 +216,7 @@ class WorkflowOrchestrator:
             )
 
     def make_result_subdir(self) -> None:
-        result_dir = os.path.join(self.environment_handler.output_dir, f"user_id_{self.data_container.user_id}")
+        result_dir = os.path.join(self.environment_handler.output_dir, f"user-id-{self.data_container.user_id}")
         os.makedirs(result_dir, exist_ok=False)
         
         self.environment_handler.output_dir = result_dir

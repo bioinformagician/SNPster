@@ -10,8 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fuse3 libfuse3-3 \
  && rm -rf /var/lib/apt/lists/*
 
-# ---- install Apptainer from official release .deb ----
-ARG APPTAINER_VER=1.4.5
+# apptainer/singularity so i can use pgs pipeline from prs catalog inside container (to avoid docker in docker issues)
 RUN set -eux; \
     cd /tmp; \
     wget -q https://github.com/apptainer/apptainer/releases/download/v${APPTAINER_VER}/apptainer_${APPTAINER_VER}_amd64.deb; \
@@ -21,7 +20,7 @@ RUN set -eux; \
     rm -f /tmp/apptainer_*.deb; \
     rm -rf /var/lib/apt/lists/*
 
-# ---- install Nextflow ----
+# nextflow
 RUN curl -s https://get.nextflow.io | bash && \
     mv nextflow /usr/local/bin/ && \
     chmod +x /usr/local/bin/nextflow
