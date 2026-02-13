@@ -4,7 +4,7 @@ import argparse
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--low_memory', type=str, required=False, default="false")
+parser.add_argument('--low_memory', type=str, required=False, default="false") #setting it true only saved about 4gb but increases computational time x3 min
 
 args = parser.parse_args()
 
