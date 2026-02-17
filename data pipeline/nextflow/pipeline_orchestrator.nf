@@ -69,7 +69,7 @@ process IMPUTE {
     path vcf_files
 
   output:
-    path 'user_id_*', type: 'dir'
+    path 'user-id-*', type: 'dir'
 
   script:
   """

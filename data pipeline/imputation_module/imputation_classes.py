@@ -398,7 +398,7 @@ class WorkflowOrchestrator:
         
         
         
-    def write_pandas_to_vcf(self, chunk_size: int = 200_000) -> None:
+    def write_pandas_to_vcf(self, chunk_size: int = 1000000) -> None:
         """
         Stream-write imputed_data to a single 1-sample VCF file in chunks.
         Much lower peak RAM than building a full string 'body' DataFrame.
@@ -425,7 +425,7 @@ class WorkflowOrchestrator:
             f.write('##FORMAT=<ID=DS,Number=1,Type=Float,Description="Dosage of ALT allele">\n')
             f.write('##FORMAT=<ID=GP,Number=3,Type=Float,Description="Genotype probabilities for 0/0,0/1,1/1">\n')
             f.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t" + sample_id + "\n")
-
+            
             n = len(df)
             for start in range(0, n, chunk_size):
                 chunk = df.iloc[start:start + chunk_size]
@@ -501,7 +501,7 @@ class WorkflowOrchestrator:
                     "FILTER": filter_col,
                     "INFO": info,
                     "FORMAT": format_col,
-                    sample_id: sample_col,
+                    "sample_id": sample_col,
                 })
 
                 out_df.to_csv(f, sep="\t", index=False, header=False)
@@ -509,7 +509,6 @@ class WorkflowOrchestrator:
         self.environment_handler.qc_imputed_files[chrom_key] = out_path
         print(f"Wrote QC'ed imputed data to {out_path}")
 
-        
         
 
 

@@ -1,0 +1,8 @@
+docker/data/pgdata
+docker/data/pgdata/**
+docker/data/**
+*.db
+*.sqlite
+*.log
+__pycache__/
+.git/
