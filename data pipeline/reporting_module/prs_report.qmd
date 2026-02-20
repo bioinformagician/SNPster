@@ -1,0 +1,129 @@
+---
+title: "My Analysis"
+format: html
+jupyter: python3
+execute:
+  python: "/home/frederik/github_projects/SNPster/.venv/bin/python"
+
+---
+
+## Load data
+
+```{python}
+from IPython.display import display
+import pandas as pd
+
+df = pd.read_csv(
+    "/home/frederik/github_projects/SNPster/data pipeline/reporting_module/data/multiple_pgs_scores_example.zip",
+    compression="zip", sep="\t"
+)
+
+#get metadata
+
+meta_data = pd.read_excel(
+    "/home/frederik/github_projects/SNPster/data pipeline/reporting_module/data/pgs_all_metadata.xlsx", sheet_name="Scores"
+)
+
+publications_meta_data = pd.read_excel(
+    "/home/frederik/github_projects/SNPster/data pipeline/reporting_module/data/pgs_all_metadata.xlsx", sheet_name="Publications"
+)   
+
+
+
+
+display(df.head())
+display(meta_data.head())
+display(publications_meta_data.head())
+
+```
+
+
+## Prepare data
+
+
+```{python}
+
+#only keep sampleset column != reference
+
+df = df[df["sampleset"] != "reference"]
+#remove _hmPOS_GRCh38 in the PGS column value strings
+
+df["PGS"] = df["PGS"].str.replace("_hmPOS_GRCh38", "", regex=False)
+
+print(df.columns)
+print(meta_data.columns)
+#join metadata on df by the PGS and Polygenic Score (PGS) ID column
+
+df = df.merge(
+    meta_data[["Polygenic Score (PGS) ID", "PGS Name", "Reported Trait", "PGS Publication (PGP) ID"]],
+    left_on="PGS",
+    right_on="Polygenic Score (PGS) ID",
+    how="left"
+)
+
+print(df.columns)
+print(publications_meta_data.columns)
+
+#only keep the values in the "PGS Publication/Study (PGP) ID", whihc are present in the "Polygenic Score (PGS) ID" column of the df
+print(df["PGS Publication (PGP) ID"])
+print(publications_meta_data["PGS Publication/Study (PGP) ID"])
+
+publications_meta_data = publications_meta_data[
+    publications_meta_data["PGS Publication/Study (PGP) ID"].isin(df["PGS Publication (PGP) ID"])
+]
+
+publications_meta_data.head()
+
+
+
+
+#make plotly barplot where y = percentile_MostSimilarPop, x = PGS, color = Reported Trait ordered ascending by percentile_MostSimilarPop and transparent background
+
+
+
+
+
+```
+
+
+## Plot
+
+
+
+```{python}
+
+import plotly.express as px
+fig = px.bar(
+    df,
+    x="PGS",
+    y="percentile_MostSimilarPop",
+    color="Reported Trait",
+    title="Percentile of Most Similar Population for Each PGS",
+    category_orders={"PGS": df.sort_values("percentile_MostSimilarPop", ascending=False)["PGS"].tolist()},
+    template="plotly_white"
+)
+fig.show()
+
+```
+
+
+## table
+
+```{python}
+
+#make a pretty table with publications_meta_data
+
+import plotly.graph_objects as go
+fig = go.Figure(data=[go.Table(
+    header=dict(values=list(publications_meta_data.columns),
+                fill_color='paleturquoise',
+                align='left'),
+    cells=dict(values=[publications_meta_data[col] for col in publications_meta_data.columns],
+               fill_color='lavender',
+               align='left'))
+])
+
+fig.update_layout(title="Publications Metadata")
+fig.show()
+```
+

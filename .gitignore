@@ -5,6 +5,11 @@ data pipeline/nextflow/.nextflow*
 data pipeline/nextflow/.nextflow
 data pipeline/nextflow/results
 data pipeline/nextflow/work
-vcf_ref_files
+data pipeline/.venv
+.venv
+data pipeline/__pycache__
+data pipeline/reporting_module/prs_report_files/libs
+data pipeline/reporting_module/data/.~lock.pgs_all_metadata.xlsx#
+
 
 
