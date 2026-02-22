@@ -4,6 +4,7 @@ format: html
 jupyter: python3
 execute:
   python: "/home/frederik/github_projects/SNPster/.venv/bin/python"
+  echo: false
 
 ---
 
@@ -13,7 +14,7 @@ execute:
 from IPython.display import display
 import pandas as pd
 
-df = pd.read_csv(
+user_pgs_scores = pd.read_csv(
     "/home/frederik/github_projects/SNPster/data pipeline/reporting_module/data/multiple_pgs_scores_example.zip",
     compression="zip", sep="\t"
 )
@@ -31,7 +32,7 @@ publications_meta_data = pd.read_excel(
 
 
 
-display(df.head())
+display(user_pgs_scores.head())
 display(meta_data.head())
 display(publications_meta_data.head())
 
@@ -45,42 +46,32 @@ display(publications_meta_data.head())
 
 #only keep sampleset column != reference
 
-df = df[df["sampleset"] != "reference"]
+user_pgs_scores = user_pgs_scores[user_pgs_scores["sampleset"] != "reference"]
 #remove _hmPOS_GRCh38 in the PGS column value strings
 
-df["PGS"] = df["PGS"].str.replace("_hmPOS_GRCh38", "", regex=False)
+user_pgs_scores["PGS"] = user_pgs_scores["PGS"].str.replace("_hmPOS_GRCh38", "", regex=False)
 
-print(df.columns)
-print(meta_data.columns)
-#join metadata on df by the PGS and Polygenic Score (PGS) ID column
 
-df = df.merge(
+user_pgs_scores = user_pgs_scores.merge(
     meta_data[["Polygenic Score (PGS) ID", "PGS Name", "Reported Trait", "PGS Publication (PGP) ID"]],
     left_on="PGS",
     right_on="Polygenic Score (PGS) ID",
     how="left"
 )
 
-print(df.columns)
-print(publications_meta_data.columns)
-
-#only keep the values in the "PGS Publication/Study (PGP) ID", whihc are present in the "Polygenic Score (PGS) ID" column of the df
-print(df["PGS Publication (PGP) ID"])
-print(publications_meta_data["PGS Publication/Study (PGP) ID"])
 
 publications_meta_data = publications_meta_data[
-    publications_meta_data["PGS Publication/Study (PGP) ID"].isin(df["PGS Publication (PGP) ID"])
+    publications_meta_data["PGS Publication/Study (PGP) ID"].isin(user_pgs_scores["PGS Publication (PGP) ID"])
 ]
 
-publications_meta_data.head()
 
-
-
-
-#make plotly barplot where y = percentile_MostSimilarPop, x = PGS, color = Reported Trait ordered ascending by percentile_MostSimilarPop and transparent background
-
-
-
+#join Reported Trait from user_pgs_scores to publications_meta_data on the "PGS Publication/Study (PGP) ID" and "PGS Publication (PGP) ID" columns
+publications_meta_data = publications_meta_data.merge(
+    user_pgs_scores[["PGS Publication (PGP) ID", "Reported Trait"]],
+    left_on="PGS Publication/Study (PGP) ID",
+    right_on="PGS Publication (PGP) ID",
+    how="left"
+)
 
 
 ```
@@ -94,12 +85,12 @@ publications_meta_data.head()
 
 import plotly.express as px
 fig = px.bar(
-    df,
+    user_pgs_scores,
     x="PGS",
     y="percentile_MostSimilarPop",
     color="Reported Trait",
     title="Percentile of Most Similar Population for Each PGS",
-    category_orders={"PGS": df.sort_values("percentile_MostSimilarPop", ascending=False)["PGS"].tolist()},
+    category_orders={"PGS": user_pgs_scores.sort_values("percentile_MostSimilarPop", ascending=False)["PGS"].tolist()},
     template="plotly_white"
 )
 fig.show()
