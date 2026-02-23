@@ -13,6 +13,7 @@ execute:
 ```{python}
 from IPython.display import display
 import pandas as pd
+import plotly.graph_objects as go
 
 user_pgs_scores = pd.read_csv(
     "/home/frederik/github_projects/SNPster/data pipeline/reporting_module/data/multiple_pgs_scores_example.zip",
@@ -102,19 +103,63 @@ fig.show()
 
 ```{python}
 
-#make a pretty table with publications_meta_data
+df = publications_meta_data.copy()
 
-import plotly.graph_objects as go
-fig = go.Figure(data=[go.Table(
-    header=dict(values=list(publications_meta_data.columns),
-                fill_color='paleturquoise',
-                align='left'),
-    cells=dict(values=[publications_meta_data[col] for col in publications_meta_data.columns],
-               fill_color='lavender',
-               align='left'))
-])
+#drop Authors, PGS Publication (PGP) ID, and PGS Publication/Study (PGP) ID columns (too long / not useful for display)
 
-fig.update_layout(title="Publications Metadata")
+df = df.drop(columns=["Authors", "PGS Publication (PGP) ID", "PGS Publication/Study (PGP) ID"])
+
+
+# Convert everything to display-friendly strings (avoids weird formatting / NaNs)
+df_display = df.fillna("").astype(str)
+
+# Align numeric-looking columns to the right, others left
+def is_numeric_col(series: pd.Series) -> bool:
+    s = pd.to_numeric(series.replace("", pd.NA), errors="coerce")
+    return s.notna().mean() > 0.85  # mostly numeric
+
+col_align = ["right" if is_numeric_col(df[c]) else "left" for c in df.columns]
+
+# Zebra striping
+row_colors = ["white" if i % 2 == 0 else "#F7F8FA" for i in range(len(df_display))]
+
+fig = go.Figure(
+    data=[
+        go.Table(
+            columnwidth=[1] * len(df_display.columns),
+            header=dict(
+                values=[f"<b>{c}</b>" for c in df_display.columns],
+                fill_color="#F1F3F5",
+                font=dict(color="#111827", size=13, family="Inter, Arial"),
+                align="left",
+                height=36,
+                line_color="#E5E7EB",
+            ),
+            cells=dict(
+                values=[df_display[c].tolist() for c in df_display.columns],
+                fill_color=[row_colors],  # zebra stripes across rows
+                font=dict(color="#111827", size=12, family="Inter, Arial"),
+                align=col_align,
+                height=30,
+                line_color="#E5E7EB",
+            ),
+        )
+    ]
+)
+
+fig.update_layout(
+    title=dict(
+        text="Publications Metadata",
+        x=0,
+        xanchor="left",
+        font=dict(size=18, family="Inter, Arial", color="#111827"),
+    ),
+    paper_bgcolor="white",
+    plot_bgcolor="white",
+    margin=dict(l=0, r=0, t=55, b=0),
+    height=min(850, 140 + 28 * (len(df_display) + 1)),  # auto-ish height
+)
+
 fig.show()
 ```
 
