@@ -1,10 +1,13 @@
 ---
 title: "My Analysis"
-format: html
+format:
+  html:
+    page-layout: full
 jupyter: python3
 execute:
   python: "/home/frederik/github_projects/SNPster/.venv/bin/python"
   echo: false
+
 
 ---
 
@@ -16,8 +19,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 user_pgs_scores = pd.read_csv(
-    "/home/frederik/github_projects/SNPster/data pipeline/reporting_module/data/multiple_pgs_scores_example.zip",
-    compression="zip", sep="\t"
+    "/home/frederik/snpster_project/important_ppl/bullino_results/psych_pgs.txt", sep="\t"
 )
 
 #get metadata

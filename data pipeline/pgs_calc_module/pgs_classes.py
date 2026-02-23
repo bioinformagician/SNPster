@@ -115,7 +115,8 @@ class PGSCalculator:
             "--outdir", self.environment_handler.output_dir,
             "--min_overlap", "0.5"
         ]
-
+            
+            print(f"Running command {command}")
         
             try:
                 result = subprocess.run(command, check=True, capture_output=True, text=True)
