@@ -32,13 +32,13 @@ CREATE TABLE snpster_users.job_board (
     user_id VARCHAR(50) REFERENCES snpster_users.user_information(user_id),
     job_status VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    started_at TIMESTAMP,
     finished_at TIMESTAMP
 );
 
 
 CREATE TABLE snpster_users.prsc_job_parameters (
-    job_id VARCHAR(50) REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
+    job_id VARCHAR(50) FOREIGN KEY REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
     prs_id VARCHAR(50)
 );
 
@@ -53,7 +53,8 @@ CREATE TABLE snpster_users.reports(
     report_id SERIAL PRIMARY KEY,
     job_id VARCHAR(50) REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
     report_status VARCHAR(20),
-    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    started_at TIMESTAMP,
     finished_at TIMESTAMP,
     report_location VARCHAR(255)
 );
@@ -67,10 +68,39 @@ CREATE TABLE snpster_users.reports(
 CREATE TABLE snpster_users.imputation_jobs(
     job_id VARCHAR(50) PRIMARY KEY REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
     imputation_status VARCHAR(20),
-    imputation_started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    imputation_started_at TIMESTAMP,
     imputation_finished_at TIMESTAMP,
     imputed_genotype_location VARCHAR(255)
-)
+);
+
+
+CREATE TABLE snpster_users.imputed_data(
+    job_id VARCHAR(50) FOREIGN KEY REFERENCES snpster_users.imputation_jobs(job_id) ON DELETE CASCADE,
+    file_type VARCHAR(20), -- e.g, imputed VCF, samplesheet 
+    file_path VARCHAR(255)
+);
+
+
+
+-- namespace for the background/meta data needed, such as libraries used for imputation, reference panels, etc.
+
+CREATE SCHEMA IF NOT EXISTS data_libraries;
+
+CREATE TABLE data_libraries.pgscatalog_metadata(
+
+
+);
+
+
+CREATE Table data_libraries.pipeline_dependencies(
+
+    module VARCHAR(50), --e.g imputater, harmonizer, standardizer dependencies
+    dependency_name VARCHAR(100),
+    file_path VARCHAR(255)
+
+);
+
 
 
 /*
