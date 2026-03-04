@@ -2,31 +2,78 @@
 -- This file will be executed when the PostgreSQL container starts
 
 -- Create your custom schema
-CREATE SCHEMA IF NOT EXISTS genomics;
+CREATE SCHEMA IF NOT EXISTS snpster_users;
 
 -- Set search path to include your schema
-ALTER DATABASE snpster_db SET search_path = genomics, public;
+ALTER DATABASE snpster_db SET search_path = snpster_users, public;
 
 -- ===================================
--- TABLES
+-- User information table(s) to store user details
 -- ===================================
 
--- SNP (Single Nucleotide Polymorphism) data table
-CREATE TABLE genomics.snp_data (
-    id SERIAL PRIMARY KEY,
-    rsid VARCHAR(20) NOT NULL UNIQUE,
-    chromosome INTEGER NOT NULL CHECK (chromosome BETWEEN 1 AND 23),
-    position BIGINT NOT NULL,
-    ref_allele CHAR(1) NOT NULL,
-    alt_allele CHAR(1) NOT NULL,
-    gene_symbol VARCHAR(50),
-    consequence VARCHAR(100),
-    maf DECIMAL(5,4), 
+
+
+CREATE TABLE snpster_users.user_information (
+    user_id VARCHAR(50) PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    phone_number VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    genefile_location VARCHAR(255) --stored on linux server in folder tbd
 );
 
 
+-- ===================================
+-- Reporting tables for post imputation jobs (prs calculations, reports)
+-- ===================================
+
+
+CREATE TABLE snpster_users.job_board (
+    job_id VARCHAR(50) PRIMARY KEY,
+    user_id VARCHAR(50) REFERENCES snpster_users.user_information(user_id),
+    job_status VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    finished_at TIMESTAMP
+);
+
+
+CREATE TABLE snpster_users.prsc_job_parameters (
+    job_id VARCHAR(50) REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
+    prs_id VARCHAR(50)
+);
+
+
+CREATE TABLE snpster_users.prsc_job_results (
+    job_id VARCHAR(50) PRIMARY KEY REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
+    prs_id VARCHAR(50),
+    percentile DECIMAL(5,2), --should not be possible to output 100.00th percentile, but just in case
+);
+
+CREATE TABLE snpster_users.reports(
+    report_id SERIAL PRIMARY KEY,
+    job_id VARCHAR(50) REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
+    report_status VARCHAR(20),
+    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    finished_at TIMESTAMP,
+    report_location VARCHAR(255)
+);
+
+
+
+-- ===================================
+-- Tables for handling everything from user uploaded data to imputation (including imputation)
+-- ===================================
+
+CREATE TABLE snpster_users.imputation_jobs(
+    job_id VARCHAR(50) PRIMARY KEY REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
+    imputation_status VARCHAR(20),
+    imputation_started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    imputation_finished_at TIMESTAMP,
+    imputed_genotype_location VARCHAR(255)
+)
+
+
+/*
 CREATE TABLE genomics.samples (
     id SERIAL PRIMARY KEY,
     sample_id VARCHAR(50) UNIQUE NOT NULL,
