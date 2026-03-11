@@ -1,259 +1,156 @@
 -- Initialize database with custom schema
 -- This file will be executed when the PostgreSQL container starts
 
--- Create your custom schema
 CREATE SCHEMA IF NOT EXISTS snpster_users;
+CREATE SCHEMA IF NOT EXISTS data_libraries;
 
--- Set search path to include your schema
 ALTER DATABASE snpster_db SET search_path = snpster_users, public;
 
 -- ===================================
 -- User information table(s) to store user details
 -- ===================================
 
-
-
 CREATE TABLE snpster_users.user_information (
     user_id VARCHAR(50) PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
     phone_number VARCHAR(20),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    genefile_location VARCHAR(255) --stored on linux server in folder tbd
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    genefile_storage_backend VARCHAR(20) NOT NULL DEFAULT 'local_fs' CHECK (genefile_storage_backend IN ('local_fs', 's3')),
+    genefile_location TEXT -- stored on linux server in folder tbd
 );
 
+-- ===================================
+-- Tables for storing information about the PGS scores, mostly containing the information from metadata files
+-- ===================================
+
+CREATE TABLE data_libraries.pgscatalog_data (
+    pgs_id VARCHAR(50) PRIMARY KEY,
+    pgs_name VARCHAR(255),
+    reported_trait VARCHAR(255),
+    mapped_trait_efo_label VARCHAR(255),
+    mapped_trait_efo_id VARCHAR(255),
+    pgs_development_method VARCHAR(255),
+    pgs_development_details TEXT,
+    original_genome_build VARCHAR(20),
+    number_of_variants INTEGER,
+    number_of_interaction_terms INTEGER,
+    type_of_variant_weight VARCHAR(50),
+    pgs_publication_pgp_id VARCHAR(50),
+    publication_pmid VARCHAR(20),
+    publication_doi VARCHAR(255),
+    score_and_results_match_original_publication BOOLEAN,
+    ancestry_distribution_source_of_variant_associations_gwas VARCHAR(255),
+    ancestry_distribution_score_development_training VARCHAR(255),
+    ancestry_distribution_pgs_evaluation VARCHAR(255),
+    ftp_link VARCHAR(255),
+    release_date DATE,
+    license_terms_of_use TEXT
+);
+
+CREATE TABLE data_libraries.scoring_files (
+    pgs_id VARCHAR(50) PRIMARY KEY REFERENCES data_libraries.pgscatalog_data(pgs_id),
+    storage_backend VARCHAR(20) NOT NULL DEFAULT 'local_fs' CHECK (storage_backend IN ('local_fs', 's3')),
+    file_path TEXT
+);
+
+CREATE TABLE data_libraries.pgs_publications (
+    pgs_id VARCHAR(50) PRIMARY KEY REFERENCES data_libraries.pgscatalog_data(pgs_id),
+    first_author VARCHAR(255),
+    title VARCHAR(255),
+    journal_name VARCHAR(255),
+    publication_date DATE,
+    release_date DATE,
+    authors TEXT,
+    digital_object_identifier_doi VARCHAR(255),
+    pubmed_id_pmid VARCHAR(20)
+);
+
+CREATE TABLE data_libraries.ontology_mappings (
+    ontology_id VARCHAR(50) PRIMARY KEY,
+    ontology_label VARCHAR(255),
+    ontology_description TEXT,
+    ontology_url VARCHAR(255)
+);
+
+-- Ontology Trait ID | Ontology Trait Label | Ontology Trait Description | Ontology URL
+CREATE TABLE data_libraries.pgs_performance (
+    performance_id VARCHAR(50) PRIMARY KEY,
+    pgs_id VARCHAR(50) REFERENCES data_libraries.pgscatalog_data(pgs_id),
+    pss_id VARCHAR(50),
+    pgp_id VARCHAR(50) REFERENCES data_libraries.pgs_publications(pgs_id),
+    reported_trait VARCHAR(255),
+    covariates_included_in_model TEXT,
+    pgs_performance_other_relevant_info TEXT,
+    hazard_ratio DECIMAL(10,6),
+    odds_ratio DECIMAL(10,6),
+    beta DECIMAL(10,6),
+    auroc DECIMAL(5,2),
+    concordance_statistic DECIMAL(5,2),
+    other_metric TEXT
+);
+
+CREATE TABLE data_libraries.pipeline_dependencies (
+    module VARCHAR(50), -- e.g imputer, harmonizer, standardizer dependencies
+    dependency_name VARCHAR(100),
+    storage_backend VARCHAR(20) NOT NULL DEFAULT 'local_fs' CHECK (storage_backend IN ('local_fs', 's3')),
+    file_path TEXT,
+    PRIMARY KEY (module, dependency_name, file_path)
+);
 
 -- ===================================
--- Reporting tables for post imputation jobs (prs calculations, reports)
+-- Reporting tables for post-imputation jobs (PRS calculations, reports)
 -- ===================================
-
 
 CREATE TABLE snpster_users.job_board (
     job_id VARCHAR(50) PRIMARY KEY,
     user_id VARCHAR(50) REFERENCES snpster_users.user_information(user_id),
-    job_status VARCHAR(20),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    started_at TIMESTAMP,
-    finished_at TIMESTAMP
+    job_status VARCHAR(20) NOT NULL CHECK (job_status IN ('queued', 'running', 'completed', 'failed', 'cancelled')),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    started_at TIMESTAMPTZ,
+    finished_at TIMESTAMPTZ
 );
-
 
 CREATE TABLE snpster_users.prsc_job_parameters (
-    job_id VARCHAR(50) FOREIGN KEY REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
-    prs_id VARCHAR(50)
+    job_id VARCHAR(50) REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
+    pgs_id VARCHAR(50) REFERENCES data_libraries.pgscatalog_data(pgs_id),
+    PRIMARY KEY (job_id, pgs_id)
 );
-
 
 CREATE TABLE snpster_users.prsc_job_results (
     job_id VARCHAR(50) PRIMARY KEY REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
-    prs_id VARCHAR(50),
-    percentile DECIMAL(5,2), --should not be possible to output 100.00th percentile, but just in case
+    pgs_id VARCHAR(50) REFERENCES data_libraries.pgscatalog_data(pgs_id),
+    percentile DECIMAL(5,2) CHECK (percentile >= 0 AND percentile <= 100)
 );
 
-CREATE TABLE snpster_users.reports(
+CREATE TABLE snpster_users.reports (
     report_id SERIAL PRIMARY KEY,
     job_id VARCHAR(50) REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
-    report_status VARCHAR(20),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    started_at TIMESTAMP,
-    finished_at TIMESTAMP,
-    report_location VARCHAR(255)
+    report_status VARCHAR(20) NOT NULL CHECK (report_status IN ('queued', 'running', 'completed', 'failed')),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    started_at TIMESTAMPTZ,
+    finished_at TIMESTAMPTZ,
+    report_storage_backend VARCHAR(20) NOT NULL DEFAULT 'local_fs' CHECK (report_storage_backend IN ('local_fs', 's3')),
+    report_location TEXT
 );
-
-
 
 -- ===================================
 -- Tables for handling everything from user uploaded data to imputation (including imputation)
 -- ===================================
 
-CREATE TABLE snpster_users.imputation_jobs(
+CREATE TABLE snpster_users.imputation_jobs (
     job_id VARCHAR(50) PRIMARY KEY REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
-    imputation_status VARCHAR(20),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    imputation_started_at TIMESTAMP,
-    imputation_finished_at TIMESTAMP,
-    imputed_genotype_location VARCHAR(255)
+    imputation_status VARCHAR(20) NOT NULL CHECK (imputation_status IN ('queued', 'running', 'completed', 'failed')),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    imputation_started_at TIMESTAMPTZ,
+    imputation_finished_at TIMESTAMPTZ,
+    imputed_genotype_storage_backend VARCHAR(20) NOT NULL DEFAULT 'local_fs' CHECK (imputed_genotype_storage_backend IN ('local_fs', 's3')),
+    imputed_genotype_location TEXT
 );
 
-
-CREATE TABLE snpster_users.imputed_data(
-    job_id VARCHAR(50) FOREIGN KEY REFERENCES snpster_users.imputation_jobs(job_id) ON DELETE CASCADE,
-    file_type VARCHAR(20), -- e.g, imputed VCF, samplesheet 
-    file_path VARCHAR(255)
+CREATE TABLE snpster_users.imputed_data (
+    job_id VARCHAR(50) REFERENCES snpster_users.imputation_jobs(job_id) ON DELETE CASCADE,
+    file_type VARCHAR(20), -- e.g, imputed VCF, samplesheet
+    storage_backend VARCHAR(20) NOT NULL DEFAULT 'local_fs' CHECK (storage_backend IN ('local_fs', 's3')),
+    file_path TEXT,
+    PRIMARY KEY (job_id, file_type, file_path)
 );
-
-
-
--- namespace for the background/meta data needed, such as libraries used for imputation, reference panels, etc.
-
-CREATE SCHEMA IF NOT EXISTS data_libraries;
-
-CREATE TABLE data_libraries.pgscatalog_metadata(
-
-
-);
-
-
-CREATE Table data_libraries.pipeline_dependencies(
-
-    module VARCHAR(50), --e.g imputater, harmonizer, standardizer dependencies
-    dependency_name VARCHAR(100),
-    file_path VARCHAR(255)
-
-);
-
-
-
-/*
-CREATE TABLE genomics.samples (
-    id SERIAL PRIMARY KEY,
-    sample_id VARCHAR(50) UNIQUE NOT NULL,
-    population VARCHAR(10),
-    sex CHAR(1) CHECK (sex IN ('M', 'F')),
-    age INTEGER CHECK (age > 0 AND age < 150),
-    phenotype_status VARCHAR(20),
-    batch_id VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
-CREATE TABLE genomics.genotypes (
-    id SERIAL PRIMARY KEY,
-    sample_id INTEGER REFERENCES genomics.samples(id) ON DELETE CASCADE,
-    snp_id INTEGER REFERENCES genomics.snp_data(id) ON DELETE CASCADE,
-    genotype VARCHAR(3) NOT NULL, -- e.g., "AA", "AT", "TT"
-    dosage DECIMAL(3,2) CHECK (dosage >= 0 AND dosage <= 2), -- 0, 1, or 2
-    quality_score DECIMAL(5,2),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(sample_id, snp_id)
-);
-
-
-CREATE TABLE genomics.pgs_scores (
-    id SERIAL PRIMARY KEY,
-    sample_id INTEGER REFERENCES genomics.samples(id) ON DELETE CASCADE,
-    trait_name VARCHAR(100) NOT NULL,
-    pgs_score DECIMAL(10,6) NOT NULL,
-    percentile DECIMAL(5,2) CHECK (percentile >= 0 AND percentile <= 100),
-    risk_category VARCHAR(20),
-    calculated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
-CREATE TABLE genomics.gwas_results (
-    id SERIAL PRIMARY KEY,
-    snp_id INTEGER REFERENCES genomics.snp_data(id) ON DELETE CASCADE,
-    trait VARCHAR(100) NOT NULL,
-    beta DECIMAL(10,6),
-    se DECIMAL(10,6), -- Standard error
-    p_value SCIENTIFIC NOT NULL,
-    odds_ratio DECIMAL(10,6),
-    ci_lower DECIMAL(10,6),
-    ci_upper DECIMAL(10,6),
-    study VARCHAR(200),
-    sample_size INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- ===================================
--- INDEXES for Performance
--- ===================================
-
--- SNP data indexes
-CREATE INDEX idx_snp_rsid ON genomics.snp_data(rsid);
-CREATE INDEX idx_snp_chr_pos ON genomics.snp_data(chromosome, position);
-CREATE INDEX idx_snp_gene ON genomics.snp_data(gene_symbol);
-
--- Sample indexes
-CREATE INDEX idx_sample_id ON genomics.samples(sample_id);
-CREATE INDEX idx_sample_population ON genomics.samples(population);
-
--- Genotype indexes (most important for performance)
-CREATE INDEX idx_genotype_sample ON genomics.genotypes(sample_id);
-CREATE INDEX idx_genotype_snp ON genomics.genotypes(snp_id);
-CREATE INDEX idx_genotype_composite ON genomics.genotypes(sample_id, snp_id);
-
--- PGS indexes
-CREATE INDEX idx_pgs_sample ON genomics.pgs_scores(sample_id);
-CREATE INDEX idx_pgs_trait ON genomics.pgs_scores(trait_name);
-
--- GWAS indexes
-CREATE INDEX idx_gwas_snp ON genomics.gwas_results(snp_id);
-CREATE INDEX idx_gwas_trait ON genomics.gwas_results(trait);
-CREATE INDEX idx_gwas_pvalue ON genomics.gwas_results(p_value);
-
--- ===================================
--- FUNCTIONS & TRIGGERS
--- ===================================
-
--- Function to update the updated_at timestamp
-CREATE OR REPLACE FUNCTION genomics.update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
-    RETURN NEW;
-END;
-$$ language 'plpgsql';
-
--- Trigger for SNP data
-CREATE TRIGGER update_snp_data_updated_at 
-    BEFORE UPDATE ON genomics.snp_data 
-    FOR EACH ROW EXECUTE FUNCTION genomics.update_updated_at_column();
-
--- ===================================
--- VIEWS for Common Queries
--- ===================================
-
--- View for complete genotype information
-CREATE VIEW genomics.complete_genotypes AS
-SELECT 
-    s.sample_id,
-    s.population,
-    sd.rsid,
-    sd.chromosome,
-    sd.position,
-    sd.gene_symbol,
-    g.genotype,
-    g.dosage,
-    g.quality_score
-FROM genomics.genotypes g
-JOIN genomics.samples s ON g.sample_id = s.id
-JOIN genomics.snp_data sd ON g.snp_id = sd.id;
-
--- View for high-impact variants
-CREATE VIEW genomics.high_impact_variants AS
-SELECT 
-    rsid,
-    chromosome,
-    position,
-    gene_symbol,
-    consequence,
-    maf
-FROM genomics.snp_data
-WHERE consequence IN ('stop_gained', 'frameshift_variant', 'start_lost')
-   OR maf < 0.01;
-
--- ===================================
--- PERMISSIONS
--- ===================================
-
--- Grant permissions to postgres user
-GRANT ALL PRIVILEGES ON SCHEMA genomics TO postgres;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA genomics TO postgres;
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA genomics TO postgres;
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA genomics TO postgres;
-
--- ===================================
--- SAMPLE DATA (Optional - for testing)
--- ===================================
-
--- Insert some test SNPs
-INSERT INTO genomics.snp_data (rsid, chromosome, position, ref_allele, alt_allele, gene_symbol, maf) VALUES
-('rs123456', 1, 1000000, 'A', 'G', 'GENE1', 0.25),
-('rs789012', 2, 2000000, 'C', 'T', 'GENE2', 0.15),
-('rs345678', 3, 3000000, 'G', 'A', 'GENE3', 0.35);
-
--- Insert test samples
-INSERT INTO genomics.samples (sample_id, population, sex, age) VALUES
-('SAMPLE001', 'EUR', 'M', 35),
-('SAMPLE002', 'AFR', 'F', 42),
-('SAMPLE003', 'ASN', 'M', 28);
