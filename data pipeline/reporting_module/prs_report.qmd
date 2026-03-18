@@ -19,17 +19,17 @@ import pandas as pd
 import plotly.graph_objects as go
 
 user_pgs_scores = pd.read_csv(
-    "/home/frederik/snpster_project/important_ppl/bullino_results/psych_pgs.txt", sep="\t"
+    r"C:\Users\frezz\Downloads\snpster\data pipeline\reporting_module\data\multiple_pgs_scores_example.zip", sep="\t"
 )
 
 #get metadata
 
 meta_data = pd.read_excel(
-    "/home/frederik/github_projects/SNPster/data pipeline/reporting_module/data/pgs_all_metadata.xlsx", sheet_name="Scores"
+    r"C:\Users\frezz\Downloads\snpster\data pipeline\reporting_module\data\pgs_all_metadata.xlsx", sheet_name="Scores"
 )
 
 publications_meta_data = pd.read_excel(
-    "/home/frederik/github_projects/SNPster/data pipeline/reporting_module/data/pgs_all_metadata.xlsx", sheet_name="Publications"
+    r"C:\Users\frezz\Downloads\snpster\data pipeline\reporting_module\data\pgs_all_metadata.xlsx", sheet_name="Publications"
 )   
 
 
