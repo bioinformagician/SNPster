@@ -11,11 +11,11 @@ ALTER DATABASE snpster_db SET search_path = snpster_users, public;
 -- ===================================
 
 CREATE TABLE snpster_users.user_information (
-    user_id VARCHAR(50) PRIMARY KEY,
+    user_id varchar(100) PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
     phone_number VARCHAR(20),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    genefile_storage_backend VARCHAR(20) NOT NULL DEFAULT 'local_fs' CHECK (genefile_storage_backend IN ('local_fs', 's3')),
+    genefile_storage_backend VARCHAR(20) NOT NULL,
     genefile_location TEXT -- stored on linux server in folder tbd
 );
 
@@ -24,7 +24,7 @@ CREATE TABLE snpster_users.user_information (
 -- ===================================
 
 CREATE TABLE data_libraries.pgscatalog_data (
-    pgs_id VARCHAR(50) PRIMARY KEY,
+    pgs_id varchar(100) PRIMARY KEY,
     pgs_name VARCHAR(255),
     reported_trait VARCHAR(255),
     mapped_trait_efo_label VARCHAR(255),
@@ -34,8 +34,8 @@ CREATE TABLE data_libraries.pgscatalog_data (
     original_genome_build VARCHAR(20),
     number_of_variants INTEGER,
     number_of_interaction_terms INTEGER,
-    type_of_variant_weight VARCHAR(50),
-    pgs_publication_pgp_id VARCHAR(50),
+    type_of_variant_weight TEXT,
+    pgp_id varchar(100),
     publication_pmid VARCHAR(20),
     publication_doi VARCHAR(255),
     score_and_results_match_original_publication BOOLEAN,
@@ -48,13 +48,13 @@ CREATE TABLE data_libraries.pgscatalog_data (
 );
 
 CREATE TABLE data_libraries.scoring_files (
-    pgs_id VARCHAR(50) PRIMARY KEY REFERENCES data_libraries.pgscatalog_data(pgs_id),
-    storage_backend VARCHAR(20) NOT NULL DEFAULT 'local_fs' CHECK (storage_backend IN ('local_fs', 's3')),
+    pgs_id varchar(100) PRIMARY KEY REFERENCES data_libraries.pgscatalog_data(pgs_id),
+    storage_backend VARCHAR(20) NOT NULL,
     file_path TEXT
 );
 
 CREATE TABLE data_libraries.pgs_publications (
-    pgs_id VARCHAR(50) PRIMARY KEY REFERENCES data_libraries.pgscatalog_data(pgs_id),
+    pgp_id varchar(100) PRIMARY KEY,
     first_author VARCHAR(255),
     title VARCHAR(255),
     journal_name VARCHAR(255),
@@ -66,7 +66,7 @@ CREATE TABLE data_libraries.pgs_publications (
 );
 
 CREATE TABLE data_libraries.ontology_mappings (
-    ontology_id VARCHAR(50) PRIMARY KEY,
+    ontology_id varchar(100) PRIMARY KEY,
     ontology_label VARCHAR(255),
     ontology_description TEXT,
     ontology_url VARCHAR(255)
@@ -74,10 +74,10 @@ CREATE TABLE data_libraries.ontology_mappings (
 
 -- Ontology Trait ID | Ontology Trait Label | Ontology Trait Description | Ontology URL
 CREATE TABLE data_libraries.pgs_performance (
-    performance_id VARCHAR(50) PRIMARY KEY,
-    pgs_id VARCHAR(50) REFERENCES data_libraries.pgscatalog_data(pgs_id),
-    pss_id VARCHAR(50),
-    pgp_id VARCHAR(50) REFERENCES data_libraries.pgs_publications(pgs_id),
+    performance_id varchar(100) PRIMARY KEY,
+    pgs_id varchar(100) REFERENCES data_libraries.pgscatalog_data(pgs_id),
+    pss_id varchar(100),
+    pgp_id varchar(100) REFERENCES data_libraries.pgs_publications(pgp_id),
     reported_trait VARCHAR(255),
     covariates_included_in_model TEXT,
     pgs_performance_other_relevant_info TEXT,
@@ -90,9 +90,9 @@ CREATE TABLE data_libraries.pgs_performance (
 );
 
 CREATE TABLE data_libraries.pipeline_dependencies (
-    module VARCHAR(50), -- e.g imputer, harmonizer, standardizer dependencies
+    module varchar(100), -- e.g imputer, harmonizer, standardizer dependencies
     dependency_name VARCHAR(100),
-    storage_backend VARCHAR(20) NOT NULL DEFAULT 'local_fs' CHECK (storage_backend IN ('local_fs', 's3')),
+    storage_backend VARCHAR(20) NOT NULL,
     file_path TEXT,
     PRIMARY KEY (module, dependency_name, file_path)
 );
@@ -102,8 +102,8 @@ CREATE TABLE data_libraries.pipeline_dependencies (
 -- ===================================
 
 CREATE TABLE snpster_users.job_board (
-    job_id VARCHAR(50) PRIMARY KEY,
-    user_id VARCHAR(50) REFERENCES snpster_users.user_information(user_id),
+    job_id varchar(100) PRIMARY KEY,
+    user_id varchar(100) REFERENCES snpster_users.user_information(user_id),
     job_status VARCHAR(20) NOT NULL CHECK (job_status IN ('queued', 'running', 'completed', 'failed', 'cancelled')),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     started_at TIMESTAMPTZ,
@@ -111,20 +111,20 @@ CREATE TABLE snpster_users.job_board (
 );
 
 CREATE TABLE snpster_users.prsc_job_parameters (
-    job_id VARCHAR(50) REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
-    pgs_id VARCHAR(50) REFERENCES data_libraries.pgscatalog_data(pgs_id),
+    job_id varchar(100) REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
+    pgs_id varchar(100) REFERENCES data_libraries.pgscatalog_data(pgs_id),
     PRIMARY KEY (job_id, pgs_id)
 );
 
 CREATE TABLE snpster_users.prsc_job_results (
-    job_id VARCHAR(50) PRIMARY KEY REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
-    pgs_id VARCHAR(50) REFERENCES data_libraries.pgscatalog_data(pgs_id),
+    job_id varchar(100) PRIMARY KEY REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
+    pgs_id varchar(100) REFERENCES data_libraries.pgscatalog_data(pgs_id),
     percentile DECIMAL(5,2) CHECK (percentile >= 0 AND percentile <= 100)
 );
 
 CREATE TABLE snpster_users.reports (
     report_id SERIAL PRIMARY KEY,
-    job_id VARCHAR(50) REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
+    job_id varchar(100) REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
     report_status VARCHAR(20) NOT NULL CHECK (report_status IN ('queued', 'running', 'completed', 'failed')),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     started_at TIMESTAMPTZ,
@@ -138,7 +138,7 @@ CREATE TABLE snpster_users.reports (
 -- ===================================
 
 CREATE TABLE snpster_users.imputation_jobs (
-    job_id VARCHAR(50) PRIMARY KEY REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
+    job_id varchar(100) PRIMARY KEY REFERENCES snpster_users.job_board(job_id) ON DELETE CASCADE,
     imputation_status VARCHAR(20) NOT NULL CHECK (imputation_status IN ('queued', 'running', 'completed', 'failed')),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     imputation_started_at TIMESTAMPTZ,
@@ -148,7 +148,7 @@ CREATE TABLE snpster_users.imputation_jobs (
 );
 
 CREATE TABLE snpster_users.imputed_data (
-    job_id VARCHAR(50) REFERENCES snpster_users.imputation_jobs(job_id) ON DELETE CASCADE,
+    job_id varchar(100) REFERENCES snpster_users.imputation_jobs(job_id) ON DELETE CASCADE,
     file_type VARCHAR(20), -- e.g, imputed VCF, samplesheet
     storage_backend VARCHAR(20) NOT NULL DEFAULT 'local_fs' CHECK (storage_backend IN ('local_fs', 's3')),
     file_path TEXT,

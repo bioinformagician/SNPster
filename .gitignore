@@ -6,6 +6,7 @@ data pipeline/nextflow/.nextflow
 data pipeline/nextflow/results
 data pipeline/nextflow/work
 data pipeline/.venv
+data pipeline/docker/data/pgdata/**
 .venv
 data pipeline/__pycache__
 data pipeline/reporting_module/prs_report_files/libs
