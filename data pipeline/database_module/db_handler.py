@@ -1,11 +1,13 @@
-from config import USERNAME, PASSWORD, DATABASE_NAME, HOST, PORT, PGS_EXCEL_FILEPATH
+from pathlib import Path
+from db_config import USERNAME, PASSWORD, DATABASE_NAME, HOST, PORT, PGS_EXCEL_FILEPATH
 import psycopg2
 from psycopg2 import sql
+from psycopg2.extras import execute_values
 import pandas as pd
 
 class DbHandler:
     
-    def __init__(self, port, db_url, user, password, host, connection=None, cursor=None):
+    def __init__(self, port:int, db_url:str, user:str, password:str, host:str, connection=None, cursor=None):
         self.db_url = db_url
         self.user = user
         self.password = password
@@ -14,7 +16,7 @@ class DbHandler:
         self.connection = connection
         self.cursor = cursor
 
-    def connect(self):
+    def connect(self) -> bool:
         # Code to establish a connection to the database using the provided parameters
         try:
             self.connection = psycopg2.connect(
@@ -35,18 +37,7 @@ class DbHandler:
             return False
         
 
-    def execute_query(self, query, params=None):
-        # Code to execute a given SQL query using the established connection
-        try:
-            self.cursor.execute(query, params)
-            self.connection.commit()
-            print("Query executed successfully.")
-        except Exception as e:
-            print(f"Error executing query: {e}")
-            print(f"Query: {query}")
-            self.connection.rollback()
-
-    def close(self):
+    def close(self) -> None:
         # Code to close the database connection
         if self.cursor:
             self.cursor.close()
@@ -54,12 +45,40 @@ class DbHandler:
             self.connection.close()
         print("Database connection closed.")
         
+    def execute_query(self, query, params=None) -> list:
+        # Code to execute a given SQL query using the established connection
+        try:
+            self.cursor.execute(query, params)
+            self.connection.commit()
+            print("Query executed successfully.")
+            
+            return self.cursor.fetchall() if self.cursor.description else None
+            
+        except Exception as e:
+            print(f"Error executing query: {e}")
+            print(f"Query: {query}")
+            self.connection.rollback()
+        
         
 class DbUtils:
     
-    def __init__(self, db_handler):
+    def __init__(self, db_handler:DbHandler):
         self.db_handler = db_handler
         
+    
+    def get_pd_dataframe_from_query(self, query:str) -> pd.DataFrame:
+        # Code to execute a SELECT query and return the results as a pandas DataFrame
+        query_result = self.db_handler.execute_query(query)
+        if query_result is not None:
+            column_names = [desc[0] for desc in self.db_handler.cursor.description]
+            df = pd.DataFrame(query_result, columns=column_names)
+            return df
+        else:
+            print("No results returned from the query.")
+            return pd.DataFrame()  # Return empty DataFrame if no results
+        
+        
+
     
     def read_pgs_metadata_excel(self, excel_filepath:str) -> pd.DataFrame: #C:\Users\frezz\Downloads\snpster\data pipeline\reporting_module\data\pgs_all_metadata.xlsx
         
@@ -129,12 +148,24 @@ class DbUtils:
             'Other Metric(s)': 'other_metric'
         }, inplace=True)
         
+        # Clean numeric columns: extract first number before confidence intervals, store NULL if no number found
+        numeric_cols = ['hazard_ratio', 'odds_ratio', 'beta', 'auroc', 'concordance_statistic']
+        for col in numeric_cols:
+            if col in pgs_performance.columns:
+                # Extract first signed number (e.g., "-0.7" from "-0.7 (0.15)").
+                pgs_performance[col] = pgs_performance[col].astype(str).str.extract(
+                    r'^\s*([+-]?(?:\d+(?:\.\d+)?|\.\d+))',
+                    expand=False,
+                )
+                # Convert to numeric, NaN for invalid values
+                pgs_performance[col] = pd.to_numeric(pgs_performance[col], errors='coerce')
+        
         return {"pgscatalog_data": pgscatalog_data,
                 "pgs_publications": pgs_publications,
                 "ontology_mappings": ontology_mappings,
                 "pgs_performance": pgs_performance}
     
-    def truncate_all_tables(self):
+    def truncate_all_tables(self) -> None:
         # Code to truncate all relevant tables in the database before inserting new data
         tables = ["pgscatalog_data", "pgs_publications", "ontology_mappings", "pgs_performance"]
         for table in tables:
@@ -142,24 +173,45 @@ class DbUtils:
                 schema=sql.Identifier("data_libraries"),
                 table=sql.Identifier(table)
             )
-            self.db_handler.execute_query(query)
+            self.execute_query(query)
             print(f"Table {table} truncated successfully.")
 
         
     
-    def insert_dataframe_to_db(self, dataframe: pd.DataFrame, table_name: str):
-        # Code to insert the given dataframe into the specified table in the database
-        for index, row in dataframe.iterrows():
-            columns = list(row.index)
-            values = [None if pd.isna(value) else value for value in row.values]
-
-            query = sql.SQL("INSERT INTO {schema}.{table} ({fields}) VALUES ({placeholders})").format(
-                schema=sql.Identifier("data_libraries"),
-                table=sql.Identifier(table_name),
-                fields=sql.SQL(", ").join(sql.Identifier(column) for column in columns),
-                placeholders=sql.SQL(", ").join(sql.Placeholder() for _ in columns),
+    def insert_dataframe_to_db(self, dataframe: pd.DataFrame, table_name: str) -> None:
+        # Bulk insert all dataframe rows in a single efficient batch operation
+        if dataframe.empty:
+            print(f"No rows to insert for {table_name}")
+            return
+        
+        columns = list(dataframe.columns)
+        # Convert dataframe rows to tuples, handling NaN/NaT as None
+        values = [
+            tuple(None if pd.isna(val) else val for val in row)
+            for row in dataframe.itertuples(index=False, name=None)
+        ]
+        
+        # Build INSERT statement with execute_values format
+        query = sql.SQL(
+            "INSERT INTO {schema}.{table} ({fields}) VALUES %s"
+        ).format(
+            schema=sql.Identifier("data_libraries"),
+            table=sql.Identifier(table_name),
+            fields=sql.SQL(",").join(sql.Identifier(col) for col in columns),
+        )
+        
+        try:
+            execute_values(
+                self.db_handler.cursor,
+                query.as_string(self.db_handler.connection),
+                values,
+                page_size=1000,
             )
-            self.db_handler.execute_query(query, values)
+            self.db_handler.connection.commit()
+            print(f"Inserted {len(values)} rows into data_libraries.{table_name}")
+        except Exception as e:
+            print(f"Error inserting into {table_name}: {e}")
+            self.db_handler.connection.rollback()
         
         
 

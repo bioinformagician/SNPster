@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>My Analysis</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -26,23 +29,22 @@ ul.task-list li input[type="checkbox"] {
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="prs_report_files/libs/clipboard/clipboard.min.js"></script>
 <script src="prs_report_files/libs/quarto-html/quarto.js" type="module"></script>
 <script src="prs_report_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="prs_report_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="prs_report_files/libs/quarto-html/popper.min.js"></script>
 <script src="prs_report_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="prs_report_files/libs/quarto-html/anchor.min.js"></script>
 <link href="prs_report_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="prs_report_files/libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="prs_report_files/libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="prs_report_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="prs_report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="prs_report_files/libs/bootstrap/bootstrap-9b997ca5beed6784726599cbceb9c0d2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="prs_report_files/libs/bootstrap/bootstrap-efbb37e9afcc02144ebbc7afd12a776f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
-<script type="text/javascript">
+<script>
 window.PlotlyConfig = {MathJaxConfig: 'local'};
 if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
 </script>
-<script type="module">import "https://cdn.plot.ly/plotly-3.3.1.min"</script>
+<script type="module">import "https://cdn.plot.ly/plotly-3.4.0.min"</script>
 
 
 
@@ -75,7 +77,13 @@ if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.M
 
 <section id="load-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-data">Load data</h2>
-<div id="ffd7770d" class="cell" data-execution_count="1">
+<div id="e824d604" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-stdout">
+<pre><code>Database connection established successfully.
+Query executed successfully.
+Query executed successfully.
+Query executed successfully.</code></pre>
+</div>
 <div class="cell-output cell-output-display">
 <div>
 
@@ -98,63 +106,63 @@ if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.M
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
-<td>20260223124121-2cfe39e439b3ffa3</td>
+<td>20260209180730-ce6212bb18f42ca9</td>
 <td>imputed_sample</td>
 <td>imputed_sample</td>
-<td>PGS000133_hmPOS_GRCh38</td>
-<td>4.633621</td>
-<td>0.490211</td>
-<td>-1.444474</td>
-<td>-1.436150</td>
-<td>69.265367</td>
+<td>PGS000039</td>
+<td>1.216813</td>
+<td>-0.574940</td>
+<td>-1.425408</td>
+<td>-1.264600</td>
+<td>28.035982</td>
 </tr>
 <tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>reference</td>
-<td>HG00096</td>
-<td>HG00096</td>
-<td>PGS000133_hmPOS_GRCh38</td>
-<td>2.768246</td>
-<td>-1.448709</td>
-<td>-1.350700</td>
-<td>-1.324116</td>
-<td>7.346327</td>
+<th data-quarto-table-cell-role="th">3331</th>
+<td>20260209180730-ce6212bb18f42ca9</td>
+<td>imputed_sample</td>
+<td>imputed_sample</td>
+<td>PGS000706</td>
+<td>-0.012998</td>
+<td>0.924566</td>
+<td>0.802822</td>
+<td>0.757459</td>
+<td>82.908546</td>
 </tr>
 <tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>reference</td>
-<td>HG00097</td>
-<td>HG00097</td>
-<td>PGS000133_hmPOS_GRCh38</td>
-<td>3.564227</td>
-<td>-0.621345</td>
-<td>-0.978018</td>
-<td>-0.961233</td>
-<td>26.236882</td>
+<th data-quarto-table-cell-role="th">6662</th>
+<td>20260209180730-ce6212bb18f42ca9</td>
+<td>imputed_sample</td>
+<td>imputed_sample</td>
+<td>PGS003973</td>
+<td>0.063291</td>
+<td>-0.224884</td>
+<td>-0.870245</td>
+<td>-0.841098</td>
+<td>41.529235</td>
 </tr>
 <tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>reference</td>
-<td>HG00099</td>
-<td>HG00099</td>
-<td>PGS000133_hmPOS_GRCh38</td>
-<td>3.663680</td>
-<td>-0.517971</td>
-<td>-0.599085</td>
-<td>-0.587830</td>
-<td>28.185907</td>
+<th data-quarto-table-cell-role="th">9993</th>
+<td>20260209180730-ce6212bb18f42ca9</td>
+<td>imputed_sample</td>
+<td>imputed_sample</td>
+<td>PGS004460</td>
+<td>-0.278805</td>
+<td>-1.183724</td>
+<td>-0.944589</td>
+<td>-0.894671</td>
+<td>11.094453</td>
 </tr>
 <tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>reference</td>
-<td>HG00100</td>
-<td>HG00100</td>
-<td>PGS000133_hmPOS_GRCh38</td>
-<td>5.500920</td>
-<td>1.391705</td>
-<td>1.417867</td>
-<td>1.392316</td>
-<td>91.979010</td>
+<th data-quarto-table-cell-role="th">13324</th>
+<td>20260209180730-ce6212bb18f42ca9</td>
+<td>imputed_sample</td>
+<td>imputed_sample</td>
+<td>PGS004911</td>
+<td>-1.373710</td>
+<td>-0.004948</td>
+<td>0.191588</td>
+<td>0.184922</td>
+<td>50.824588</td>
 </tr>
 </tbody>
 </table>
@@ -169,154 +177,93 @@ if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.M
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">Polygenic Score (PGS) ID</th>
-<th data-quarto-table-cell-role="th">PGS Name</th>
-<th data-quarto-table-cell-role="th">Reported Trait</th>
-<th data-quarto-table-cell-role="th">Mapped Trait(s) (EFO label)</th>
-<th data-quarto-table-cell-role="th">Mapped Trait(s) (EFO ID)</th>
-<th data-quarto-table-cell-role="th">PGS Development Method</th>
-<th data-quarto-table-cell-role="th">PGS Development Details/Relevant Parameters</th>
-<th data-quarto-table-cell-role="th">Original Genome Build</th>
-<th data-quarto-table-cell-role="th">Number of Variants</th>
-<th data-quarto-table-cell-role="th">Number of Interaction Terms</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">PGS Publication (PGP) ID</th>
-<th data-quarto-table-cell-role="th">Publication (PMID)</th>
-<th data-quarto-table-cell-role="th">Publication (doi)</th>
-<th data-quarto-table-cell-role="th">Score and results match the original publication</th>
-<th data-quarto-table-cell-role="th">Ancestry Distribution (%) - Source of Variant Associations (GWAS)</th>
-<th data-quarto-table-cell-role="th">Ancestry Distribution (%) - Score Development/Training</th>
-<th data-quarto-table-cell-role="th">Ancestry Distribution (%) - PGS Evaluation</th>
-<th data-quarto-table-cell-role="th">FTP link</th>
-<th data-quarto-table-cell-role="th">Release Date</th>
-<th data-quarto-table-cell-role="th">License/Terms of Use</th>
+<th data-quarto-table-cell-role="th">pgs_id</th>
+<th data-quarto-table-cell-role="th">reported_trait</th>
+<th data-quarto-table-cell-role="th">mapped_trait_efo_id</th>
+<th data-quarto-table-cell-role="th">number_of_variants</th>
+<th data-quarto-table-cell-role="th">pgp_id</th>
+<th data-quarto-table-cell-role="th">publication_pmid</th>
+<th data-quarto-table-cell-role="th">publication_doi</th>
+<th data-quarto-table-cell-role="th">ftp_link</th>
+<th data-quarto-table-cell-role="th">release_date</th>
+<th data-quarto-table-cell-role="th">ancestry_distribution_source_of_variant_associations_gwas</th>
+<th data-quarto-table-cell-role="th">ancestry_distribution_pgs_evaluation</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
-<td>PGS000001</td>
-<td>PRS77_BC</td>
-<td>Breast cancer</td>
-<td>breast carcinoma</td>
-<td>EFO_0000305</td>
-<td>SNPs passing genome-wide significance</td>
-<td>P&lt;5x10-8</td>
-<td>NR</td>
-<td>77</td>
-<td>0</td>
-<td>...</td>
-<td>PGP000001</td>
-<td>25855707.0</td>
-<td>10.1093/jnci/djv036</td>
-<td>True</td>
-<td>European:100</td>
-<td>NaN</td>
-<td>European:80|Not Reported:20</td>
+<td>PGS000039</td>
+<td>Ischemic stroke</td>
+<td>EFO_0000712|HP_0002140</td>
+<td>3225583</td>
+<td>PGP000027</td>
+<td>31862893</td>
+<td>10.1038/s41467-019-13848-1</td>
 <td>https://ftp.ebi.ac.uk/pub/databases/spot/pgs/s...</td>
-<td>2019-10-14</td>
-<td>PGS obtained from the Catalog should be cited ...</td>
+<td>2019-12-18</td>
+<td>European:96.8|East Asian:1.3|South Asian:1|Afr...</td>
+<td>European:61.5|African:15.4|East Asian:15.4|Not...</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
-<td>PGS000002</td>
-<td>PRS77_ERpos</td>
-<td>ER-positive breast cancer</td>
-<td>estrogen-receptor positive breast cancer</td>
-<td>EFO_1000649</td>
-<td>SNPs passing genome-wide significance</td>
-<td>P&lt;5x10-8</td>
-<td>NR</td>
-<td>77</td>
-<td>0</td>
-<td>...</td>
-<td>PGP000001</td>
-<td>25855707.0</td>
-<td>10.1093/jnci/djv036</td>
-<td>True</td>
-<td>European:100</td>
+<td>PGS000706</td>
+<td>Hypertension</td>
+<td>EFO_0000537</td>
+<td>186726</td>
+<td>PGP000128</td>
+<td>33462484</td>
+<td>10.1038/s41588-020-00757-z</td>
+<td>https://ftp.ebi.ac.uk/pub/databases/spot/pgs/s...</td>
+<td>2021-02-03</td>
 <td>NaN</td>
 <td>European:100</td>
-<td>https://ftp.ebi.ac.uk/pub/databases/spot/pgs/s...</td>
-<td>2019-10-14</td>
-<td>PGS obtained from the Catalog should be cited ...</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
-<td>PGS000003</td>
-<td>PRS77_ERneg</td>
-<td>ER-negative breast cancer</td>
-<td>estrogen-receptor negative breast cancer</td>
-<td>EFO_1000650</td>
-<td>SNPs passing genome-wide significance</td>
-<td>P&lt;5x10-8</td>
-<td>NR</td>
-<td>77</td>
-<td>0</td>
-<td>...</td>
-<td>PGP000001</td>
-<td>25855707.0</td>
-<td>10.1093/jnci/djv036</td>
-<td>True</td>
-<td>European:100</td>
-<td>NaN</td>
-<td>European:100</td>
+<td>PGS003973</td>
+<td>Abdominal aortic aneurysm</td>
+<td>EFO_0004214</td>
+<td>1118997</td>
+<td>PGP000513</td>
+<td>37845353</td>
+<td>10.1038/s41588-023-01510-y</td>
 <td>https://ftp.ebi.ac.uk/pub/databases/spot/pgs/s...</td>
-<td>2019-10-14</td>
-<td>PGS obtained from the Catalog should be cited ...</td>
+<td>2023-11-01</td>
+<td>European:91.9|African:8.1</td>
+<td>European:100</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">3</th>
-<td>PGS000004</td>
-<td>PRS313_BC</td>
-<td>Breast cancer</td>
-<td>breast carcinoma</td>
-<td>EFO_0000305</td>
-<td>Hard-Thresholding Stepwise Forward Regression</td>
-<td>p &lt; 10^-5</td>
-<td>GRCh37</td>
-<td>313</td>
-<td>0</td>
-<td>...</td>
-<td>PGP000002</td>
-<td>30554720.0</td>
-<td>10.1016/j.ajhg.2018.11.002</td>
-<td>True</td>
-<td>European:100</td>
-<td>European:100</td>
-<td>European:74.6|Multi-ancestry (including Europe...</td>
+<td>PGS004460</td>
+<td>I26 (Pulmonary embolism)</td>
+<td>EFO_0003827</td>
+<td>1059939</td>
+<td>PGP000561</td>
+<td>38351177</td>
+<td>10.1038/s42003-024-05874-7</td>
 <td>https://ftp.ebi.ac.uk/pub/databases/spot/pgs/s...</td>
-<td>2019-10-14</td>
-<td>PGS obtained from the Catalog should be cited ...</td>
+<td>2024-03-18</td>
+<td>NaN</td>
+<td>European:100</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">4</th>
-<td>PGS000005</td>
-<td>PRS313_ERpos</td>
-<td>ER-positive breast cancer</td>
-<td>estrogen-receptor positive breast cancer</td>
-<td>EFO_1000649</td>
-<td>Hard-Thresholding Stepwise Forward Regression</td>
-<td>p &lt; 10^-5</td>
-<td>GRCh37</td>
-<td>313</td>
-<td>0</td>
-<td>...</td>
-<td>PGP000002</td>
-<td>30554720.0</td>
-<td>10.1016/j.ajhg.2018.11.002</td>
-<td>True</td>
-<td>European:100</td>
-<td>European:100</td>
-<td>European:85.7|Not Reported:4.8|African:4.8|Mul...</td>
+<td>PGS004911</td>
+<td>Hypertrophic cardiomyopathy (MTAG)</td>
+<td>EFO_0000538</td>
+<td>374114</td>
+<td>PGP000642</td>
+<td>39966645</td>
+<td>10.1038/s41588-025-02094-5</td>
 <td>https://ftp.ebi.ac.uk/pub/databases/spot/pgs/s...</td>
-<td>2019-10-14</td>
-<td>PGS obtained from the Catalog should be cited ...</td>
+<td>2025-02-26</td>
+<td>European:100</td>
+<td>European:100</td>
 </tr>
 </tbody>
 </table>
 
-<p>5 rows × 21 columns</p>
 </div>
 </div>
 <div class="cell-output cell-output-display">
@@ -327,77 +274,126 @@ if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.M
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">PGS Publication/Study (PGP) ID</th>
-<th data-quarto-table-cell-role="th">First Author</th>
-<th data-quarto-table-cell-role="th">Title</th>
-<th data-quarto-table-cell-role="th">Journal Name</th>
-<th data-quarto-table-cell-role="th">Publication Date</th>
-<th data-quarto-table-cell-role="th">Release Date</th>
-<th data-quarto-table-cell-role="th">Authors</th>
-<th data-quarto-table-cell-role="th">digital object identifier (doi)</th>
-<th data-quarto-table-cell-role="th">PubMed ID (PMID)</th>
+<th data-quarto-table-cell-role="th">first_author</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">journal_name</th>
+<th data-quarto-table-cell-role="th">publication_date</th>
+<th data-quarto-table-cell-role="th">pgp_id</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
-<td>PGP000001</td>
-<td>Mavaddat N</td>
-<td>Prediction of breast cancer risk based on prof...</td>
-<td>J Natl Cancer Inst</td>
-<td>2015-04-08</td>
-<td>2019-10-14</td>
-<td>Mavaddat N, Pharoah PD, Michailidou K, Tyrer J...</td>
-<td>10.1093/jnci/djv036</td>
-<td>25855707.0</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>PGP000002</td>
-<td>Mavaddat N</td>
-<td>Polygenic Risk Scores for Prediction of Breast...</td>
-<td>Am J Hum Genet</td>
-<td>2018-12-13</td>
-<td>2019-10-14</td>
-<td>Mavaddat N, Michailidou K, Dennis J, Lush M, F...</td>
-<td>10.1016/j.ajhg.2018.11.002</td>
-<td>30554720.0</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>PGP000003</td>
-<td>Mega JL</td>
-<td>Genetic risk, coronary heart disease events, a...</td>
-<td>Lancet</td>
-<td>2015-03-04</td>
-<td>2019-10-14</td>
-<td>Mega JL, Stitziel NO, Smith JG, Chasman DI, Ca...</td>
-<td>10.1016/S0140-6736(14)61730-X</td>
-<td>25748612.0</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>PGP000004</td>
-<td>Tada H</td>
-<td>Risk prediction by genetic risk scores for cor...</td>
-<td>Eur Heart J</td>
-<td>2015-09-20</td>
-<td>2019-10-14</td>
-<td>Tada H, Melander O, Louie JZ, Catanese JJ, Row...</td>
-<td>10.1093/eurheartj/ehv462</td>
-<td>26392438.0</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>PGP000005</td>
 <td>Abraham G</td>
-<td>Genomic prediction of coronary heart disease.</td>
-<td>Eur Heart J</td>
-<td>2016-09-21</td>
-<td>2019-10-14</td>
-<td>Abraham G, Havulinna AS, Bhalala OG, Byars SG,...</td>
-<td>10.1093/eurheartj/ehw450</td>
-<td>27655226.0</td>
+<td>Genomic risk score offers predictive performan...</td>
+<td>Nat Commun</td>
+<td>2019-12-20</td>
+<td>PGP000027</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Sinnott-Armstrong N</td>
+<td>Genetics of 35 blood and urine biomarkers in t...</td>
+<td>Nat Genet</td>
+<td>2021-01-18</td>
+<td>PGP000128</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Roychowdhury T</td>
+<td>Genome-wide association meta-analysis identifi...</td>
+<td>Nat Genet</td>
+<td>2023-10-16</td>
+<td>PGP000513</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Jung H</td>
+<td>Integration of risk factor polygenic risk scor...</td>
+<td>Commun Biol</td>
+<td>2024-02-13</td>
+<td>PGP000561</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Zheng SL</td>
+<td>Evaluation of polygenic scores for hypertrophi...</td>
+<td>Nat Genet</td>
+<td>2025-02-18</td>
+<td>PGP000642</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">pgp_id</th>
+<th data-quarto-table-cell-role="th">hazard_ratio</th>
+<th data-quarto-table-cell-role="th">odds_ratio</th>
+<th data-quarto-table-cell-role="th">auroc</th>
+<th data-quarto-table-cell-role="th">performance_id</th>
+<th data-quarto-table-cell-role="th">pgs_id</th>
+<th data-quarto-table-cell-role="th">pss_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>PGP000027</td>
+<td>1.260000</td>
+<td>None</td>
+<td>None</td>
+<td>PPM000091</td>
+<td>PGS000039</td>
+<td>PSS000058</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>PGP000128</td>
+<td>None</td>
+<td>None</td>
+<td>0.62</td>
+<td>PPM001598</td>
+<td>PGS000706</td>
+<td>PSS000822</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>PGP000209</td>
+<td>1.410000</td>
+<td>None</td>
+<td>0.69</td>
+<td>PPM002221</td>
+<td>PGS000039</td>
+<td>PSS001082</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>PGP000209</td>
+<td>None</td>
+<td>None</td>
+<td>None</td>
+<td>PPM002222</td>
+<td>PGS000039</td>
+<td>PSS001082</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>PGP000209</td>
+<td>1.430000</td>
+<td>None</td>
+<td>None</td>
+<td>PPM002223</td>
+<td>PGS000039</td>
+<td>PSS001082</td>
 </tr>
 </tbody>
 </table>
@@ -408,15 +404,126 @@ if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.M
 </section>
 <section id="prepare-data" class="level2">
 <h2 class="anchored" data-anchor-id="prepare-data">Prepare data</h2>
+<div id="88951402" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-stdout">
+<pre><code>['sampleset', 'FID', 'IID', 'PGS', 'SUM', 'Z_MostSimilarPop', 'Z_norm1', 'Z_norm2', 'percentile_MostSimilarPop', 'pgs_id', 'reported_trait', 'mapped_trait_efo_id', 'number_of_variants', 'pgp_id', 'publication_pmid', 'publication_doi', 'ftp_link', 'release_date', 'ancestry_distribution_source_of_variant_associations_gwas', 'ancestry_distribution_pgs_evaluation']
+['sampleset', 'FID', 'IID', 'PGS', 'SUM', 'Z_MostSimilarPop', 'Z_norm1', 'Z_norm2', 'percentile_MostSimilarPop', 'pgs_id', 'reported_trait', 'mapped_trait_efo_id', 'number_of_variants', 'pgp_id', 'publication_pmid', 'publication_doi', 'ftp_link', 'release_date', 'ancestry_distribution_source_of_variant_associations_gwas', 'ancestry_distribution_pgs_evaluation', 'hazard_ratio', 'odds_ratio', 'auroc', 'performance_id', 'pss_id']
+['sampleset', 'FID', 'IID', 'PGS', 'SUM', 'Z_MostSimilarPop', 'Z_norm1', 'Z_norm2', 'percentile_MostSimilarPop', 'pgs_id', 'reported_trait', 'mapped_trait_efo_id', 'number_of_variants', 'pgp_id', 'publication_pmid', 'publication_doi', 'ftp_link', 'release_date', 'ancestry_distribution_source_of_variant_associations_gwas', 'ancestry_distribution_pgs_evaluation', 'hazard_ratio', 'odds_ratio', 'auroc', 'performance_id', 'pss_id', 'first_author', 'title', 'journal_name', 'publication_date']</code></pre>
+</div>
+</div>
+<div id="47bd7f4c" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-stdout">
+<pre><code>['sampleset', 'FID', 'IID', 'PGS', 'SUM', 'Z_MostSimilarPop', 'Z_norm1', 'Z_norm2', 'percentile_MostSimilarPop', 'pgs_id', 'reported_trait', 'mapped_trait_efo_id', 'number_of_variants', 'pgp_id', 'publication_pmid', 'publication_doi', 'ftp_link', 'release_date', 'ancestry_distribution_source_of_variant_associations_gwas', 'ancestry_distribution_pgs_evaluation', 'hazard_ratio', 'odds_ratio', 'auroc', 'performance_id', 'pss_id', 'first_author', 'title', 'journal_name', 'publication_date', 'individual_hazard_ratio', 'individual_odds_ratio', 'individual_risk_ratio', 'risk', 'risk_type', 'performance_score_id']</code></pre>
+</div>
+</div>
 </section>
-<section id="plot" class="level2">
-<h2 class="anchored" data-anchor-id="plot">Plot</h2>
-<div id="4131cc28" class="cell" data-execution_count="3">
+<section id="percentile-plot" class="level2">
+<h2 class="anchored" data-anchor-id="percentile-plot">Percentile Plot</h2>
+<div id="f0ed5707" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
-<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.3.1.min.js" integrity="sha256-4rD3fugVb/nVJYUv5Ky3v+fYXoouHaBSP20WIJuEiWg=" crossorigin="anonymous"></script>                <div id="a214a7d6-afbd-4542-a595-363222f35cd1" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("a214a7d6-afbd-4542-a595-363222f35cd1")) {                    Plotly.newPlot(                        "a214a7d6-afbd-4542-a595-363222f35cd1",                        [{"hovertemplate":"Reported Trait=Schizophrenia\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Schizophrenia","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"Schizophrenia","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS000133"],"xaxis":"x","y":{"dtype":"f8","bdata":"ZEcyx\u002ftQUUA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Reported Trait=Lifetime Major Depressive Disorder\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Lifetime Major Depressive Disorder","marker":{"color":"#EF553B","pattern":{"shape":""}},"name":"Lifetime Major Depressive Disorder","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS000138"],"xaxis":"x","y":{"dtype":"f8","bdata":"fWEmlFp8LEA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Reported Trait=Lifetime Major Depressive Disorder (with recurrence)\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Lifetime Major Depressive Disorder (with recurrence)","marker":{"color":"#00cc96","pattern":{"shape":""}},"name":"Lifetime Major Depressive Disorder (with recurrence)","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS000139"],"xaxis":"x","y":{"dtype":"f8","bdata":"mJy4zTgEQUA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Reported Trait=Depression\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Depression","marker":{"color":"#ab63fa","pattern":{"shape":""}},"name":"Depression","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS001829","PGS002036"],"xaxis":"x","y":{"dtype":"f8","bdata":"7bXSwQVj+j+SXwX27fznPw=="},"yaxis":"y","type":"bar"},{"hovertemplate":"Reported Trait=Tobacco use disorder\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Tobacco use disorder","marker":{"color":"#FFA15A","pattern":{"shape":""}},"name":"Tobacco use disorder","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS002037"],"xaxis":"x","y":{"dtype":"f8","bdata":"zfE+1HW3QEA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Reported Trait=Recent poor appetite or overeating\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Recent poor appetite or overeating","marker":{"color":"#19d3f3","pattern":{"shape":""}},"name":"Recent poor appetite or overeating","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS002098"],"xaxis":"x","y":{"dtype":"f8","bdata":"laFBz+y1TEA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Reported Trait=Alcohol use disorder\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Alcohol use disorder","marker":{"color":"#FF6692","pattern":{"shape":""}},"name":"Alcohol use disorder","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS002738"],"xaxis":"x","y":{"dtype":"f8","bdata":"IgtZyEIWKkA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Reported Trait=Bipolar disorder\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Bipolar disorder","marker":{"color":"#B6E880","pattern":{"shape":""}},"name":"Bipolar disorder","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS002786"],"xaxis":"x","y":{"dtype":"f8","bdata":"i7Vl1bx8SUA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Reported Trait=Type 1 bipolar disorder\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Type 1 bipolar disorder","marker":{"color":"#FF97FF","pattern":{"shape":""}},"name":"Type 1 bipolar disorder","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS002787"],"xaxis":"x","y":{"dtype":"f8","bdata":"2x9Xp6SpSEA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Reported Trait=Type 2 bipolar disorder\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Type 2 bipolar disorder","marker":{"color":"#FECB52","pattern":{"shape":""}},"name":"Type 2 bipolar disorder","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS002788"],"xaxis":"x","y":{"dtype":"f8","bdata":"Q6nFR5+zVUA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Reported Trait=Autism spectrum disorder\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Autism spectrum disorder","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"Autism spectrum disorder","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS002790"],"xaxis":"x","y":{"dtype":"f8","bdata":"TOHvHTYJTEA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Reported Trait=Major Depressive Disorder (Lifetime)\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Major Depressive Disorder (Lifetime)","marker":{"color":"#EF553B","pattern":{"shape":""}},"name":"Major Depressive Disorder (Lifetime)","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS003579"],"xaxis":"x","y":{"dtype":"f8","bdata":"CF5RRMpjBEA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Reported Trait=Attention deficit hyperactivity disorder\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Attention deficit hyperactivity disorder","marker":{"color":"#00cc96","pattern":{"shape":""}},"name":"Attention deficit hyperactivity disorder","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS003753"],"xaxis":"x","y":{"dtype":"f8","bdata":"DTOh1OKjQ0A="},"yaxis":"y","type":"bar"},{"hovertemplate":"Reported Trait=F10 (Mental and behavioural disorders due to use of alcohol)\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"F10 (Mental and behavioural disorders due to use of alcohol)","marker":{"color":"#ab63fa","pattern":{"shape":""}},"name":"F10 (Mental and behavioural disorders due to use of alcohol)","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS004449"],"xaxis":"x","y":{"dtype":"f8","bdata":"XZ2SpsrQQkA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Reported Trait=F41 (Other anxiety disorders)\u003cbr\u003ePGS=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"F41 (Other anxiety disorders)","marker":{"color":"#FFA15A","pattern":{"shape":""}},"name":"F41 (Other anxiety disorders)","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS004451"],"xaxis":"x","y":{"dtype":"f8","bdata":"cgheUUTKQ0A="},"yaxis":"y","type":"bar"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"PGS"},"categoryorder":"array","categoryarray":["PGS002788","PGS000133","PGS002098","PGS002790","PGS002786","PGS002787","PGS004451","PGS003753","PGS004449","PGS000139","PGS002037","PGS000138","PGS002738","PGS003579","PGS001829","PGS002036"]},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"percentile_MostSimilarPop"}},"legend":{"title":{"text":"Reported Trait"},"tracegroupgap":0},"title":{"text":"Percentile of Most Similar Population for Each PGS"},"barmode":"relative"},                        {"responsive": true}                    ).then(function(){
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.4.0.min.js" integrity="sha256-KEmPoupLpFyGMyGAiOsiNDbKDKAvxXAn/W+oQa0ZAfk=" crossorigin="anonymous"></script>                <div id="f10cf745-adaf-41ac-942e-879e7982c075" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("f10cf745-adaf-41ac-942e-879e7982c075")) {                    Plotly.newPlot(                        "f10cf745-adaf-41ac-942e-879e7982c075",                        [{"hovertemplate":"reported_trait=Ischemic stroke\u003cbr\u003epgs_id=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Ischemic stroke","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"Ischemic stroke","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS000039"],"xaxis":"x","y":{"dtype":"f8","bdata":"TOHvHTYJPEA="},"yaxis":"y","type":"bar"},{"hovertemplate":"reported_trait=Hypertension\u003cbr\u003epgs_id=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Hypertension","marker":{"color":"#EF553B","pattern":{"shape":""}},"name":"Hypertension","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS000706"],"xaxis":"x","y":{"dtype":"f8","bdata":"Lj76nCW6VEA="},"yaxis":"y","type":"bar"},{"hovertemplate":"reported_trait=Abdominal aortic aneurysm\u003cbr\u003epgs_id=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Abdominal aortic aneurysm","marker":{"color":"#00cc96","pattern":{"shape":""}},"name":"Abdominal aortic aneurysm","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS003973"],"xaxis":"x","y":{"dtype":"f8","bdata":"h3Mp\u002fL3DREA="},"yaxis":"y","type":"bar"},{"hovertemplate":"reported_trait=I26 (Pulmonary embolism)\u003cbr\u003epgs_id=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"I26 (Pulmonary embolism)","marker":{"color":"#ab63fa","pattern":{"shape":""}},"name":"I26 (Pulmonary embolism)","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS004460"],"xaxis":"x","y":{"dtype":"f8","bdata":"zF4rHVwwJkA="},"yaxis":"y","type":"bar"},{"hovertemplate":"reported_trait=Hypertrophic cardiomyopathy (MTAG)\u003cbr\u003epgs_id=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Hypertrophic cardiomyopathy (MTAG)","marker":{"color":"#FFA15A","pattern":{"shape":""}},"name":"Hypertrophic cardiomyopathy (MTAG)","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS004911"],"xaxis":"x","y":{"dtype":"f8","bdata":"2EoHF4xpSUA="},"yaxis":"y","type":"bar"},{"hovertemplate":"reported_trait=Dilated cardiomyopathy (MTAG)\u003cbr\u003epgs_id=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Dilated cardiomyopathy (MTAG)","marker":{"color":"#19d3f3","pattern":{"shape":""}},"name":"Dilated cardiomyopathy (MTAG)","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS004951"],"xaxis":"x","y":{"dtype":"f8","bdata":"aT0gxJPtUkA="},"yaxis":"y","type":"bar"},{"hovertemplate":"reported_trait=Coronary artery calcification\u003cbr\u003epgs_id=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Coronary artery calcification","marker":{"color":"#FF6692","pattern":{"shape":""}},"name":"Coronary artery calcification","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS005096"],"xaxis":"x","y":{"dtype":"f8","bdata":"OHYkc7wPS0A="},"yaxis":"y","type":"bar"},{"hovertemplate":"reported_trait=Peak aortic velocity\u003cbr\u003epgs_id=%{x}\u003cbr\u003epercentile_MostSimilarPop=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Peak aortic velocity","marker":{"color":"#B6E880","pattern":{"shape":""}},"name":"Peak aortic velocity","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS005256"],"xaxis":"x","y":{"dtype":"f8","bdata":"ebL9cXVKUkA="},"yaxis":"y","type":"bar"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"pgs_id"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"percentile_MostSimilarPop"}},"legend":{"title":{"text":"reported_trait"},"tracegroupgap":0},"title":{"text":"Percentile of Most Similar Population for Each PGS"},"barmode":"relative"},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('a214a7d6-afbd-4542-a595-363222f35cd1');
+var gd = document.getElementById('f10cf745-adaf-41ac-942e-879e7982c075');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+</section>
+<section id="hazard-risk-plot" class="level2">
+<h2 class="anchored" data-anchor-id="hazard-risk-plot">hazard risk plot</h2>
+<div id="7069849b" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.4.0.min.js" integrity="sha256-KEmPoupLpFyGMyGAiOsiNDbKDKAvxXAn/W+oQa0ZAfk=" crossorigin="anonymous"></script>                <div id="c932b51f-bb83-44b2-afd0-8b21a7495b9c" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("c932b51f-bb83-44b2-afd0-8b21a7495b9c")) {                    Plotly.newPlot(                        "c932b51f-bb83-44b2-afd0-8b21a7495b9c",                        [{"hovertemplate":"reported_trait=Ischemic stroke\u003cbr\u003eperformance_score_id=%{x}\u003cbr\u003erisk=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Ischemic stroke","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"Ischemic stroke","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS000039_PSS000058"],"xaxis":"x","y":{"dtype":"f8","bdata":"HnOiW5riKMA="},"yaxis":"y","type":"bar"},{"hovertemplate":"reported_trait=Hypertrophic cardiomyopathy (MTAG)\u003cbr\u003eperformance_score_id=%{x}\u003cbr\u003erisk=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Hypertrophic cardiomyopathy (MTAG)","marker":{"color":"#EF553B","pattern":{"shape":""}},"name":"Hypertrophic cardiomyopathy (MTAG)","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS004911_PSS011704"],"xaxis":"x","y":{"dtype":"f8","bdata":"kHJIOx3d2r8="},"yaxis":"y","type":"bar"},{"hovertemplate":"reported_trait=Peak aortic velocity\u003cbr\u003eperformance_score_id=%{x}\u003cbr\u003erisk=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Peak aortic velocity","marker":{"color":"#00cc96","pattern":{"shape":""}},"name":"Peak aortic velocity","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS005256_PSS012068"],"xaxis":"x","y":{"dtype":"f8","bdata":"Zp\u002fZAyKMPkA="},"yaxis":"y","type":"bar"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"performance_score_id"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"risk"}},"legend":{"title":{"text":"reported_trait"},"tracegroupgap":0},"title":{"text":"Hazard Ratio Risk for Each PGS"},"barmode":"relative"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('c932b51f-bb83-44b2-afd0-8b21a7495b9c');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+</section>
+<section id="odsratio-risk-plot" class="level2">
+<h2 class="anchored" data-anchor-id="odsratio-risk-plot">odsratio risk plot</h2>
+<div id="ac0d3530" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-display">
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.4.0.min.js" integrity="sha256-KEmPoupLpFyGMyGAiOsiNDbKDKAvxXAn/W+oQa0ZAfk=" crossorigin="anonymous"></script>                <div id="55077386-7a8d-46d1-9f1f-c4619f141471" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("55077386-7a8d-46d1-9f1f-c4619f141471")) {                    Plotly.newPlot(                        "55077386-7a8d-46d1-9f1f-c4619f141471",                        [{"hovertemplate":"reported_trait=I26 (Pulmonary embolism)\u003cbr\u003eperformance_score_id=%{x}\u003cbr\u003erisk=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"I26 (Pulmonary embolism)","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"I26 (Pulmonary embolism)","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS004460_PSS011364"],"xaxis":"x","y":{"dtype":"f8","bdata":"kXjvXJ+xMMA="},"yaxis":"y","type":"bar"},{"hovertemplate":"reported_trait=Dilated cardiomyopathy (MTAG)\u003cbr\u003eperformance_score_id=%{x}\u003cbr\u003erisk=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Dilated cardiomyopathy (MTAG)","marker":{"color":"#EF553B","pattern":{"shape":""}},"name":"Dilated cardiomyopathy (MTAG)","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS004951_PSS011780"],"xaxis":"x","y":{"dtype":"f8","bdata":"U02pXdOfS0A="},"yaxis":"y","type":"bar"},{"hovertemplate":"reported_trait=Coronary artery calcification\u003cbr\u003eperformance_score_id=%{x}\u003cbr\u003erisk=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Coronary artery calcification","marker":{"color":"#00cc96","pattern":{"shape":""}},"name":"Coronary artery calcification","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS005096_PSS011838","PGS005096_PSS011839","PGS005096_PSS011840"],"xaxis":"x","y":{"dtype":"f8","bdata":"+XSA\u002fbyiE0BWSiW+5Cg2QA+LPNAq6yBA"},"yaxis":"y","type":"bar"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"performance_score_id"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"risk"}},"legend":{"title":{"text":"reported_trait"},"tracegroupgap":0},"title":{"text":"Odds Ratio Risk for Each PGS"},"barmode":"relative"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('55077386-7a8d-46d1-9f1f-c4619f141471');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+</section>
+<section id="auroc-performance-plot" class="level2">
+<h2 class="anchored" data-anchor-id="auroc-performance-plot">auroc performance plot</h2>
+<div id="b0fa5709" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display">
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.4.0.min.js" integrity="sha256-KEmPoupLpFyGMyGAiOsiNDbKDKAvxXAn/W+oQa0ZAfk=" crossorigin="anonymous"></script>                <div id="ef5e6a18-2714-47f5-a9fe-392c01e06f6e" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("ef5e6a18-2714-47f5-a9fe-392c01e06f6e")) {                    Plotly.newPlot(                        "ef5e6a18-2714-47f5-a9fe-392c01e06f6e",                        [{"hovertemplate":"reported_trait=Hypertension\u003cbr\u003eperformance_score_id=%{x}\u003cbr\u003eauroc=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Hypertension","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"Hypertension","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS000706_PSS000822"],"xaxis":"x","y":[0.62],"yaxis":"y","type":"bar"},{"hovertemplate":"reported_trait=Hypertrophic cardiomyopathy (MTAG)\u003cbr\u003eperformance_score_id=%{x}\u003cbr\u003eauroc=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Hypertrophic cardiomyopathy (MTAG)","marker":{"color":"#EF553B","pattern":{"shape":""}},"name":"Hypertrophic cardiomyopathy (MTAG)","orientation":"v","showlegend":true,"textposition":"auto","x":["PGS004911_PSS011704"],"xaxis":"x","y":[0.8],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"performance_score_id"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"auroc"}},"legend":{"title":{"text":"reported_trait"},"tracegroupgap":0},"title":{"text":"AUROC Performance for Each PGS"},"barmode":"relative"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('ef5e6a18-2714-47f5-a9fe-392c01e06f6e');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -444,12 +551,12 @@ if (outputEl) {{
 </section>
 <section id="table" class="level2">
 <h2 class="anchored" data-anchor-id="table">table</h2>
-<div id="b0bb615f" class="cell" data-execution_count="4">
+<div id="c2197371" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
-<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.3.1.min.js" integrity="sha256-4rD3fugVb/nVJYUv5Ky3v+fYXoouHaBSP20WIJuEiWg=" crossorigin="anonymous"></script>                <div id="5c9a1afb-0e49-4977-801d-1885d456ed41" class="plotly-graph-div" style="height:616px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("5c9a1afb-0e49-4977-801d-1885d456ed41")) {                    Plotly.newPlot(                        "5c9a1afb-0e49-4977-801d-1885d456ed41",                        [{"cells":{"align":["left","left","left","left","left","left","right","left"],"fill":{"color":[["white","#F7F8FA","white","#F7F8FA","white","#F7F8FA","white","#F7F8FA","white","#F7F8FA","white","#F7F8FA","white","#F7F8FA","white","#F7F8FA"]]},"font":{"color":"#111827","family":"Inter, Arial","size":12},"height":30,"line":{"color":"#E5E7EB"},"values":[["Zheutlin AB","Cai N","Cai N","Priv\u00e9 F","Priv\u00e9 F","Priv\u00e9 F","Priv\u00e9 F","Lai D","Gui Y","Gui Y","Gui Y","Gui Y","Dahl A","Sato JR","Jung H","Jung H"],["Penetrance and Pleiotropy of Polygenic Risk Scores for Schizophrenia in 106,160 Patients Across Four Health Care Systems.","Minimal phenotyping yields genome-wide association signals of low specificity for major depression.","Minimal phenotyping yields genome-wide association signals of low specificity for major depression.","Portability of 245 polygenic scores when derived from the UK Biobank and applied to 9 ancestry groups from the same cohort","Portability of 245 polygenic scores when derived from the UK Biobank and applied to 9 ancestry groups from the same cohort","Portability of 245 polygenic scores when derived from the UK Biobank and applied to 9 ancestry groups from the same cohort","Portability of 245 polygenic scores when derived from the UK Biobank and applied to 9 ancestry groups from the same cohort","Evaluating risk for alcohol use disorder: Polygenic risk scores and family history.","Sex-specific genetic association between psychiatric disorders and cognition, behavior and brain imaging in children and adults.","Sex-specific genetic association between psychiatric disorders and cognition, behavior and brain imaging in children and adults.","Sex-specific genetic association between psychiatric disorders and cognition, behavior and brain imaging in children and adults.","Sex-specific genetic association between psychiatric disorders and cognition, behavior and brain imaging in children and adults.","Phenotype integration improves power and preserves specificity in biobank-based genetic studies of MDD","Polygenic risk score for attention-deficit\u002fhyperactivity disorder and brain functional networks segregation in a community-based sample.","Integration of risk factor polygenic risk score with disease polygenic risk score for disease prediction.","Integration of risk factor polygenic risk score with disease polygenic risk score for disease prediction."],["Am J Psychiatry","Nat Genet","Nat Genet","Am J Hum Genet","Am J Hum Genet","Am J Hum Genet","Am J Hum Genet","Alcohol Clin Exp Res","Transl Psychiatry","Transl Psychiatry","Transl Psychiatry","Transl Psychiatry","bioRxiv","Genes Brain Behav","Commun Biol","Commun Biol"],["2019-08-16","2020-03-30","2020-03-30","2022-01-06","2022-01-06","2022-01-06","2022-01-06","2022-03-10","2022-08-26","2022-08-26","2022-08-26","2022-08-26","2022-08-15","2023-02-21","2024-02-13","2024-02-13"],["2020-03-27","2020-04-29","2020-04-29","2022-01-10","2022-01-10","2022-01-10","2022-01-10","2022-08-03","2022-09-29","2022-09-29","2022-09-29","2022-09-29","2023-04-12","2023-06-22","2024-03-18","2024-03-18"],["10.1176\u002fappi.ajp.2019.18091085","10.1038\u002fs41588-020-0594-5","10.1038\u002fs41588-020-0594-5","10.1016\u002fj.ajhg.2021.11.008","10.1016\u002fj.ajhg.2021.11.008","10.1016\u002fj.ajhg.2021.11.008","10.1016\u002fj.ajhg.2021.11.008","10.1111\u002facer.14772","10.1038\u002fs41398-022-02041-6","10.1038\u002fs41398-022-02041-6","10.1038\u002fs41398-022-02041-6","10.1038\u002fs41398-022-02041-6","10.1101\u002f2022.08.15.503980","10.1111\u002fgbb.12838","10.1038\u002fs42003-024-05874-7","10.1038\u002fs42003-024-05874-7"],["31416338.0","32231276.0","32231276.0","34995502.0","34995502.0","34995502.0","34995502.0","35267208.0","36028495.0","36028495.0","36028495.0","36028495.0","","36811275.0","38351177.0","38351177.0"],["Schizophrenia","Lifetime Major Depressive Disorder","Lifetime Major Depressive Disorder (with recurrence)","Depression","Depression","Tobacco use disorder","Recent poor appetite or overeating","Alcohol use disorder","Bipolar disorder","Type 1 bipolar disorder","Type 2 bipolar disorder","Autism spectrum disorder","Major Depressive Disorder (Lifetime)","Attention deficit hyperactivity disorder","F10 (Mental and behavioural disorders due to use of alcohol)","F41 (Other anxiety disorders)"]]},"columnwidth":[1,1,1,1,1,1,1,1],"header":{"align":"left","fill":{"color":"#F1F3F5"},"font":{"color":"#111827","family":"Inter, Arial","size":13},"height":36,"line":{"color":"#E5E7EB"},"values":["\u003cb\u003eFirst Author\u003c\u002fb\u003e","\u003cb\u003eTitle\u003c\u002fb\u003e","\u003cb\u003eJournal Name\u003c\u002fb\u003e","\u003cb\u003ePublication Date\u003c\u002fb\u003e","\u003cb\u003eRelease Date\u003c\u002fb\u003e","\u003cb\u003edigital object identifier (doi)\u003c\u002fb\u003e","\u003cb\u003ePubMed ID (PMID)\u003c\u002fb\u003e","\u003cb\u003eReported Trait\u003c\u002fb\u003e"]},"type":"table"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"title":{"font":{"size":18,"family":"Inter, Arial","color":"#111827"},"text":"Publications Metadata","x":0,"xanchor":"left"},"margin":{"l":0,"r":0,"t":55,"b":0},"paper_bgcolor":"white","plot_bgcolor":"white","height":616},                        {"responsive": true}                    ).then(function(){
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.4.0.min.js" integrity="sha256-KEmPoupLpFyGMyGAiOsiNDbKDKAvxXAn/W+oQa0ZAfk=" crossorigin="anonymous"></script>                <div id="e3943cee-a695-4d13-a102-964431c3a561" class="plotly-graph-div" style="height:392px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("e3943cee-a695-4d13-a102-964431c3a561")) {                    Plotly.newPlot(                        "e3943cee-a695-4d13-a102-964431c3a561",                        [{"cells":{"align":["left","left","left","left","left"],"fill":{"color":[["white","#F7F8FA","white","#F7F8FA","white","#F7F8FA","white","#F7F8FA"]]},"font":{"color":"#111827","family":"Inter, Arial","size":12},"height":30,"line":{"color":"#E5E7EB"},"values":[["Abraham G","Sinnott-Armstrong N","Roychowdhury T","Jung H","Zheng SL","Jurgens SJ","Mishra PP","Kany S"],["Genomic risk score offers predictive performance comparable to clinical risk factors for ischaemic stroke.","Genetics of 35 blood and urine biomarkers in the UK Biobank.","Genome-wide association meta-analysis identifies risk loci for abdominal aortic aneurysm and highlights PCSK9 as a therapeutic target.","Integration of risk factor polygenic risk score with disease polygenic risk score for disease prediction.","Evaluation of polygenic scores for hypertrophic cardiomyopathy in the general population and across clinical settings.","Genome-wide association study reveals mechanisms underlying dilated cardiomyopathy and myocardial resilience.","Genetic risk score for coronary artery calcification and its predictive ability for coronary artery disease.","Multitrait analyses identify genetic variants associated with aortic valve function and aortic stenosis risk."],["Nat Commun","Nat Genet","Nat Genet","Commun Biol","Nat Genet","Nat Genet","Am J Prev Cardiol","Nat Genet"],["2019-12-20","2021-01-18","2023-10-16","2024-02-13","2025-02-18","2024-11-21","2024-10-10","2025-12-19"],["PGP000027","PGP000128","PGP000513","PGP000561","PGP000642","PGP000672","PGP000689","PGP000747"]]},"columnwidth":[1,1,1,1,1],"header":{"align":"left","fill":{"color":"#F1F3F5"},"font":{"color":"#111827","family":"Inter, Arial","size":13},"height":36,"line":{"color":"#E5E7EB"},"values":["\u003cb\u003efirst_author\u003c\u002fb\u003e","\u003cb\u003etitle\u003c\u002fb\u003e","\u003cb\u003ejournal_name\u003c\u002fb\u003e","\u003cb\u003epublication_date\u003c\u002fb\u003e","\u003cb\u003epgp_id\u003c\u002fb\u003e"]},"type":"table"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"title":{"font":{"size":18,"family":"Inter, Arial","color":"#111827"},"text":"Publications Metadata","x":0,"xanchor":"left"},"margin":{"l":0,"r":0,"t":55,"b":0},"paper_bgcolor":"white","plot_bgcolor":"white","height":392},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('5c9a1afb-0e49-4977-801d-1885d456ed41');
+var gd = document.getElementById('e3943cee-a695-4d13-a102-964431c3a561');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{

@@ -17,27 +17,68 @@ execute:
 from IPython.display import display
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.express as px
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path.cwd().parent / "database_module"))
+
+from db_handler import DbHandler, DbUtils
+from db_config import USERNAME, PASSWORD, DATABASE_NAME, HOST, PORT, PGS_EXCEL_FILEPATH
+
+
+db_handler = DbHandler(port=PORT, db_url=None, user=USERNAME, password=PASSWORD, host=HOST)
+
+db_handler.connect()
+
+db_utils = DbUtils(db_handler)
+
+
 
 user_pgs_scores = pd.read_csv(
     r"C:\Users\frezz\Downloads\snpster\data pipeline\reporting_module\data\multiple_pgs_scores_example.zip", sep="\t"
 )
 
+"""
+Index(['sampleset', 'FID', 'IID', 'PGS', 'SUM', 'Z_MostSimilarPop', 'Z_norm1',   
+       'Z_norm2', 'percentile_MostSimilarPop'],
+      dtype='str')
+"""
+
+
 #get metadata
 
-meta_data = pd.read_excel(
-    r"C:\Users\frezz\Downloads\snpster\data pipeline\reporting_module\data\pgs_all_metadata.xlsx", sheet_name="Scores"
-)
+user_pgs_scores["PGS"] = user_pgs_scores["PGS"].str.replace("_hmPOS_GRCh38", "", regex=False)
 
-publications_meta_data = pd.read_excel(
-    r"C:\Users\frezz\Downloads\snpster\data pipeline\reporting_module\data\pgs_all_metadata.xlsx", sheet_name="Publications"
-)   
+#only keep sampleset column != reference
+
+user_pgs_scores = user_pgs_scores[user_pgs_scores["sampleset"] != "reference"]
 
 
+meta_data_query = f"""
+SELECT pgs_id, reported_trait, mapped_trait_efo_id, number_of_variants,pgp_id, publication_pmid,publication_doi,ftp_link,release_date,ancestry_distribution_source_of_variant_associations_gwas,ancestry_distribution_pgs_evaluation FROM data_libraries.pgscatalog_data
+WHERE pgs_id IN ({', '.join([f"'{pgs}'" for pgs in user_pgs_scores['PGS'].unique()])})
+"""
 
+meta_data = db_utils.get_pd_dataframe_from_query(meta_data_query)
+
+
+publications_meta_data_query = f"""SELECT first_author, title, journal_name, publication_date, pgp_id FROM data_libraries.pgs_publications
+WHERE pgp_id IN ({', '.join([f"'{pgp}'" for pgp in meta_data['pgp_id'].unique()])})
+"""
+
+publications_meta_data = db_utils.get_pd_dataframe_from_query(publications_meta_data_query)
+
+pgs_performance_data_query = f"""SELECT pgp_id, hazard_ratio, odds_ratio, auroc, performance_id, pgs_id, pss_id FROM data_libraries.pgs_performance
+WHERE pgs_id IN ({', '.join([f"'{pgs}'" for pgs in user_pgs_scores['PGS'].unique()])})
+"""
+
+pgs_performance_data = db_utils.get_pd_dataframe_from_query(pgs_performance_data_query)
 
 display(user_pgs_scores.head())
 display(meta_data.head())
 display(publications_meta_data.head())
+display(pgs_performance_data.head())
 
 ```
 
@@ -47,56 +88,164 @@ display(publications_meta_data.head())
 
 ```{python}
 
-#only keep sampleset column != reference
+#print all columns of user_pgs_scores, meta_data, publications_meta_data, pgs_performance_data
+#print("user_pgs_scores columns:", user_pgs_scores.columns.tolist())
+#print("meta_data columns:", meta_data.columns.tolist())
+#print("publications_meta_data columns:", publications_meta_data.columns.tolist())
+#print("pgs_performance_data columns:", pgs_performance_data.columns.tolist())
 
-user_pgs_scores = user_pgs_scores[user_pgs_scores["sampleset"] != "reference"]
-#remove _hmPOS_GRCh38 in the PGS column value strings
-
-user_pgs_scores["PGS"] = user_pgs_scores["PGS"].str.replace("_hmPOS_GRCh38", "", regex=False)
 
 
 user_pgs_scores = user_pgs_scores.merge(
-    meta_data[["Polygenic Score (PGS) ID", "PGS Name", "Reported Trait", "PGS Publication (PGP) ID"]],
-    left_on="PGS",
-    right_on="Polygenic Score (PGS) ID",
+    meta_data,
+    left_on="PGS", #default column name from the prs_catalog nextlfow output
+    right_on="pgs_id",
+    how="left"
+)
+
+print(user_pgs_scores.columns.tolist())
+
+user_pgs_scores = user_pgs_scores.merge(
+    pgs_performance_data,
+    left_on=["pgs_id", "pgp_id"],
+    right_on=["pgs_id", "pgp_id"],
+    how="left"
+)
+
+print(user_pgs_scores.columns.tolist())
+
+user_pgs_scores = user_pgs_scores.merge(
+    publications_meta_data,
+    left_on="pgp_id",
+    right_on="pgp_id",
     how="left"
 )
 
 
-publications_meta_data = publications_meta_data[
-    publications_meta_data["PGS Publication/Study (PGP) ID"].isin(user_pgs_scores["PGS Publication (PGP) ID"])
+print(user_pgs_scores.columns.tolist())
+
+```
+```{python}
+import numpy as np
+
+
+
+user_pgs_scores["individual_hazard_ratio"] = (
+    user_pgs_scores["hazard_ratio"].astype(float) ** user_pgs_scores["Z_MostSimilarPop"].astype(float)
+)
+
+user_pgs_scores["individual_odds_ratio"] = (
+    user_pgs_scores["odds_ratio"].astype(float) ** user_pgs_scores["Z_MostSimilarPop"].astype(float)
+)
+
+user_pgs_scores["individual_risk_ratio"] = (
+    user_pgs_scores["individual_hazard_ratio"].combine_first(
+        user_pgs_scores["individual_odds_ratio"]
+    )
+)
+
+user_pgs_scores["risk"] = (
+    (user_pgs_scores["individual_risk_ratio"] - 1) * 100
+)
+#add column showing if score is hazard ratio or odds ratio
+
+conditions = [
+    user_pgs_scores["risk"].isna(),
+    user_pgs_scores["individual_hazard_ratio"].notna(),
+    user_pgs_scores["individual_odds_ratio"].notna(),
 ]
 
+choices = [
+    "percentile",
+    "hazard_ratio",
+    "odds_ratio",
+]
 
-#join Reported Trait from user_pgs_scores to publications_meta_data on the "PGS Publication/Study (PGP) ID" and "PGS Publication (PGP) ID" columns
-publications_meta_data = publications_meta_data.merge(
-    user_pgs_scores[["PGS Publication (PGP) ID", "Reported Trait"]],
-    left_on="PGS Publication/Study (PGP) ID",
-    right_on="PGS Publication (PGP) ID",
-    how="left"
-)
+user_pgs_scores["risk_type"] = np.select(conditions, choices, default=None)
 
+user_pgs_scores["risk"] = user_pgs_scores["risk"].fillna(user_pgs_scores["percentile_MostSimilarPop"])
+
+user_pgs_scores["performance_score_id"] = user_pgs_scores["pgs_id"] + "_" + user_pgs_scores["pss_id"].astype(str)
+
+print(user_pgs_scores.columns.tolist())
 
 ```
 
 
-## Plot
-
-
-
+## Percentile Plot
 ```{python}
 
 import plotly.express as px
 fig = px.bar(
-    user_pgs_scores,
-    x="PGS",
+    user_pgs_scores.drop_duplicates(subset=["pgs_id"]),
+    x="pgs_id",
     y="percentile_MostSimilarPop",
-    color="Reported Trait",
+    color="reported_trait",
     title="Percentile of Most Similar Population for Each PGS",
-    category_orders={"PGS": user_pgs_scores.sort_values("percentile_MostSimilarPop", ascending=False)["PGS"].tolist()},
     template="plotly_white"
 )
 fig.show()
+
+```
+
+
+## hazard risk plot
+```{python}
+
+#concatenate pss_id and pgs_id to create unique identifier for each performance score
+
+
+import plotly.express as px
+fig = px.bar(
+    user_pgs_scores[user_pgs_scores["risk_type"] == "hazard_ratio"],
+    x="performance_score_id",
+    y="risk",
+    color="reported_trait",
+    title="Hazard Ratio Risk for Each PGS",
+    template="plotly_white"
+)
+fig.show()
+
+```
+
+
+## odsratio risk plot
+```{python}
+
+import plotly.express as px
+fig = px.bar(
+    user_pgs_scores[user_pgs_scores["risk_type"] == "odds_ratio"],
+    x="performance_score_id",
+    y="risk",
+    color="reported_trait",
+    title="Odds Ratio Risk for Each PGS",
+    template="plotly_white"
+)
+fig.show()
+
+
+#print(user_pgs_scores[user_pgs_scores["risk_type"] == "odds_ratio"])
+
+
+```
+
+## auroc performance plot
+```{python}
+
+import plotly.express as px
+fig = px.bar(
+    user_pgs_scores[user_pgs_scores["auroc"].notna()],
+    x="performance_score_id",
+    y="auroc",
+    color="reported_trait",
+    title="AUROC Performance for Each PGS",
+    template="plotly_white"
+)
+fig.show()
+
+
+#print(user_pgs_scores[user_pgs_scores["risk_type"] == "odds_ratio"])
+
 
 ```
 
@@ -107,9 +256,6 @@ fig.show()
 
 df = publications_meta_data.copy()
 
-#drop Authors, PGS Publication (PGP) ID, and PGS Publication/Study (PGP) ID columns (too long / not useful for display)
-
-df = df.drop(columns=["Authors", "PGS Publication (PGP) ID", "PGS Publication/Study (PGP) ID"])
 
 
 # Convert everything to display-friendly strings (avoids weird formatting / NaNs)
