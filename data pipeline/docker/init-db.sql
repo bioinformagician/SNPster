@@ -28,7 +28,7 @@ CREATE TABLE data_libraries.pgscatalog_data (
     pgs_name VARCHAR(255),
     reported_trait VARCHAR(255),
     mapped_trait_efo_label VARCHAR(255),
-    mapped_trait_efo_id VARCHAR(255),
+    efo_id VARCHAR(255),
     pgs_development_method VARCHAR(255),
     pgs_development_details TEXT,
     original_genome_build VARCHAR(20),
@@ -74,7 +74,7 @@ CREATE TABLE data_libraries.ontology_mappings (
 
 -- Ontology Trait ID | Ontology Trait Label | Ontology Trait Description | Ontology URL
 CREATE TABLE data_libraries.pgs_performance (
-    performance_id varchar(100) PRIMARY KEY,
+    ppm_id varchar(100) PRIMARY KEY,
     pgs_id varchar(100) REFERENCES data_libraries.pgscatalog_data(pgs_id),
     pss_id varchar(100),
     pgp_id varchar(100) REFERENCES data_libraries.pgs_publications(pgp_id),
@@ -90,6 +90,34 @@ CREATE TABLE data_libraries.pgs_performance (
     concordance_statistic DECIMAL(5,2),
     other_metric TEXT
 );
+
+
+CREATE TABLE data_libraries.score_development_samples ( 
+    pgs_id VARCHAR(50), 
+    stage_of_pgs_development VARCHAR(100), 
+    individuals_development INTEGER, 
+    cases_development INTEGER, 
+    controls_development INTEGER, 
+    percent_male_development FLOAT ); 
+
+CREATE TABLE data_libraries.evaluation_sample_sets (
+     pss_id VARCHAR(50), 
+     individuals_evaluation INTEGER, 
+     cases_evaluation INTEGER, 
+     controls_evaluation INTEGER, 
+     percent_male_evaluation FLOAT );
+
+
+
+CREATE TABLE data_libraries.pipeline_dependencies (
+    module varchar(100), -- e.g imputer, harmonizer, standardizer dependencies
+    dependency_name VARCHAR(100),
+    storage_backend VARCHAR(20) NOT NULL,
+    file_path TEXT,
+    PRIMARY KEY (module, dependency_name, file_path)
+);
+
+
 
 CREATE TABLE data_libraries.pipeline_dependencies (
     module varchar(100), -- e.g imputer, harmonizer, standardizer dependencies

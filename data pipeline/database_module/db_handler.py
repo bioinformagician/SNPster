@@ -86,13 +86,43 @@ class DbUtils:
         pgs_publications = pd.read_excel(excel_filepath, sheet_name="Publications")
         ontology_mappings = pd.read_excel(excel_filepath, sheet_name="EFO Traits")
         pgs_performance = pd.read_excel(excel_filepath, sheet_name="Performance Metrics")
+        score_development_samples = pd.read_excel(excel_filepath, sheet_name="Score Development Samples")
+        evaluation_sample_sets = pd.read_excel(excel_filepath, sheet_name="Evaluation Sample Sets")
+        
+        print(score_development_samples.columns)
+        print(evaluation_sample_sets.columns)
+        
+        score_development_samples = score_development_samples[["Polygenic Score (PGS) ID", "Stage of PGS Development",
+                                                              "Number of Individuals", "Number of Cases",
+                                                              "Number of Controls", "Percent of Participants Who are Male"]]
+        
+        evaluation_sample_sets = evaluation_sample_sets[["PGS Sample Set (PSS)","Number of Individuals",
+                                                        "Number of Cases", "Number of Controls",
+                                                        "Percent of Participants Who are Male"]]
+        
+        score_development_samples.rename(columns={
+            'Polygenic Score (PGS) ID': 'pgs_id',
+            'Stage of PGS Development': 'stage_of_pgs_development',
+            'Number of Individuals': 'individuals_development',
+            'Number of Cases': 'cases_development',
+            'Number of Controls': 'controls_development',
+            'Percent of Participants Who are Male': 'percent_male_development'
+        }, inplace=True)
+        
+        evaluation_sample_sets.rename(columns={
+            'PGS Sample Set (PSS)': 'pss_id',
+            'Number of Individuals': 'individuals_evaluation',
+            'Number of Cases': 'cases_evaluation',
+            'Number of Controls': 'controls_evaluation',
+            'Percent of Participants Who are Male': 'percent_male_evaluation'
+        }, inplace=True)
         
         pgscatalog_data.rename(columns={
             'Polygenic Score (PGS) ID': 'pgs_id',
             'PGS Name': 'pgs_name',
             'Reported Trait': 'reported_trait',
             'Mapped Trait(s) (EFO label)': 'mapped_trait_efo_label',
-            'Mapped Trait(s) (EFO ID)': 'mapped_trait_efo_id',
+            'Mapped Trait(s) (EFO ID)': 'efo_id',
             'PGS Development Method': 'pgs_development_method',
             'PGS Development Details/Relevant Parameters': 'pgs_development_details',
             'Original Genome Build': 'original_genome_build',
@@ -131,7 +161,7 @@ class DbUtils:
         }, inplace=True)
 
         pgs_performance.rename(columns={
-            'PGS Performance Metric (PPM) ID': 'performance_id',
+            'PGS Performance Metric (PPM) ID': 'ppm_id',
             'Evaluated Score': 'pgs_id',
             'PGS Sample Set (PSS)': 'pss_id',
             'PGS Publication (PGP) ID': 'pgp_id',
@@ -163,17 +193,20 @@ class DbUtils:
         return {"pgscatalog_data": pgscatalog_data,
                 "pgs_publications": pgs_publications,
                 "ontology_mappings": ontology_mappings,
-                "pgs_performance": pgs_performance}
+                "pgs_performance": pgs_performance,
+                "score_development_samples": score_development_samples,
+                "evaluation_sample_sets": evaluation_sample_sets
+                }
     
     def truncate_all_tables(self) -> None:
         # Code to truncate all relevant tables in the database before inserting new data
-        tables = ["pgscatalog_data", "pgs_publications", "ontology_mappings", "pgs_performance"]
+        tables = ["pgscatalog_data", "pgs_publications", "ontology_mappings", "pgs_performance", "score_development_samples", "evaluation_sample_sets"]
         for table in tables:
             query = sql.SQL("TRUNCATE TABLE {schema}.{table} RESTART IDENTITY CASCADE").format(
                 schema=sql.Identifier("data_libraries"),
                 table=sql.Identifier(table)
             )
-            self.execute_query(query)
+            self.db_handler.execute_query(query)
             print(f"Table {table} truncated successfully.")
 
         
@@ -229,25 +262,6 @@ if __name__ == "__main__":
     
     excel_filepath = PGS_EXCEL_FILEPATH
     dataframes = db_utils.read_pgs_metadata_excel(excel_filepath)
-    
-    # Example of how to access the dataframes
-    pgscatalog_data_df = dataframes["pgscatalog_data"]
-    pgs_publications_df = dataframes["pgs_publications"]
-    ontology_mappings_df = dataframes["ontology_mappings"]
-    pgs_performance_df = dataframes["pgs_performance"]
-    
-    # Print the columns of each dataframe to verify
-    print("pgscatalog_data columns:")
-    print(pgscatalog_data_df.columns)
-    
-    print("pgs_publications columns:")
-    print(pgs_publications_df.columns)
-    
-    print("ontology_mappings columns:")
-    print(ontology_mappings_df.columns)
-    
-    print("pgs_performance columns:")
-    print(pgs_performance_df.columns)
     
     
     for key, df in dataframes.items():

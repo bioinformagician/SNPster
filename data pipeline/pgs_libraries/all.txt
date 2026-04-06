@@ -1,0 +1,42 @@
+All-cause dementia: PGS005170
+Alzheimer's disease: PGS004146
+Asthma: PGS002727
+Atrial fibrillation: PGS005313
+Bladder cancer: PGS000782
+Breast cancer: PGS004153, PGS000004
+Breast cancer intrinsic-like subtype (luminal A-like): PGS000212
+Cardiovascular disease: PGS000117
+Celiac disease: PGS004930
+Chronic kidney disease (stage 3 or greater): PGS002237, PPM012722, PPM012724
+Cirrhosis: PGS004621
+Colorectal cancer: PGS003432, PGS000785(hazard)
+Coronary artery disease: PGS004237 PGS000018(hazard)
+Coronary heart disease: PGS001780
+Diastolic blood pressure: PGS002239
+Dilated cardiomyopathy (MTAG): PGS004862
+ER-positive breast cancer: PGS000005
+Estimated glomerular filtration rate: PGS000883(PPM018705)
+FEV1/FVC ratio: PGS001801
+Forced expiratory volume (FEV1): PGS001800
+Gout: PGS004931
+Heel quantitative ultrasound speed of sound (SOS): PGS000657(PPM001865)
+Hypertension: PGS004236
+Hypertrophic cardiomyopathy (MTAG): PGS004911
+Hypothyroidism: PGS004935
+Incident type 2 diabetes: PGS002780(PPM022960 hazard, PPM021508 odds)
+Inflammatory bowel disease (IBD): PGS004038(PPM019216)
+Ischemic stroke: PGS002725(odds), PGS000039(hazard)
+Kidney cancer: PGS004908(PPM021362)
+Lung cancer: PGS004860, PGS000789(hazard)
+Non-insulin-dependent diabetes (time-to-event): PGS001294(hazard)
+Obstructive sleep apnea (AdjustedBMI): PGS005219
+Ovarian cancer: PGS000793
+Primary open-angle glaucoma: PGS004944(PPM021744)
+Prostate cancer: PGS000030, PGS000795(hazard), PGS004042(odds rly good for eu/asian)
+Rheumatoid arthritis: PGS004163
+Smoking status: PGS003066
+Systolic blood pressure:PGS005120
+Thyroid cancer: PGS000797
+Triglycerides: PGS004937
+Type 1 diabetes (T1D): PGS004162
+Type 2 diabetes (T2D): PGS003114, PGS003730(hazard ratio)

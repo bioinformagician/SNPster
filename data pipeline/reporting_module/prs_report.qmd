@@ -56,20 +56,23 @@ user_pgs_scores = user_pgs_scores[user_pgs_scores["sampleset"] != "reference"]
 
 
 meta_data_query = f"""
-SELECT pgs_id, reported_trait, mapped_trait_efo_id, number_of_variants,pgp_id, publication_pmid,publication_doi,ftp_link,release_date,ancestry_distribution_source_of_variant_associations_gwas,ancestry_distribution_pgs_evaluation FROM data_libraries.pgscatalog_data
+SELECT pgs_id, reported_trait, efo_id, number_of_variants,pgp_id, publication_pmid,publication_doi,ftp_link,release_date,ancestry_distribution_source_of_variant_associations_gwas,ancestry_distribution_pgs_evaluation 
+FROM data_libraries.pgscatalog_data
 WHERE pgs_id IN ({', '.join([f"'{pgs}'" for pgs in user_pgs_scores['PGS'].unique()])})
 """
 
 meta_data = db_utils.get_pd_dataframe_from_query(meta_data_query)
 
 
-publications_meta_data_query = f"""SELECT first_author, title, journal_name, publication_date, pgp_id FROM data_libraries.pgs_publications
+publications_meta_data_query = f"""SELECT first_author, title, journal_name, publication_date, pgp_id 
+FROM data_libraries.pgs_publications
 WHERE pgp_id IN ({', '.join([f"'{pgp}'" for pgp in meta_data['pgp_id'].unique()])})
 """
 
 publications_meta_data = db_utils.get_pd_dataframe_from_query(publications_meta_data_query)
 
-pgs_performance_data_query = f"""SELECT pgp_id, hazard_ratio, odds_ratio, auroc, performance_id, pgs_id, pss_id FROM data_libraries.pgs_performance
+pgs_performance_data_query = f"""SELECT pgp_id, hazard_ratio, odds_ratio, auroc, ppm_id, pgs_id, pss_id 
+FROM data_libraries.pgs_performance
 WHERE pgs_id IN ({', '.join([f"'{pgs}'" for pgs in user_pgs_scores['PGS'].unique()])})
 """
 
@@ -79,6 +82,30 @@ display(user_pgs_scores.head())
 display(meta_data.head())
 display(publications_meta_data.head())
 display(pgs_performance_data.head())
+
+
+overview_query = f"""
+SELECT  pp.auroc, pp.odds_ratio, pp.hazard_ratio, pp.ppm_id, pp.pgs_id, pp.pss_id, pp.pgp_id, cd.reported_trait, cd.efo_id, cd.number_of_variants, cd.pgp_id, cd.publication_pmid, cd.publication_doi, cd.ftp_link, cd.release_date, cd.ancestry_distribution_source_of_variant_associations_gwas, cd.ancestry_distribution_pgs_evaluation, es.*, sd.*
+FROM data_libraries.pgs_performance pp
+LEFT JOIN data_libraries.pgscatalog_data cd
+ON pp.pgs_id = cd.pgs_id
+LEFT JOIN data_libraries.evaluation_sample_sets es
+ON  pp.pss_id = es.pss_id
+LEFT JOIN data_libraries.score_development_samples sd
+ON pp.pgs_id = sd.pgs_id
+WHERE pp.auroc IS NOT NULL
+  AND (
+        pp.hazard_ratio IS NOT NULL
+        OR pp.odds_ratio IS NOT NULL
+      )
+	AND individuals_development > 50000
+	AND individuals_evaluation > 1000
+	AND auroc > 0.65
+ORDER BY cd.reported_trait, pp.auroc DESC;
+
+"""
+
+
 
 ```
 
