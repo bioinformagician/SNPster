@@ -1,0 +1,1 @@
+"""Query the db for jobs that are ready to be processed, and run the nextflow pipeline on them"""
