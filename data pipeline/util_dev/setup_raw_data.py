@@ -35,12 +35,12 @@ def transfer_files(source_dir:str, target_dir:str, db_handler:DbHandler=db_handl
             user_id = _
             email = f"{_}@example.com"
             created_at = "NOW()"
-            genefile_storage_backend = "local"
+            password_hash = "hashed_password"  # Placeholder, replace with actual hash if needed
             genefile_location = target_file
 
             query = f"""
-            INSERT INTO snpster_users.user_information (user_id, email, created_at, genefile_storage_backend, genefile_location)
-            VALUES ('{user_id}', '{email}', {created_at}, '{genefile_storage_backend}', '{genefile_location}');
+            INSERT INTO snpster_users.user_information (user_id, email, created_at, password_hash, genefile_location)
+            VALUES ('{user_id}', '{email}', {created_at}, '{password_hash}', '{genefile_location}');
             """
             print(f"Executing query: {query}")
             db_handler.execute_query(query)
@@ -53,9 +53,9 @@ if __name__ == "__main__":
 
 
 """CREATE TABLE snpster_users.user_information (
-    user_id varchar(100) PRIMARY KEY,
+    user_id varchar(100) PRIMARY KEY NOT NULL ON DELETE CASCADE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    genefile_location TEXT -- stored on linux server in folder /srv/raw
-);"""
+    genefile_location TEXT NOT NULL -- stored on linux server in folder /srv/raw);
+    """

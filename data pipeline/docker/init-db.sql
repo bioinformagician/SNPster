@@ -6,25 +6,24 @@ CREATE SCHEMA IF NOT EXISTS data_libraries;
 
 ALTER DATABASE snpster_db SET search_path = snpster_users, public;
 
-
-CREATE SEQUENCE imputation_jobs_seq START 1;
-create sequence prsc_jobs_seq start 1;
-create sequence report_jobs_seq start 1;
+CREATE SEQUENCE IF NOT EXISTS snpster_users.imputation_jobs_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS snpster_users.prsc_jobs_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS snpster_users.report_jobs_seq START 1;
 
 -- ===================================
 -- User information table(s) to store user details
 -- ===================================
 
 CREATE TABLE snpster_users.user_information (
-    user_id varchar(100) PRIMARY KEY NOT NULL ON DELETE CASCADE,
+    user_id varchar(100) PRIMARY KEY NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    genefile_location TEXT NOT NULL -- stored on linux server in folder /srv/raw
+    genefile_location TEXT NOT NULL
 );
 
 -- ===================================
--- Tables for storing information about the PGS scores, mostly containing the information from metadata files
+-- Tables for storing information about the PGS scores
 -- ===================================
 
 CREATE TABLE data_libraries.pgscatalog_data (
@@ -52,7 +51,7 @@ CREATE TABLE data_libraries.pgscatalog_data (
 );
 
 CREATE TABLE data_libraries.scoring_files (
-    pgs_id varchar(100) PRIMARY KEY REFERENCES data_libraries.pgscatalog_data(pgs_id),
+    pgs_id varchar(100) PRIMARY KEY REFERENCES data_libraries.pgscatalog_data(pgs_id) ON DELETE CASCADE,
     file_path TEXT
 );
 
@@ -75,12 +74,11 @@ CREATE TABLE data_libraries.ontology_mappings (
     ontology_url VARCHAR(255)
 );
 
--- Ontology Trait ID | Ontology Trait Label | Ontology Trait Description | Ontology URL
 CREATE TABLE data_libraries.pgs_performance (
     ppm_id varchar(100) PRIMARY KEY,
-    pgs_id varchar(100) REFERENCES data_libraries.pgscatalog_data(pgs_id),
+    pgs_id varchar(100) REFERENCES data_libraries.pgscatalog_data(pgs_id) ON DELETE CASCADE,
     pss_id varchar(100),
-    pgp_id varchar(100) REFERENCES data_libraries.pgs_publications(pgp_id),
+    pgp_id varchar(100) REFERENCES data_libraries.pgs_publications(pgp_id) ON DELETE CASCADE,
     reported_trait VARCHAR(255),
     covariates_included_in_model TEXT,
     pgs_performance_other_relevant_info TEXT,
@@ -94,51 +92,37 @@ CREATE TABLE data_libraries.pgs_performance (
     other_metric TEXT
 );
 
-
 CREATE TABLE data_libraries.score_development_samples ( 
     pgs_id VARCHAR(50), 
     stage_of_pgs_development VARCHAR(100), 
     individuals_development INTEGER, 
     cases_development INTEGER, 
     controls_development INTEGER, 
-    percent_male_development FLOAT ); 
+    percent_male_development FLOAT
+); 
 
 CREATE TABLE data_libraries.evaluation_sample_sets (
-     pss_id VARCHAR(50), 
-     individuals_evaluation INTEGER, 
-     cases_evaluation INTEGER, 
-     controls_evaluation INTEGER, 
-     percent_male_evaluation FLOAT );
-
-
+    pss_id VARCHAR(50), 
+    individuals_evaluation INTEGER, 
+    cases_evaluation INTEGER, 
+    controls_evaluation INTEGER, 
+    percent_male_evaluation FLOAT
+);
 
 CREATE TABLE data_libraries.pipeline_dependencies (
-    module varchar(100), -- e.g imputer, harmonizer, standardizer dependencies
+    module varchar(100),
     dependency_name VARCHAR(100),
     file_path TEXT,
     PRIMARY KEY (module, dependency_name, file_path)
 );
-
-
-
-CREATE TABLE data_libraries.pipeline_dependencies (
-    module varchar(100), -- e.g imputer, harmonizer, standardizer dependencies
-    dependency_name VARCHAR(100),
-    file_path TEXT,
-    PRIMARY KEY (module, dependency_name, file_path)
-);
-
-
-
-
 
 -- ===================================
--- Tables for handling everything from user uploaded data to imputation (including imputation)
+-- Tables for handling everything from user uploaded data to imputation
 -- ===================================
 
 CREATE TABLE snpster_users.imputation_jobs (
-    imputation_id integer PRIMARY KEY DEFAULT nextval('imputation_jobs_seq') NOT NULL,
-    user_id varchar(100) references snpster_users.user_information(user_id) NOT NULL ON DELETE CASCADE,
+    imputation_id integer PRIMARY KEY DEFAULT nextval('snpster_users.imputation_jobs_seq') NOT NULL,
+    user_id varchar(100) NOT NULL REFERENCES snpster_users.user_information(user_id) ON DELETE CASCADE,
     imputation_status VARCHAR(20) CHECK (imputation_status IN ('queued', 'running', 'completed', 'failed')),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     started_at TIMESTAMPTZ,
@@ -146,23 +130,19 @@ CREATE TABLE snpster_users.imputation_jobs (
 );
 
 CREATE TABLE snpster_users.imputed_data (
-    imputation_id integer references snpster_users.imputation_jobs(imputation_id) NOT NULL ON DELETE CASCADE,
-    file_type VARCHAR(20) CHECK (file_type IN ('imputed VCF', 'samplesheet')), -- e.g, imputed VCF, samplesheet
+    imputation_id integer NOT NULL REFERENCES snpster_users.imputation_jobs(imputation_id) ON DELETE CASCADE,
+    file_type VARCHAR(20) CHECK (file_type IN ('imputed VCF', 'samplesheet')),
     file_path TEXT,
     PRIMARY KEY (imputation_id, file_type, file_path)
 );
 
-
-
 -- ===================================
--- Reporting tables for post-imputation jobs (PRS calculations, reports)
+-- Reporting tables for post-imputation jobs
 -- ===================================
-
-
 
 CREATE TABLE snpster_users.prsc_jobs (
-    imputation_id integer references snpster_users.imputation_jobs(imputation_id) NOT NULL ON DELETE CASCADE,
-    prsc_id integer primary key DEFAULT nextval('prsc_jobs_seq') NOT NULL,
+    imputation_id integer NOT NULL REFERENCES snpster_users.imputation_jobs(imputation_id) ON DELETE CASCADE,
+    prsc_id integer PRIMARY KEY DEFAULT nextval('snpster_users.prsc_jobs_seq') NOT NULL,
     prsc_status VARCHAR(20) CHECK (prsc_status IN ('queued', 'running', 'completed', 'failed')),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     started_at TIMESTAMPTZ,
@@ -170,27 +150,25 @@ CREATE TABLE snpster_users.prsc_jobs (
 );
 
 CREATE TABLE snpster_users.prsc_job_parameters (
-    prsc_id integer references snpster_users.prsc_jobs(prsc_id) NOT NULL ON DELETE CASCADE,
-    pgs_id varchar(100) REFERENCES data_libraries.pgscatalog_data(pgs_id) NOT NULL ON DELETE CASCADE
+    prsc_id integer NOT NULL REFERENCES snpster_users.prsc_jobs(prsc_id) ON DELETE CASCADE,
+    pgs_id varchar(100) NOT NULL REFERENCES data_libraries.pgscatalog_data(pgs_id) ON DELETE CASCADE
 );
 
 CREATE TABLE snpster_users.prsc_job_results (
-    prsc_id integer references snpster_users.prsc_jobs(prsc_id) NOT NULL ON DELETE CASCADE,
-    pgs_id varchar(100) REFERENCES data_libraries.pgscatalog_data(pgs_id) NOT NULL ON DELETE CASCADE,
+    prsc_id integer NOT NULL REFERENCES snpster_users.prsc_jobs(prsc_id) ON DELETE CASCADE,
+    pgs_id varchar(100) NOT NULL REFERENCES data_libraries.pgscatalog_data(pgs_id) ON DELETE CASCADE,
     file_path TEXT,
     percentile DECIMAL(5,2) CHECK (percentile >= 0 AND percentile <= 100)
 );
 
 CREATE TABLE snpster_users.report_jobs (
-    prsc_id integer references snpster_users.prsc_jobs(prsc_id) NOT NULL ON DELETE CASCADE,
-    report_id integer PRIMARY KEY DEFAULT nextval('report_jobs_seq') NOT NULL,
+    prsc_id integer NOT NULL REFERENCES snpster_users.prsc_jobs(prsc_id) ON DELETE CASCADE,
+    report_id integer PRIMARY KEY DEFAULT nextval('snpster_users.report_jobs_seq') NOT NULL,
     report_status VARCHAR(20) CHECK (report_status IN ('queued', 'running', 'completed', 'failed')),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     started_at TIMESTAMPTZ,
     completed_at TIMESTAMPTZ
 );
-
-
 
 -- ===================================
 -- Trigger: create imputation job when a new user is created
