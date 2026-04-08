@@ -9,6 +9,8 @@ params.harmonizer_dependencies = "/home/frederik/shared_drive/snpster_dependenci
 params.imputation_dependencies = "/home/frederik/shared_drive/snpster_dependencies/imputer_dependencies"
 params.genefile_dir     = "/home/frederik/snpster_project/test_run"
 params.output_dir       = "/home/frederik/snpster_project/nf_output"
+params.identifier = "user-id-1234"
+params.working_dir = "/home/frederik/snpster_project/nextflow_working_dir"
 
 
 

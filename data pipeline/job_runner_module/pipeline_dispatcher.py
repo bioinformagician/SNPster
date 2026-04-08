@@ -6,7 +6,7 @@ import os
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "database_module"))
 print(sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "database_module")))
 from db_handler import DbHandler, DbUtils
-from db_config import USERNAME, PASSWORD, DATABASE_NAME, HOST, PORT, PGS_EXCEL_FILEPATH
+from db_config import USERNAME, PASSWORD, HOST, PORT
 
 
 
@@ -35,6 +35,18 @@ if __name__ == "__main__":
             # Here you would call your processing function, e.g.:
             # process_genefile(genefile_location)
             # After processing, update the status in the database
+            
+            subprocess.run(["nextflow", "run", "pipeline_orchestrator.nf", 
+                            "--harmonizer_dependencies", "/home/frederik/shared_drive/snpster_dependencies/harmonizer_dependencies",
+                            "--imputation_dependencies", "/home/frederik/shared_drive/snpster_dependencies/imputer_dependencies",
+                            "--genefile_dir", genefile_location,])
+            
+            """params.harmonizer_dependencies = "/home/frederik/shared_drive/snpster_dependencies/harmonizer_dependencies"
+params.imputation_dependencies = "/home/frederik/shared_drive/snpster_dependencies/imputer_dependencies"
+params.genefile_dir     = "/home/frederik/snpster_project/test_run"
+params.output_dir       = "/home/frederik/snpster_project/nf_output"
+"""
+            
             update_query = f"""UPDATE snpster_users.imputation_jobs
                                SET imputation_status = 'processed' 
                                WHERE user_id = '{user_id}' AND imputation_id = '{imputation_id}';"""
