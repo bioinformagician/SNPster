@@ -70,8 +70,23 @@ class FileHandler:
             zip_ref.extractall(os.path.dirname(self.user_file))
             extracted_files = zip_ref.namelist()
         
-        # Filter out directories, keep only files
-        extracted_files = [f for f in extracted_files if not f.endswith('/')]
+        # Filter out directories and metadata artifacts (e.g. __MACOSX, .DS_Store, AppleDouble)
+        cleaned_files = []
+        for file_name in extracted_files:
+            if file_name.endswith('/'):
+                continue
+
+            path_parts = file_name.split('/')
+            base_name = os.path.basename(file_name)
+
+            if '__MACOSX' in path_parts:
+                continue
+            if base_name.startswith('._') or base_name.startswith('.'):
+                continue
+
+            cleaned_files.append(file_name)
+
+        extracted_files = cleaned_files
         
         if len(extracted_files) != 1:
             raise ValueError(f"Zip file should contain exactly one data file. Found: {extracted_files}")

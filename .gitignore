@@ -13,6 +13,8 @@ data pipeline/reporting_module/prs_report_files/libs
 data pipeline/reporting_module/data/.~lock.pgs_all_metadata.xlsx#
 data pipeline/reporting_module/__pycache__
 data pipeline/database_module/__pycache__
+data pipeline/job_runner_module/__pycache__
+.nextflow*
 
 
 

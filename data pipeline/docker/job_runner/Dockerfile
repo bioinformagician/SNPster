@@ -1,0 +1,40 @@
+FROM python:3.12-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+ENV BASE_OUTPUT_DIR=/srv/imputed
+ENV NEXTFLOW_BIN=/usr/local/bin/nextflow
+ENV SAMPLESHEET_PATH=/app/job_runner_module/samplesheet.csv
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    openjdk-21-jre \
+    curl \
+    bash \
+    ca-certificates \
+    git \
+    procps \
+    unzip \
+    gcc \
+    libpq-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN curl -s https://get.nextflow.io | bash \
+ && mv nextflow /usr/local/bin/nextflow \
+ && chmod +x /usr/local/bin/nextflow
+
+WORKDIR /app/job_runner_module
+
+COPY database_module/requirements.txt /tmp/database_requirements.txt
+COPY job_runner_module/requirements.txt /tmp/job_runner_requirements.txt
+
+RUN pip install --no-cache-dir -r /tmp/database_requirements.txt \
+ && pip install --no-cache-dir -r /tmp/job_runner_requirements.txt
+
+COPY database_module/ /app/database_module/
+COPY job_runner_module/ /app/job_runner_module/
+COPY nextflow/ /app/job_runner_module/
+
+RUN mkdir -p /work
+
+CMD ["python", "/app/job_runner_module/pipeline_dispatcher.py"]
