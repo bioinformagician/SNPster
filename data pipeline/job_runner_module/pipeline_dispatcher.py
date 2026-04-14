@@ -2,9 +2,10 @@ import os
 import subprocess
 import sys
 import time
+import shutil
 from pathlib import Path
 
-from config import BASE_OUTPUT_DIR, IMPUTATION_DEPENDENCIES, HARMONIZER_DEPENDENCIES, NEXTFLOW_BIN, SAMPLESHEET_PATH
+from config import BASE_OUTPUT_DIR, IMPUTATION_DEPENDENCIES, HARMONIZER_DEPENDENCIES, NEXTFLOW_BIN, SAMPLESHEET_PATH, PIPELINE_PATH, NEXTFLOW_CONFIG
 
 
 
@@ -23,10 +24,24 @@ if __name__ == "__main__":
     if not HARMONIZER_DEPENDENCIES:
         raise ValueError("HARMONIZER_DEPENDENCIES is not set in config.py")
 
+    docker_bin = shutil.which("docker")
+    if docker_bin is None:
+        raise RuntimeError(
+            "Docker CLI not found in job_runner container. Rebuild the image so docker client is installed."
+        )
+
+    if not os.path.exists("/var/run/docker.sock"):
+        raise RuntimeError(
+            "Docker socket /var/run/docker.sock is not mounted. Check docker-compose volume mounts."
+        )
+
     while True:
 
         db_handler = DbHandler(port=PORT, db_url=None, user=USERNAME, password=PASSWORD, host=HOST)
-        db_handler.connect()
+        if not db_handler.connect():
+            print("Database unavailable. Retrying in 10 seconds...")
+            time.sleep(10)
+            continue
 
         db_utils = DbUtils(db_handler)
 
@@ -37,6 +52,11 @@ if __name__ == "__main__":
                     LIMIT 5;"""
         
         results = db_utils.get_pd_dataframe_from_query(query)
+        if results.empty:
+            print("No queued jobs found. Sleeping for 10 seconds...")
+            db_handler.close()
+            time.sleep(10)
+            continue
 
         print(f"Found {len(results)} queued jobs to process.")
 
@@ -63,10 +83,23 @@ if __name__ == "__main__":
         user_id = results.iloc[0]["user_id"]
         #output_dir = f"{BASE_OUTPUT_DIR}/{user_id}"
 
-        subprocess.run([NEXTFLOW_BIN, "run", "/home/frederik/github_projects/SNPster/data pipeline/nextflow/pipeline_orchestrator.nf",
-                        "--samplesheet", SAMPLESHEET_PATH,
-                        "--imputation_dependencies", IMPUTATION_DEPENDENCIES,
-                        "--harmonizer_dependencies", HARMONIZER_DEPENDENCIES], check=True)
+        nextflow_work_dir = os.getenv("NXF_WORK", "/srv/imputed/nf_runtime/nf_work")
+
+        subprocess.run([
+                        NEXTFLOW_BIN,
+                        "run",
+                        PIPELINE_PATH,
+                        "-c",
+                        NEXTFLOW_CONFIG,
+                        "-work-dir",
+                        nextflow_work_dir,
+                        "--samplesheet",
+                        SAMPLESHEET_PATH,
+                        "--imputation_dependencies",
+                        IMPUTATION_DEPENDENCIES,
+                        "--harmonizer_dependencies",
+                        HARMONIZER_DEPENDENCIES,
+                    ], check=True)
 
         
         update_query = f"""UPDATE snpster_users.imputation_jobs

@@ -20,11 +20,11 @@ class DbHandler:
         # Code to establish a connection to the database using the provided parameters
         try:
             self.connection = psycopg2.connect(
-                dbname=DATABASE_NAME,
-                user=USERNAME,
-                password=PASSWORD,
-                host=HOST,
-                port=PORT
+                dbname=self.db_url or DATABASE_NAME,
+                user=self.user,
+                password=self.password,
+                host=self.host,
+                port=self.port
             )
             
             self.cursor = self.connection.cursor()
@@ -47,6 +47,11 @@ class DbHandler:
         
     def execute_query(self, query, params=None) -> list:
         # Code to execute a given SQL query using the established connection
+        if self.connection is None or self.cursor is None:
+            print("Error executing query: database connection is not established.")
+            print(f"Query: {query}")
+            return None
+
         try:
             self.cursor.execute(query, params)
             self.connection.commit()
@@ -57,7 +62,9 @@ class DbHandler:
         except Exception as e:
             print(f"Error executing query: {e}")
             print(f"Query: {query}")
-            self.connection.rollback()
+            if self.connection is not None:
+                self.connection.rollback()
+            return None
         
         
 class DbUtils:
