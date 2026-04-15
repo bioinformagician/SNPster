@@ -54,8 +54,9 @@ process IMPUTE {
     tuple val(identifier), val(output_dir), path(vcf_files)
 
   output:
-    path "${identifier}", type: 'dir'
-
+    //path "${identifier}", type: 'dir'
+    path "output/*"
+    
   script:
   """
   python /app/main.py --vcf_files .
