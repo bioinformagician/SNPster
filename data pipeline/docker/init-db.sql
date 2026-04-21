@@ -50,10 +50,6 @@ CREATE TABLE data_libraries.pgscatalog_data (
     license_terms_of_use TEXT
 );
 
-CREATE TABLE data_libraries.scoring_files (
-    pgs_id varchar(100) PRIMARY KEY REFERENCES data_libraries.pgscatalog_data(pgs_id) ON DELETE CASCADE,
-    file_path TEXT
-);
 
 CREATE TABLE data_libraries.pgs_publications (
     pgp_id varchar(100) PRIMARY KEY,
@@ -157,8 +153,14 @@ CREATE TABLE snpster_users.prsc_job_parameters (
 CREATE TABLE snpster_users.prsc_job_results (
     prsc_id integer NOT NULL REFERENCES snpster_users.prsc_jobs(prsc_id) ON DELETE CASCADE,
     pgs_id varchar(100) NOT NULL REFERENCES data_libraries.pgscatalog_data(pgs_id) ON DELETE CASCADE,
-    file_path TEXT,
-    percentile DECIMAL(5,2) CHECK (percentile >= 0 AND percentile <= 100)
+    percentile DECIMAL(5,2) CHECK (percentile >= 0 AND percentile <= 100),
+    z_most_similar_pop DECIMAL(5,2)
+);
+
+CREATE TABLE snpster_users.pgs_reports_shop(
+    pgs_id varchar(100) NOT NULL REFERENCES data_libraries.pgscatalog_data(pgs_id),
+    report_name VARCHAR(255),
+    scoring_file_path TEXT
 );
 
 CREATE TABLE snpster_users.report_jobs (

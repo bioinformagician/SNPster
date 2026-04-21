@@ -44,8 +44,6 @@ orchestrator = WorkflowOrchestrator(
 
 orchestrator.set_user_id_from_vcf()
 
-orchestrator.make_result_subdir()
-
 orchestrator.impute_vcf_files()
 
 orchestrator.run_qc_on_imputed_data(args.df_engine)

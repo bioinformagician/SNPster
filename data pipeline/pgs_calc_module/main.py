@@ -2,6 +2,7 @@ from pgs_classes import EnvironmentHandler, PGSCalculator_Config, PGSCalculator
 from config import SAMPLESHEET_PATH, OUTPUT_DIR, REFERENCE_DATA_PATH, PGS_ID_FILE
 import argparse
 
+#adjust to new pgs_classes.py file
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--low_memory', type=str, required=False, default="false") #setting it true only saved about 4gb but increases computational time x3 min

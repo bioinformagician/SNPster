@@ -1,4 +1,9 @@
 import subprocess
+import pandas as pd
+from db_handler import DbHandler, DbUtils
+from db_config import USERNAME, PASSWORD, HOST, PORT
+
+
 
 class EnvironmentHandler:
     def __init__(self, samplesheet_path: str, 
@@ -6,6 +11,10 @@ class EnvironmentHandler:
                  reference_data_path: str,
                  pgs_id_file: str,
                  low_memory : bool, #split analysis into multiple runs of pgs calcs, calling NF pipeline multiple times (cache will be used)
+                 scoring_file_str: str = None,
+                 imputation_id: int = None,
+                 db_handler: DbHandler = None,
+                 db_utils: DbUtils = None,
                  ):
         
         self.samplesheet_path = samplesheet_path
@@ -13,31 +22,21 @@ class EnvironmentHandler:
         self.reference_data_path = reference_data_path
         self.pgs_id_file = pgs_id_file
         self.low_memory = low_memory
-
+        self.scoring_file_str = scoring_file_str
+        self.imputation_id = imputation_id
+        self.db_handler = db_handler
+        self.db_utils = db_utils
 
 
 class PGSCalculator_Config:
     def __init__(self, 
                  environment_handler: EnvironmentHandler,
-                 pgs_id_str: str,
                  target_build: str = "GRCh38"):
+        
         self.environment_handler = environment_handler
-        self.pgs_id_str = pgs_id_str
         self.target_build = target_build
-        self.set_pgs_id_str()
         
     
-    def set_pgs_id_str(self):
-        
-        with open(self.environment_handler.pgs_id_file) as f:
-            first_line = f.readline().strip()
-        
-        #check if pgs substring contained in first line
-        if 'PGS' not in first_line:
-            raise ValueError("PGS ID string not found in the first line of the file.")
-        
-        else:
-            self.pgs_id_str = first_line
         
         
         
@@ -50,8 +49,65 @@ class PGSCalculator:
                  pgscalculator_config: PGSCalculator_Config):
         self.environment_handler = environment_handler
         self.pgscalculator_config = pgscalculator_config
+
+    
+    def get_jobs(self) -> pd.DataFrame:
+
+
+        """Fetches the list of imputation jobs from the database."""
+        query = f"""SELECT pj.imputation_id, pj.prsc_ud, pj.prsc_status, pjp.prsc_id, pjp.pgs_id, ij.imputation_status, prs.scoring_file_path
+                    FROM snpster_users.prsc_jobs pj
+                    JOIN snpster_users.prsc_job_parameters pjp ON pj.prsc_id = pjp.prsc_id
+                    JOIN snpster_users.imputation_jobs ij ON pj.imputation_id = ij.imputation_id
+                    JOIN snpster_users.pgs_reports_shop prs ON pjp.pgs_id = prs.pgs_id
+                    WHERE pj.prsc_status = 'queued'
+                    AND ij.imputation_status = 'completed'
+                    LIMIT 1;"""
+        
+        #also needs to fetch scoring file path from pgs_reports_shop
+
+        results = self.environment_handler.db_utils.get_pd_dataframe_from_query(query)
+
+        self.environment_handler.imputation_id = results["imputation_id"].iloc[0]
+        #concatenate strings for scoring file path
+
+        #self.environment_handler.scoring_file_str = results["scoring_file_path"].iloc[0] 
+
+        self.environment_handler.scoring_file_str = "/srv/scoring_files/*.txt.gz" #i dont know if it will run all of them or pick correct ones
+        return results
+
+    def upload_results(self):
+        
+        # path example: /output_dir/{imputation_id}/score/{imputation_id}_pgs.txt.gz
+        """Uploads the PGS calculation results to the database and updates job status."""
+
+        results_path = f"{self.environment_handler.output_dir}/{self.environment_handler.imputation_id}/score/{self.environment_handler.imputation_id}_pgs.txt.gz"
+
+        results = pd.read_csv(results_path, sep="\t")
+        results["PGS"] = results["PGS"].str.replace("_hmPOS_GRCh38", "", regex=False)
+        results = results[results["sampleset"] != "reference"]
+
+        for index, row in results.iterrows():
+            
+            prsc_id = int(row["sampleset"])
+            pgs_id = row["PGS"]
+            percentile = float(row["percentile"])
+            z_most_similar_pop = float(row["z_most_similar_pop"])
+
+            insert_query = f"""INSERT INTO snpster_users.prsc_job_results (prsc_id, pgs_id, percentile, z_most_similar_pop)
+                            VALUES ({prsc_id}, '{pgs_id}', {percentile}, {z_most_similar_pop});"""
+            
+            self.environment_handler.db_handler.execute_query(insert_query)
+
+        
+
+
     
     def run_pgs_calculation(self):
+
+        job_df = self.get_jobs()
+
+        pgs_id_str = ",".join(job_df['pgs_id'].tolist())
         
         """nextflow run pgscatalog/pgsc_calc \
             -profile <docker/singularity/conda> \
@@ -64,16 +120,17 @@ class PGSCalculator:
             "-profile", "singularity",
             "--input", self.environment_handler.samplesheet_path,
             "--target_build", self.pgscalculator_config.target_build,
-            "--pgs_id", self.pgscalculator_config.pgs_id_str,
+            "--pgs_id", pgs_id_str,
             "--run_ancestry", self.environment_handler.reference_data_path,
             "--outdir", self.environment_handler.output_dir,
-            "--min_overlap", "0.5"
+            "--min_overlap", "0.5",
+            "--scorefile", self.environment_handler.scoring_file_str
         ]
 
 
         if self.environment_handler.low_memory == "true":
 
-            pgs_id_list = self.pgscalculator_config.pgs_id_str.split(",")
+            pgs_id_list = pgs_id_str.split(",")
 
             for pgs_id in pgs_id_list:
 
@@ -85,7 +142,8 @@ class PGSCalculator:
                     "--pgs_id", pgs_id,
                     "--run_ancestry", self.environment_handler.reference_data_path,
                     "--outdir", self.environment_handler.output_dir,
-                    "--min_overlap", "0.5"
+                    "--min_overlap", "0.5",
+                    "--scorefile", self.environment_handler.scoring_file_str
                 ]
 
                 print(f"Running command {command}")
@@ -100,6 +158,8 @@ class PGSCalculator:
                     print("Return code:", e.returncode)
                     print("Output:", e.output)
                     print("Error message:", e.stderr)
+            
+                self.upload_results()
         
 
 
@@ -110,10 +170,11 @@ class PGSCalculator:
             "-profile", "singularity",
             "--input", self.environment_handler.samplesheet_path,
             "--target_build", self.pgscalculator_config.target_build,
-            "--pgs_id", self.pgscalculator_config.pgs_id_str,
+            "--pgs_id", pgs_id_str,
             "--run_ancestry", self.environment_handler.reference_data_path,
             "--outdir", self.environment_handler.output_dir,
-            "--min_overlap", "0.5"
+            "--min_overlap", "0.5",
+            "--scorefile", self.environment_handler.scoring_file_str
         ]
             
             print(f"Running command {command}")
@@ -128,5 +189,6 @@ class PGSCalculator:
                 print("Return code:", e.returncode)
                 print("Output:", e.output)
                 print("Error message:", e.stderr)
-        
+
+            self.upload_results()
     

@@ -29,10 +29,15 @@ RUN curl -s https://get.nextflow.io | bash && \
 RUN mkdir -p /app/pgs_output
 
 ENV REFERENCE_DATA_PATH=/data/pgsc_HGDP+1kGP_v1.tar.zst
-ENV PGS_ID_FILE=/data/pgs_ids.txt
-ENV SAMPLESHEET_PATH=/data/samplesheet.csv
 ENV OUTPUT_DIR=/app/pgs_output
 
+# Install both requirement sets with distinct file names to avoid overwrite.
+COPY pgs_calc_module/requirements.txt /tmp/pgs_calc_requirements.txt
+COPY database_module/requirements.txt /tmp/database_requirements.txt
+RUN pip install --no-cache-dir -r /tmp/pgs_calc_requirements.txt \
+ && pip install --no-cache-dir -r /tmp/database_requirements.txt
+
 COPY pgs_calc_module/ .
+COPY database_module/ .
 
 CMD ["python", "main.py"]

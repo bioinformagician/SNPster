@@ -3,11 +3,13 @@ import shutil
 import zstandard as zstd
 from pathlib import Path
 import sys
-import random
+import re
+from urllib.parse import urlparse
+from urllib.request import urlopen
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "database_module"))
 print(sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "database_module")))
-from db_handler import DbHandler, DbUtils
+from db_handler import DbHandler
 from db_config import USERNAME, PASSWORD, DATABASE_NAME, HOST, PORT, PGS_EXCEL_FILEPATH
 
 
@@ -29,33 +31,137 @@ def transfer_files(source_dir:str, target_dir:str, db_handler:DbHandler=db_handl
         target_file = os.path.join(target_dir, filename)
 
         if os.path.isfile(source_file):
-            shutil.copy2(source_file, target_file)
-            print(f"Copied: {source_file} to {target_file}")
+            if os.path.exists(target_file) and os.path.getsize(target_file) > 0:
+                print(f"File already exists, skipping copy: {target_file}")
+            else:
+                shutil.copy2(source_file, target_file)
+                print(f"Copied: {source_file} to {target_file}")
 
             user_id = _
             email = f"{_}@example.com"
-            created_at = "NOW()"
             password_hash = "hashed_password"  # Placeholder, replace with actual hash if needed
             genefile_location = target_file
 
-            query = f"""
-            INSERT INTO snpster_users.user_information (user_id, email, created_at, password_hash, genefile_location)
-            VALUES ('{user_id}', '{email}', {created_at}, '{password_hash}', '{genefile_location}');
+            query = """
+            INSERT INTO snpster_users.user_information (user_id, email, password_hash, genefile_location)
+            VALUES (%s, %s, %s, %s)
+            ON CONFLICT (user_id)
+            DO UPDATE SET
+                email = EXCLUDED.email,
+                password_hash = EXCLUDED.password_hash,
+                genefile_location = EXCLUDED.genefile_location;
             """
-            print(f"Executing query: {query}")
-            db_handler.execute_query(query)
-            print(f"Updated database with file location for {target_file}")
+            db_handler.execute_query(query, (str(user_id), email, password_hash, genefile_location))
+            print(f"Upserted database row with file location for {target_file}")
 
+            #trigger function updates imputation_jobs table with imputation_id and sets status to queued for the new job
+
+
+def setup_pgs_reports():
+
+
+    # read data:
+    report_library_folder = "/home/frederik/github_projects/SNPster/data pipeline/pgs_libraries"
+    scoring_target_dir = "/srv/scoring_files"
+    os.makedirs(scoring_target_dir, exist_ok=True)
+
+    def extract_pgs_ids(content: str) -> list:
+        # Handles both comma-separated files and free text lines containing PGS IDs.
+        return sorted(set(re.findall(r"PGS\d{6}", content)))
+
+    def download_scoring_file(ftp_link: str, pgs_id: str) -> str:
+        parsed = urlparse(ftp_link)
+        basename = os.path.basename(parsed.path) or f"{pgs_id}.txt.gz"
+        local_name = f"{pgs_id}_{basename}"
+        local_path = os.path.join(scoring_target_dir, local_name)
+
+        # Reuse any existing non-empty file for this PGS ID across reruns.
+        existing_files = sorted(
+            f for f in os.listdir(scoring_target_dir)
+            if f.startswith(f"{pgs_id}_")
+        )
+        if existing_files:
+            existing_path = os.path.join(scoring_target_dir, existing_files[0])
+            if os.path.getsize(existing_path) > 0:
+                print(f"Scoring file already exists for {pgs_id}: {existing_path}")
+                return existing_path
+            print(f"Existing scoring file for {pgs_id} is empty. Re-downloading: {existing_path}")
+
+        if not os.path.exists(local_path):
+            print(f"Downloading scoring file for {pgs_id} from {ftp_link}")
+            with urlopen(ftp_link) as response, open(local_path, "wb") as out_file:
+                shutil.copyfileobj(response, out_file)
+        else:
+            if os.path.getsize(local_path) > 0:
+                print(f"Scoring file already exists for {pgs_id}: {local_path}")
+            else:
+                print(f"Scoring file exists but is empty for {pgs_id}. Re-downloading: {local_path}")
+                with urlopen(ftp_link) as response, open(local_path, "wb") as out_file:
+                    shutil.copyfileobj(response, out_file)
+
+        return local_path
+
+    for filename in os.listdir(report_library_folder):
+
+        if "all" in filename:
+            continue  # skip the all file, which is just a combined file of all reports for testing purposes
+
+        if not filename.endswith(".txt"):
+            continue
+
+        report_name = filename.replace(".txt", "")
+        file_path = os.path.join(report_library_folder, filename)
+
+        with open(file_path, "r", encoding="utf-8") as f:
+            report_content = f.read()
+
+        pgs_ids = extract_pgs_ids(report_content)
+        if not pgs_ids:
+            print(f"No PGS IDs found in report file: {file_path}")
+            continue
+
+        for pgs_id in pgs_ids:
+            ftp_query = """
+            SELECT ftp_link
+            FROM data_libraries.pgscatalog_data
+            WHERE pgs_id = %s
+              AND ftp_link IS NOT NULL
+              AND ftp_link <> ''
+            LIMIT 1;
+            """
+            ftp_rows = db_handler.execute_query(ftp_query, (pgs_id,))
+
+            if not ftp_rows:
+                print(f"No ftp_link found for {pgs_id}, skipping download and DB update.")
+                continue
+
+            ftp_link = ftp_rows[0][0]
+
+            try:
+                local_scoring_file = download_scoring_file(ftp_link, pgs_id)
+            except Exception as exc:
+                print(f"Failed to download scoring file for {pgs_id} from {ftp_link}: {exc}")
+                continue
+
+            insert_query = """
+            INSERT INTO snpster_users.pgs_reports_shop (pgs_id, report_name, scoring_file_path)
+            VALUES (%s, %s, %s)
+            ON CONFLICT DO NOTHING;
+            """
+            db_handler.execute_query(insert_query, (pgs_id, report_name, local_scoring_file))
+
+            update_query = """
+            UPDATE snpster_users.pgs_reports_shop
+            SET scoring_file_path = %s
+            WHERE pgs_id = %s AND report_name = %s;
+            """
+            db_handler.execute_query(update_query, (local_scoring_file, pgs_id, report_name))
+
+            print(
+                f"Report '{report_name}' mapped to {pgs_id}; scoring file stored at {local_scoring_file}"
+            )
 
 
 if __name__ == "__main__":
     transfer_files(RAW_DATA_DIR, TARGET_DIR)
-
-
-"""CREATE TABLE snpster_users.user_information (
-    user_id varchar(100) PRIMARY KEY NOT NULL ON DELETE CASCADE,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    genefile_location TEXT NOT NULL -- stored on linux server in folder /srv/raw);
-    """
+    setup_pgs_reports()

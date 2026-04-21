@@ -275,6 +275,9 @@ if __name__ == "__main__":
         print(f"{key} dataframe shape: {df.shape}")
         db_utils.insert_dataframe_to_db(df, table_name=key)
     
+
+    #insert 
+    
     db_handler.close()
     
     
