@@ -1,6 +1,5 @@
 import os
 import shutil
-import zstandard as zstd
 from pathlib import Path
 import sys
 import re
@@ -161,7 +160,35 @@ def setup_pgs_reports():
                 f"Report '{report_name}' mapped to {pgs_id}; scoring file stored at {local_scoring_file}"
             )
 
+def setup_prsc_jobs():
+    
 
+    #create an insert to have jobs available
+    
+    imputation_ids = [158,159,160]
+    prsc_status = "queued"
+    for imputation_id in imputation_ids:
+        insert_query = """
+        INSERT INTO snpster_users.prsc_jobs (imputation_id, prsc_status)
+        VALUES (%s, %s)
+        ON CONFLICT DO NOTHING;
+        """
+        db_handler.execute_query(insert_query, (imputation_id, prsc_status))
+        print(f"Inserted prsc job for imputation_id {imputation_id} with status {prsc_status}") 
+    
+
+    #populate the prsc_job_parameters table with pgs_ids from pgs_reports_shop where report_name = 'cardiovascular_panel'
+    insert_query = """
+    INSERT INTO snpster_users.prsc_job_parameters (prsc_id, pgs_id)
+    SELECT prsc_id, pgs_id
+    FROM snpster_users.pgs_reports_shop
+    JOIN snpster_users.prsc_jobs ON prsc_jobs.imputation_id = pgs_reports_shop.imputation_id
+    WHERE report_name = 'cardiovascular_panel';
+    """
+    db_handler.execute_query(insert_query)
+    print("Populated prsc_job_parameters table with PGS IDs for 'cardiovascular_panel' reports.")
+    
 if __name__ == "__main__":
-    transfer_files(RAW_DATA_DIR, TARGET_DIR)
-    setup_pgs_reports()
+    #transfer_files(RAW_DATA_DIR, TARGET_DIR)
+    #setup_pgs_reports()
+    setup_prsc_jobs()

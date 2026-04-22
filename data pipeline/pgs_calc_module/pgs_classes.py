@@ -9,22 +9,18 @@ class EnvironmentHandler:
     def __init__(self, samplesheet_path: str, 
                  output_dir: str, 
                  reference_data_path: str,
-                 pgs_id_file: str,
                  low_memory : bool, #split analysis into multiple runs of pgs calcs, calling NF pipeline multiple times (cache will be used)
                  scoring_file_str: str = None,
                  imputation_id: int = None,
-                 db_handler: DbHandler = None,
-                 db_utils: DbUtils = None,
+                 db_utils = DbUtils(DbHandler(user=USERNAME, password=PASSWORD, host=HOST, port=PORT))
                  ):
         
         self.samplesheet_path = samplesheet_path
         self.output_dir = output_dir
         self.reference_data_path = reference_data_path
-        self.pgs_id_file = pgs_id_file
         self.low_memory = low_memory
         self.scoring_file_str = scoring_file_str
         self.imputation_id = imputation_id
-        self.db_handler = db_handler
         self.db_utils = db_utils
 
 
@@ -67,7 +63,10 @@ class PGSCalculator:
         #also needs to fetch scoring file path from pgs_reports_shop
 
         results = self.environment_handler.db_utils.get_pd_dataframe_from_query(query)
-
+        
+        if results.empty:
+            raise ValueError("No queued jobs found in the database.")
+        
         self.environment_handler.imputation_id = results["imputation_id"].iloc[0]
         #concatenate strings for scoring file path
 
@@ -76,7 +75,7 @@ class PGSCalculator:
         self.environment_handler.scoring_file_str = "/srv/scoring_files/*.txt.gz" #i dont know if it will run all of them or pick correct ones
         return results
 
-    def upload_results(self):
+    def upload_results(self) -> None:
         
         # path example: /output_dir/{imputation_id}/score/{imputation_id}_pgs.txt.gz
         """Uploads the PGS calculation results to the database and updates job status."""
@@ -103,10 +102,15 @@ class PGSCalculator:
 
 
     
-    def run_pgs_calculation(self):
+    def run_pgs_calculation(self) -> None:
 
-        job_df = self.get_jobs()
 
+        try:
+            job_df = self.get_jobs()
+        except ValueError as e:
+            print(e)
+            return
+            
         pgs_id_str = ",".join(job_df['pgs_id'].tolist())
         
         """nextflow run pgscatalog/pgsc_calc \

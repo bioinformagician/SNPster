@@ -7,7 +7,7 @@ import pandas as pd
 
 class DbHandler:
     
-    def __init__(self, port:int, db_url:str, user:str, password:str, host:str, connection=None, cursor=None):
+    def __init__(self, port:int, user:str, password:str, host:str, connection=None, cursor=None, db_url:str=None):
         self.db_url = db_url
         self.user = user
         self.password = password

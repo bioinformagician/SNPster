@@ -1,7 +1,5 @@
 import os
 
-
 SAMPLESHEET_PATH = os.getenv("SAMPLESHEET_PATH")
 OUTPUT_DIR = os.getenv("OUTPUT_DIR")
 REFERENCE_DATA_PATH = os.getenv("REFERENCE_DATA_PATH")
-PGS_ID_FILE = os.getenv("PGS_ID_FILE")
