@@ -1,5 +1,5 @@
 from pgs_classes import EnvironmentHandler, PGSCalculator_Config, PGSCalculator
-from config import SAMPLESHEET_PATH, OUTPUT_DIR, REFERENCE_DATA_PATH
+from config import OUTPUT_DIR, REFERENCE_DATA_PATH
 import argparse
 
 #adjust to new pgs_classes.py file
@@ -12,7 +12,6 @@ parser.add_argument('--low_memory', type=str, required=False, default="false") #
 args = parser.parse_args()
 
 environment_handler = EnvironmentHandler(
-    samplesheet_path=SAMPLESHEET_PATH,
     output_dir=OUTPUT_DIR,
     low_memory = args.low_memory,
     reference_data_path=REFERENCE_DATA_PATH,
@@ -26,5 +25,6 @@ pgs_calculator = PGSCalculator(
     pgscalculator_config=pgs_calculator_config
 )
 
+environment_handler.connect_to_db()
 pgs_calculator.run_pgs_calculation()
-
+environment_handler.close_db_connection()

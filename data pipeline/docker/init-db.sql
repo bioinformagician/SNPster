@@ -4,6 +4,8 @@
 CREATE SCHEMA IF NOT EXISTS snpster_users;
 CREATE SCHEMA IF NOT EXISTS data_libraries;
 
+CREATE EXTENSION IF NOT EXISTS btree_gist;
+
 ALTER DATABASE snpster_db SET search_path = snpster_users, public;
 
 CREATE SEQUENCE IF NOT EXISTS snpster_users.imputation_jobs_seq START 1;
@@ -147,20 +149,25 @@ CREATE TABLE snpster_users.prsc_jobs (
 
 CREATE TABLE snpster_users.prsc_job_parameters (
     prsc_id integer NOT NULL REFERENCES snpster_users.prsc_jobs(prsc_id) ON DELETE CASCADE,
-    pgs_id varchar(100) NOT NULL REFERENCES data_libraries.pgscatalog_data(pgs_id) ON DELETE CASCADE
+    pgs_id varchar(100) NOT NULL REFERENCES data_libraries.pgscatalog_data(pgs_id) ON DELETE CASCADE,
+    PRIMARY KEY (prsc_id, pgs_id)
 );
 
 CREATE TABLE snpster_users.prsc_job_results (
     prsc_id integer NOT NULL REFERENCES snpster_users.prsc_jobs(prsc_id) ON DELETE CASCADE,
     pgs_id varchar(100) NOT NULL REFERENCES data_libraries.pgscatalog_data(pgs_id) ON DELETE CASCADE,
     percentile DECIMAL(5,2) CHECK (percentile >= 0 AND percentile <= 100),
-    z_most_similar_pop DECIMAL(5,2)
+    z_most_similar_pop DECIMAL(5,2),
+    PRIMARY KEY (prsc_id, pgs_id)
 );
 
 CREATE TABLE snpster_users.pgs_reports_shop(
     pgs_id varchar(100) NOT NULL REFERENCES data_libraries.pgscatalog_data(pgs_id),
-    report_name VARCHAR(255),
-    scoring_file_path TEXT
+    report_name VARCHAR(255) NOT NULL,
+    scoring_file_path TEXT,
+    PRIMARY KEY (pgs_id, report_name),
+    CONSTRAINT pgs_reports_shop_one_scoring_path_per_pgs
+        EXCLUDE USING gist (pgs_id WITH =, scoring_file_path WITH <>)
 );
 
 CREATE TABLE snpster_users.report_jobs (

@@ -180,15 +180,78 @@ def setup_prsc_jobs():
     #populate the prsc_job_parameters table with pgs_ids from pgs_reports_shop where report_name = 'cardiovascular_panel'
     insert_query = """
     INSERT INTO snpster_users.prsc_job_parameters (prsc_id, pgs_id)
-    SELECT prsc_id, pgs_id
-    FROM snpster_users.pgs_reports_shop
-    JOIN snpster_users.prsc_jobs ON prsc_jobs.imputation_id = pgs_reports_shop.imputation_id
-    WHERE report_name = 'cardiovascular_panel';
+    SELECT prsc_jobs.prsc_id, pgs_reports_shop.pgs_id
+    FROM snpster_users.prsc_jobs
+    CROSS JOIN snpster_users.pgs_reports_shop
+    WHERE prsc_jobs.imputation_id = ANY(%s)
+      AND pgs_reports_shop.report_name = 'cardiovascular_panel'
+    ON CONFLICT DO NOTHING;
     """
-    db_handler.execute_query(insert_query)
+    db_handler.execute_query(insert_query, (imputation_ids,))
     print("Populated prsc_job_parameters table with PGS IDs for 'cardiovascular_panel' reports.")
     
+    
+    
+def update_ftp_links_to_grch38():
+    #example link https://ftp.ebi.ac.uk/pub/databases/spot/pgs/scores/PGS000001/ScoringFiles/Harmonized/PGS000001_hmPOS_GRCh38.txt.gz
+    
+    """CREATE TABLE data_libraries.pgscatalog_data (
+        pgs_id varchar(100) PRIMARY KEY,
+        pgs_name VARCHAR(255),
+        reported_trait VARCHAR(255),
+        mapped_trait_efo_label VARCHAR(255),
+        efo_id VARCHAR(255),
+        pgs_development_method VARCHAR(255),
+        pgs_development_details TEXT,
+        original_genome_build VARCHAR(20),
+        number_of_variants INTEGER,
+        number_of_interaction_terms INTEGER,
+        type_of_variant_weight TEXT,
+        pgp_id varchar(100),
+        publication_pmid int,
+        publication_doi VARCHAR(255),
+        score_and_results_match_original_publication BOOLEAN,
+        ancestry_distribution_source_of_variant_associations_gwas VARCHAR(255),
+        ancestry_distribution_score_development_training VARCHAR(255),
+        ancestry_distribution_pgs_evaluation VARCHAR(255),
+        ftp_link VARCHAR(255),
+        release_date DATE,
+        license_terms_of_use TEXT
+    );"""
+    
+    #get all rows in table
+    rows = db_handler.execute_query("SELECT pgs_id FROM data_libraries.pgscatalog_data;")
+    if not rows:
+        print("No PGS IDs found in pgscatalog_data table.")
+        return
+    pgs_ids = [row[0] for row in rows]
+
+    for pgs_id in pgs_ids:
+        ftp_link = f"https://ftp.ebi.ac.uk/pub/databases/spot/pgs/scores/{pgs_id}/ScoringFiles/Harmonized/{pgs_id}_hmPOS_GRCh38.txt.gz"
+        
+        #check if ftp_link is valid
+        try:
+            with urlopen(ftp_link) as response:
+                if response.status == 200:
+                    print(f"FTP link is valid for {pgs_id}: {ftp_link}")
+                else:
+                    print(f"FTP link returned status {response.status} for {pgs_id}: {ftp_link}")
+                    continue
+        except Exception as exc:
+            print(f"Error accessing FTP link for {pgs_id}: {ftp_link} - {exc}")
+            continue
+        
+        update_query = """
+        UPDATE data_libraries.pgscatalog_data
+        SET ftp_link = %s
+        WHERE pgs_id = %s;
+        """
+        db_handler.execute_query(update_query, (ftp_link, pgs_id))
+        print(f"Updated ftp_link for {pgs_id} to {ftp_link}")
+
+
 if __name__ == "__main__":
-    #transfer_files(RAW_DATA_DIR, TARGET_DIR)
-    #setup_pgs_reports()
+    #update_ftp_links_to_grch38()
+    transfer_files(RAW_DATA_DIR, TARGET_DIR)
+    setup_pgs_reports()
     setup_prsc_jobs()
