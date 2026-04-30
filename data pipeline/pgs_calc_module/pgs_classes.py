@@ -192,7 +192,7 @@ class PGSCalculator:
                 print(f"Running command {command}")
 
                 try:
-                    result = subprocess.run(command, check=True)
+                    subprocess.run(command, check=True)
                     print("PGS calculation completed successfully.")
                     self.upload_results() #might not work right now with current upload_results
 
@@ -218,7 +218,7 @@ class PGSCalculator:
             print(f"Running command {command}")
         
             try:
-                result = subprocess.run(command, check=True)
+                subprocess.run(command, check=True)
                 print("PGS calculation completed successfully.")
                 self.upload_results()
                 self.environment_handler.set_db_job_status("completed")  #maybe this should be a trigger function in db upon upload of data to prsc_job_results instead
