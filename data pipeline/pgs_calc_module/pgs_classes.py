@@ -157,8 +157,7 @@ class PGSCalculator:
             
             self.environment_handler.db_utils.db_handler.execute_query(insert_query)
         
-        self.environment_handler.set_db_job_status("completed") #maybe this should be a trigger function in db upon upload of data to prsc_job_results instead
-
+        
         
 
 
@@ -222,6 +221,9 @@ class PGSCalculator:
                 result = subprocess.run(command, check=True)
                 print("PGS calculation completed successfully.")
                 self.upload_results()
+                self.environment_handler.set_db_job_status("completed")  #maybe this should be a trigger function in db upon upload of data to prsc_job_results instead
+                self.environment_handler.close_db_connection()
+                
 
             except subprocess.CalledProcessError as e:
                 print("Error during PGS calculation:")
