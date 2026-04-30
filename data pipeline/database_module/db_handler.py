@@ -4,6 +4,7 @@ import psycopg2
 from psycopg2 import sql
 from psycopg2.extras import execute_values
 import pandas as pd
+import time
 
 class DbHandler:
     
@@ -16,25 +17,28 @@ class DbHandler:
         self.connection = connection
         self.cursor = cursor
 
-    def connect(self) -> bool:
+    def connect(self, retries = 10, wait_time = 60) -> bool:
         # Code to establish a connection to the database using the provided parameters
-        try:
-            self.connection = psycopg2.connect(
-                dbname=self.db_url or DATABASE_NAME,
-                user=self.user,
-                password=self.password,
-                host=self.host,
+        for attempt in range(retries):
+            try:
+                self.connection = psycopg2.connect(
+                    dbname=self.db_url or DATABASE_NAME,
+                    user=self.user,
+                    password=self.password,
+                    host=self.host,
                 port=self.port
             )
             
-            self.cursor = self.connection.cursor()
-            print("Database connection established successfully.")
-            return True
-        except Exception as e:
-            print(f"Error connecting to the database: {e}")
-            self.connection = None
-            self.cursor = None
-            return False
+                self.cursor = self.connection.cursor()
+                print("Database connection established successfully.")
+                return True
+            except Exception as e:
+                print(f"Error connecting to the database: {e}")
+                self.connection = None
+                self.cursor = None
+                if attempt < retries - 1:
+                    time.sleep(wait_time)  # Wait before retrying
+        return False
         
 
     def close(self) -> None:
@@ -45,26 +49,26 @@ class DbHandler:
             self.connection.close()
         print("Database connection closed.")
         
-    def execute_query(self, query, params=None) -> list:
+    def execute_query(self, query, retries = 10, wait_time = 60, params=None) -> list:
         # Code to execute a given SQL query using the established connection
-        if self.connection is None or self.cursor is None:
-            print("Error executing query: database connection is not established.")
-            print(f"Query: {query}")
-            return None
+        
+        for attempt in range(retries):
 
-        try:
-            self.cursor.execute(query, params)
-            self.connection.commit()
-            print("Query executed successfully.")
-            
-            return self.cursor.fetchall() if self.cursor.description else None
-            
-        except Exception as e:
-            print(f"Error executing query: {e}")
-            print(f"Query: {query}")
-            if self.connection is not None:
-                self.connection.rollback()
-            return None
+            try:
+                self.cursor.execute(query, params)
+                self.connection.commit()
+                print("Query executed successfully.")
+                
+                return self.cursor.fetchall() if self.cursor.description else None
+                
+            except Exception as e:
+                print(f"Error executing query: {e}")
+                print(f"Query: {query}")
+                if self.connection is not None:
+                    self.connection.rollback()
+                if attempt < retries - 1:
+                    time.sleep(wait_time)  # Wait before retrying
+        return None
         
         
 class DbUtils:

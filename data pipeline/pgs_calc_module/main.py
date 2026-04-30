@@ -25,6 +25,8 @@ pgs_calculator = PGSCalculator(
     pgscalculator_config=pgs_calculator_config
 )
 
-environment_handler.connect_to_db()
-pgs_calculator.run_pgs_calculation()
-environment_handler.close_db_connection()
+
+while True:
+    environment_handler.connect_to_db()
+    pgs_calculator.run_pgs_calculation()
+    environment_handler.close_db_connection()
