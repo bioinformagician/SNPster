@@ -1,9 +1,10 @@
 import subprocess
 import pandas as pd
 import os
+import shutil
 from db_handler import DbHandler, DbUtils
 from db_config import USERNAME, PASSWORD, HOST, PORT
-from config import SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR
+from config import SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR
 
 
 class EnvironmentHandler:
@@ -17,7 +18,8 @@ class EnvironmentHandler:
                  db_utils: DbUtils = None,
                  samplesheet_path: str = None,
                  scoring_file_source_dir: str = SCORING_FILE_SOURCE_DIR,
-                 scoring_file_target_dir: str = SCORING_FILE_TARGET_DIR
+                 scoring_file_target_dir: str = SCORING_FILE_TARGET_DIR,
+                 nf_work_dir: str = NF_WORK_DIR
                  ):
         
         self.samplesheet_path = samplesheet_path
@@ -32,7 +34,7 @@ class EnvironmentHandler:
         self.db_utils = db_utils
         self.scoring_file_source_dir = scoring_file_source_dir
         self.scoring_file_target_dir = scoring_file_target_dir
-        
+        self.nf_work_dir = nf_work_dir
     
     def copy_scoring_files(self, scoring_file_list: list) -> None:
         """Copies scoring files from the mounted source directory to the scoring file directory."""
@@ -58,6 +60,27 @@ class EnvironmentHandler:
             self.db_utils.db_handler.execute_query(update_query)
         else:
             raise ValueError("prsc_id is not set. Cannot update job status.")
+    
+    def clear_directories(self) -> None:
+        """Clears the output and scoring file directories."""
+        directories_to_clear = [
+            self.output_dir,
+            self.scoring_file_target_dir,
+            self.nf_work_dir,
+        ]
+
+        for directory in directories_to_clear:
+            if not directory or not os.path.isdir(directory):
+                continue
+
+            for entry in os.listdir(directory):
+                path = os.path.join(directory, entry)
+                if os.path.isfile(path) or os.path.islink(path):
+                    os.unlink(path)
+                elif os.path.isdir(path):
+                    shutil.rmtree(path)
+
+
 
 
 class PGSCalculator_Config:
@@ -131,7 +154,7 @@ class PGSCalculator:
         self.environment_handler.samplesheet_path = f"/srv/imputed/{user_id}/{imputation_id}/output/samplesheet.csv"
         self.environment_handler.copy_scoring_files(results["scoring_file_path"].tolist())
         self.environment_handler.scoring_file_str = f"{self.environment_handler.scoring_file_target_dir}/*.txt.gz"
-        #self.environment_handler.set_db_job_status("running") implement this when heartbeat function is implemented
+        
         
 
     def upload_results(self) -> None:
@@ -142,6 +165,7 @@ class PGSCalculator:
         results_path = f"{self.environment_handler.output_dir}/{self.environment_handler.imputation_id}/score/{self.environment_handler.imputation_id}_pgs.txt.gz"
 
         results = pd.read_csv(results_path, sep="\t")
+        
         results["PGS"] = results["PGS"].str.replace("_hmPOS_GRCh38", "", regex=False)
         results = results[results["sampleset"] != "reference"]
         
@@ -157,19 +181,25 @@ class PGSCalculator:
             
             self.environment_handler.db_utils.db_handler.execute_query(insert_query)
         
+    def validate_results(self) -> bool:
+        """Validates the PGS calculation results before uploading."""
         
+        results_path = f"{self.environment_handler.output_dir}/{self.environment_handler.imputation_id}/score/{self.environment_handler.imputation_id}_pgs.txt.gz"
+        
+        try:
+            results = pd.read_csv(results_path, sep="\t")
+        except Exception as e:
+            self.environment_handler.set_db_job_status("failed")
+            raise ValueError(f"Error reading results file at {results_path}: {e}")
+            
+        if results.empty:
+            self.environment_handler.set_db_job_status("failed")
+            raise ValueError("No results found in the output file.")
         
 
 
     
     def run_pgs_calculation(self) -> None:
-
-
-        try:
-            self.set_job_parameters()
-        except ValueError as e:
-            print(e)
-            return
 
 
         if self.environment_handler.low_memory == "true":
@@ -194,7 +224,6 @@ class PGSCalculator:
                 try:
                     subprocess.run(command, check=True)
                     print("PGS calculation completed successfully.")
-                    self.upload_results() #might not work right now with current upload_results
 
                 except subprocess.CalledProcessError as e:
                     print("Error during PGS calculation:")
@@ -221,8 +250,7 @@ class PGSCalculator:
                 subprocess.run(command, check=True)
                 print("PGS calculation completed successfully.")
                 self.upload_results()
-                self.environment_handler.set_db_job_status("completed")  #maybe this should be a trigger function in db upon upload of data to prsc_job_results instead
-                self.environment_handler.close_db_connection()
+                
                 
 
             except subprocess.CalledProcessError as e:

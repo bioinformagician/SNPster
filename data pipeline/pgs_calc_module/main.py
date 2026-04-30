@@ -28,5 +28,21 @@ pgs_calculator = PGSCalculator(
 
 while True:
     environment_handler.connect_to_db()
-    pgs_calculator.run_pgs_calculation()
+    pgs_calculator.set_job_parameters()
+    #self.environment_handler.set_db_job_status("running") implement this when heartbeat function is implemented
     environment_handler.close_db_connection()
+    pgs_calculator.run_pgs_calculation()
+    
+    try:
+        pgs_calculator.validate_results() 
+    except Exception as e:
+        print(f"Validation failed: {e}")
+        environment_handler.set_db_job_status("failed")
+        continue  # Skip uploading results and move to the next job
+    
+    environment_handler.connect_to_db()
+    pgs_calculator.upload_results() 
+    environment_handler.set_db_job_status("completed")  #maybe this should be a trigger function in db upon upload of data to prsc_job_results instead --- IGNORE ---
+    environment_handler.close_db_connection()
+    environment_handler.clear_directories()
+    
