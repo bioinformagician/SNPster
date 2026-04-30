@@ -13,6 +13,7 @@ class EnvironmentHandler:
                  low_memory : bool, #split analysis into multiple runs of pgs calcs, calling NF pipeline multiple times (cache will be used)
                  scoring_file_str: str = None,
                  imputation_id: int = None,
+                 prsc_id: int = None,
                  db_utils: DbUtils = None,
                  samplesheet_path: str = None,
                  scoring_file_source_dir: str = SCORING_FILE_SOURCE_DIR,
@@ -25,6 +26,7 @@ class EnvironmentHandler:
         self.low_memory = low_memory
         self.scoring_file_str = scoring_file_str
         self.imputation_id = imputation_id
+        self.prsc_id = prsc_id
         if db_utils is None:
             db_utils = DbUtils(DbHandler(user=USERNAME, password=PASSWORD, host=HOST, port=PORT))
         self.db_utils = db_utils
@@ -46,6 +48,16 @@ class EnvironmentHandler:
     
     def close_db_connection(self) -> None:
         self.db_utils.db_handler.close()
+    
+    def set_db_job_status(self, status: str) -> None:
+        """Updates the job status in the database."""
+        if self.prsc_id is not None:
+            update_query = f"""UPDATE snpster_users.prsc_jobs
+                            SET prsc_status = '{status}'
+                            WHERE prsc_id = {self.prsc_id};"""
+            self.db_utils.db_handler.execute_query(update_query)
+        else:
+            raise ValueError("prsc_id is not set. Cannot update job status.")
 
 
 class PGSCalculator_Config:
@@ -86,6 +98,7 @@ class PGSCalculator:
                 SELECT
                     pj.imputation_id,
                     pj.prsc_id,
+                    ij.user_id,
                     pj.prsc_status,
                     pjp.pgs_id,
                     ij.imputation_status,
@@ -109,14 +122,16 @@ class PGSCalculator:
         if results.empty:
             raise ValueError("No queued jobs found in the database.")
         
+        prsc_id = results["prsc_id"].iloc[0]
         imputation_id = results["imputation_id"].iloc[0]
         #concatenate strings for scoring file path
         user_id = results["user_id"].iloc[0]
+        self.environment_handler.prsc_id = prsc_id
         self.environment_handler.imputation_id = imputation_id
         self.environment_handler.samplesheet_path = f"/srv/imputed/{user_id}/{imputation_id}/output/samplesheet.csv"
         self.environment_handler.copy_scoring_files(results["scoring_file_path"].tolist())
-        self.environment_handler.scoring_file_str = f"{self.environment_handler.scoring_file_target_dir}/*.txt.gz" #i dont know if it will run all of them or pick correct ones
-        
+        self.environment_handler.scoring_file_str = f"{self.environment_handler.scoring_file_target_dir}/*.txt.gz"
+        #self.environment_handler.set_db_job_status("running") implement this when heartbeat function is implemented
         
 
     def upload_results(self) -> None:
@@ -129,18 +144,20 @@ class PGSCalculator:
         results = pd.read_csv(results_path, sep="\t")
         results["PGS"] = results["PGS"].str.replace("_hmPOS_GRCh38", "", regex=False)
         results = results[results["sampleset"] != "reference"]
-
+        
         for index, row in results.iterrows():
             
-            prsc_id = int(row["sampleset"])
+            #imputation_id = int(row["sampleset"])
             pgs_id = row["PGS"]
             percentile = float(row["percentile_MostSimilarPop"])
             z_most_similar_pop = float(row["Z_MostSimilarPop"])
 
             insert_query = f"""INSERT INTO snpster_users.prsc_job_results (prsc_id, pgs_id, percentile, z_most_similar_pop)
-                            VALUES ({prsc_id}, '{pgs_id}', {percentile}, {z_most_similar_pop});"""
+                            VALUES ({self.environment_handler.prsc_id}, '{pgs_id}', {percentile}, {z_most_similar_pop});"""
             
             self.environment_handler.db_utils.db_handler.execute_query(insert_query)
+        
+        self.environment_handler.set_db_job_status("completed") #maybe this should be a trigger function in db upon upload of data to prsc_job_results instead
 
         
 
