@@ -189,13 +189,12 @@ class PGSCalculator:
         try:
             results = pd.read_csv(results_path, sep="\t")
         except Exception as e:
-            self.environment_handler.set_db_job_status("failed")
             raise ValueError(f"Error reading results file at {results_path}: {e}")
             
         if results.empty:
-            self.environment_handler.set_db_job_status("failed")
             raise ValueError("No results found in the output file.")
         
+
 
 
     
@@ -249,7 +248,6 @@ class PGSCalculator:
             try:
                 subprocess.run(command, check=True)
                 print("PGS calculation completed successfully.")
-                self.upload_results()
                 
                 
 

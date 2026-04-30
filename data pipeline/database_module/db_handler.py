@@ -47,7 +47,18 @@ class DbHandler:
             self.cursor.close()
         if self.connection:
             self.connection.close()
+        self.cursor = None
+        self.connection = None
         print("Database connection closed.")
+
+    def _ensure_connection(self) -> bool:
+        connection_closed = self.connection is None or self.connection.closed != 0
+        cursor_closed = self.cursor is None or self.cursor.closed
+
+        if connection_closed or cursor_closed:
+            return self.connect(retries=1, wait_time=0)
+
+        return True
         
     def execute_query(self, query, retries = 10, wait_time = 60, params=None) -> list:
         # Code to execute a given SQL query using the established connection
@@ -55,6 +66,9 @@ class DbHandler:
         for attempt in range(retries):
 
             try:
+                if not self._ensure_connection():
+                    raise psycopg2.InterfaceError("Database connection is not available.")
+
                 self.cursor.execute(query, params)
                 self.connection.commit()
                 print("Query executed successfully.")
@@ -65,7 +79,13 @@ class DbHandler:
                 print(f"Error executing query: {e}")
                 print(f"Query: {query}")
                 if self.connection is not None:
-                    self.connection.rollback()
+                    try:
+                        if self.connection.closed == 0:
+                            self.connection.rollback()
+                    except Exception:
+                        pass
+                if isinstance(e, (psycopg2.InterfaceError, psycopg2.OperationalError)):
+                    self.close()
                 if attempt < retries - 1:
                     time.sleep(wait_time)  # Wait before retrying
         return None
