@@ -40,15 +40,13 @@ services:
       SAMPLESHEET_PATH: /app/imputation_runner_module/samplesheet.csv
       NXF_HOME: /srv/imputed/nf_runtime/.nextflow
       NXF_WORK: /srv/imputed/nf_runtime/nf_work
-
       BASE_OUTPUT_DIR: /srv/imputed
-      IMPUTATION_DEPENDENCIES: /home/frederik/shared_drive/snpster_dependencies/imputer_dependencies
-      HARMONIZER_DEPENDENCIES: /home/frederik/shared_drive/snpster_dependencies/harmonizer_dependencies
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /home/frederik/shared_drive:/home/frederik/shared_drive
-      - /srv/imputed:/srv/imputed
-      - ..:/app
+      - /var/run/docker.sock:/var/run/docker.sock #mount socket such that docker container only needs client to run nextflow pipeline which calls other docker containers to avoid dockerin docker issues
+      - /srv/imputed:/srv/imputed # this is where the imputation outputs will be stored, must mount to :/srv/imputed, s3 bucket in the future
+      - ..:/app #why is this mounted?
+      - /srv/dependencies/imputer:/app/dependencies/imputer:ro #imputation dependencies, must mount to :/app/dependencies/imputer
+      - /srv/dependencies/harmonizer:/app/dependencies/harmonizer:ro  #harmonizer dependencies, must mount to :/app/dependencies/harmonizer
     depends_on:
       - postgres
     restart: always

@@ -1,12 +1,13 @@
-params.harmonizer_dependencies = "/home/frederik/shared_drive/snpster_dependencies/harmonizer_dependencies"
-params.imputation_dependencies = "/home/frederik/shared_drive/snpster_dependencies/imputer_dependencies"
-params.samplesheet = "/app/job_runner_module/input_files.csv" 
+params.harmonizer_dependencies = "/srv/dependencies/imputation_runner/harmonizer"
+params.imputation_dependencies = "/srv/dependencies/imputation_runner/imputer"
+params.samplesheet = "/app/imputation_runner_module/input_files.csv" 
 
 
 
 process STANDARDIZE {
 
     container 'standardizer:latest'
+    
 
     input:
       tuple val(identifier), val(output_dir), path(microarray_file)
@@ -54,15 +55,14 @@ process IMPUTE {
     tuple val(identifier), val(output_dir), path(vcf_files)
 
   output:
-    //path "${identifier}", type: 'dir'
     path "output/*"
-    
+
   script:
   """
   python /app/main.py --vcf_files .
 
-  mkdir -p "${identifier}"
-  cp -a output/* "${identifier}/"
+  mkdir -p output
+  cp -a /output/* output/
   """
 }
 

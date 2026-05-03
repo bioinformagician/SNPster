@@ -28,7 +28,7 @@ RUN curl -s https://get.nextflow.io | bash \
  && mv nextflow /usr/local/bin/nextflow \
  && chmod +x /usr/local/bin/nextflow
 
-WORKDIR /app/imputation_runner_module
+WORKDIR /app
 
 COPY database_module/requirements.txt /tmp/database_requirements.txt
 COPY imputation_runner_module/requirements.txt /tmp/imputation_runner_requirements.txt
@@ -36,10 +36,16 @@ COPY imputation_runner_module/requirements.txt /tmp/imputation_runner_requiremen
 RUN pip install --no-cache-dir -r /tmp/database_requirements.txt \
  && pip install --no-cache-dir -r /tmp/imputation_runner_requirements.txt
 
-COPY database_module/ /app/database_module/
-COPY imputation_runner_module/ /app/imputation_runner_module/
+COPY database_module/ /app/
+COPY imputation_runner_module/ /app/
 COPY nextflow/ /app/nextflow/
 
 RUN mkdir -p /srv/imputed/nf_runtime
+RUN mkdir -p /app/data /app/imputation_runner_module
+
+#mounted volumes for dependencies and data, must mount to :/data
+ENV IMPUTATION_DEPENDENCIES=/srv/dependencies/imputation_runner/imputer 
+ENV HARMONIZER_DEPENDENCIES=/srv/dependencies/imputation_runner/harmonizer
+
 
 CMD ["python", "/app/imputation_runner_module/main.py"]

@@ -43,14 +43,12 @@ ENV DF_ENGINE=polars
 #expect them to appear under /data via a volume mount at runtime.
 ENV PLINK_MAP_DIR=/data/plink.GRCh38.map
 ENV BEAGLE_REFERENCE_DIR=/data/beagle_references
-
+ENV OUTPUT_DIR=/output
 
 
 #default test data for testing
 ENV VCF_FILES_DIR=/app/dependencies/test_data
 
-# Output directory for imputed results
-ENV OUTPUT_DIR=output
 
 # Run your script
 CMD ["python", "main.py"]

@@ -4,7 +4,7 @@ import sys
 import time
 import shutil
 import pandas as pd
-from config import BASE_OUTPUT_DIR, IMPUTATION_DEPENDENCIES, HARMONIZER_DEPENDENCIES, NEXTFLOW_BIN, SAMPLESHEET_PATH, PIPELINE_PATH, NEXTFLOW_CONFIG
+from config import BASE_OUTPUT_DIR, IMPUTATION_DEPENDENCIES, HARMONIZER_DEPENDENCIES, NEXTFLOW_BIN, SAMPLESHEET_PATH, PIPELINE_PATH, NEXTFLOW_CONFIG, NEXTFLOW_WORK_DIR
 from db_handler import DbHandler, DbUtils
 from db_config import USERNAME, PASSWORD, HOST, PORT
 
@@ -17,6 +17,7 @@ class EnvironmentHandler:
                     imputation_dependencies=IMPUTATION_DEPENDENCIES,
                     harmonizer_dependencies=HARMONIZER_DEPENDENCIES,
                     nextflow_bin=NEXTFLOW_BIN,
+                    nextflow_workdir=NEXTFLOW_WORK_DIR,
                     samplesheet_path=SAMPLESHEET_PATH,
                     pipeline_path=PIPELINE_PATH,
                     nextflow_config=NEXTFLOW_CONFIG,
@@ -30,6 +31,7 @@ class EnvironmentHandler:
         self.pipeline_path = pipeline_path
         self.nextflow_config = nextflow_config
         self.samplesheet_df = samplesheet_df
+        self.nextflow_workdir = nextflow_workdir
         
     def validate_environment(self):
         if not self.base_output_dir:
@@ -53,11 +55,11 @@ class EnvironmentHandler:
         
     
 class DatabaseQueryHandler:
-    def __init__(self, db_utils: DbUtils):
+    def __init__(self, db_utils: DbUtils = None):
 
         
         if db_utils is None:
-            db_utils = DbUtils(DbHandler(user=USERNAME, password=PASSWORD, host=HOST, port=PORT))
+            db_utils = DbUtils(db_handler = DbHandler(user=USERNAME, password=PASSWORD, host=HOST, port=PORT))
         self.db_utils = db_utils
         
         
@@ -83,7 +85,7 @@ class DatabaseQueryHandler:
                         started_at = CURRENT_TIMESTAMP
                     WHERE imputation_id IN ({imputation_ids_sql})
                       AND imputation_status = 'queued';"""
-        self.db_utils.execute_query(mark_running_query)
+        self.db_utils.db_handler.execute_query(mark_running_query)
         
         
     
@@ -95,7 +97,7 @@ class DatabaseQueryHandler:
                                            completed_at = CURRENT_TIMESTAMP
                                        WHERE imputation_id IN ({imputation_ids_sql});"""
                                        
-        self.db_utils.execute_query(mark_completed_query)
+        self.db_utils.db_handler.execute_query(mark_completed_query)
     
     
     
@@ -107,7 +109,7 @@ class DatabaseQueryHandler:
                                         completed_at = CURRENT_TIMESTAMP
                                     WHERE imputation_id IN ({imputation_ids_sql});"""
                                     
-        self.db_utils.execute_query(mark_failed_query)
+        self.db_utils.db_handler.execute_query(mark_failed_query)
         
         
 
@@ -147,7 +149,7 @@ class ImputationRunner:
     
     def run_imputation(self) -> None:
         
-        print("Starting Nextflow run for imputation jobs with IDs: ", self.job_df["imputation_id"].tolist())
+        print("Starting Nextflow run for imputation jobs with imputation IDs: ", self.job_df["imputation_id"].tolist())
         subprocess.run([
                         self.env_handler.nextflow_bin,
                         "run",
@@ -155,7 +157,7 @@ class ImputationRunner:
                         "-c",
                         self.env_handler.nextflow_config,
                         "-work-dir",
-                        self.env_handler.base_output_dir,
+                        self.env_handler.nextflow_workdir,
                         "--samplesheet",
                         self.env_handler.samplesheet_path,
                         "--imputation_dependencies",
