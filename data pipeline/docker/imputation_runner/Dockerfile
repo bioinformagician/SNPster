@@ -5,7 +5,7 @@ ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 ENV BASE_OUTPUT_DIR=/srv/imputed
 ENV NEXTFLOW_BIN=/usr/local/bin/nextflow
-ENV SAMPLESHEET_PATH=/app/job_runner_module/samplesheet.csv
+ENV SAMPLESHEET_PATH=/app/imputation_runner_module/samplesheet.csv
 ENV PIPELINE_PATH=/app/nextflow/pipeline_orchestrator.nf
 ENV NEXTFLOW_CONFIG=/app/nextflow/nextflow.config
 ENV NXF_HOME=/srv/imputed/nf_runtime/.nextflow
@@ -28,18 +28,18 @@ RUN curl -s https://get.nextflow.io | bash \
  && mv nextflow /usr/local/bin/nextflow \
  && chmod +x /usr/local/bin/nextflow
 
-WORKDIR /app/job_runner_module
+WORKDIR /app/imputation_runner_module
 
 COPY database_module/requirements.txt /tmp/database_requirements.txt
-COPY job_runner_module/requirements.txt /tmp/job_runner_requirements.txt
+COPY imputation_runner_module/requirements.txt /tmp/imputation_runner_requirements.txt
 
 RUN pip install --no-cache-dir -r /tmp/database_requirements.txt \
- && pip install --no-cache-dir -r /tmp/job_runner_requirements.txt
+ && pip install --no-cache-dir -r /tmp/imputation_runner_requirements.txt
 
 COPY database_module/ /app/database_module/
-COPY job_runner_module/ /app/job_runner_module/
+COPY imputation_runner_module/ /app/imputation_runner_module/
 COPY nextflow/ /app/nextflow/
 
 RUN mkdir -p /srv/imputed/nf_runtime
 
-CMD ["python", "/app/job_runner_module/pipeline_dispatcher.py"]
+CMD ["python", "/app/imputation_runner_module/main.py"]

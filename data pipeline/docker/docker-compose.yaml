@@ -23,10 +23,10 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     restart: always
 
-  job_runner:
+  imputation_runner:
     build: 
       context: ..
-      dockerfile: docker/job_runner/Dockerfile
+      dockerfile: docker/imputation_runner/Dockerfile
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
@@ -37,7 +37,7 @@ services:
       NEXTFLOW_BIN: /usr/local/bin/nextflow
       NEXTFLOW_CONFIG: /app/nextflow/nextflow.config
       PIPELINE_PATH: /app/nextflow/pipeline_orchestrator.nf
-      SAMPLESHEET_PATH: /app/job_runner_module/samplesheet.csv
+      SAMPLESHEET_PATH: /app/imputation_runner_module/samplesheet.csv
       NXF_HOME: /srv/imputed/nf_runtime/.nextflow
       NXF_WORK: /srv/imputed/nf_runtime/nf_work
 
