@@ -207,3 +207,70 @@ CREATE TRIGGER trg_create_imputation_job_on_user_insert
 AFTER INSERT ON snpster_users.user_information
 FOR EACH ROW
 EXECUTE FUNCTION snpster_users.create_imputation_job_for_new_user();
+
+-- ===================================
+-- Trigger: set started_at / completed_at timestamps on status changes
+-- ===================================
+
+CREATE OR REPLACE FUNCTION snpster_users.set_imputation_job_timestamps()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF NEW.imputation_status = 'running' AND (OLD.imputation_status IS DISTINCT FROM 'running') THEN
+        NEW.started_at := CURRENT_TIMESTAMP;
+    END IF;
+    IF NEW.imputation_status = 'completed' AND (OLD.imputation_status IS DISTINCT FROM 'completed') THEN
+        NEW.completed_at := CURRENT_TIMESTAMP;
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION snpster_users.set_prsc_job_timestamps()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF NEW.prsc_status = 'running' AND (OLD.prsc_status IS DISTINCT FROM 'running') THEN
+        NEW.started_at := CURRENT_TIMESTAMP;
+    END IF;
+    IF NEW.prsc_status = 'completed' AND (OLD.prsc_status IS DISTINCT FROM 'completed') THEN
+        NEW.completed_at := CURRENT_TIMESTAMP;
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION snpster_users.set_report_job_timestamps()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF NEW.report_status = 'running' AND (OLD.report_status IS DISTINCT FROM 'running') THEN
+        NEW.started_at := CURRENT_TIMESTAMP;
+    END IF;
+    IF NEW.report_status = 'completed' AND (OLD.report_status IS DISTINCT FROM 'completed') THEN
+        NEW.completed_at := CURRENT_TIMESTAMP;
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_imputation_job_timestamps ON snpster_users.imputation_jobs;
+CREATE TRIGGER trg_imputation_job_timestamps
+BEFORE UPDATE OF imputation_status ON snpster_users.imputation_jobs
+FOR EACH ROW
+EXECUTE FUNCTION snpster_users.set_imputation_job_timestamps();
+
+DROP TRIGGER IF EXISTS trg_prsc_job_timestamps ON snpster_users.prsc_jobs;
+CREATE TRIGGER trg_prsc_job_timestamps
+BEFORE UPDATE OF prsc_status ON snpster_users.prsc_jobs
+FOR EACH ROW
+EXECUTE FUNCTION snpster_users.set_prsc_job_timestamps();
+
+DROP TRIGGER IF EXISTS trg_report_job_timestamps ON snpster_users.report_jobs;
+CREATE TRIGGER trg_report_job_timestamps
+BEFORE UPDATE OF report_status ON snpster_users.report_jobs
+FOR EACH ROW
+EXECUTE FUNCTION snpster_users.set_report_job_timestamps();
