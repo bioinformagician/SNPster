@@ -60,7 +60,7 @@ class DbHandler:
 
         return True
         
-    def execute_query(self, query, retries = 10, wait_time = 60, params=None) -> list:
+    def execute_query(self, query, params=None, retries = 10, wait_time = 60) -> list:
         # Code to execute a given SQL query using the established connection
         
         for attempt in range(retries):

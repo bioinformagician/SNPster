@@ -5,7 +5,7 @@ import sys
 import re
 from urllib.parse import urlparse
 from urllib.request import urlopen
-
+import random as rd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "database_module"))
 print(sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "database_module")))
 from db_handler import DbHandler
@@ -16,10 +16,8 @@ RAW_DATA_DIR = "/home/frederik/snpster_project/zipped"
 TARGET_DIR = "/srv/raw"
 
 
-db_handler = DbHandler(port=PORT, db_url=None, user=USERNAME, password=PASSWORD, host=HOST)
-db_handler.connect()
 
-def transfer_files(source_dir:str, target_dir:str, db_handler:DbHandler=db_handler) -> None:
+def transfer_files(source_dir:str, target_dir:str, db_handler:DbHandler) -> None:
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
 
@@ -166,6 +164,16 @@ def setup_prsc_jobs():
     #create an insert to have jobs available
     
     imputation_ids = [158,159,160]
+    
+    imputation_id_query = """SELECT imputation_id
+                    FROM snpster_users.imputation_jobs
+                    WHERE imputation_status = 'completed';"""
+    
+    imputation_id_rows = db_handler.execute_query(imputation_id_query)
+
+    imputation_ids = [row[0] for row in imputation_id_rows]
+    print(f"Using existing completed imputation IDs for PRSC job setup: {imputation_ids}")
+
     prsc_status = "queued"
     for imputation_id in imputation_ids:
         insert_query = """
@@ -178,17 +186,22 @@ def setup_prsc_jobs():
     
 
     #populate the prsc_job_parameters table with pgs_ids from pgs_reports_shop where report_name = 'cardiovascular_panel'
-    insert_query = """
+    panels = ['cardiovascular_panel', 'cancer_panel', 'metabolic&autoimmune_panel']
+    
+
+    
+    random_panel_query = """
     INSERT INTO snpster_users.prsc_job_parameters (prsc_id, pgs_id)
     SELECT prsc_jobs.prsc_id, pgs_reports_shop.pgs_id
     FROM snpster_users.prsc_jobs
     CROSS JOIN snpster_users.pgs_reports_shop
     WHERE prsc_jobs.imputation_id = ANY(%s)
-      AND pgs_reports_shop.report_name = 'cardiovascular_panel'
+      AND pgs_reports_shop.report_name = ANY(%s)
     ON CONFLICT DO NOTHING;
     """
-    db_handler.execute_query(insert_query, (imputation_ids,))
-    print("Populated prsc_job_parameters table with PGS IDs for 'cardiovascular_panel' reports.")
+    
+    db_handler.execute_query(random_panel_query, (imputation_ids, panels))
+    print("Populated prsc_job_parameters table with PGS IDs for reports.")
     
     
     
@@ -251,7 +264,10 @@ def update_ftp_links_to_grch38():
 
 
 if __name__ == "__main__":
+    
+    db_handler = DbHandler(port=PORT, db_url=None, user=USERNAME, password=PASSWORD, host=HOST)
+    db_handler.connect()
     #update_ftp_links_to_grch38()
-    transfer_files(RAW_DATA_DIR, TARGET_DIR)
-    setup_pgs_reports()
+    #transfer_files(RAW_DATA_DIR, TARGET_DIR)
+    #setup_pgs_reports()
     setup_prsc_jobs()

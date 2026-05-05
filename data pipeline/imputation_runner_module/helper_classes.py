@@ -1,7 +1,5 @@
 import os
 import subprocess
-import sys
-import time
 import shutil
 import pandas as pd
 from config import BASE_OUTPUT_DIR, IMPUTATION_DEPENDENCIES, HARMONIZER_DEPENDENCIES, NEXTFLOW_BIN, SAMPLESHEET_PATH, PIPELINE_PATH, NEXTFLOW_CONFIG, NEXTFLOW_WORK_DIR
@@ -52,6 +50,31 @@ class EnvironmentHandler:
                 "Docker socket /var/run/docker.sock is not mounted. Check docker-compose volume mounts."
             )
     
+    def clear_environment(self) -> None:
+        """Clears the output and scoring file directories."""
+        
+        
+        self.samplesheet_df = None
+        
+        
+        directories_to_clear = [
+            self.nextflow_workdir
+        ]
+
+        for directory in directories_to_clear:
+            if not directory or not os.path.isdir(directory):
+                continue
+
+            for entry in os.listdir(directory):
+                path = os.path.join(directory, entry)
+                if os.path.isfile(path) or os.path.islink(path):
+                    os.unlink(path)
+                elif os.path.isdir(path):
+                    shutil.rmtree(path)
+                    
+        
+        if os.path.exists(self.samplesheet_path):
+            os.remove(self.samplesheet_path)
         
     
 class DatabaseQueryHandler:
@@ -69,6 +92,7 @@ class DatabaseQueryHandler:
                     FROM snpster_users.user_information ui
                     JOIN snpster_users.imputation_jobs ij ON ui.user_id = ij.user_id
                     WHERE ij.imputation_status = 'queued'
+                    order by imputation_id asc
                     LIMIT 5;"""
         
         results = self.db_utils.get_pd_dataframe_from_query(query)
@@ -122,6 +146,9 @@ class ImputationRunner:
         self.env_handler = env_handler
         self.query_handler = query_handler
         self.job_df = job_df
+    
+    def set_job_df(self) -> None:
+        self.job_df = self.query_handler.get_queued_jobs()
     
     
     def write_samplesheet(self) -> None:

@@ -41,7 +41,8 @@ COPY imputation_runner_module/ /app/
 COPY nextflow/ /app/nextflow/
 
 RUN mkdir -p /srv/imputed/nf_runtime
-RUN mkdir -p /app/data /app/imputation_runner_module
+RUN mkdir -p /app/imputation_runner_module
+
 
 #mounted volumes for dependencies and data, must mount to :/data
 ENV IMPUTATION_DEPENDENCIES=/srv/dependencies/imputation_runner/imputer 
