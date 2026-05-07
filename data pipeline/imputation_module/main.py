@@ -22,7 +22,8 @@ environment_handler = EnvironmentHandler(
     plink_map_dir=PLINK_MAP_DIR, #mounted
     vcf_files_dir=args.vcf_files, #mounted from harmonization step
     imputed_files = {},
-    qc_imputed_files= {}
+    qc_imputed_files= {},
+    imputation_id=None
 )
 
 qc_thresholds = QCThresholds(
@@ -42,7 +43,7 @@ orchestrator = WorkflowOrchestrator(
 )
 
 
-orchestrator.set_user_id_from_vcf()
+orchestrator.set_imputation_id_from_vcf()
 
 orchestrator.impute_vcf_files()
 

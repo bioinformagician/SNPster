@@ -23,7 +23,7 @@ class DataContainer:
     qc_thresholds: QCThresholds = QCThresholds(None, None, False, False)
     imputed_data: pd.DataFrame = None
     qc_status: bool = False
-    user_id: str = None
+    imputation_id: str = None
     
     
 
@@ -216,7 +216,7 @@ class WorkflowOrchestrator:
             )
 
     def make_result_subdir(self) -> None:
-        result_dir = os.path.join(self.environment_handler.output_dir, f"user-id-{self.data_container.user_id}")
+        result_dir = os.path.join(self.environment_handler.output_dir, f"user-id-{self.data_container.imputation_id}")
         os.makedirs(result_dir, exist_ok=False)
         
         self.environment_handler.output_dir = result_dir
@@ -411,9 +411,9 @@ class WorkflowOrchestrator:
         if df is None or df.empty:
             raise ValueError("imputed data is empty; run qc_imputed_data() first.")
 
-        sample_id = "imputed_sample"
+        #sample_id = "imputed_sample"
         chrom_key = str(df["CHROM"].iloc[0])
-        out_path = os.path.join(f"{self.environment_handler.output_dir}", f"chr{chrom_key}_imputed_qced_{self.data_container.user_id}.vcf")
+        out_path = os.path.join(f"{self.environment_handler.output_dir}", f"chr{chrom_key}_imputed_qced_{self.data_container.imputation_id}.vcf")
 
         with open(out_path, "w", encoding="utf-8", newline="") as f:
             # --- header ---
@@ -424,7 +424,7 @@ class WorkflowOrchestrator:
             f.write('##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">\n')
             f.write('##FORMAT=<ID=DS,Number=1,Type=Float,Description="Dosage of ALT allele">\n')
             f.write('##FORMAT=<ID=GP,Number=3,Type=Float,Description="Genotype probabilities for 0/0,0/1,1/1">\n')
-            f.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t" + sample_id + "\n")
+            f.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t" + self.data_container.imputation_id + "\n")
 
             n = len(df)
             for start in range(0, n, chunk_size):
@@ -501,7 +501,7 @@ class WorkflowOrchestrator:
                     "FILTER": filter_col,
                     "INFO": info,
                     "FORMAT": format_col,
-                    sample_id: sample_col,
+                    self.data_container.imputation_id: sample_col,
                 })
 
                 out_df.to_csv(f, sep="\t", index=False, header=False)
@@ -579,7 +579,7 @@ class WorkflowOrchestrator:
         self.environment_handler.vcf_plink_reference_mapping = mapping_df
         
         
-    def set_user_id_from_vcf(self) -> None:
+    def set_imputation_id_from_vcf(self) -> None:
         vcf_file = self.environment_handler.vcf_file_paths["22"]  # smallest chr
         opener = gzip.open if vcf_file.endswith(".gz") else open
 
@@ -587,7 +587,7 @@ class WorkflowOrchestrator:
             for line in f:
                 if line.startswith("#CHROM"):
                     sample_id = line.rstrip("\n").split("\t")[-1]
-                    self.data_container.user_id = sample_id.split("_", 1)[1]
+                    self.data_container.imputation_id = sample_id.split("_", 1)[1]
                     break
         
         
@@ -604,7 +604,7 @@ class WorkflowOrchestrator:
         chr_numbers = list(self.environment_handler.qc_imputed_files.keys())
 
         samplesheet_df = pd.DataFrame({
-            "sampleset": self.data_container.user_id,
+            "sampleset": self.data_container.imputation_id,
             "path_prefix": vcf_base_names,
             "chrom": chr_numbers,
             "format": "vcf",
