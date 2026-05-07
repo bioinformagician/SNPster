@@ -18,5 +18,6 @@ RUN pip install --no-cache-dir -r /tmp/pgs_calc_requirements.txt \
 
 COPY pgs_calc_module/ .
 COPY database_module/ .
+COPY pgs_calc_module/nextflow_cache_override.config /app/nextflow_cache_override.config
 
 CMD ["python", "main.py"]

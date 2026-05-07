@@ -163,7 +163,6 @@ def setup_prsc_jobs():
 
     #create an insert to have jobs available
     
-    imputation_ids = [158,159,160]
     
     imputation_id_query = """SELECT imputation_id
                     FROM snpster_users.imputation_jobs
@@ -191,16 +190,24 @@ def setup_prsc_jobs():
 
     
     random_panel_query = """
-    INSERT INTO snpster_users.prsc_job_parameters (prsc_id, pgs_id)
-    SELECT prsc_jobs.prsc_id, pgs_reports_shop.pgs_id
-    FROM snpster_users.prsc_jobs
-    CROSS JOIN snpster_users.pgs_reports_shop
-    WHERE prsc_jobs.imputation_id = ANY(%s)
-      AND pgs_reports_shop.report_name = ANY(%s)
-    ON CONFLICT DO NOTHING;
-    """
+        INSERT INTO snpster_users.prsc_job_parameters (prsc_id, pgs_id)
+        SELECT
+            pj.prsc_id,
+            prs.pgs_id
+        FROM snpster_users.prsc_jobs AS pj
+        CROSS JOIN LATERAL (
+            SELECT panel_name
+            FROM unnest(%s::text[]) AS panel_name
+            ORDER BY random()
+            LIMIT 1
+        ) AS picked_panel
+        JOIN snpster_users.pgs_reports_shop AS prs
+            ON prs.report_name = picked_panel.panel_name
+        WHERE pj.imputation_id = ANY(%s)
+        ON CONFLICT DO NOTHING;
+        """
     
-    db_handler.execute_query(random_panel_query, (imputation_ids, panels))
+    db_handler.execute_query(random_panel_query, (panels, imputation_ids))
     print("Populated prsc_job_parameters table with PGS IDs for reports.")
     
     

@@ -88,6 +88,8 @@ class DatabaseQueryHandler:
         
         
     def get_queued_jobs(self) -> pd.DataFrame:
+        
+        
         query = f"""SELECT ij.user_id, ij.imputation_id, ui.genefile_location 
                     FROM snpster_users.user_information ui
                     JOIN snpster_users.imputation_jobs ij ON ui.user_id = ij.user_id
