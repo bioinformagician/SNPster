@@ -8,7 +8,7 @@ imputation_runner = ImputationRunner(env_handler=environment_handler,
                                    query_handler=database_query_handler)
 
 
-max = 2
+max = 10
 counter = 0
 
 while counter < max:

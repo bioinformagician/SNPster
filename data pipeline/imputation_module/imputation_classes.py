@@ -105,6 +105,7 @@ class EnvironmentHandler:
                  output_dir: str,
                  beagle_reference_dir: str,
                  plink_map_dir: str,
+                 imputation_id: str,
                  vcf_file_paths: dict[str, str] = None,
                  beagle_references: dict[str, str] = None,
                  plink_map_files: dict[str, str] = None,
@@ -127,6 +128,7 @@ class EnvironmentHandler:
         self.beagle_reference_dir = beagle_reference_dir
         self.plink_map_dir = plink_map_dir
         self.plink_map_files = plink_map_files
+        self.imputation_id = imputation_id
         self.beagle_references = beagle_references
         self.vcf_files_dir = vcf_files_dir
         self.vcf_file_paths = vcf_file_paths
