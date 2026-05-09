@@ -156,7 +156,10 @@ CREATE TABLE snpster_users.prsc_job_parameters (
 CREATE TABLE snpster_users.prsc_job_results (
     prsc_id integer NOT NULL REFERENCES snpster_users.prsc_jobs(prsc_id) ON DELETE CASCADE,
     pgs_id varchar(100) NOT NULL REFERENCES data_libraries.pgscatalog_data(pgs_id) ON DELETE CASCADE,
-    percentile DECIMAL(5,2) CHECK (percentile >= 0 AND percentile <= 100),
+    sum Decimal(10,6),
+    percentile_most_similar_pop DECIMAL(5,2) CHECK (percentile_most_similar_pop >= 0 AND percentile_most_similar_pop <= 100),
+    z_norm1 DECIMAL(5,2),
+    z_norm2 DECIMAL(5,2),
     z_most_similar_pop DECIMAL(5,2),
     percent_variants_matched DECIMAL(5,2),
     PRIMARY KEY (prsc_id, pgs_id)

@@ -5,7 +5,7 @@ import shutil
 import glob
 from db_handler import DbHandler, DbUtils
 from db_config import USERNAME, PASSWORD, HOST, PORT
-from config import SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR, OUTPUT_DIR, REFERENCE_DATA_PATH, BCFTOOLS_THREADS
+from config import SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR, OUTPUT_DIR, REFERENCE_DATA_PATH, BCFTOOLS_THREADS, SAMPLESET_NAME
 
 
 class EnvironmentHandler:
@@ -19,12 +19,14 @@ class EnvironmentHandler:
                  db_utils: DbUtils = None,
                  samplesheet_paths: list = None,
                  combined_samplesheet_path: str = None,
+                 sampleset_name: str = SAMPLESET_NAME,
                  scoring_file_source_dir: str = SCORING_FILE_SOURCE_DIR,
                  scoring_file_target_dir: str = SCORING_FILE_TARGET_DIR,
                  nf_work_dir: str = NF_WORK_DIR,
                  output_dir: str = OUTPUT_DIR,
                  reference_data_path: str = REFERENCE_DATA_PATH
                  ):
+        
         self.merged_sample_sheet = merged_sample_sheet
         self.samplesheet_paths = samplesheet_paths
         self.combined_samplesheet_path = combined_samplesheet_path
@@ -41,7 +43,8 @@ class EnvironmentHandler:
         self.scoring_file_source_dir = scoring_file_source_dir
         self.scoring_file_target_dir = scoring_file_target_dir
         self.nf_work_dir = nf_work_dir
-    
+        self.sampleset_name = sampleset_name
+        
     def copy_scoring_files(self, scoring_file_list: list) -> None:
         """Copies scoring files from the mounted source directory to the scoring file directory."""
         for file in scoring_file_list:
@@ -57,12 +60,12 @@ class EnvironmentHandler:
     def close_db_connection(self) -> None:
         self.db_utils.db_handler.close()
     
-    def set_db_job_status(self, status: str, prsc_id: str) -> None:
+    def set_db_job_status(self, status: str) -> None:
         """Updates the job status in the database."""
 
         update_query = f"""UPDATE snpster_users.prsc_jobs
                         SET prsc_status = '{status}'
-                        WHERE prsc_id = '{prsc_id}';"""
+                        WHERE prsc_id in ({', '.join(map(str, self.prsc_ids))});"""
         self.db_utils.db_handler.execute_query(update_query)
 
     
@@ -238,7 +241,6 @@ class PGSCalculator:
 
     def upload_results(self, path) -> None:
         
-        # path example: /output_dir/{imputation_id}/score/{imputation_id}_pgs.txt.gz
         """Uploads the PGS calculation results to the database and updates job status."""
 
         results = pd.read_csv(path, sep="\t")
@@ -250,19 +252,27 @@ class PGSCalculator:
         
         results = results.groupby("sampleset")
         
-        
         for sampleset, group in results:
             
             for index, row in group.iterrows():
+                imputation_id = int(row['FID'])
                 
-                imputation_id = row['FID']
-                prsc_id = self.environment_handler.id_map[self.environment_handler.id_map["imputation_id"] == imputation_id]["prsc_id"].values[0]
+                matched_rows = self.environment_handler.id_map[
+                    self.environment_handler.id_map["imputation_id"] == imputation_id
+                ]
+                
+                prsc_id = matched_rows["prsc_id"].values[0]
                 pgs_id = row["PGS"]
-                percentile = float(row["percentile_MostSimilarPop"])
+                percentile_most_similar_pop = float(row["percentile_MostSimilarPop"])
                 z_most_similar_pop = float(row["Z_MostSimilarPop"])
+                z_norm1 = float(row["Z_norm1"])
+                z_norm2 = float(row["Z_norm2"])
+                score_sum = float(row["SUM"])
+                percent_variants_matched = 'NULL'
 
-                insert_query = f"""INSERT INTO snpster_users.prsc_job_results (prsc_id, pgs_id, percentile, z_most_similar_pop)
-                                VALUES ({prsc_id}, '{pgs_id}', {percentile}, {z_most_similar_pop});"""
+
+                insert_query = f"""INSERT INTO snpster_users.prsc_job_results (prsc_id, pgs_id, percentile_most_similar_pop, z_norm1, z_norm2, z_most_similar_pop, score_sum, percent_variants_matched)
+                                VALUES ({prsc_id}, '{pgs_id}', {percentile_most_similar_pop}, {z_norm1}, {z_norm2}, {z_most_similar_pop}, {score_sum}, {percent_variants_matched});"""
                 
                 self.environment_handler.db_utils.db_handler.execute_query(insert_query)
             
@@ -400,7 +410,7 @@ class VCFHandler:
             
             base_filename = f"cohort_chr{chrom}"
             merged_file_sample_sheet.loc[len(merged_file_sample_sheet)] = {
-                "sampleset": 'MergedUserData',
+                "sampleset": self.environment_handler.sampleset_name,
                 "path_prefix": base_filename,
                 "chrom": chrom,
                 "format": "vcf"
