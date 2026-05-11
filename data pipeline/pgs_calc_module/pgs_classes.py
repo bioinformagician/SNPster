@@ -5,7 +5,7 @@ import shutil
 import glob
 from db_handler import DbHandler, DbUtils
 from db_config import USERNAME, PASSWORD, HOST, PORT
-from config import SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR, OUTPUT_DIR, REFERENCE_DATA_PATH, BCFTOOLS_THREADS, SAMPLESET_NAME
+from config import SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR, OUTPUT_DIR, REFERENCE_DATA_PATH, BCFTOOLS_THREADS, SAMPLESET_NAME, VCF_MERGE_SHEET_DIR
 
 
 class EnvironmentHandler:
@@ -18,6 +18,8 @@ class EnvironmentHandler:
                  id_map: pd.DataFrame = None,
                  db_utils: DbUtils = None,
                  samplesheet_paths: list = None,
+                 vcf_merge_sheet_dir: str = VCF_MERGE_SHEET_DIR,
+                 vcf_merge_sheet: str = None,
                  combined_samplesheet_path: str = None,
                  sampleset_name: str = SAMPLESET_NAME,
                  scoring_file_source_dir: str = SCORING_FILE_SOURCE_DIR,
@@ -29,6 +31,8 @@ class EnvironmentHandler:
         
         self.merged_sample_sheet = merged_sample_sheet
         self.samplesheet_paths = samplesheet_paths
+        self.vcf_merge_sheet = vcf_merge_sheet
+        self.vcf_merge_sheet_dir = vcf_merge_sheet_dir
         self.combined_samplesheet_path = combined_samplesheet_path
         self.user_ids = user_ids
         self.output_dir = output_dir
@@ -99,9 +103,52 @@ class EnvironmentHandler:
                     os.unlink(path)
                 elif os.path.isdir(path):
                     shutil.rmtree(path)
-
-
-
+    
+    def create_full_path_samplesheet(self) -> None:
+        """
+        Creates a sample sheet for the VCF merging by 
+        adding the full path to the prefix column of the samplesheets
+        
+        This is needed for the vcf_combiner.py script executed by nextflow to find the files to merge
+        """
+        
+        combined_df = pd.DataFrame(columns=["sampleset", "full_vcf_path", "chrom", "format"])
+        
+        for samplesheet_path in self.samplesheet_paths:
+            base_path = os.path.dirname(samplesheet_path)
+            df = pd.read_csv(samplesheet_path)
+            
+            df["full_vcf_path"] = df.apply(lambda row: f"{base_path}/{row['path_prefix']}.{row['format']}", axis=1) #might need .gz depending on how the files are stored
+            combined_df = pd.concat([combined_df, df], ignore_index=True)
+        
+        #write one file per chromosome
+        
+        for chrom in combined_df["chrom"].unique():
+            chrom_df = combined_df[combined_df["chrom"] == chrom]
+            chrom_df.to_csv(f"{self.vcf_merge_sheet_dir}/vcf_merge_sheet_chr{chrom}.csv", index=False)
+    
+    def create_merged_vcf_samplesheet(self) -> None:
+        """ create the new samplesheet with merged vcf files and set the environment variable"""
+        
+        rows = []
+        
+        for filename in os.listdir(self.vcf_merge_sheet_dir):
+            if filename.startswith("merged_vcf_chr") and filename.endswith(".vcf.gz"):
+                chrom = filename.split("_chr_")[1].split(".vcf.gz")[0]
+                sampleset = self.sampleset_name
+                path_prefix = filename.split(".")[0]
+                format = "vcf" #doesnt accept the compression extension
+                
+                rows.append({
+                    "sampleset": sampleset,
+                    "path_prefix": path_prefix,
+                    "chrom": chrom,
+                    "format": format
+                })
+        
+        samplesheet = pd.DataFrame(rows, columns=["sampleset", "path_prefix", "chrom", "format"])
+        samplesheet.to_csv(f"{self.vcf_merge_sheet_dir}/merged_sample_sheet.csv", index=False)
+        self.merged_sample_sheet = f"{self.vcf_merge_sheet_dir}/merged_sample_sheet.csv"
 
 class PGSCalculator_Config:
     def __init__(self, 
@@ -202,10 +249,14 @@ class PGSCalculator:
         self.environment_handler.imputation_ids = imputation_ids
         self.environment_handler.user_ids = user_ids
         self.environment_handler.id_map = df_subset
+        self.environment_handler.base_folder_paths = [
+            f"/srv/imputed/{row.user_id}/{row.imputation_id}/output/"
+            for row in df_subset.itertuples(index=False)
+        ]
         self.environment_handler.samplesheet_paths = [
-        f"/srv/imputed/{row.user_id}/{row.imputation_id}/output/samplesheet.csv"
-        for row in df_subset.itertuples(index=False)
-                                                        ]
+            f"{base_path}samplesheet.csv"
+            for base_path in self.environment_handler.base_folder_paths
+        ]
         self.environment_handler.copy_scoring_files(sorted(set(results["scoring_file_path"].tolist())))
         self.environment_handler.scoring_file_str = f"{self.environment_handler.scoring_file_target_dir}/*.txt.gz"
 
@@ -291,8 +342,22 @@ class PGSCalculator:
             return False
         
         return True
-
-
+    
+    
+    def run_vcf_merging(self) -> None:
+        """nextflow run vcf_combiner_pipeline.nf --samplsheet_dir ./nf_data --output_dir ./nf_data"""
+        
+        print("Running VCF merging with Nextflow...")
+        
+        command = [
+            "nextflow", "run", "vcf_combiner_pipeline.nf",
+            "--samplsheet_dir", f"{self.environment_handler.vcf_merge_sheet_dir}",
+            "--output_dir", f"{self.environment_handler.vcf_merge_sheet_dir}"
+        ]
+        
+        print(f"running command {command}")
+        
+        subprocess.run(command, check=True)
 
     
     def run_pgs_calculation(self, sample_sheet: str) -> None:
@@ -323,100 +388,3 @@ class PGSCalculator:
 
 
 
-
-class VCFHandler:
-    def __init__(
-        self,
-        environment_handler: EnvironmentHandler,
-        user_imputation_id_dict: dict[str, str] | None = None,
-        full_vcf_file_path_dict: dict[str, list[str]] | None = None,
-    ):
-        self.environment_handler = environment_handler
-        self.user_imputation_id_dict = user_imputation_id_dict
-        self.full_vcf_file_path_dict = full_vcf_file_path_dict
-
-    def set_user_imputation_id_dict(self) -> None:
-        # Set mapping: imputation_id -> user_id from shared environment state.
-        user_ids = self.environment_handler.user_ids
-        imputation_ids = self.environment_handler.imputation_ids
-
-        self.user_imputation_id_dict = {
-            str(imputation_id): str(user_id)
-            for imputation_id, user_id in zip(imputation_ids, user_ids)
-        }
-
-    def set_vcf_file_dict(self) -> None:
-        # Build: chromosome -> list of full VCF paths across all selected jobs.
-
-        sample_sheet_pd = pd.read_csv(self.environment_handler.combined_samplesheet_path)
-        self.full_vcf_file_path_dict = {}
-
-        for row in sample_sheet_pd.itertuples(index=False):
-            chrom = str(row.chrom)
-            path_prefix = str(row.path_prefix)
-            fmt = str(row.format)
-            imputation_id = str(row.sampleset)
-
-            user_id = self.user_imputation_id_dict.get(imputation_id)
-            if user_id is None:
-                raise KeyError(f"No user_id mapping found for imputation_id={imputation_id}")
-
-            file_name = f"{path_prefix}.{fmt}"
-            full_path = f"/srv/imputed/{user_id}/{imputation_id}/output/{file_name}"
-
-            self.full_vcf_file_path_dict.setdefault(chrom, []).append(full_path)
-
-    def _prepare_merge_input(self, input_path: str) -> str:
-        prepared_dir = os.path.join(self.environment_handler.nf_work_dir, "merge_inputs")
-        os.makedirs(prepared_dir, exist_ok=True)
-
-        if input_path.endswith(".vcf.gz"):
-            if not os.path.exists(f"{input_path}.tbi"):
-                subprocess.run(["bcftools", "index", "-t", input_path], check=True)
-            return input_path
-
-        file_name = os.path.basename(input_path)
-        prepared_path = os.path.join(prepared_dir, f"{file_name}.gz")
-
-        if not os.path.exists(prepared_path):
-            subprocess.run(["bcftools", "view", input_path, "-Oz", "-o", prepared_path], check=True)
-
-        if not os.path.exists(f"{prepared_path}.tbi"):
-            subprocess.run(["bcftools", "index", "-t", prepared_path], check=True)
-
-        return prepared_path
-
-    def merge_vcf_files(self) -> None:
-
-        """sampleset,path_prefix,chrom,format"""
-        merged_file_sample_sheet = pd.DataFrame(columns=["sampleset", "path_prefix", "chrom", "format"])
-
-        for chrom, files in self.full_vcf_file_path_dict.items():
-
-            print(f"VCF files for chromosome {chrom}: {files}")
-            output_path = f"{self.environment_handler.nf_work_dir}/cohort_chr{chrom}.vcf.gz"
-
-            missing = [path for path in files if not os.path.exists(path)]
-            if missing:
-                raise FileNotFoundError(f"Missing VCF files for chromosome {chrom}: {missing}")
-
-            prepared_files = [self._prepare_merge_input(path) for path in files]
-
-            
-            print(f"Merging {len(prepared_files)} files for chromosome {chrom} into {output_path}")
-
-
-            subprocess.run(["bcftools", "merge", *prepared_files, "-Oz", "-o", output_path, '--threads', str(BCFTOOLS_THREADS)], check=True)
-            
-            base_filename = f"cohort_chr{chrom}"
-            merged_file_sample_sheet.loc[len(merged_file_sample_sheet)] = {
-                "sampleset": self.environment_handler.sampleset_name,
-                "path_prefix": base_filename,
-                "chrom": chrom,
-                "format": "vcf"
-            }
-            
-        merged_file_sample_sheet.to_csv(f"{self.environment_handler.nf_work_dir}/merged_samplesheet.csv", index=False)
-        self.environment_handler.merged_sample_sheet = f"{self.environment_handler.nf_work_dir}/merged_samplesheet.csv"
-
-        

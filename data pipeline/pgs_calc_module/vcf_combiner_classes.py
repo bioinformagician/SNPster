@@ -1,5 +1,7 @@
 import os
 import subprocess
+import tempfile
+import shutil
 import pandas as pd
 
 class VCFEnvironmentHandler:
@@ -22,23 +24,17 @@ class VCFHandler:
         self.vcf_environment_handler = vcf_environment_handler
 
 
-    def _prepare_merge_input(self, input_path: str) -> str:
-        prepared_dir = os.path.join(self.vcf_environment_handler.output_dir, "merge_inputs")
-        os.makedirs(prepared_dir, exist_ok=True)
-
+    def _prepare_merge_input(self, input_path: str, tmp_dir: str) -> str:
         if input_path.endswith(".vcf.gz"):
             if not os.path.exists(f"{input_path}.tbi"):
                 subprocess.run(["bcftools", "index", "-t", input_path], check=True)
             return input_path
 
         file_name = os.path.basename(input_path)
-        prepared_path = os.path.join(prepared_dir, f"{file_name}.gz")
+        prepared_path = os.path.join(tmp_dir, f"{file_name}.gz")
 
-        if not os.path.exists(prepared_path):
-            subprocess.run(["bcftools", "view", input_path, "-Oz", "-o", prepared_path], check=True)
-
-        if not os.path.exists(f"{prepared_path}.tbi"):
-            subprocess.run(["bcftools", "index", "-t", prepared_path], check=True)
+        subprocess.run(["bcftools", "view", input_path, "-Oz", "-o", prepared_path], check=True)
+        subprocess.run(["bcftools", "index", "-t", prepared_path], check=True)
 
         return prepared_path
 
@@ -55,7 +51,9 @@ class VCFHandler:
         print(f"VCF files for chromosome {chrom}: {combined_vcf_path_string}")
         output_path = os.path.join(self.vcf_environment_handler.output_dir, f"merged_vcf_chr_{chrom}.vcf.gz")
 
-        prepared_files = [self._prepare_merge_input(path) for path in merged_file_sample_sheet["full_vcf_path"].tolist()]
-
-
-        subprocess.run(["bcftools", "merge", *prepared_files, "-Oz", "-o", output_path], check=True)
+        tmp_dir = tempfile.mkdtemp()
+        try:
+            prepared_files = [self._prepare_merge_input(path, tmp_dir) for path in merged_file_sample_sheet["full_vcf_path"].tolist()]
+            subprocess.run(["bcftools", "merge", *prepared_files, "-Oz", "-o", output_path], check=True)
+        finally:
+            shutil.rmtree(tmp_dir, ignore_errors=True)

@@ -1,4 +1,4 @@
-from pgs_classes import EnvironmentHandler, PGSCalculator_Config, PGSCalculator, VCFHandler
+from pgs_classes import EnvironmentHandler, PGSCalculator_Config, PGSCalculator
 import time
 
 
@@ -10,8 +10,6 @@ pgs_calculator_config = PGSCalculator_Config(
 pgs_calculator = PGSCalculator(
     environment_handler=environment_handler,
     pgscalculator_config=pgs_calculator_config)
-
-vcf_handler = VCFHandler(environment_handler=environment_handler)
 
 
 while True:
@@ -30,11 +28,14 @@ while True:
     
     pgs_calculator.create_combined_samplesheet()
     environment_handler.close_db_connection()
-    
+    print(environment_handler.imputation_ids)
     if len(environment_handler.imputation_ids) > 1:
-        vcf_handler.set_user_imputation_id_dict()
-        vcf_handler.set_vcf_file_dict()
-        vcf_handler.merge_vcf_files()
+        
+        pgs_calculator.environment_handler.create_full_path_samplesheet() #this creates one sheet per chrom in the vcf_merge_sheet_dir with columns: sampleset, path_prefix, chrom, format for the nextflow process to merge them fast
+        
+        pgs_calculator.run_vcf_merging()
+        
+        pgs_calculator.environment_handler.create_merged_vcf_samplesheet()
     
         pgs_calculator.run_pgs_calculation(environment_handler.merged_sample_sheet)
         pgs_score_path = f"{environment_handler.output_dir}/{environment_handler.sampleset_name}/score/{environment_handler.sampleset_name}_pgs.txt.gz"

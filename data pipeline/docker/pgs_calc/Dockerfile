@@ -9,8 +9,9 @@ ENV SCORING_FILE_TARGET_DIR=/app/scoring_files
 ENV NF_WORK_DIR=/app/work
 ENV BCFTOOLS_THREADS=8
 ENV SAMPLESET_NAME=MergedUserData
+ENV VCF_MERGE_SHEET_DIR=/app/vcf_merge_sheets
 
-RUN mkdir -p "$OUTPUT_DIR" "$SCORING_FILE_TARGET_DIR" "$NF_WORK_DIR"
+RUN mkdir -p "$OUTPUT_DIR" "$SCORING_FILE_TARGET_DIR" "$NF_WORK_DIR" "$VCF_MERGE_SHEET_DIR"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bcftools \
