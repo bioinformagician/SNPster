@@ -7,7 +7,7 @@ import numpy as np
 import re
 import gc
 import polars as pl
-import vcf_merging_module.vcf_combiner_classes as vcf_combiner_classes
+import vcf_combiner_classes
 
 @dataclass(frozen=True)
 class QCThresholds:
@@ -105,8 +105,10 @@ class EnvironmentHandler:
                  output_dir: str,
                  beagle_reference_dir: str,
                  plink_map_dir: str,
-                 imputation_id: str,
-                 vcf_file_paths: dict[str, str] = None,
+                 imputation_id: str, #maybe delete this after refactor
+                 merged_samplesheet_dir: str,
+                 imputation_ids: list[str] = None,
+                 vcf_file_paths: dict[str, list[str]] = None,
                  beagle_references: dict[str, str] = None,
                  plink_map_files: dict[str, str] = None,
                  imputed_dir: str = None,
@@ -118,6 +120,7 @@ class EnvironmentHandler:
         self.working_dir = working_dir
         self.java_exe = java_exe
         self.beagle_jar = beagle_jar
+        self.merged_samplesheet_dir = merged_samplesheet_dir
         self.vcf_plink_reference_mapping = vcf_plink_reference_mapping
         self.imputed_dir = imputed_dir
         self.heap_gb = heap_gb
@@ -125,6 +128,7 @@ class EnvironmentHandler:
         self.imputed_files = imputed_files
         self.qc_imputed_files = qc_imputed_files
         self.output_dir = output_dir
+        self.imputation_ids = imputation_ids
         self.beagle_reference_dir = beagle_reference_dir
         self.plink_map_dir = plink_map_dir
         self.plink_map_files = plink_map_files
@@ -168,7 +172,10 @@ class EnvironmentHandler:
                 match = pattern.search(file)
                 if match:
                     chrom = match.group(1)
-                    vcf_files[chrom] = os.path.join(self.vcf_files_dir, file)
+                    full_path = os.path.join(self.vcf_files_dir, file)
+                    if chrom not in vcf_files:
+                        vcf_files[chrom] = []
+                    vcf_files[chrom].append(full_path)
         
         self.vcf_file_paths = vcf_files
     
@@ -200,35 +207,61 @@ class WorkflowOrchestrator:
     def __init__(self,
                     environment_handler: EnvironmentHandler,
                     data_container: DataContainer,
-                    vcf_environment_handler: vcf_combiner_classes.VCFEnvironmentHandler,
                     vcf_handler: vcf_combiner_classes.VCFHandler
                     ):
         
         self.environment_handler = environment_handler
         self.data_container = data_container
-        self.vcf_environment_handler = vcf_environment_handler
         self.vcf_handler = vcf_handler
         self.create_vcf_reference_mapping()
-        self.vcf_environment_handler.output_dir = self.environment_handler.working_dir
+        self.vcf_handler.vcf_environment_handler.output_dir = self.environment_handler.merged_samplesheet_dir
         
         
     def create_vcf_samplesheet(self) -> None:
         
         mapping_df = self.environment_handler.vcf_plink_reference_mapping
-        
+        print("mapping_df in create_vcf_samplesheet:", mapping_df)
         samplesheet_df = pd.DataFrame({
-            "sampleset": self.data_container.imputation_id,
+            "sampleset": self.environment_handler.imputation_ids,
             "full_vcf_path": mapping_df["vcf_file"],
             "chrom": mapping_df["chromosome_number"],
             "format": "vcf",
         })
         
-        samplesheet_path = os.path.join(self.environment_handler.working_dir, "vcf_samplesheet.csv")
+        samplesheet_path = os.path.join(self.environment_handler.merged_samplesheet_dir, "vcf_samplesheet.csv")
         samplesheet_df.to_csv(samplesheet_path, index=False)
-        self.vcf_environment_handler.vcf_samplesheet_path = samplesheet_path
-        self.vcf_environment_handler.vcf_samplesheet_path = samplesheet_path
+        self.vcf_handler.vcf_environment_handler.vcf_samplesheet_path = samplesheet_path
         print(f"Created VCF sample sheet at {samplesheet_path}")
-            
+    
+    def split_vcf_samplesheet_by_chromosome(self) -> None:
+        df = pd.read_csv(self.vcf_handler.vcf_environment_handler.vcf_samplesheet_path, dtype=str)
+        for chrom, group in df.groupby("chrom"):
+            chrom_path = os.path.join(self.environment_handler.merged_samplesheet_dir, f"vcf_samplesheet_chr{chrom}.csv")
+            group.to_csv(chrom_path, index=False)
+            print(f"Wrote chromosome-specific sample sheet: {chrom_path}")
+        
+        #delete old one
+        os.remove(self.vcf_handler.vcf_environment_handler.vcf_samplesheet_path)
+        self.vcf_handler.vcf_environment_handler.vcf_samplesheet_path = None
+    
+    
+    def run_vcf_merging(self) -> None: #this is duplicate code from pgs_calc module, fix later
+        """nextflow run vcf_combiner_pipeline.nf --samplsheet_dir ./nf_data --output_dir ./nf_data"""
+        
+        print("Running VCF merging with Nextflow...")
+        
+        command = [
+            "nextflow", "run", "vcf_combiner_pipeline.nf",
+            "--samplsheet_dir", f"{self.environment_handler.merged_samplesheet_dir}",
+            "--output_dir", f"{self.environment_handler.merged_samplesheet_dir}"
+        ]
+        
+        print(f"running command {command}")
+        
+        subprocess.run(command, check=True)
+    
+    
+    
         
     def run_command(self, command: list[str]) -> None:
         """Run a command in the subprocess and handle errors."""
@@ -564,13 +597,16 @@ class WorkflowOrchestrator:
     
     def create_vcf_reference_mapping(self) -> None:
         
-        mapping_df = pd.DataFrame()
+        # Flatten the vcf_file_paths dict which may have lists as values
+        vcf_rows = []
+        for chrom, files in self.environment_handler.vcf_file_paths.items():
+            if isinstance(files, list):
+                for file_path in files:
+                    vcf_rows.append({"chromosome_number": chrom, "vcf_file": file_path})
+            else:
+                vcf_rows.append({"chromosome_number": chrom, "vcf_file": files})
         
-        
-        vcf_files_df=pd.DataFrame(
-            list(self.environment_handler.vcf_file_paths.items()),
-            columns=["chromosome_number", "vcf_file"]
-        )
+        vcf_files_df = pd.DataFrame(vcf_rows)
         
         beagle_reference_df=pd.DataFrame(
             list(self.environment_handler.beagle_references.items()),
@@ -606,15 +642,45 @@ class WorkflowOrchestrator:
         
         
     def set_imputation_id_from_vcf(self) -> None:
-        vcf_file = self.environment_handler.vcf_file_paths["22"]  # smallest chr
+        # Get files for chromosome 22 (smallest)
+        vcf_files = self.environment_handler.vcf_file_paths.get('22', [])
+        vcf_file = vcf_files[0] if isinstance(vcf_files, list) and vcf_files else vcf_files
+        
+        if not vcf_file:
+            raise ValueError("No VCF file found for chromosome 22")
+        
         opener = gzip.open if vcf_file.endswith(".gz") else open
 
         with opener(vcf_file, "rt") as f:  # <-- text mode
             for line in f:
                 if line.startswith("#CHROM"):
                     sample_id = line.rstrip("\n").split("\t")[-1]
-                    self.data_container.imputation_id = sample_id.split("_", 1)[1]
+                    imputation_id = sample_id.split("_", 1)[1]
                     break
+    
+        self.data_container.imputation_id = imputation_id
+    
+    
+    def set_imputation_id_from_vcf_env(self) -> None:
+        
+        imputation_ids = []
+        for vcf_files in self.environment_handler.vcf_file_paths.values():
+            # Handle both list and single file cases
+            files_to_process = vcf_files if isinstance(vcf_files, list) else [vcf_files]
+            
+            for vcf_file in files_to_process:
+                opener = gzip.open if vcf_file.endswith(".gz") else open
+
+                with opener(vcf_file, "rt") as f:  # <-- text mode
+                    for line in f:
+                        if line.startswith("#CHROM"):
+                            sample_id = line.rstrip("\n").split("\t")[-1]
+                            imputation_ids.append(sample_id.split("_", 1)[1])
+                            break
+        
+        self.data_container.imputation_id = imputation_ids[0] if imputation_ids else None
+    
+    
         
         
     

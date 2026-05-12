@@ -123,12 +123,50 @@ class WorkflowOrchestrator:
             "--make-just-pvar",
             "--threads", "1",
             "--memory", "8000", #self.environment_handler.plink_1_9_memory_mb,
-            "--out", f"{self.environment_handler.output_dir}/subset_hg37"
+            "--out", f"{self.environment_handler.output_dir}/subset_hg38"
         ]
         
         self.run_command(command)
-        self.environment_handler.reference_data_path = f"{self.environment_handler.output_dir}/subset_hg37.pvar"
+        self.environment_handler.reference_data_path = f"{self.environment_handler.output_dir}/subset_hg38.pvar"
     
+    def prepare_reference_fasta(self) -> str:
+        """Prepare reference FASTA for bcftools norm (decompress and index if needed).
+        
+        Returns: Path to the prepared (decompressed and indexed) FASTA file.
+        """
+        fasta_gz = self.environment_handler.plink_reference_fasta
+        
+        # Check if it's gzipped
+        if not fasta_gz.endswith('.gz'):
+            # Already decompressed, just need to index
+            fasta_path = fasta_gz
+        else:
+            # Need to decompress
+            fasta_path = fasta_gz.replace('.gz', '')
+            
+        # Check if decompressed file exists
+        if not os.path.exists(fasta_path):
+            print(f"Decompressing reference FASTA: {fasta_gz} -> {fasta_path}")
+            with gzip.open(fasta_gz, 'rb') as f_in:
+                with open(fasta_path, 'wb') as f_out:
+                    # Decompress in chunks to handle large files
+                    chunk_size = 1024 * 1024  # 1MB chunks
+                    while True:
+                        chunk = f_in.read(chunk_size)
+                        if not chunk:
+                            break
+                        f_out.write(chunk)
+            print(f"Decompression complete: {fasta_path}")
+        
+        # Check if index exists
+        fai_path = fasta_path + '.fai'
+        if not os.path.exists(fai_path):
+            print(f"Creating FASTA index: {fai_path}")
+            index_command = ["samtools", "faidx", fasta_path]
+            self.run_command(index_command)
+            print(f"Index created: {fai_path}")
+        
+        return fasta_path
     
     
     def run_command(self, command: list[str]) -> None:
@@ -191,13 +229,29 @@ class WorkflowOrchestrator:
         
         output_filepaths = {}
 
+        # Define valid chromosomes (standard autosomes, sex chromosomes, and mitochondrial)
+        valid_chromosomes = {str(i) for i in range(1, 23)} | {'X', 'Y', 'MT', 'M'}
+        # Also accept chr-prefixed versions
+        valid_chromosomes |= {f'chr{c}' for c in list(valid_chromosomes)}
+        
         dataframe_split = {chrom: df for chrom, df in self.data_container.harmonized_data.groupby('chromosome')}
 
         for chrom, df in dataframe_split.items():
+            # Skip alternate contigs, patches, and unplaced sequences
+            chrom_str = str(chrom)
+            # Extract base chromosome (remove chr prefix if present for comparison)
+            base_chrom = chrom_str.replace('chr', '') if chrom_str.startswith('chr') else chrom_str
             
-        #write each dataframe to a separate file in the temp_dir with the same header as the original file
+            # Check if this is a standard chromosome (not alt, patch, or unplaced)
+            if base_chrom not in valid_chromosomes and not any(base_chrom.startswith(str(i)) and '_' not in base_chrom for i in range(1, 23)):
+                print(f"Skipping non-standard chromosome: {chrom_str}")
+                continue
             
-            output_file = os.path.join(harmonized_dir, f"chr{chrom}.txt")
+            # Ensure proper chromosome naming (add chr prefix if not present)
+            if not chrom_str.startswith('chr'):
+                chrom_str = f'chr{chrom_str}'
+            
+            output_file = os.path.join(harmonized_dir, f"{chrom_str}.txt")
             df.to_csv(output_file, sep="\t", index=False)
             print(f"Wrote chromosome {chrom} to {output_file}")
             output_filepaths[chrom] = output_file
@@ -237,13 +291,19 @@ class WorkflowOrchestrator:
     
     
     def convert_bed_to_vcf(self) -> None:
+        # Prepare reference FASTA (decompress and index if needed) once before processing
+        prepared_fasta = self.prepare_reference_fasta()
+        
         output_vcf_files = {}
         for chr_number, file in self.environment_handler.bed_file_paths.items():
                 print(f"Processing BED file: {file} to VCF format")
                 
                 filename = file.replace(".bed", "") #the extension is removed because the plink program will need the .bed, .bim, and .fam files, therefore we provide the generic filename. It will find all three files automatically from the generic filename
                  
-                """Convert PLINK binary files to VCF format using a reference genome."""
+                """Convert PLINK binary files to VCF format using a reference genome.
+                Using --ref-from-fa to ensure all samples have consistent REF alleles matching the reference FASTA.
+                Then normalize with bcftools to ensure consistent REF orientation across all samples.
+                """
                 command = [
                     self.environment_handler.plink_2_0_path,
                     "--bfile", filename,
@@ -255,7 +315,31 @@ class WorkflowOrchestrator:
                 ]
                 
                 self.run_command(command)
-                output_vcf_files[chr_number] = rf"{filename}.vcf.gz"
+                
+                # Normalize VCF to ensure consistent REF alleles across all samples
+                # This fixes cases where PLINK sets different REF for homozygous vs heterozygous sites
+                vcf_path = rf"{filename}.vcf.gz"
+                normalized_vcf = rf"{filename}.normalized.vcf.gz"
+                
+                print(f"Normalizing VCF file: {vcf_path}")
+                norm_command = [
+                    "bcftools", "norm",
+                    "--check-ref", "s",  # Swap REF/ALT if REF doesn't match FASTA
+                    "--fasta-ref", prepared_fasta,  # Use decompressed and indexed FASTA
+                    "-Oz", "-o", normalized_vcf,
+                    vcf_path
+                ]
+                
+                self.run_command(norm_command)
+                
+                # Replace original VCF with normalized version
+                os.replace(normalized_vcf, vcf_path)
+                
+                # Reindex the normalized VCF
+                index_command = ["bcftools", "index", "-f", vcf_path]
+                self.run_command(index_command)
+                
+                output_vcf_files[chr_number] = vcf_path
 
                 
         self.environment_handler.vcf_file_paths = output_vcf_files
@@ -268,24 +352,25 @@ class WorkflowOrchestrator:
     
     def run_harmonization_workflow(self) -> None:
         
-        """In the future the genome build should also be evaluated to ensure proper harmonization"""
+        """
+        Harmonizes strand orientation by flipping alleles to match the GRCh38 reference.
+        Note: Genome build liftover should be handled by the standardizer module.
+        This step harmonizes alleles to match the GRCh38 reference, regardless of strand.
+        """
         
-        if self.data_container.is_forward_strand is False:
-            print("Data is not in forward strand orientation. Proceeding with harmonization workflow...")
-            self.create_user_snp_list()
-            print("User SNP list created.")
-            print("Extracting reference data...")
-            self.extract_reference_data() #extracts refernce data based on snp list
-            self.data_container.reference_data = self.read_vcf_like_to_df() #reads extracted refernce data
-            print("Reference data extracted and set in data container")
-            print("Harmonizing data...")
-            self.data_container.harmonize_data()
-            print("Data harmonization complete. Harmonized data:")
-            print(self.data_container.harmonization_stats)
-            print(self.data_container.harmonized_data.head())
-        else:
-            print("Data is already in forward strand orientation. Skipping harmonization workflow...")
-            self.data_container.harmonized_data = self.data_container.microarray_data
+        # Always harmonize to ensure consistent GRCh38 positions and alleles
+        print("Harmonizing data to GRCh38 reference...")
+        self.create_user_snp_list()
+        print("User SNP list created.")
+        print("Extracting reference data...")
+        self.extract_reference_data() #extracts reference data based on snp list
+        self.data_container.reference_data = self.read_vcf_like_to_df() #reads extracted reference data
+        print("Reference data extracted and set in data container")
+        print("Harmonizing data...")
+        self.data_container.harmonize_data()
+        print("Data harmonization complete. Harmonized data:")
+        print(self.data_container.harmonization_stats)
+        print(self.data_container.harmonized_data.head())
 
     
 

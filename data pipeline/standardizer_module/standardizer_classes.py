@@ -79,6 +79,9 @@ class WorkflowOrchestrator:
             lo = LiftOver(self.environment_handler.grch_to_hg_identifier_dict[self.data_container.genome_build], 
                           self.environment_handler.grch_to_hg_identifier_dict['GRCh38'])
             self.data_container.lift_over_data(lo)
+            # Update genome_build metadata to reflect the liftover
+            self.data_container.genome_build = 'GRCh38'
+            print(f"Liftover complete. Genome build updated to GRCh38")
     
     def evaluate_zipping(self) -> None:
         if self.file_handler.is_zipped_file():

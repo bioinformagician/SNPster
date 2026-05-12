@@ -16,3 +16,4 @@ DS_TOL = float(os.getenv("DS_TOL", "0.05"))
 SNPS_ONLY = os.getenv("SNPS_ONLY", "True").lower() == "true"
 BIALLELIC_ONLY = os.getenv("BIALLELIC_ONLY", "True").lower() == "true"
 ACCEPTED_DF_ENGINES = ["pandas", "polars"]
+MERGED_SAMPLESHEET_DIR = os.getenv("MERGED_SAMPLESHEET_DIR", r"C:\Users\frezz\Downloads\snpster\data pipeline\imputation_module\merged_samplesheets")

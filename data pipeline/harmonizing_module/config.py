@@ -17,7 +17,7 @@ TEST_FILE = os.getenv(
 
 PVAR_REF_FILE = os.getenv(
     "PVAR_REF_FILE",
-    r"C:\Users\frezz\Desktop\harmonizer_dependencies\all_phase3.pvar.zst",
+    r"C:\Users\frezz\Desktop\harmonizer_dependencies\all_hg38.pvar.zst",
 )
 
 PLINK_1_9_PATH = os.getenv(

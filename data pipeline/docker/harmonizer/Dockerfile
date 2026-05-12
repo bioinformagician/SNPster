@@ -5,6 +5,12 @@ FROM python:3.9-slim
 WORKDIR /app
 
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    bcftools \
+    samtools \
+    tabix \
+    && rm -rf /var/lib/apt/lists/*
+
 # ---- Paths *inside the container* ----
 # These three are baked into the image
 ENV PLINK_1_9_PATH=/app/dependencies/plink

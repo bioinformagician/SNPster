@@ -57,3 +57,5 @@ class VCFHandler:
             subprocess.run(["bcftools", "merge", *prepared_files, "-Oz", "-o", output_path], check=True)
         finally:
             shutil.rmtree(tmp_dir, ignore_errors=True)
+
+    

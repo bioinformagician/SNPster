@@ -136,6 +136,33 @@ class DataContainer:
 
         self.harmonized_data['genotype'] = self.harmonized_data['allele1'] + self.harmonized_data['allele2']
         self.harmonized_data = self.harmonized_data[self.harmonized_data["both_ok"] == True].drop(columns=["ID", "allele1_flipped", "allele2_flipped", "allele1_ok", "allele2_ok", "both_ok", "REF", "ALT", "allele1", "allele2"])
+        
+        # Use the reference genome positions (POS, CHROM) instead of user's original positions
+        # Drop old position/chromosome if they exist, then rename reference columns
+        if 'position' in self.harmonized_data.columns:
+            self.harmonized_data = self.harmonized_data.drop(columns=['position'])
+        if 'chromosome' in self.harmonized_data.columns:
+            self.harmonized_data = self.harmonized_data.drop(columns=['chromosome'])
+        
+        # Rename reference columns to standard names
+        self.harmonized_data = self.harmonized_data.rename(columns={'POS': 'position', 'CHROM': 'chromosome'})
+        
+        # Filter out alternate contigs, patches, and unplaced sequences
+        # Keep only standard chromosomes: 1-22, X, Y, MT
+        valid_chromosomes = [str(i) for i in range(1, 23)] + ['X', 'Y', 'MT', 'M']
+        valid_chromosomes_with_prefix = valid_chromosomes + [f'chr{c}' for c in valid_chromosomes]
+        
+        initial_count = len(self.harmonized_data)
+        self.harmonized_data['chrom_clean'] = self.harmonized_data['chromosome'].astype(str).str.replace('chr', '')
+        self.harmonized_data = self.harmonized_data[self.harmonized_data['chrom_clean'].isin(valid_chromosomes)]
+        self.harmonized_data = self.harmonized_data.drop(columns=['chrom_clean'])
+        filtered_count = initial_count - len(self.harmonized_data)
+        
+        if filtered_count > 0:
+            print(f"Filtered out {filtered_count} variants on non-standard chromosomes (alt contigs, patches, etc.)")
+        
+        # Keep only the 4 columns needed for PLINK --23file format
+        self.harmonized_data = self.harmonized_data[['# rsid', 'chromosome', 'position', 'genotype']]
 
 
 

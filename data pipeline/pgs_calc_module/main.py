@@ -35,6 +35,7 @@ while True:
         
         pgs_calculator.run_vcf_merging()
         
+        
         pgs_calculator.environment_handler.create_merged_vcf_samplesheet()
     
         pgs_calculator.run_pgs_calculation(environment_handler.merged_sample_sheet)
