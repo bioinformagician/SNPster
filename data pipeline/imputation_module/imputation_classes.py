@@ -7,7 +7,7 @@ import numpy as np
 import re
 import gc
 import polars as pl
-
+import vcf_merging_module.vcf_combiner_classes as vcf_combiner_classes
 
 @dataclass(frozen=True)
 class QCThresholds:
@@ -199,12 +199,36 @@ class EnvironmentHandler:
 class WorkflowOrchestrator:
     def __init__(self,
                     environment_handler: EnvironmentHandler,
-                    data_container: DataContainer
+                    data_container: DataContainer,
+                    vcf_environment_handler: vcf_combiner_classes.VCFEnvironmentHandler,
+                    vcf_handler: vcf_combiner_classes.VCFHandler
                     ):
         
         self.environment_handler = environment_handler
         self.data_container = data_container
+        self.vcf_environment_handler = vcf_environment_handler
+        self.vcf_handler = vcf_handler
         self.create_vcf_reference_mapping()
+        self.vcf_environment_handler.output_dir = self.environment_handler.working_dir
+        
+        
+    def create_vcf_samplesheet(self) -> None:
+        
+        mapping_df = self.environment_handler.vcf_plink_reference_mapping
+        
+        samplesheet_df = pd.DataFrame({
+            "sampleset": self.data_container.imputation_id,
+            "full_vcf_path": mapping_df["vcf_file"],
+            "chrom": mapping_df["chromosome_number"],
+            "format": "vcf",
+        })
+        
+        samplesheet_path = os.path.join(self.environment_handler.working_dir, "vcf_samplesheet.csv")
+        samplesheet_df.to_csv(samplesheet_path, index=False)
+        self.vcf_environment_handler.vcf_samplesheet_path = samplesheet_path
+        self.vcf_environment_handler.vcf_samplesheet_path = samplesheet_path
+        print(f"Created VCF sample sheet at {samplesheet_path}")
+            
         
     def run_command(self, command: list[str]) -> None:
         """Run a command in the subprocess and handle errors."""
