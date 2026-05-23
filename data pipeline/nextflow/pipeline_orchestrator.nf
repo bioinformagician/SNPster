@@ -42,21 +42,6 @@ process HARMONIZE {
 }
 
 
-process merge_vcfs {
-  //mock implementation, need to merge vcf files by chromosome from all outputs of harmonization so imputation runs faster
-  container 'vcf_merger:latest'
-
-  input:
-    tuple val(identifier), val(output_dir), path(vcf_files)
-
-  output:
-    tuple val(identifier), val(output_dir), path("merged_vcf/merged.vcf.gz"), emit: merged_vcf
-
-  script:
-  """
-  python /app/main.py --vcf_files "${vcf_files.join(' ')}"
-  """
-}
 
 process IMPUTE {
 
@@ -102,6 +87,14 @@ workflow {
 
     standardized_ch = STANDARDIZE(samples_ch)
     harmonized_ch = HARMONIZE(standardized_ch.parquet_file)
-    IMPUTE(harmonized_ch.vcfs)
+    
+    // Collect all VCF files from all harmonizer processes into a single list
+    all_vcfs = harmonized_ch.vcfs
+        .map { identifier, output_dir, vcf_files -> vcf_files }
+        .flatten()
+        .collect()
+        .map { vcf_list -> tuple("combined", "./output", vcf_list) }
+    
+    IMPUTE(all_vcfs)
 
 }

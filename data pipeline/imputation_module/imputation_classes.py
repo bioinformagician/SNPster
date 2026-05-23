@@ -20,6 +20,8 @@ class QCThresholds:
 
 @dataclass
 class DataContainer:
+    file_path: str = None # path to the split imputed file
+    chromosome_number: str = None
     qc_thresholds: QCThresholds = QCThresholds(None, None, False, False)
     imputed_data: pd.DataFrame = None
     qc_status: bool = False
@@ -90,240 +92,9 @@ class DataContainer:
     
     
     
-
     
     
-
-class EnvironmentHandler:
-    def __init__(self,
-                 working_dir: str,
-                 java_exe: str,
-                 beagle_jar: str,
-                 heap_gb: int,
-                 threads: int,
-                 vcf_files_dir: str,
-                 output_dir: str,
-                 beagle_reference_dir: str,
-                 plink_map_dir: str,
-                 imputation_id: str, #maybe delete this after refactor
-                 merged_samplesheet_dir: str,
-                 imputation_ids: list[str] = None,
-                 vcf_file_paths: dict[str, list[str]] = None,
-                 beagle_references: dict[str, str] = None,
-                 plink_map_files: dict[str, str] = None,
-                 imputed_dir: str = None,
-                 imputed_files: dict[str,str] = None,
-                 qc_imputed_files: dict[str,str] = None,
-                 vcf_plink_reference_mapping: pd.DataFrame = None
-                 ):
-        
-        self.working_dir = working_dir
-        self.java_exe = java_exe
-        self.beagle_jar = beagle_jar
-        self.merged_samplesheet_dir = merged_samplesheet_dir
-        self.vcf_plink_reference_mapping = vcf_plink_reference_mapping
-        self.imputed_dir = imputed_dir
-        self.heap_gb = heap_gb
-        self.threads = threads
-        self.imputed_files = imputed_files
-        self.qc_imputed_files = qc_imputed_files
-        self.output_dir = output_dir
-        self.imputation_ids = imputation_ids
-        self.beagle_reference_dir = beagle_reference_dir
-        self.plink_map_dir = plink_map_dir
-        self.plink_map_files = plink_map_files
-        self.imputation_id = imputation_id
-        self.beagle_references = beagle_references
-        self.vcf_files_dir = vcf_files_dir
-        self.vcf_file_paths = vcf_file_paths
-        self.validate_paths()
-        self.make_imputed_directory()
-        self.set_beagle_files()
-        self.set_plink_map_files()
-        self.set_vcf_files()
-
-        
-    def set_beagle_files(self) -> dict:
-        beagle_files = {}
-        for file in os.listdir(self.beagle_reference_dir):
-            if file.endswith(".vcf.gz") or file.endswith(".bref3"):
-                chrom = re.search(r"chr(\d+)\.", file)
-                if chrom:
-                    beagle_files[chrom.group(1)] = os.path.join(self.beagle_reference_dir, file)
-            
-        self.beagle_references = beagle_files
-    
-    def set_plink_map_files(self) -> dict:
-        plink_map_files = {}
-        for file in os.listdir(self.plink_map_dir):
-            if file.endswith(".map"):
-                chrom = re.search(r"chr(\d+)[^/]*\.map$", file)
-                if chrom:
-                    plink_map_files[chrom.group(1)] = os.path.join(self.plink_map_dir, file)
-        
-        self.plink_map_files = plink_map_files
-    
-    def set_vcf_files(self) -> dict:
-        vcf_files = {}
-        pattern = re.compile(r"_chr(1?\d|2[0-2])_")
-
-        for file in os.listdir(self.vcf_files_dir):
-            if file.endswith(".vcf.gz"):
-                match = pattern.search(file)
-                if match:
-                    chrom = match.group(1)
-                    full_path = os.path.join(self.vcf_files_dir, file)
-                    if chrom not in vcf_files:
-                        vcf_files[chrom] = []
-                    vcf_files[chrom].append(full_path)
-        
-        self.vcf_file_paths = vcf_files
-    
-    
-    def make_imputed_directory(self) -> None:
-        imputed_dir = os.path.join(self.working_dir, "imputed")
-        os.makedirs(imputed_dir, exist_ok=True)
-        self.imputed_dir = imputed_dir
-    
-
-    def validate_paths(self) -> None:
-        
-        # Create output directory if it doesn't exist
-        os.makedirs(self.output_dir, exist_ok=True)
-        
-        for path in [
-            self.working_dir,
-            self.java_exe,
-            self.beagle_jar,
-            self.beagle_reference_dir,
-            self.plink_map_dir,
-            self.vcf_files_dir
-        ]:
-            if not os.path.exists(path):
-                raise FileNotFoundError(f"Required path does not exist: {path}")
-
-
-class WorkflowOrchestrator:
-    def __init__(self,
-                    environment_handler: EnvironmentHandler,
-                    data_container: DataContainer,
-                    vcf_handler: vcf_combiner_classes.VCFHandler
-                    ):
-        
-        self.environment_handler = environment_handler
-        self.data_container = data_container
-        self.vcf_handler = vcf_handler
-        self.create_vcf_reference_mapping()
-        self.vcf_handler.vcf_environment_handler.output_dir = self.environment_handler.merged_samplesheet_dir
-        
-        
-    def create_vcf_samplesheet(self) -> None:
-        
-        mapping_df = self.environment_handler.vcf_plink_reference_mapping
-        print("mapping_df in create_vcf_samplesheet:", mapping_df)
-        samplesheet_df = pd.DataFrame({
-            "sampleset": self.environment_handler.imputation_ids,
-            "full_vcf_path": mapping_df["vcf_file"],
-            "chrom": mapping_df["chromosome_number"],
-            "format": "vcf",
-        })
-        
-        samplesheet_path = os.path.join(self.environment_handler.merged_samplesheet_dir, "vcf_samplesheet.csv")
-        samplesheet_df.to_csv(samplesheet_path, index=False)
-        self.vcf_handler.vcf_environment_handler.vcf_samplesheet_path = samplesheet_path
-        print(f"Created VCF sample sheet at {samplesheet_path}")
-    
-    def split_vcf_samplesheet_by_chromosome(self) -> None:
-        df = pd.read_csv(self.vcf_handler.vcf_environment_handler.vcf_samplesheet_path, dtype=str)
-        for chrom, group in df.groupby("chrom"):
-            chrom_path = os.path.join(self.environment_handler.merged_samplesheet_dir, f"vcf_samplesheet_chr{chrom}.csv")
-            group.to_csv(chrom_path, index=False)
-            print(f"Wrote chromosome-specific sample sheet: {chrom_path}")
-        
-        #delete old one
-        os.remove(self.vcf_handler.vcf_environment_handler.vcf_samplesheet_path)
-        self.vcf_handler.vcf_environment_handler.vcf_samplesheet_path = None
-    
-    
-    def run_vcf_merging(self) -> None: #this is duplicate code from pgs_calc module, fix later
-        """nextflow run vcf_combiner_pipeline.nf --samplsheet_dir ./nf_data --output_dir ./nf_data"""
-        
-        print("Running VCF merging with Nextflow...")
-        
-        command = [
-            "nextflow", "run", "vcf_combiner_pipeline.nf",
-            "--samplsheet_dir", f"{self.environment_handler.merged_samplesheet_dir}",
-            "--output_dir", f"{self.environment_handler.merged_samplesheet_dir}"
-        ]
-        
-        print(f"running command {command}")
-        
-        subprocess.run(command, check=True)
-    
-    
-    
-        
-    def run_command(self, command: list[str]) -> None:
-        """Run a command in the subprocess and handle errors."""
-        try:
-            print(f"Running command: {' '.join(command)}")
-            result = subprocess.run(command, check=True, capture_output=True, text=True)
-            print(result.stdout)
-        except subprocess.CalledProcessError as e:
-            raise RuntimeError(
-                f"Error running command: {' '.join(command)}\n{e.stderr}"
-            )
-
-    def make_result_subdir(self) -> None:
-        result_dir = os.path.join(self.environment_handler.output_dir, f"user-id-{self.data_container.imputation_id}")
-        os.makedirs(result_dir, exist_ok=False)
-        
-        self.environment_handler.output_dir = result_dir
-        print(f"Created result directory: {result_dir}")
-
-
-    def impute_data(self, gt_vcf: str, map_file: str,
-                        ref_panel: str, chr_number) -> None:
-        
-
-        out = os.path.join(f"{self.environment_handler.imputed_dir}/imputed_chr{chr_number}.risk")
-        
-        cmd = [
-            self.environment_handler.java_exe, f"-Xmx{self.environment_handler.heap_gb}g", "-jar", str(self.environment_handler.beagle_jar),
-            f"gt={gt_vcf}",
-            f"ref={ref_panel}",
-            f"map={map_file}",
-            f"out={out}",
-            f"nthreads={self.environment_handler.threads}",
-            f"gp=true",
-            # Beagle imputes by default when ref= is provided
-        ]
-        
-        self.run_command(cmd)
-        
-        out = out + ".vcf.gz"
-        
-        return out
-        
-        
-    
-    def impute_vcf_files(self) -> None:
-
-        
-        for _, row in self.environment_handler.vcf_plink_reference_mapping.iterrows():
-            vcf_path = row["vcf_file"]
-            map_file = row["plink_map_file"]
-            ref_file = row["reference_file"]
-            chr_number = row["chromosome_number"]
-            
-            out = self.impute_data(vcf_path, map_file, ref_file, chr_number)
-            
-            
-            self.environment_handler.imputed_files[chr_number] = out
-            
-    
-    
-    def load_vcf_to_df_pandas(self, imputed_file) -> None:
+    def load_vcf_to_df_pandas(self) -> None:
         
         """stats from benchmarking loading and qc'ing 3 chromosomes separately:
                     Wall time: 24.98s
@@ -333,7 +104,7 @@ class WorkflowOrchestrator:
         """
         
         dataframe = pd.read_csv(
-            imputed_file,
+            self.file_path,
             sep="\t",
             comment="#",
             compression="gzip",
@@ -375,11 +146,11 @@ class WorkflowOrchestrator:
 
         dataframe.drop(columns=["INFO"], inplace=True)
         
-        self.data_container.imputed_data = dataframe
+        self.imputed_data = dataframe
     
     
     
-    def load_vcf_to_df_polars(self, imputed_file) -> None:
+    def load_vcf_to_df_polars(self) -> None:
         
         """stats from benchmarking loading and qc'ing 3 chromosomes separately:
                     Wall time: 5.48s
@@ -390,7 +161,7 @@ class WorkflowOrchestrator:
         
         polars = (
             pl.read_csv(
-                gzip.open(imputed_file, "rt", encoding="utf-8", newline=""),
+                gzip.open(self.file_path, "rt", encoding="utf-8", newline=""),
                 separator="\t",
                 comment_prefix="#",
                 has_header=False,
@@ -453,26 +224,25 @@ class WorkflowOrchestrator:
             .drop(["GP", "g"])
         ).to_pandas()
         
-        self.data_container.imputed_data = polars
-        
-        
-        
-    def write_pandas_to_vcf(self, chunk_size: int = 1000000) -> None:
+        self.imputed_data = polars
+    
+    
+    def write_pandas_to_vcf(self, output_dir, chunk_size: int = 1000000) -> None:
         """
         Stream-write imputed_data to a single 1-sample VCF file in chunks.
         Much lower peak RAM than building a full string 'body' DataFrame.
         """
 
-        if self.data_container.qc_status is False:
+        if self.qc_status is False:
             raise ValueError("Data has not passed QC; cannot write to VCF.")
 
-        df = self.data_container.imputed_data
+        df = self.imputed_data
         if df is None or df.empty:
             raise ValueError("imputed data is empty; run qc_imputed_data() first.")
 
         #sample_id = "imputed_sample"
-        chrom_key = str(df["CHROM"].iloc[0])
-        out_path = os.path.join(f"{self.environment_handler.output_dir}", f"chr{chrom_key}_imputed_qced_{self.data_container.imputation_id}.vcf")
+        chrom_key = self.chromosome_number
+        out_path = os.path.join(f"{output_dir}", f"chr{chrom_key}_imputed_qced_IMPID{self.imputation_id}.vcf")
 
         with open(out_path, "w", encoding="utf-8", newline="") as f:
             # --- header ---
@@ -483,7 +253,7 @@ class WorkflowOrchestrator:
             f.write('##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">\n')
             f.write('##FORMAT=<ID=DS,Number=1,Type=Float,Description="Dosage of ALT allele">\n')
             f.write('##FORMAT=<ID=GP,Number=3,Type=Float,Description="Genotype probabilities for 0/0,0/1,1/1">\n')
-            f.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t" + self.data_container.imputation_id + "\n")
+            f.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t" + self.imputation_id + "\n")
 
             n = len(df)
             for start in range(0, n, chunk_size):
@@ -560,39 +330,365 @@ class WorkflowOrchestrator:
                     "FILTER": filter_col,
                     "INFO": info,
                     "FORMAT": format_col,
-                    self.data_container.imputation_id: sample_col,
+                    self.imputation_id: sample_col,
                 })
 
                 out_df.to_csv(f, sep="\t", index=False, header=False)
+        
 
-        self.environment_handler.qc_imputed_files[chrom_key] = out_path
         print(f"Wrote QC'ed imputed data to {out_path}")
+        
+        return out_path
+
+    
+    
+    
+
+    
+    
+
+class EnvironmentHandler:
+    def __init__(self,
+                 working_dir: str,
+                 java_exe: str,
+                 beagle_jar: str,
+                 heap_gb: int,
+                 threads: int,
+                 vcf_files_dir: str,
+                 output_dir: str,
+                 beagle_reference_dir: str,
+                 plink_map_dir: str,
+                 merged_samplesheet_dir: str,
+                 imputation_ids: list[str] = None,
+                 vcf_file_paths: dict[str, list[str]] = None,
+                 beagle_references: dict[str, str] = None,
+                 plink_map_files: dict[str, str] = None,
+                 imputed_dir: str = None,
+                 split_imputed_vcf_mapping: pd.DataFrame = None, # columns: imputation_id, split_vcf_filepath, qc_imputed_file (added after qc step)
+                 vcf_plink_reference_mapping: pd.DataFrame = None #columns: chromosome_number, vcf_file, reference_file, plink_map_file
+                 ):
+        
+        self.working_dir = working_dir
+        self.java_exe = java_exe
+        self.beagle_jar = beagle_jar
+        self.merged_samplesheet_dir = merged_samplesheet_dir
+        self.vcf_plink_reference_mapping = vcf_plink_reference_mapping
+        self.imputed_dir = imputed_dir
+        self.heap_gb = heap_gb
+        self.threads = threads
+        self.output_dir = output_dir
+        self.imputation_ids = imputation_ids
+        self.beagle_reference_dir = beagle_reference_dir
+        self.plink_map_dir = plink_map_dir
+        self.plink_map_files = plink_map_files
+        self.beagle_references = beagle_references
+        self.vcf_files_dir = vcf_files_dir
+        self.vcf_file_paths = vcf_file_paths
+        self.split_imputed_vcf_mapping = split_imputed_vcf_mapping
+        if self.split_imputed_vcf_mapping is None:
+            self.split_imputed_vcf_mapping = pd.DataFrame(columns=["chromosome_number","imputation_id", "split_vcf_filepath", "qc_imputed_file"])
+        self.validate_paths()
+        self.make_imputed_directory()
+        self.set_beagle_files()
+        self.set_plink_map_files()
+        self.set_vcf_files()
 
         
+    def set_beagle_files(self) -> dict:
+        beagle_files = {}
+        for file in os.listdir(self.beagle_reference_dir):
+            if file.endswith(".vcf.gz") or file.endswith(".bref3"):
+                chrom = re.search(r"chr(\d+)\.", file)
+                if chrom:
+                    beagle_files[chrom.group(1)] = os.path.join(self.beagle_reference_dir, file)
+            
+        self.beagle_references = beagle_files
+    
+    def set_plink_map_files(self) -> dict:
+        plink_map_files = {}
+        for file in os.listdir(self.plink_map_dir):
+            if file.endswith(".map"):
+                chrom = re.search(r"chr(\d+)[^/]*\.map$", file)
+                if chrom:
+                    plink_map_files[chrom.group(1)] = os.path.join(self.plink_map_dir, file)
+        
+        self.plink_map_files = plink_map_files
+    
+    def set_vcf_files(self) -> dict:
+        vcf_files = {}
+        pattern = re.compile(r"_chr(1?\d|2[0-2])_")
+
+        for file in os.listdir(self.vcf_files_dir):
+            if file.endswith(".vcf.gz"):
+                match = pattern.search(file)
+                if match:
+                    chrom = match.group(1)
+                    full_path = os.path.abspath(os.path.join(self.vcf_files_dir, file))
+                    if chrom not in vcf_files:
+                        vcf_files[chrom] = []
+                    vcf_files[chrom].append(full_path)
+        
+        self.vcf_file_paths = vcf_files
+    
+    
+    def make_imputed_directory(self) -> None:
+        imputed_dir = os.path.join(self.working_dir, "imputed")
+        os.makedirs(imputed_dir, exist_ok=True)
+        self.imputed_dir = imputed_dir
+    
+
+    def validate_paths(self) -> None:
+        
+        # Create output directory if it doesn't exist
+        os.makedirs(self.output_dir, exist_ok=True)
+        
+        for path in [
+            self.working_dir,
+            self.java_exe,
+            self.beagle_jar,
+            self.beagle_reference_dir,
+            self.plink_map_dir,
+            self.vcf_files_dir
+        ]:
+            if not os.path.exists(path):
+                raise FileNotFoundError(f"Required path does not exist: {path}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class WorkflowOrchestrator:
+    def __init__(self,
+                    environment_handler: EnvironmentHandler,
+                    data_containers: list[DataContainer], #str is imputation_id
+                    vcf_handler: vcf_combiner_classes.VCFHandler,
+                    qc_thresholds: QCThresholds
+                    ):
+        
+        self.environment_handler = environment_handler
+        self.data_containers = data_containers
+        self.vcf_handler = vcf_handler
+        self.qc_thresholds = qc_thresholds
+        self.create_vcf_reference_mapping()
+        
+    
+    def _get_imputation_id_from_vcf(self, vcf_path: str) -> str:
+        filename = os.path.basename(vcf_path)
+        match = re.search(r"_(\d+)\.vcf\.gz$", filename)
+        if match:
+            return match.group(1)
+        else:
+            raise ValueError(f"Could not extract imputation ID from VCF filename: {filename}")
+        
+    def create_vcf_samplesheet_for_vcf_merge(self) -> None:
+        
+        mapping_df = self.environment_handler.vcf_plink_reference_mapping
+        print("mapping_df in create_vcf_samplesheet:", mapping_df)
+
+        samplesheet_df = pd.DataFrame({
+            "full_vcf_path": mapping_df["vcf_file"],
+            "chrom": mapping_df["chromosome_number"],
+            "sample_id": None,
+            "imputation_id": None
+        })
+        
+        samplesheet_path = os.path.join(self.environment_handler.merged_samplesheet_dir, "vcf_samplesheet.csv")
+        samplesheet_df.to_csv(samplesheet_path, index=False)
+        self.vcf_handler.vcf_environment_handler.vcf_samplesheet_path = samplesheet_path
+        print(f"Created VCF sample sheet at {samplesheet_path}")
+    
+    
+    
+    def create_vcf_samplesheets_for_vcf_split(self) -> None:
+        
+        """ 
+        This function will make a sample sheet for each chromosome specific vcf file that was made after merging + imputation
+        columns: full_vcf_path, chrom, imputation_id, sample_id 
+        """
+        
+        mapping_df = self.environment_handler.vcf_plink_reference_mapping #vcf_plink_reference_mapping has columns: chromosome_number, vcf_file, reference_file, plink_map_file, imputed_file (added after imputation step)
+        print("mapping_df in create_vcf_samplesheet:", mapping_df)
+
+        
+        for _, row in mapping_df.iterrows():
+            
+            imputed_file = row["imputed_file"]
+            
+            if imputed_file is None:
+                raise ValueError(f"Imputed file path is None for chromosome {row['chromosome_number']}. Ensure that imputation has been completed before creating sample sheets for split VCFs.")
+            
+            
+            sample_ids  = self._get_sample_ids(imputed_file)
+            imputation_ids = [self._get_imputation_id_from_sample_id(sample_id) for sample_id in sample_ids]
+            chromosome = row["chromosome_number"]
+            
+            #concat to string separated by commas if more than one sample id
+            if isinstance(sample_ids, list) and len(sample_ids) > 1:
+                sample_ids = ",".join(sample_ids)
+            else:
+                sample_ids = sample_ids[0] if isinstance(sample_ids, list) else sample_ids
+            
+            
+            if isinstance(imputation_ids, list) and len(imputation_ids) > 1:
+                imputation_ids = ",".join(imputation_ids)
+            else:
+                imputation_ids = imputation_ids[0] if isinstance(imputation_ids, list) else imputation_ids
+            
+
+            samplesheet_df = pd.DataFrame({
+                "full_vcf_path": imputed_file,
+                "chrom": chromosome,
+                "sample_id": sample_ids, #all merged/imputed vcfs should have the same sample ids since they are merged, so we can just take the first one
+                "imputation_id": imputation_ids
+            }, index=[0])
+            
+            samplesheet_path = os.path.join(self.environment_handler.merged_samplesheet_dir, f"vcf_splitting_chr{chromosome}_samplesheet.csv")
+            samplesheet_df.to_csv(samplesheet_path, index=False)
+            print(f"Created VCF sample sheet for splitting at {samplesheet_path}")
+        
+    
+    def split_vcf_samplesheet_by_chromosome(self) -> None:
+        df = pd.read_csv(self.vcf_handler.vcf_environment_handler.vcf_samplesheet_path, dtype=str)
+        for chrom, group in df.groupby("chrom"):
+            chrom_path = os.path.join(self.environment_handler.merged_samplesheet_dir, f"vcf_samplesheet_chr{chrom}.csv")
+            group.to_csv(chrom_path, index=False)
+            print(f"Wrote chromosome-specific sample sheet: {chrom_path}")
+        
+        #delete old one
+        os.remove(self.vcf_handler.vcf_environment_handler.vcf_samplesheet_path)
+        self.vcf_handler.vcf_environment_handler.vcf_samplesheet_path = None
+    
+    
+    
+    
+    def update_vcf_plink_reference_mapping(self):
+        
+        "update the mapping to contain the newly merged vcf paths for imputation step, the map has the columns: chromosome_number, vcf_file, reference_file, plink_map_file"
+        
+        mapping_df = self.environment_handler.vcf_plink_reference_mapping
+        
+        #look for *.vcf.gz files in merged_samplesheet_dir and update mapping_df vcf_file paths accordingly
+        merged_vcf_files = os.listdir(self.environment_handler.merged_samplesheet_dir)
+        for file in merged_vcf_files:
+            if file.endswith(".vcf.gz"):
+                chrom_match = re.search(r"chr_(\d+)\.vcf\.gz$", file)
+                
+                if chrom_match is None:
+                    raise ValueError(f"Could not extract chromosome number from merged VCF filename: {file}")
+                
+                chrom = chrom_match.group(1)
+                full_path = os.path.abspath(os.path.join(self.environment_handler.merged_samplesheet_dir, file))
+                mapping_df.loc[mapping_df["chromosome_number"] == chrom, "vcf_file"] = full_path
+        
+        # Remove duplicate rows (multiple input VCFs were merged into one per chromosome)
+        mapping_df = mapping_df.drop_duplicates(subset=["chromosome_number"], keep="first")
+        
+        self.environment_handler.vcf_plink_reference_mapping = mapping_df
+                
+                
+        
+        
+        
+    
+    
+    
+        
+    def run_command(self, command: list[str]) -> None:
+        """Run a command in the subprocess and handle errors."""
+        try:
+            print(f"Running command: {' '.join(command)}")
+            result = subprocess.run(command, check=True, capture_output=True, text=True)
+            print(result.stdout)
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(
+                f"Error running command: {' '.join(command)}\n{e.stderr}"
+            )
+
+
+
+    def impute_data(self, gt_vcf: str, map_file: str,
+                        ref_panel: str, chr_number) -> None:
         
 
+        out = os.path.join(f"{self.environment_handler.imputed_dir}/imputed_chr{chr_number}.risk")
+        
+        cmd = [
+            self.environment_handler.java_exe, f"-Xmx{self.environment_handler.heap_gb}g", "-jar", str(self.environment_handler.beagle_jar),
+            f"gt={gt_vcf}",
+            f"ref={ref_panel}",
+            f"map={map_file}",
+            f"out={out}",
+            f"nthreads={self.environment_handler.threads}",
+            f"gp=true",
+            # Beagle imputes by default when ref= is provided
+        ]
+        
+        self.run_command(cmd)
+        
+        out = out + ".vcf.gz"
+        
+        return out
+    
+        
+    
+    def impute_vcf_files(self) -> None:
+
+        n_imputations = len(self.environment_handler.vcf_plink_reference_mapping)
+        counter = 1
+        for _, row in self.environment_handler.vcf_plink_reference_mapping.iterrows():
+            vcf_path = row["vcf_file"]
+            map_file = row["plink_map_file"]
+            ref_file = row["reference_file"]
+            chr_number = row["chromosome_number"]
+            
+            print(f"Imputing chromosome {chr_number} ({counter}/{n_imputations})...")
+            
+            out = self.impute_data(vcf_path, map_file, ref_file, chr_number)
+            
+            self.environment_handler.vcf_plink_reference_mapping.loc[self.environment_handler.vcf_plink_reference_mapping["chromosome_number"] == chr_number, "imputed_file"] = out
+            
+            counter += 1
+            
 
     
     def run_qc_on_imputed_data(self, engine) -> None:
         
         #Per chromsome approach to save memory
         
-        for chromosome, file in self.environment_handler.imputed_files.items():
-            print(f"Converting chromosome {chromosome} to pandas DataFrame...")
+        for data_container in self.data_containers:
+            print(f"Converting chromosome {data_container.file_path} to pandas DataFrame...")
             
             if engine == "pandas":
-                self.load_vcf_to_df_pandas(file)
+                data_container.load_vcf_to_df_pandas()
             else:
-                self.load_vcf_to_df_polars(file)
+                data_container.load_vcf_to_df_polars()
             
-            print(f"Running QC on chromosome {chromosome} imputed data...")
-            self.data_container.qc_imputed_data()
-            print(f"Writing QC'ed imputed data for chromosome {chromosome} to VCF...")
-            self.write_pandas_to_vcf()
+            print(f"Running QC on chromosome {data_container.file_path} imputed data...")
+            data_container.qc_imputed_data()
+            print(f"Writing QC'ed imputed data for chromosome {data_container.file_path} to VCF...")
+            output_path = data_container.write_pandas_to_vcf(output_dir=self.environment_handler.output_dir)
+            
+            # Explicitly clear the DataFrame to free memory
+            data_container.imputed_data = None
+            
+            self.environment_handler.split_imputed_vcf_mapping.loc[
+                self.environment_handler.split_imputed_vcf_mapping["chromosome_number"] == data_container.chromosome_number,
+                "qc_imputed_file"            ] = output_path
             
             # Force garbage collection to free memory, otherwise it will ramp up
             gc.collect()
-            print(f"Completed chromosome {chromosome}. Memory freed.")
+            print(f"Completed chromosome {data_container.file_path} and written to {output_path}. Memory freed.")
+
+            
 
     
     def create_vcf_reference_mapping(self) -> None:
@@ -636,79 +732,169 @@ class WorkflowOrchestrator:
         if mapping_df.empty:
             raise ValueError("File mismatch when merging VCF, Beagle reference, and PLINK map files.")
     
-
-        
+        #add imputed_file
+        mapping_df["imputed_file"] = None
         self.environment_handler.vcf_plink_reference_mapping = mapping_df
-        
-        
-    def set_imputation_id_from_vcf(self) -> None:
-        # Get files for chromosome 22 (smallest)
-        vcf_files = self.environment_handler.vcf_file_paths.get('22', [])
-        vcf_file = vcf_files[0] if isinstance(vcf_files, list) and vcf_files else vcf_files
-        
-        if not vcf_file:
-            raise ValueError("No VCF file found for chromosome 22")
-        
-        opener = gzip.open if vcf_file.endswith(".gz") else open
-
-        with opener(vcf_file, "rt") as f:  # <-- text mode
-            for line in f:
-                if line.startswith("#CHROM"):
-                    sample_id = line.rstrip("\n").split("\t")[-1]
-                    imputation_id = sample_id.split("_", 1)[1]
-                    break
-    
-        self.data_container.imputation_id = imputation_id
-    
-    
-    def set_imputation_id_from_vcf_env(self) -> None:
-        
-        imputation_ids = []
-        for vcf_files in self.environment_handler.vcf_file_paths.values():
-            # Handle both list and single file cases
-            files_to_process = vcf_files if isinstance(vcf_files, list) else [vcf_files]
-            
-            for vcf_file in files_to_process:
-                opener = gzip.open if vcf_file.endswith(".gz") else open
-
-                with opener(vcf_file, "rt") as f:  # <-- text mode
-                    for line in f:
-                        if line.startswith("#CHROM"):
-                            sample_id = line.rstrip("\n").split("\t")[-1]
-                            imputation_ids.append(sample_id.split("_", 1)[1])
-                            break
-        
-        self.data_container.imputation_id = imputation_ids[0] if imputation_ids else None
-    
     
         
         
     
     def create_samplesheet(self) -> None:
         
-        vcf_paths= list(self.environment_handler.qc_imputed_files.values())
-        
-        vcf_filenames = [os.path.basename(path) for path in vcf_paths]
-        
-        vcf_base_names = [name.split(".", 1)[0] for name in vcf_filenames]
-        
-        
-        chr_numbers = list(self.environment_handler.qc_imputed_files.keys())
+        """Write a sample sheet for each imputation id + chromosome number, with the columns: sampleset, path_prefix, chrom, format. 
+        This format is needed for the nextflow pgs_calc module downstream """        
 
-        samplesheet_df = pd.DataFrame({
-            "sampleset": self.data_container.imputation_id,
-            "path_prefix": vcf_base_names,
-            "chrom": chr_numbers,
-            "format": "vcf",
-        })
         
-        samplesheet_df.to_csv(
-            os.path.join(self.environment_handler.output_dir, "samplesheet.csv"),
-            index=False
-        )
+        for imputation_id, group in self.environment_handler.split_imputed_vcf_mapping.groupby("imputation_id"):
+        
+            vcf_paths= list(group["split_vcf_filepath"])
+            
+            vcf_filenames = [os.path.basename(path) for path in vcf_paths]
+            
+            vcf_base_names = [name.split(".", 1)[0] for name in vcf_filenames]
+            
+            
+            chr_numbers = list(group["chromosome_number"])
+
+            samplesheet_df = pd.DataFrame({
+                "sampleset": "cohort",
+                "path_prefix": vcf_base_names,
+                "chrom": chr_numbers,
+                "format": "vcf",
+            })
+            
+            samplesheet_df.to_csv(
+                os.path.join(self.environment_handler.output_dir, f"samplesheet_IMPID{imputation_id}.csv"),
+                index=False
+            )
+            
+            
         
     
+    def _open_text(self, vcf_file):
+        vcf_file = str(vcf_file)
+        return gzip.open(vcf_file, "rt") if vcf_file.endswith(".gz") else open(vcf_file, "rt")
 
+
+    def _get_sample_ids(self, vcf_file) -> list[str]:
+        """takes a vcf file path as input at returns the sample ids in that file(will be more than one if the file is a merged vcf file)"""
+        with self._open_text(vcf_file) as f:
+            for line in f:
+                if line.startswith("#CHROM"):
+                    columns = line.rstrip("\n").split("\t")
+                    return columns[9:]
+
+        raise ValueError(f"No #CHROM header found in VCF file: {vcf_file}")
+
+
+    def _get_chrom_number_from_vcf(self, vcf_file) -> str:
+        with self._open_text(vcf_file) as f:
+            for line in f:
+                if line.startswith("#"):
+                    continue
+
+                columns = line.rstrip("\n").split("\t")
+                return columns[0]
+
+        raise ValueError(f"No variant rows found in VCF file: {vcf_file}")
+
+
+    def _get_imputation_id_from_sample_id(self, sample_id) -> str:
+        return sample_id.split("_", 1)[1]
+
+
+    def _add_minimal_contig_header(self, input_vcf: str, output_vcf: str, chrom:str) -> None:
+        
+        """BCF tools require the contig header to be present in the VCF so need to add it before splitting vcf files by sample"""
+        
+        with gzip.open(input_vcf, "rt") as f:
+            lines = f.readlines()
+
+        contig_line = f"##contig=<ID={chrom}>\n"
+        has_contig = any(line.startswith(f"##contig=<ID={chrom}") for line in lines)
+
+        with gzip.open(output_vcf, "wt") as f:
+            for line in lines:
+                if line.startswith("#CHROM") and not has_contig:
+                    f.write(contig_line)
+                f.write(line)
+
+
+
+
+
+    def _get_imputation_id_from_split_imputed_filename(self, filename) -> str:
+        match = re.search(r"split_imputed_ImpID(\d+)_chr\d+\.vcf\.gz$", filename)
+        if match:
+            return match.group(1)
+        else:
+            raise ValueError(f"Could not extract imputation ID from split imputed VCF filename: {filename}")
+    
+
+    def setup_datacontainers(self) -> None:
+        
+        """ creates a data container for each imputation id + chromosome number """
+        
+        
+        vcf_gz_files = [f for f in os.listdir(self.environment_handler.merged_samplesheet_dir) 
+                if re.match(r"split.*\.vcf\.gz$", f)]
+
+        for vcf_file in vcf_gz_files:
+            file_path = os.path.join(self.environment_handler.merged_samplesheet_dir, vcf_file)
+            imputation_id = self._get_imputation_id_from_split_imputed_filename(vcf_file)
+            chrom_number = self._get_chrom_number_from_vcf(file_path)
+            
+            data_container = DataContainer(
+                file_path=file_path,
+                chromosome_number=chrom_number,
+                qc_thresholds=self.qc_thresholds,
+                imputed_data=None,
+                qc_status=False,
+                imputation_id=imputation_id
+            )
+            
+            self.data_containers.append(data_container)
+            
+            self.environment_handler.split_imputed_vcf_mapping = pd.concat([
+                self.environment_handler.split_imputed_vcf_mapping,
+                pd.DataFrame({
+                    "chromosome_number": chrom_number,
+                    "imputation_id": imputation_id,
+                    "split_vcf_filepath": file_path,
+                    "qc_imputed_file": None
+                }, index=[0])
+            ], ignore_index=True)
+    
+    
+    
+
+
+    
+    
+    def delete_merged_vcf(self) -> None:
+        imputed_files = os.listdir(self.environment_handler.imputed_dir)
+
+        merged_vcf_files = [
+            os.path.join(self.environment_handler.imputed_dir, f)
+            for f in imputed_files
+            if f.endswith(".risk.vcf.gz") or f.endswith(".risk.log")
+        ]
+
+        for vcf_file in merged_vcf_files:
+            os.remove(vcf_file)
+
+            # Also remove tabix index if it exists
+            tbi_file = f"{vcf_file}.tbi"
+            if os.path.exists(tbi_file):
+                os.remove(tbi_file)
+
+            # Also remove CSI index if it exists
+            csi_file = f"{vcf_file}.csi"
+            if os.path.exists(csi_file):
+                os.remove(csi_file)
+            
+            
+        
 
     
 

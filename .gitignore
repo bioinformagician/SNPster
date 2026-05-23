@@ -16,5 +16,6 @@ data pipeline/database_module/__pycache__
 data pipeline/job_runner_module/__pycache__
 .nextflow*
 data pipeline/vcf_merge_sheets_export
+data pipeline/temp_test
 
 

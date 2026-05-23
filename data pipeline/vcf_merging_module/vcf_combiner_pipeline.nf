@@ -15,7 +15,7 @@ process MERGE_VCFS {
 
 workflow {
 
-    samplesheet_ch = Channel.fromPath("$params.samplsheet_dir/*.csv")
+    samplesheet_ch = Channel.fromPath("$params.samplsheet_dir/vcf_samplesheet_chr*.csv")
     MERGE_VCFS(samplesheet_ch)
 
 }

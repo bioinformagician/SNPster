@@ -22,9 +22,6 @@ environment_handler = EnvironmentHandler(
     beagle_reference_dir=BEAGLE_REFERENCE_DIR, #mounted
     plink_map_dir=PLINK_MAP_DIR, #mounted
     vcf_files_dir=args.vcf_files, #mounted from harmonization step
-    imputed_files = {},
-    qc_imputed_files= {},
-    imputation_id=None
 )
 
 qc_thresholds = QCThresholds(
@@ -34,11 +31,6 @@ qc_thresholds = QCThresholds(
     biallelic_only=BIALLELIC_ONLY
 )
 
-data_container = DataContainer(
-    qc_thresholds=qc_thresholds
-)
-
-
 vcf_environment_handler = vcf_combiner_classes.VCFEnvironmentHandler(
     vcf_samplesheet_path = None,
     output_dir = None)
@@ -47,25 +39,35 @@ vcf_handler = vcf_combiner_classes.VCFHandler(
     vcf_environment_handler=vcf_environment_handler
 )
 
+vcf_handler.vcf_environment_handler.output_dir = environment_handler.merged_samplesheet_dir
+
 orchestrator = WorkflowOrchestrator(
     environment_handler=environment_handler,
-    data_container=data_container,
-    vcf_handler=vcf_handler
+    data_containers=[],
+    vcf_handler=vcf_handler,
+    qc_thresholds=qc_thresholds
 )
 
 
-#orchestrator.set_imputation_id_from_vcf()
-orchestrator.set_imputation_id_from_vcf_env()
-
-orchestrator.create_vcf_samplesheet()
+orchestrator.create_vcf_samplesheet_for_vcf_merge()
 
 orchestrator.split_vcf_samplesheet_by_chromosome()
 
-orchestrator.run_vcf_merging()
+vcf_handler.run_vcf_merging(environment_handler.merged_samplesheet_dir) #merging in parallel
 
-orchestrator.impute_vcf_files()
+orchestrator.update_vcf_plink_reference_mapping()
 
-orchestrator.run_qc_on_imputed_data(args.df_engine)
+orchestrator.impute_vcf_files()# parallelize?
+
+orchestrator.create_vcf_samplesheets_for_vcf_split()
+
+vcf_handler.run_vcf_splitting(environment_handler.merged_samplesheet_dir)
+
+orchestrator.delete_merged_vcf()
+
+orchestrator.setup_datacontainers()
+
+orchestrator.run_qc_on_imputed_data(args.df_engine) #also need to do this in parallel with nextflow, rly slow step
 
 orchestrator.create_samplesheet()
 
