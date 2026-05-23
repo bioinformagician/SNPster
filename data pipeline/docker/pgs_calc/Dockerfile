@@ -20,14 +20,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY pgs_calc_module/requirements.txt /tmp/pgs_calc_requirements.txt
 COPY database_module/requirements.txt /tmp/database_requirements.txt
-COPY vcf_merging_module/requirements.txt /tmp/vcf_merging_requirements.txt
+COPY vcf_utilities_module/requirements.txt /tmp/vcf_utilities_requirements.txt
 
 RUN pip install --no-cache-dir -r /tmp/pgs_calc_requirements.txt \
  && pip install --no-cache-dir -r /tmp/database_requirements.txt \
- && pip install --no-cache-dir -r /tmp/vcf_merging_requirements.txt
+ && pip install --no-cache-dir -r /tmp/vcf_utilities_requirements.txt
 
 COPY pgs_calc_module/ .
 COPY database_module/ .
-COPY vcf_merging_module/ .
+COPY vcf_utilities_module/ .
 
 CMD ["python", "main.py"]

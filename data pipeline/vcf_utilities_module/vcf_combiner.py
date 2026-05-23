@@ -1,5 +1,5 @@
 import argparse
-from vcf_combiner_classes import VCFEnvironmentHandler, VCFHandler
+from vcf_classes import VCFEnvironmentHandler, VCFHandler
 
 
 #add vcf_sheet_path to environment handler and set it in main.py when creating combined samplesheet, then use it in vcf handler to set vcf file dict
@@ -20,6 +20,6 @@ vcf_environment_handler = VCFEnvironmentHandler(
 vcf_handler = VCFHandler(vcf_environment_handler=vcf_environment_handler)
 
 
-vcf_handler.split_vcf_files()
+vcf_handler.merge_vcf_files()
 
 

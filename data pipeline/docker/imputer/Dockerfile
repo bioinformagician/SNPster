@@ -41,7 +41,7 @@ RUN pip install -r requirements.txt
 
 # Copy Python files (exclude large dependencies)
 COPY imputation_module/*.py .
-COPY vcf_merging_module/vcf* .
+COPY vcf_utilities_module/vcf* .
 
 # Copy only needed dependencies (Beagle JAR and test data)
 COPY imputation_module/dependencies/beagle.27Feb25.75f.jar ./dependencies/

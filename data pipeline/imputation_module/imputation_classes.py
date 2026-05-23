@@ -7,7 +7,7 @@ import numpy as np
 import re
 import gc
 import polars as pl
-import vcf_combiner_classes
+import vcf_classes
 
 @dataclass(frozen=True)
 class QCThresholds:
@@ -470,7 +470,7 @@ class WorkflowOrchestrator:
     def __init__(self,
                     environment_handler: EnvironmentHandler,
                     data_containers: list[DataContainer], #str is imputation_id
-                    vcf_handler: vcf_combiner_classes.VCFHandler,
+                    vcf_handler: vcf_classes.VCFHandler,
                     qc_thresholds: QCThresholds
                     ):
         

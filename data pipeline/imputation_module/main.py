@@ -1,6 +1,6 @@
 import os
 import argparse
-from imputation_classes import EnvironmentHandler, QCThresholds, DataContainer, WorkflowOrchestrator, vcf_combiner_classes
+from imputation_classes import EnvironmentHandler, QCThresholds, DataContainer, WorkflowOrchestrator, vcf_classes
 from config import BEAGLE_JAR, JAVA_EXE, HEAP_GB, THREADS, GP_MIN, DS_TOL, SNPS_ONLY, BIALLELIC_ONLY, OUTPUT_DIR, BEAGLE_REFERENCE_DIR, PLINK_MAP_DIR, VCF_FILES_DIR, DF_ENGINE, ACCEPTED_DF_ENGINES, MERGED_SAMPLESHEET_DIR
 
 parser = argparse.ArgumentParser()
@@ -31,11 +31,11 @@ qc_thresholds = QCThresholds(
     biallelic_only=BIALLELIC_ONLY
 )
 
-vcf_environment_handler = vcf_combiner_classes.VCFEnvironmentHandler(
+vcf_environment_handler = vcf_classes.VCFEnvironmentHandler(
     vcf_samplesheet_path = None,
     output_dir = None)
 
-vcf_handler = vcf_combiner_classes.VCFHandler(
+vcf_handler = vcf_classes.VCFHandler(
     vcf_environment_handler=vcf_environment_handler
 )
 
