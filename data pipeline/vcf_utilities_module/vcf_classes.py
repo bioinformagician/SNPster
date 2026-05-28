@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import subprocess
 import tempfile
 import shutil
@@ -17,7 +18,7 @@ class VCFEnvironmentHandler:
     
     
     
-class VCFHandler:
+class VCFHandler: #split this into a VCFMerger and VCFSplitter class later, but for now it is easier to keep bcftools merging and splitting code together since they both use the same sample sheet format and are run sequentially in the workflow
     def __init__(
         self,
         vcf_environment_handler: VCFEnvironmentHandler,
@@ -159,5 +160,113 @@ class VCFHandler:
         print(f"running command {command}")
         
         subprocess.run(command, check=True)
+
+
+
+
+class VCFUtilities:
+    
+    """Class to provide utilities such as adding and reading metadata to/from VCF files """
+    
+    IMPUTATION_ID_KEY = "IMPUTATION_ID"
+
+    def add_imputation_id_to_vcf(self, vcf_file: str, imputation_id: list) -> None:
+        """
+        Adds imputation ID metadata to the VCF header in place.
+
+        If the VCF already has:
+            ##IMPUTATION_ID=12,93
+
+        and imputation_id is:
+            [45, 60]
+
+        it becomes:
+            ##IMPUTATION_ID=12,93,45,60
+        """
+
+        vcf_path = Path(vcf_file)
+        is_gzipped = self._is_gzipped(vcf_path)
+
+        input_opener = gzip.open if is_gzipped else open
+        output_opener = gzip.open if is_gzipped else open
+
+        new_ids = [int(value) for value in imputation_id]
+        existing_ids = self.read_imputation_id_from_vcf(vcf_file)
+
+        merged_ids = existing_ids + [
+            value for value in new_ids
+            if value not in existing_ids
+        ]
+
+        metadata_line = (
+            f"##{self.IMPUTATION_ID_KEY}="
+            f"{','.join(str(value) for value in merged_ids)}\n"
+        )
+
+        with tempfile.NamedTemporaryFile(
+            delete=False,
+            dir=vcf_path.parent,
+            suffix=vcf_path.suffix,
+        ) as tmp:
+            tmp_path = Path(tmp.name)
+
+        try:
+            inserted = False
+
+            with input_opener(vcf_path, "rt") as fin, output_opener(tmp_path, "wt") as fout:
+                for line in fin:
+                    if line.startswith(f"##{self.IMPUTATION_ID_KEY}="):
+                        if not inserted:
+                            fout.write(metadata_line)
+                            inserted = True
+                        continue
+
+                    if line.startswith("#CHROM") and not inserted:
+                        fout.write(metadata_line)
+                        inserted = True
+
+                    fout.write(line)
+
+            os.replace(tmp_path, vcf_path)
+
+        except Exception:
+            tmp_path.unlink(missing_ok=True)
+            raise
+    
+    
+    def read_imputation_id_from_vcf(self, vcf_file: str) -> list[int]:
+        """
+        Reads imputation IDs from the VCF header.
+
+        """
+
+        vcf_path = Path(vcf_file)
+        if not vcf_path.exists():
+            raise FileNotFoundError(f"VCF file does not exist: {vcf_file}")
+        
+        opener = gzip.open if self._is_gzipped(vcf_path) else open
+
+        with opener(vcf_path, "rt") as f:
+            for line in f:
+                line = line.rstrip("\n")
+
+                if line.startswith(f"##{self.IMPUTATION_ID_KEY}="):
+                    value = line.split("=", 1)[1]
+
+                    return [
+                        int(item)
+                        for item in value.split(",")
+                        if item
+                    ]
+
+                if line.startswith("#CHROM"):
+                    break
+
+        return []
+
+    @staticmethod
+    def _is_gzipped(path: Path) -> bool:
+        return path.suffix == ".gz"
+    
 
     

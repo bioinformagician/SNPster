@@ -54,6 +54,7 @@ print("Conversion to BED format complete. BED file paths:")
 print("Converting BED files to VCF format...")
 workflow_orchestrator.convert_bed_to_vcf()
 workflow_orchestrator.confirm_paths_exist(workflow_orchestrator.environment_handler.vcf_file_paths)
-
+workflow_orchestrator.add_imputation_id_to_vcfs()
+print("Conversion to VCF format complete. VCF file paths:")
 
 

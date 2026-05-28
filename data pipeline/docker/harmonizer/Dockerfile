@@ -1,5 +1,5 @@
 # Use Python base image
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
@@ -32,6 +32,7 @@ RUN pip install -r requirements.txt
 
 # Copy all project files from harmonizing_module
 COPY harmonizing_module/ .
+COPY vcf_utilities_module/vcf_classes.py .
 
 # Run your script
 CMD ["python", "main.py"]

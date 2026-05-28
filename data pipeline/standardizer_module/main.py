@@ -9,7 +9,7 @@ parser.add_argument('--microarray_file', type=str, required=False, default = TES
 parser.add_argument(
     '--identifier',
     type=str,
-    help='A unique identifier for the current standardization run (e.g., user ID or timestamp).',
+    help='The identifier should always be imputation_id',
     default=f"{pd.Timestamp.now().strftime('%Y%m%d%H%M%S')}-{os.urandom(8).hex()}",
 )
 

@@ -3,6 +3,10 @@ import subprocess
 import gzip
 from data_models import *
 import pyarrow.parquet as pq
+from vcf_classes import VCFUtilities 
+
+
+vcf_utilities = VCFUtilities()
 
 class EnvironmentHandler:
     def __init__(self,
@@ -348,6 +352,11 @@ class WorkflowOrchestrator:
         for path in paths.values():
             if not os.path.exists(path):
                 raise FileNotFoundError(f"Harmonized chromosome file not found: {path}")
+    
+    def add_imputation_id_to_vcfs(self) -> None:
+        
+        for chrom, vcf_path in self.environment_handler.vcf_file_paths.items():
+            vcf_utilities.add_imputation_id_to_vcf(vcf_file = vcf_path, imputation_id=self.data_container.identifier)
     
     
     def run_harmonization_workflow(self) -> None:
