@@ -263,10 +263,55 @@ class VCFUtilities:
                     break
 
         return []
+    
+    
+    def get_chromosome_from_vcf(self, vcf_file: str) -> str | None:
+        """Reads the chromosome from the first data line in the VCF."""
+        vcf_path = Path(vcf_file)
+        if not vcf_path.exists():
+            raise FileNotFoundError(f"VCF file does not exist: {vcf_file}")
+        
+        opener = gzip.open if self._is_gzipped(vcf_path) else open
+
+        with opener(vcf_path, "rt") as f:
+            for line in f:
+                line = line.rstrip("\n")
+                
+                # Skip header lines
+                if line.startswith("#"):
+                    continue
+                
+                # First data line - chromosome is first column
+                if line:
+                    chrom = line.split("\t")[0]
+                    return chrom
+
+        return None
 
     @staticmethod
     def _is_gzipped(path: Path) -> bool:
         return path.suffix == ".gz"
+    
+    
+    def make_vcf_merging_samplesheet(self, vcf_file_dir: str, output_dir: str) -> str:
+        """ Take a dir of vcf files and output a csv file in that dir with the columns full_vcf_path and chrom, which can be used as input for the vcf merging process in the workflow
+            This function will produce 22 csv files, one for each chromosome
+        """
+        
+        vcf_files = [f for f in os.listdir(vcf_file_dir) if f.endswith(".vcf.gz")]
+        full_vcf_paths = [os.path.join(vcf_file_dir, f) for f in vcf_files]
+        chromosomes = [self.get_chromosome_from_vcf(path) for path in full_vcf_paths]
+        
+
+        samplesheet_df = pd.DataFrame({
+            "full_vcf_path": full_vcf_paths,
+            "chrom": chromosomes
+        })
+        
+        for chrom in samplesheet_df["chrom"].unique():
+            chrom_df = samplesheet_df[samplesheet_df["chrom"] == chrom]
+            output_path = os.path.join(output_dir, f"vcf_merge_sheet_chr{chrom}.csv")
+            chrom_df.to_csv(output_path, index=False)
     
 
     
