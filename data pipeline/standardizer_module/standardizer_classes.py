@@ -19,7 +19,9 @@ class EnvironmentHandler:
     
     def validate_environment(self) -> None:
         
-        paths = [self.output_dir] + list(self.chain_file_dict.values()) + [self.user_file]
+        os.makedirs(self.output_dir, exist_ok=True)
+            
+        paths = list(self.chain_file_dict.values()) + [self.user_file]
         #remove None values (for GRCh38 chain file)
         paths = [path for path in paths if path is not None]
         for path in paths:
@@ -88,43 +90,40 @@ class WorkflowOrchestrator:
             unzipped_file = self.file_handler.unzip_file()
             self.file_handler.user_file = unzipped_file
             self.environment_handler.user_file = unzipped_file
+        
     
     def write_parquet_output(self) -> None:
-        output_path = os.path.join(self.environment_handler.output_dir, f"standardized_microarray_data_user_{self.data_container.identifier}.parquet")
+        """ Naming of file should follow {IMPIDx}.{CHR}.{STAGE}.filextension"""
         
-        # Convert DataFrame to PyArrow Table
-        table = pa.Table.from_pandas(self.data_container.microarray_data)
         
-        # Add custom metadata
-        metadata = {
-            b'vendor': self.data_container.vendor.encode('utf-8'),
-            b'genome_build': self.data_container.genome_build.encode('utf-8'),
-            b'is_forward_strand': str(self.data_container.is_forward_strand).encode('utf-8'),
-            b'identifier': str(self.data_container.identifier).encode('utf-8')
-        }
+        for chrom, df_chrom in self.data_container.microarray_data.groupby("chromosome", sort = False):
         
-        # Merge with existing schema metadata
-        existing_metadata = table.schema.metadata or {}
-        combined_metadata = {**existing_metadata, **metadata}
-        
-        # Create new schema with metadata
-        new_schema = table.schema.with_metadata(combined_metadata)
-        table = table.cast(new_schema)
-        
-        # Write parquet with metadata
-        pq.write_table(table, output_path)
-        print(f"Standardized data written to {output_path}")
-        print(f"Metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, is_forward_strand={self.data_container.is_forward_strand}, identifier={self.data_container.identifier}")
-    
-    
-    def write_meta_data_output(self) -> None:
-        meta_data_path = os.path.join(self.environment_handler.output_dir, f"metadata_user_{self.data_container.identifier}.txt")
-        with open(meta_data_path, 'w') as f:
-            f.write(f"Vendor: {self.data_container.vendor}\n")
-            f.write(f"Genome Build: {self.data_container.genome_build}\n")
-            f.write(f"Is Forward Strand: {self.data_container.is_forward_strand}\n")
-            f.write(f"Identifier: {self.data_container.identifier}\n")
-        print(f"Metadata written to {meta_data_path}")
+            
+            output_path = os.path.join(self.environment_handler.output_dir, f"IMPID{self.data_container.imputation_id}.chr{chrom}.standardizedMicroarray.parquet")
+            
+            # Convert DataFrame to PyArrow Table
+            table = pa.Table.from_pandas(df_chrom)
+            
+            # Add custom metadata
+            metadata = {
+                b'vendor': self.data_container.vendor.encode('utf-8'),
+                b'genome_build': self.data_container.genome_build.encode('utf-8'),
+                b'is_forward_strand': str(self.data_container.is_forward_strand).encode('utf-8'),
+                b'imputation_id': str(self.data_container.imputation_id).encode('utf-8')
+            }
+            
+            # Merge with existing schema metadata
+            existing_metadata = table.schema.metadata or {}
+            combined_metadata = {**existing_metadata, **metadata}
+            
+            # Create new schema with metadata
+            new_schema = table.schema.with_metadata(combined_metadata)
+            table = table.cast(new_schema)
+            
+            # Write parquet with metadata
+            pq.write_table(table, output_path)
+            print(f"Standardized data written to {output_path}")
+            print(f"Metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, is_forward_strand={self.data_container.is_forward_strand}, imputation_id={self.data_container.imputation_id}")
         
             
         

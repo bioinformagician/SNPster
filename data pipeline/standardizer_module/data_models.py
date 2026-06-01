@@ -7,12 +7,13 @@ import zipfile
 
 @dataclass
 class DataContainer:
-    identifier: Optional[str] = None
+    imputation_id: Optional[str] = None
     vendor: Optional[str] = None
     genome_build: Optional[str] = None
     is_forward_strand: Optional[bool] = None
     lift_over: bool = False
     microarray_data: Optional[pd.DataFrame] = None
+    split_microarray_data: Optional[pd.DataFrame] = None
 
     
 

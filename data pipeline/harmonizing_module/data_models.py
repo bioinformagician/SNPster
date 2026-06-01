@@ -6,7 +6,7 @@ import re
 
 @dataclass
 class DataContainer:
-    identifier: Optional[str] = None
+    imputation_id: Optional[str] = None
     vendor: Optional[str] = None
     genome_build: Optional[str] = None
     is_forward_strand: Optional[bool] = True

@@ -40,21 +40,18 @@ workflow_orchestrator.read_parquet()
 print("Microarray data set in data container:")
 print(workflow_orchestrator.data_container.microarray_data.head())
 
+print("Harmonizing File")
 workflow_orchestrator.run_harmonization_workflow() #harmonize data if is_forward_strand is false (not implemented yet) or skip if true
 
-print("Splitting harmonized data into chromosome-specific files...")
-workflow_orchestrator.create_harmonized_chromosome_files()
-print("Splitting complete. Chromosome-specific file paths:")
-
-print("Converting harmonized files to BED format...")
+print("Converting harmonized file to BED format...")
 workflow_orchestrator.convert_23andme_to_bed()
-workflow_orchestrator.confirm_paths_exist(workflow_orchestrator.environment_handler.bed_file_paths)
-print("Conversion to BED format complete. BED file paths:")
+workflow_orchestrator.confirm_path_exist(workflow_orchestrator.environment_handler.bed_file_path)
+print("Conversion to BED format complete")
 
-print("Converting BED files to VCF format...")
+print("Converting BED file to VCF format...")
 workflow_orchestrator.convert_bed_to_vcf()
-workflow_orchestrator.confirm_paths_exist(workflow_orchestrator.environment_handler.vcf_file_paths)
+workflow_orchestrator.confirm_path_exist(workflow_orchestrator.environment_handler.vcf_file_path)
 workflow_orchestrator.add_imputation_id_to_vcfs()
-print("Conversion to VCF format complete. VCF file paths:")
+print("Conversion to VCF format complete.")
 
 

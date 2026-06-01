@@ -23,8 +23,8 @@ class EnvironmentHandler:
                  user_snp_list_path: str = None,
                  reference_data_path: str = None,
                  split_harmonized_file_paths: dict[str, str] = None,
-                 bed_file_paths: dict[str, str] = None,
-                 vcf_file_paths: dict[str, str] = None
+                 bed_file_path: str = None,
+                 vcf_file_path: str = None
                  ):
         
         self.output_dir = output_dir
@@ -38,8 +38,8 @@ class EnvironmentHandler:
         self.pvar_ref_file = pvar_ref_file
         self.reference_data_path = reference_data_path
         self.split_harmonized_file_paths = split_harmonized_file_paths
-        self.bed_file_paths = bed_file_paths
-        self.vcf_file_paths = vcf_file_paths
+        self.bed_file_path = bed_file_path
+        self.vcf_file_path = vcf_file_path
         self.plink_1_9_memory_mb = plink_1_9_memory_mb
         self.plink_1_9_threads = plink_1_9_threads
         self.create_output_directory()
@@ -96,7 +96,7 @@ class WorkflowOrchestrator:
 
         self.data_container.vendor = metadata[b'vendor'].decode('utf-8')
         self.data_container.genome_build = metadata[b'genome_build'].decode('utf-8')
-        self.data_container.identifier = metadata[b'identifier'].decode('utf-8')
+        self.data_container.imputation_id = metadata[b'imputation_id'].decode('utf-8')
         
         self.data_container.is_forward_strand = metadata[b'is_forward_strand'].decode('utf-8')
         if self.data_container.is_forward_strand == 'True':
@@ -225,72 +225,55 @@ class WorkflowOrchestrator:
     
     
     
-    def create_harmonized_chromosome_files(self) -> None:
+    def write_harmonized_data_to_csv(self) -> None:
+        """"Streamline this as it will be used after the standardization process"""
         
-        #make new dir for harmonized chromosome files
-        harmonized_dir = os.path.join(self.environment_handler.output_dir, "harmonized_chromosomes")
-        os.makedirs(harmonized_dir, exist_ok=True)
-        
-        output_filepaths = {}
-
-        # Define valid chromosomes (standard autosomes, sex chromosomes, and mitochondrial)
-        valid_chromosomes = {str(i) for i in range(1, 23)} | {'X', 'Y', 'MT', 'M'}
-        # Also accept chr-prefixed versions
-        valid_chromosomes |= {f'chr{c}' for c in list(valid_chromosomes)}
-        
-        dataframe_split = {chrom: df for chrom, df in self.data_container.harmonized_data.groupby('chromosome')}
-
-        for chrom, df in dataframe_split.items():
-            # Skip alternate contigs, patches, and unplaced sequences
-            chrom_str = str(chrom)
-            # Extract base chromosome (remove chr prefix if present for comparison)
-            base_chrom = chrom_str.replace('chr', '') if chrom_str.startswith('chr') else chrom_str
-            
-            # Check if this is a standard chromosome (not alt, patch, or unplaced)
-            if base_chrom not in valid_chromosomes and not any(base_chrom.startswith(str(i)) and '_' not in base_chrom for i in range(1, 23)):
-                print(f"Skipping non-standard chromosome: {chrom_str}")
-                continue
-            
-            # Ensure proper chromosome naming (add chr prefix if not present)
-            if not chrom_str.startswith('chr'):
-                chrom_str = f'chr{chrom_str}'
-            
-            output_file = os.path.join(harmonized_dir, f"{chrom_str}.txt")
-            df.to_csv(output_file, sep="\t", index=False)
-            print(f"Wrote chromosome {chrom} to {output_file}")
-            output_filepaths[chrom] = output_file
 
         self.environment_handler.split_harmonized_file_paths = output_filepaths
     
+    
+    
     def convert_23andme_to_bed(self) -> None:
-        """Convert 23andMe text file to PLINK binary format."""
+        """
+        Convert 23andMe text file to PLINK binary format.
+        """
 
-
-        output_dir = os.path.join(self.environment_handler.output_dir, "bed_files")
+        output_dir = self.environment_handler.output_dir
         os.makedirs(output_dir, exist_ok=True)
-        output_paths = {}
         
-        for chr_number, file in self.environment_handler.split_harmonized_file_paths.items():
-            print(f"Converting file: {file} to BED format")
+        chr_number = self.data_container.harmonized_data['chromosome'].iloc[0]
+        
+        csv_path = os.path.join(
+            output_dir,
+            f"IMPID{self.data_container.imputation_id}.chr{chr_number}.HarmonizedMicroarray.csv"
+        )
 
-            filename = os.path.basename(file)
-            output_path = os.path.join(output_dir, f"{self.environment_handler.PLINK_PREFIX}_{filename.replace('.txt', '')}_{self.data_container.identifier}")
+        self.data_container.harmonized_data.to_csv(
+            csv_path,
+            sep="\t",
+            index=False,
+            header=False
+        )
+        
+        print(f"Converting file: {csv_path} to BED format")
+
+        filename = os.path.basename(csv_path)
+        output_path = os.path.join(output_dir, f"{filename.replace('HarmonizedMicroarray.csv', '')}.{self.environment_handler.PLINK_PREFIX}")
+        
+        command = [
+            self.environment_handler.plink_1_9_path,
+            "--23file", csv_path,
+            "FAM001", self.data_container.imputation_id,
+            "--memory", self.environment_handler.plink_1_9_memory_mb,
+            "--threads", self.environment_handler.plink_1_9_threads,
+            "--make-bed",
+            "--allow-no-sex",
+            "--out", output_path
+        ]
+        
+        self.run_command(command)
             
-            command = [
-                self.environment_handler.plink_1_9_path,
-                "--23file", file,
-                "FAM001", self.data_container.identifier,
-                "--memory", self.environment_handler.plink_1_9_memory_mb,
-                "--threads", self.environment_handler.plink_1_9_threads,
-                "--make-bed",
-                "--allow-no-sex",
-                "--out", output_path
-            ]
-            
-            self.run_command(command)
-            output_paths[chr_number] = output_path+".bed"
-            
-        self.environment_handler.bed_file_paths = output_paths
+        self.environment_handler.bed_file_path = output_path+".bed"
     
     
     
@@ -298,66 +281,64 @@ class WorkflowOrchestrator:
         # Prepare reference FASTA (decompress and index if needed) once before processing
         prepared_fasta = self.prepare_reference_fasta()
         
-        output_vcf_files = {}
-        for chr_number, file in self.environment_handler.bed_file_paths.items():
-                print(f"Processing BED file: {file} to VCF format")
-                
-                filename = file.replace(".bed", "") #the extension is removed because the plink program will need the .bed, .bim, and .fam files, therefore we provide the generic filename. It will find all three files automatically from the generic filename
-                 
-                """Convert PLINK binary files to VCF format using a reference genome.
-                Using --ref-from-fa to ensure all samples have consistent REF alleles matching the reference FASTA.
-                Then normalize with bcftools to ensure consistent REF orientation across all samples.
-                """
-                command = [
-                    self.environment_handler.plink_2_0_path,
-                    "--bfile", filename,
-                    "--split-par", "b38", #hg38 for grch38 genome build 
-                    "--fa", self.environment_handler.plink_reference_fasta,
-                    "--ref-from-fa", "force",
-                    "--export", "vcf", "bgz",
-                    "--out", rf"{filename}"
-                ]
-                
-                self.run_command(command)
-                
-                # Normalize VCF to ensure consistent REF alleles across all samples
-                # This fixes cases where PLINK sets different REF for homozygous vs heterozygous sites
-                vcf_path = rf"{filename}.vcf.gz"
-                normalized_vcf = rf"{filename}.normalized.vcf.gz"
-                
-                print(f"Normalizing VCF file: {vcf_path}")
-                norm_command = [
-                    "bcftools", "norm",
-                    "--check-ref", "s",  # Swap REF/ALT if REF doesn't match FASTA
-                    "--fasta-ref", prepared_fasta,  # Use decompressed and indexed FASTA
-                    "-Oz", "-o", normalized_vcf,
-                    vcf_path
-                ]
-                
-                self.run_command(norm_command)
-                
-                # Replace original VCF with normalized version
-                os.replace(normalized_vcf, vcf_path)
-                
-                # Reindex the normalized VCF
-                index_command = ["bcftools", "index", "-f", vcf_path]
-                self.run_command(index_command)
-                
-                output_vcf_files[chr_number] = vcf_path
+        
+        chr_number = chr_number = self.data_container.harmonized_data['chromosome'].iloc[0]
+        file = self.environment_handler.bed_file_path
+        
+        print(f"Processing BED file: {file} to VCF format")
+        
+        filename = file.replace(".bed", "") #the extension is removed because the plink program will need the .bed, .bim, and .fam files, therefore we provide the generic filename. It will find all three files automatically from the generic filename
+            
+        """Convert PLINK binary files to VCF format using a reference genome.
+        Using --ref-from-fa to ensure all samples have consistent REF alleles matching the reference FASTA.
+        Then normalize with bcftools to ensure consistent REF orientation across all samples.
+        """
+        command = [
+            self.environment_handler.plink_2_0_path,
+            "--bfile", filename,
+            "--split-par", "b38", #hg38 for grch38 genome build 
+            "--fa", self.environment_handler.plink_reference_fasta,
+            "--ref-from-fa", "force",
+            "--export", "vcf", "bgz",
+            "--out", rf"{filename}"
+        ]
+        
+        self.run_command(command)
+        
+        # Normalize VCF to ensure consistent REF alleles across all samples
+        # This fixes cases where PLINK sets different REF for homozygous vs heterozygous sites
+        vcf_path = rf"{filename}.vcf.gz"
+        normalized_vcf = rf"{filename}.normalized.vcf.gz"
+        
+        print(f"Normalizing VCF file: {vcf_path}")
+        norm_command = [
+            "bcftools", "norm",
+            "--check-ref", "s",  # Swap REF/ALT if REF doesn't match FASTA
+            "--fasta-ref", prepared_fasta,  # Use decompressed and indexed FASTA
+            "-Oz", "-o", normalized_vcf,
+            vcf_path
+        ]
+        
+        self.run_command(norm_command)
+        
+        # Replace original VCF with normalized version
+        os.replace(normalized_vcf, vcf_path)
+        
+        # Reindex the normalized VCF
+        index_command = ["bcftools", "index", "-f", vcf_path]
+        self.run_command(index_command)
 
                 
-        self.environment_handler.vcf_file_paths = output_vcf_files
+        self.environment_handler.vcf_file_path = vcf_path
     
-    def confirm_paths_exist(self, paths: dict[str, str]) -> None:
-        for path in paths.values():
-            if not os.path.exists(path):
-                raise FileNotFoundError(f"Harmonized chromosome file not found: {path}")
-    
+    def confirm_path_exist(self, path) -> None:
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"Harmonized chromosome file not found: {path}")
+
     def add_imputation_id_to_vcfs(self) -> None:
         
-        for chrom, vcf_path in self.environment_handler.vcf_file_paths.items():
-            vcf_utilities.add_imputation_id_to_vcf(vcf_file = vcf_path, imputation_id=self.data_container.identifier)
-    
+        vcf_utilities.add_imputation_id_to_vcf(vcf_file=self.environment_handler.vcf_file_path, imputation_id=self.data_container.imputation_id)
+            
     
     def run_harmonization_workflow(self) -> None:
         

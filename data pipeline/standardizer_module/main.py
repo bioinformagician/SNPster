@@ -7,7 +7,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--output_dir', type=str, required=False, default=os.getcwd())
 parser.add_argument('--microarray_file', type=str, required=False, default = TEST_FILE, help='Path to the user microarray data file (e.g., 23andMe, Ancestry, Myheritage...).')
 parser.add_argument(
-    '--identifier',
+    '--imputation_id',
     type=str,
     help='The identifier should always be imputation_id',
     default=f"{pd.Timestamp.now().strftime('%Y%m%d%H%M%S')}-{os.urandom(8).hex()}",
@@ -16,7 +16,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-data_container = DataContainer(identifier=args.identifier)
+data_container = DataContainer(imputation_id=args.imputation_id)
 
 environment_handler = EnvironmentHandler(
     chain_file_dict=CHAIN_FILE_DICT,
@@ -49,6 +49,6 @@ workflow_orchestrator.set_strand_direction()
 workflow_orchestrator.set_microarray_data()
 workflow_orchestrator.evaluate_liftover()
 workflow_orchestrator.write_parquet_output()
-workflow_orchestrator.write_meta_data_output()
+
 
 

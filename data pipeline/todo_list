@@ -1,0 +1,4 @@
+Refactor standardizer to output a parquet file for each chromosome, not just one big file
+refactor harmonizer module to not split the parquet file per chromosome as this has already been done by standardizer
+change the naming convention in harmonizer to follow {IMPIDx}.{chr}.{stage}.vcf
+apply this naming convention throughout the whole pipeline and use it to handle channels in nextflow
