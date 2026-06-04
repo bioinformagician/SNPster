@@ -1,7 +1,7 @@
 from standardizer_classes import *
 import argparse
 import os
-from config import TEST_FILE, ACCEPTED_VENDORS_DICT, GENOME_BUILD_DICT, CHAIN_FILE_DICT, GRCH_TO_HG_IDENTIFIER_DICT, FORWARD_STRAND_VENDORS
+from config import TEST_FILE, ACCEPTED_VENDORS_DICT, GENOME_BUILD_DICT, CHAIN_FILE_DICT, GRCH_TO_HG_IDENTIFIER_DICT, FORWARD_STRAND_VENDORS, PVAR_REF_FILE
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--output_dir', type=str, required=False, default=os.getcwd())
@@ -22,7 +22,8 @@ environment_handler = EnvironmentHandler(
     chain_file_dict=CHAIN_FILE_DICT,
     grch_to_hg_identifier_dict=GRCH_TO_HG_IDENTIFIER_DICT,
     user_file = args.microarray_file,
-    output_dir = args.output_dir
+    output_dir = args.output_dir,
+    pvar_ref_file = PVAR_REF_FILE
 )
 
 
@@ -48,6 +49,7 @@ workflow_orchestrator.set_vendor()
 workflow_orchestrator.set_strand_direction()
 workflow_orchestrator.set_microarray_data()
 workflow_orchestrator.evaluate_liftover()
+workflow_orchestrator.run_harmonization_workflow()
 workflow_orchestrator.write_parquet_output()
 
 

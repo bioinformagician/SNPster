@@ -122,6 +122,7 @@ class DataContainer:
     
     def harmonize_data(self) -> None:
         
+        
 
         self.microarray_data[['allele1', 'allele2']] = self.microarray_data['genotype'].str.extract(r'([ACGT])([ACGT])')
 

@@ -2,6 +2,8 @@ from data_models import DataContainer, FileHandler, pd, os
 from pyliftover import LiftOver
 import pyarrow as pa
 import pyarrow.parquet as pq
+import subprocess
+import gzip
 
 class EnvironmentHandler:
     
@@ -9,19 +11,21 @@ class EnvironmentHandler:
                  chain_file_dict: dict[str, str],
                  grch_to_hg_identifier_dict: dict[str, str],
                  user_file:str,
-                 output_dir: str
+                 output_dir: str,
+                 pvar_ref_file: str
                  ) -> None:
         
         self.output_dir = output_dir
         self.chain_file_dict = chain_file_dict
         self.user_file = user_file
         self.grch_to_hg_identifier_dict = grch_to_hg_identifier_dict
+        self.pvar_ref_file = pvar_ref_file
     
     def validate_environment(self) -> None:
         
         os.makedirs(self.output_dir, exist_ok=True)
             
-        paths = list(self.chain_file_dict.values()) + [self.user_file]
+        paths = list(self.chain_file_dict.values()) + [self.user_file, self.pvar_ref_file]
         #remove None values (for GRCh38 chain file)
         paths = [path for path in paths if path is not None]
         for path in paths:
@@ -39,6 +43,25 @@ class WorkflowOrchestrator:
         self.data_container = data_container
         self.file_handler = file_handler
         self.environment_handler = environment_handler
+
+    def run_command(self, command: list[str]) -> None:
+        """Run a command in the subprocess and handle errors."""
+        try:
+            if command and os.path.isfile(command[0]) and not os.access(command[0], os.X_OK):
+                try:
+                    os.chmod(command[0], os.stat(command[0]).st_mode | 0o111)
+                except PermissionError:
+                    pass
+            print(f"Running command: {' '.join(command)}")
+            result = subprocess.run(command, check=True, capture_output=True, text=True)
+            print(result.stdout)
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(
+                f"Error running command: {' '.join(command)}\n"
+                f"Return code: {e.returncode}\n"
+                f"STDOUT:\n{e.stdout}\n"
+                f"STDERR:\n{e.stderr}\n"
+            )
 
     def check_dictionary_coherence(self) -> None:
         """Check that the keys and values in the build extraction tool matches the liftover files dicts"""
@@ -96,7 +119,7 @@ class WorkflowOrchestrator:
         """ Naming of file should follow {IMPIDx}.{CHR}.{STAGE}.filextension"""
         
         
-        for chrom, df_chrom in self.data_container.microarray_data.groupby("chromosome", sort = False):
+        for chrom, df_chrom in self.data_container.harmonized_data.groupby("chromosome", sort = False):
         
             
             output_path = os.path.join(self.environment_handler.output_dir, f"IMPID{self.data_container.imputation_id}.chr{chrom}.standardizedMicroarray.parquet")
@@ -124,8 +147,100 @@ class WorkflowOrchestrator:
             pq.write_table(table, output_path)
             print(f"Standardized data written to {output_path}")
             print(f"Metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, is_forward_strand={self.data_container.is_forward_strand}, imputation_id={self.data_container.imputation_id}")
+            
+            
+            
+            
+            
+    
+    #----------------- Harmonization methods -----------------#
+    
+    
+    
+    
+    
+    
+    def create_user_snp_list(self) -> None:
+        user_snps_path = os.path.join(self.environment_handler.output_dir, "user_snps.txt")
+        self.data_container.microarray_data["# rsid"].to_csv(user_snps_path, sep="\t", index=False, header=False)
+        self.environment_handler.user_snp_list_path = user_snps_path
+    
+    
+    def extract_reference_data(self) -> None:
+        r"""example: C:\Users\frezz>"C:\Users\frezz\Desktop\SNPster\gwas_catalog_data_cleaning\plink2_win_avx2\plink2.exe" 
+        --pvar "C:\Users\frezz\Desktop\SNPster\gwas_catalog_data_cleaning\get_forward_alleles\all_phase3.pvar.zst" 
+        --extract "C:\Users\frezz\Desktop\SNPster\gwas_catalog_data_cleaning\get_forward_alleles\risk_alleles.txt" 
+        --make-just-pvar --out "C:\Users\frezz\Downloads\subset_hg37"""
+        
+        
+        
+        command = [
+            "plink2",
+            "--pvar", self.environment_handler.pvar_ref_file,
+            "--extract", self.environment_handler.user_snp_list_path,
+            "--make-just-pvar",
+            "--threads", "1",
+            "--memory", "8000", #self.environment_handler.plink_1_9_memory_mb,
+            "--out", f"{self.environment_handler.output_dir}/subset_hg38"
+        ]
+        
+        self.run_command(command)
+        self.environment_handler.reference_data_path = f"{self.environment_handler.output_dir}/subset_hg38.pvar"
         
             
         
+    def read_vcf_like_to_df(self) -> pd.DataFrame:
+        """
+        Read a VCF/pvar into a DataFrame using pandas.
+        - Skips header lines starting with '#'
+        - Uses the '#CHROM ...' line for column names
+        - Optionally expands selected INFO keys into separate columns
+        
+        Move this to vcf_utilities module
+        """
+        # 1) find the column header line
+        opener = gzip.open if str(self.environment_handler.reference_data_path).endswith(".gz") else open
+        cols = None
+        with opener(self.environment_handler.reference_data_path, "rt", encoding="utf-8", newline="") as f:
+            for line in f:
+                if line.startswith("#CHROM"):
+                    # keep the '#CHROM' name or drop the leading '#', either is fine
+                    cols = line.rstrip("\n").lstrip("#").split("\t")
+                    break
+        if cols is None:
+            raise ValueError("No #CHROM header line found in file.")
 
+        # 2) read the body; skip all lines beginning with '#'
+        df = pd.read_csv(
+            self.environment_handler.reference_data_path,
+            sep="\t",
+            comment="#",
+            header=None,
+            names=cols,
+            dtype={cols[0]: "string"}  # keep chromosome as string (handles 'X','MT')
+        )
+
+        return df
+    
+    def run_harmonization_workflow(self) -> None:
+        
+        """
+        Harmonizes strand orientation by flipping alleles to match the GRCh38 reference.
+        Note: Genome build liftover should be handled by the standardizer module.
+        This step harmonizes alleles to match the GRCh38 reference, regardless of strand.
+        """
+        
+        # Always harmonize to ensure consistent GRCh38 positions and alleles
+        print("Harmonizing data to GRCh38 reference...")
+        self.create_user_snp_list()
+        print("User SNP list created.")
+        print("Extracting reference data...")
+        self.extract_reference_data() #extracts reference data based on snp list
+        self.data_container.reference_data = self.read_vcf_like_to_df() #reads extracted reference data
+        print("Reference data extracted and set in data container")
+        print("Harmonizing data...")
+        self.data_container.harmonize_data()
+        print("Data harmonization complete. Harmonized data:")
+        print(self.data_container.harmonization_stats)
+        print(self.data_container.harmonized_data.head())
 

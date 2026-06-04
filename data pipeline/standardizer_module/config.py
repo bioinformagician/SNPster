@@ -45,3 +45,10 @@ CHAIN_FILE_DICT={
                     'GRCh37': HG19_TO_HG38_CHAIN_FILE,
                     'GRCh38': None
                     }
+
+
+
+PVAR_REF_FILE = os.getenv(
+    "PVAR_REF_FILE",
+    r"C:\Users\frezz\Desktop\harmonizer_dependencies\all_hg38.pvar.zst",
+)

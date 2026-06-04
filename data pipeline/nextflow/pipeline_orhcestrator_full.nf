@@ -14,11 +14,11 @@ process STANDARDIZE {
       tuple val(identifier), val(output_dir), path(microarray_file)
 
     output:
-      tuple val(identifier), val(output_dir), path("*.parquet"), emit: parquet_file
+        path("*.parquet"), emit: parquets
 
     script:
     """
-    python /app/main.py --microarray_file "${microarray_file}" --identifier "${identifier}" --output_dir .
+    python /app/main.py --microarray_file "${microarray_file}" --imputation_id "${identifier}" --output_dir .
     """
 }
 
@@ -31,10 +31,10 @@ process HARMONIZE {
     containerOptions "-v ${params.harmonizer_dependencies}:/data"
 
     input:
-    tuple val(identifier), val(output_dir), path(parquet_file)
+    path(parquet_file)
 
     output:
-    tuple val(identifier), val(output_dir), path("output/bed_files/*.vcf.gz"), emit: vcfs
+    path("output/*.vcf.gz"), emit: vcfs
 
     script:
     """
@@ -44,37 +44,27 @@ process HARMONIZE {
 }
 
 
-process MAKE_SAMPLESHEETS {
-    container 'samplesheet_maker:latest'
-
-    input:
-    path "input_vcfs/*"
-
-    output:
-    path "*.csv"
-
-    script:
-    """
-    python /app/create_merging_samplesheets.py --vcf_file_dir input_vcfs --output_dir .
-    """
-}
-
-
-
 process MERGE_VCFS {
 
     container 'vcf_merger:latest'
 
     input:
-    path samplesheet
+    tuple val(chr), path(vcf_files)
 
     output:
     path "merged_output/*.vcf.gz"
 
+    
     script:
     """
-    mkdir -p merged_output
-    python /app/vcf_combiner.py --vcf_samplesheet_path ${samplesheet} --output_dir merged_output
+        echo "full_vcf_path,chrom" > samplesheet.csv
+
+        for f in ${vcf_files.join(' ')}; do
+            echo "\$PWD/\$f,${chr}" >> samplesheet.csv
+        done
+
+        python /app/vcf_combiner.py \
+            --vcf_samplesheet_path samplesheet.csv
     """
 }
 
@@ -142,7 +132,6 @@ process QC_VCFS {
 
 workflow {
 
-    // Step 1: Load samples from samplesheet
     samples_ch = channel
         .fromPath(params.samplesheet)
         .splitCsv(header: true)
@@ -154,38 +143,27 @@ workflow {
             )
         }
 
-    // Step 2: Standardize and harmonize each sample
     standardized_ch = STANDARDIZE(samples_ch)
-    harmonized_ch = HARMONIZE(standardized_ch.parquet_file)
-    
-    // Step 3: Collect all harmonized VCF files and create samplesheets
-    // Extract just the VCF files from the tuple, flatten, and collect them all
+    harmonized_ch = HARMONIZE(standardized_ch.parquets.flatten())
+
     all_vcfs = harmonized_ch.vcfs
-        .map { identifier, output_dir, vcf_files -> vcf_files }
+
+    vcf_bundles_ch = all_vcfs
         .flatten()
-        .collect()
-    
-    // Create samplesheets from all collected VCFs
-    samplesheets_ch = MAKE_SAMPLESHEETS(all_vcfs)
-    
-    // Step 4: Flatten samplesheets channel to process each CSV individually
-    samplesheets_ch = samplesheets_ch.flatten()
-    
-    // Step 5: Combine each samplesheet with all VCF files, then merge
-    // Use all_vcfs.first() to convert value channel to single-item queue for combine
-    merged_input_ch = all_vcfs.combine(samplesheets_ch)
-    merged_vcfs_ch = MERGE_VCFS(merged_input_ch)
-    
-    // Step 6: Flatten merged VCFs and impute each one
-    merged_vcfs_flat = merged_vcfs_ch.flatten()
-    imputed_vcfs_ch = IMPUTE(merged_vcfs_flat)
-    
-    // Step 7: Flatten imputed VCFs and split each one
-    imputed_vcfs_flat = imputed_vcfs_ch.flatten()
-    split_vcfs_ch = SPLIT_VCF(imputed_vcfs_flat)
-    
-    // Step 8: Flatten split VCFs and QC each one
-    split_vcfs_flat = split_vcfs_ch.flatten()
-    QC_VCFS(split_vcfs_flat)
+        .map { vcf_path ->
+            def m = vcf_path.name =~ /IMPID\d+\.chr([^\.]+)\..*\.vcf\.gz$/
+            if (!m) {
+                throw new IllegalArgumentException("Could not parse chromosome from: ${vcf_path.name}")
+            }
+
+            def chr = "chr${m[0][1]}"
+            tuple(chr, vcf_path)
+        }
+        .groupTuple()
+
+    merged_ch = MERGE_VCFS(vcf_bundles_ch)
+
+    imputed_ch = IMPUTE(merged_ch.flatten())
+
 
 }

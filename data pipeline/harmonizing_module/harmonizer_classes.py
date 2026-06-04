@@ -225,14 +225,6 @@ class WorkflowOrchestrator:
     
     
     
-    def write_harmonized_data_to_csv(self) -> None:
-        """"Streamline this as it will be used after the standardization process"""
-        
-
-        self.environment_handler.split_harmonized_file_paths = output_filepaths
-    
-    
-    
     def convert_23andme_to_bed(self) -> None:
         """
         Convert 23andMe text file to PLINK binary format.
@@ -240,15 +232,47 @@ class WorkflowOrchestrator:
 
         output_dir = self.environment_handler.output_dir
         os.makedirs(output_dir, exist_ok=True)
+
+        harmonized_df = self.data_container.harmonized_data.copy()
+        harmonized_df["chromosome"] = (
+            harmonized_df["chromosome"]
+            .astype(str)
+            .str.replace(r"\.0$", "", regex=True)
+        )
+        harmonized_df["position"] = (
+            pd.to_numeric(harmonized_df["position"], errors="raise")
+            .round()
+            .astype(int)
+        )
         
-        chr_number = self.data_container.harmonized_data['chromosome'].iloc[0]
+        """Remove this if theres issue with standardizer, somehow data from another chromosome sneaks into some files
+        update: the chromosome can swtich when extracting the reference data, because in the reference data the chromosome for x rsid can be different from the original data's chromosome"""
+        #---------------------------------------------------------
+        chr_number = harmonized_df['chromosome'].iloc[0]
+        before_count = len(harmonized_df)
+        harmonized_df = harmonized_df[harmonized_df["chromosome"] == chr_number].copy()
+        removed_count = before_count - len(harmonized_df)
+        if removed_count > 0:
+            print(
+                f"Filtered {removed_count} row(s) with mismatched chromosome before PLINK export; "
+                f"keeping chromosome {chr_number} only."
+            )
+
+        if harmonized_df.empty:
+            raise ValueError(f"No rows left for chromosome {chr_number} after filtering harmonized data")
+        #---------------------------------------------------------
+        
+        harmonized_df = harmonized_df.sort_values(
+            by=["position", "# rsid"],
+            kind="mergesort"
+        ).reset_index(drop=True)
         
         csv_path = os.path.join(
             output_dir,
             f"IMPID{self.data_container.imputation_id}.chr{chr_number}.HarmonizedMicroarray.csv"
         )
 
-        self.data_container.harmonized_data.to_csv(
+        harmonized_df.to_csv(
             csv_path,
             sep="\t",
             index=False,
@@ -258,7 +282,8 @@ class WorkflowOrchestrator:
         print(f"Converting file: {csv_path} to BED format")
 
         filename = os.path.basename(csv_path)
-        output_path = os.path.join(output_dir, f"{filename.replace('HarmonizedMicroarray.csv', '')}.{self.environment_handler.PLINK_PREFIX}")
+        output_prefix = filename.replace(".HarmonizedMicroarray.csv", "")
+        output_path = os.path.join(output_dir, f"{output_prefix}.{self.environment_handler.PLINK_PREFIX}")
         
         command = [
             self.environment_handler.plink_1_9_path,
