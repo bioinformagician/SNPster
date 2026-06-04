@@ -14,15 +14,10 @@ class EnvironmentHandler:
                  user_upload_file: str,
                  plink_1_9_path: str,
                  plink_2_0_path: str,
-                 pvar_ref_file: str,
                  PLINK_PREFIX: str,
                  plink_reference_fasta: str,
                  plink_1_9_memory_mb: str,
                  plink_1_9_threads: str,
-                 chromosome_split_files: dict = None,
-                 user_snp_list_path: str = None,
-                 reference_data_path: str = None,
-                 split_harmonized_file_paths: dict[str, str] = None,
                  bed_file_path: str = None,
                  vcf_file_path: str = None
                  ):
@@ -33,11 +28,6 @@ class EnvironmentHandler:
         self.plink_2_0_path = plink_2_0_path
         self.PLINK_PREFIX = PLINK_PREFIX
         self.plink_reference_fasta = plink_reference_fasta
-        self.chromosome_split_files = chromosome_split_files
-        self.user_snp_list_path = user_snp_list_path
-        self.pvar_ref_file = pvar_ref_file
-        self.reference_data_path = reference_data_path
-        self.split_harmonized_file_paths = split_harmonized_file_paths
         self.bed_file_path = bed_file_path
         self.vcf_file_path = vcf_file_path
         self.plink_1_9_memory_mb = plink_1_9_memory_mb
@@ -57,7 +47,6 @@ class EnvironmentHandler:
             self.user_upload_file,
             self.plink_1_9_path,
             self.plink_2_0_path,
-            self.pvar_ref_file,
             self.plink_reference_fasta
         ]:
             if not os.path.exists(path):
@@ -89,7 +78,7 @@ class WorkflowOrchestrator:
         
         # Read parquet file with metadata
         parquet_file = pq.read_table(self.environment_handler.user_upload_file)
-        self.data_container.microarray_data = parquet_file.to_pandas()
+        self.data_container.harmonized_data = parquet_file.to_pandas()
         
         # Extract custom metadata from schema
         metadata = parquet_file.schema.metadata
@@ -107,32 +96,7 @@ class WorkflowOrchestrator:
         
         print(f"Loaded parquet with metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, is_forward_strand={self.data_container.is_forward_strand}")
         
-    def create_user_snp_list(self) -> None:
-        user_snps_path = os.path.join(self.environment_handler.output_dir, "user_snps.txt")
-        self.data_container.microarray_data["# rsid"].to_csv(user_snps_path, sep="\t", index=False, header=False)
-        self.environment_handler.user_snp_list_path = user_snps_path
 
-    def extract_reference_data(self) -> None:
-        r"""example: C:\Users\frezz>"C:\Users\frezz\Desktop\SNPster\gwas_catalog_data_cleaning\plink2_win_avx2\plink2.exe" 
-        --pvar "C:\Users\frezz\Desktop\SNPster\gwas_catalog_data_cleaning\get_forward_alleles\all_phase3.pvar.zst" 
-        --extract "C:\Users\frezz\Desktop\SNPster\gwas_catalog_data_cleaning\get_forward_alleles\risk_alleles.txt" 
-        --make-just-pvar --out "C:\Users\frezz\Downloads\subset_hg37"""
-        
-        
-        
-        command = [
-            self.environment_handler.plink_2_0_path,
-            "--pvar", self.environment_handler.pvar_ref_file,
-            "--extract", self.environment_handler.user_snp_list_path,
-            "--make-just-pvar",
-            "--threads", "1",
-            "--memory", "8000", #self.environment_handler.plink_1_9_memory_mb,
-            "--out", f"{self.environment_handler.output_dir}/subset_hg38"
-        ]
-        
-        self.run_command(command)
-        self.environment_handler.reference_data_path = f"{self.environment_handler.output_dir}/subset_hg38.pvar"
-    
     def prepare_reference_fasta(self) -> str:
         """Prepare reference FASTA for bcftools norm (decompress and index if needed).
         
@@ -192,36 +156,6 @@ class WorkflowOrchestrator:
                 f"STDERR:\n{e.stderr}\n"
             )
     
-    def read_vcf_like_to_df(self) -> pd.DataFrame:
-        """
-        Read a VCF/pvar into a DataFrame using pandas.
-        - Skips header lines starting with '#'
-        - Uses the '#CHROM ...' line for column names
-        - Optionally expands selected INFO keys into separate columns
-        """
-        # 1) find the column header line
-        opener = gzip.open if str(self.environment_handler.reference_data_path).endswith(".gz") else open
-        cols = None
-        with opener(self.environment_handler.reference_data_path, "rt", encoding="utf-8", newline="") as f:
-            for line in f:
-                if line.startswith("#CHROM"):
-                    # keep the '#CHROM' name or drop the leading '#', either is fine
-                    cols = line.rstrip("\n").lstrip("#").split("\t")
-                    break
-        if cols is None:
-            raise ValueError("No #CHROM header line found in file.")
-
-        # 2) read the body; skip all lines beginning with '#'
-        df = pd.read_csv(
-            self.environment_handler.reference_data_path,
-            sep="\t",
-            comment="#",
-            header=None,
-            names=cols,
-            dtype={cols[0]: "string"}  # keep chromosome as string (handles 'X','MT')
-        )
-
-        return df
     
     
     
@@ -234,6 +168,7 @@ class WorkflowOrchestrator:
         os.makedirs(output_dir, exist_ok=True)
 
         harmonized_df = self.data_container.harmonized_data.copy()
+        
         harmonized_df["chromosome"] = (
             harmonized_df["chromosome"]
             .astype(str)
@@ -245,22 +180,7 @@ class WorkflowOrchestrator:
             .astype(int)
         )
         
-        """Remove this if theres issue with standardizer, somehow data from another chromosome sneaks into some files
-        update: the chromosome can swtich when extracting the reference data, because in the reference data the chromosome for x rsid can be different from the original data's chromosome"""
-        #---------------------------------------------------------
         chr_number = harmonized_df['chromosome'].iloc[0]
-        before_count = len(harmonized_df)
-        harmonized_df = harmonized_df[harmonized_df["chromosome"] == chr_number].copy()
-        removed_count = before_count - len(harmonized_df)
-        if removed_count > 0:
-            print(
-                f"Filtered {removed_count} row(s) with mismatched chromosome before PLINK export; "
-                f"keeping chromosome {chr_number} only."
-            )
-
-        if harmonized_df.empty:
-            raise ValueError(f"No rows left for chromosome {chr_number} after filtering harmonized data")
-        #---------------------------------------------------------
         
         harmonized_df = harmonized_df.sort_values(
             by=["position", "# rsid"],
@@ -307,7 +227,7 @@ class WorkflowOrchestrator:
         prepared_fasta = self.prepare_reference_fasta()
         
         
-        chr_number = chr_number = self.data_container.harmonized_data['chromosome'].iloc[0]
+        chr_number = self.data_container.harmonized_data['chromosome'].iloc[0]
         file = self.environment_handler.bed_file_path
         
         print(f"Processing BED file: {file} to VCF format")
@@ -365,27 +285,7 @@ class WorkflowOrchestrator:
         vcf_utilities.add_imputation_id_to_vcf(vcf_file=self.environment_handler.vcf_file_path, imputation_id=self.data_container.imputation_id)
             
     
-    def run_harmonization_workflow(self) -> None:
-        
-        """
-        Harmonizes strand orientation by flipping alleles to match the GRCh38 reference.
-        Note: Genome build liftover should be handled by the standardizer module.
-        This step harmonizes alleles to match the GRCh38 reference, regardless of strand.
-        """
-        
-        # Always harmonize to ensure consistent GRCh38 positions and alleles
-        print("Harmonizing data to GRCh38 reference...")
-        self.create_user_snp_list()
-        print("User SNP list created.")
-        print("Extracting reference data...")
-        self.extract_reference_data() #extracts reference data based on snp list
-        self.data_container.reference_data = self.read_vcf_like_to_df() #reads extracted reference data
-        print("Reference data extracted and set in data container")
-        print("Harmonizing data...")
-        self.data_container.harmonize_data()
-        print("Data harmonization complete. Harmonized data:")
-        print(self.data_container.harmonization_stats)
-        print(self.data_container.harmonized_data.head())
+
 
     
 

@@ -24,7 +24,6 @@ ENV PLINK_1_9_THREADS=1
 
 ENV PLINK_PREFIX=plink_temp
 ENV PLINK_REFERENCE_FASTA=/data/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
-ENV PVAR_REF_FILE=/data/all_hg38.pvar.zst
 
 # Copy and install Python requirements
 COPY harmonizing_module/requirements.txt .

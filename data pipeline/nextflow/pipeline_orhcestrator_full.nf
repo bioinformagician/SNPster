@@ -8,6 +8,7 @@ params.samplesheet = "/home/frederik/github_projects/SNPster/data pipeline/imput
 process STANDARDIZE {
 
     container 'standardizer:latest'
+    containerOptions "-v ${params.harmonizer_dependencies}:/data"
 
 
     input:

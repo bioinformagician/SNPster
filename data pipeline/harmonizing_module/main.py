@@ -1,5 +1,5 @@
 import os
-from config import PLINK_PREFIX, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PVAR_REF_FILE, PLINK_REFERENCE_FASTA, PLINK_1_9_MEMORY_MB, PLINK_1_9_THREADS
+from config import PLINK_PREFIX, TEST_FILE, PLINK_1_9_PATH, PLINK_2_0_PATH, PLINK_REFERENCE_FASTA, PLINK_1_9_MEMORY_MB, PLINK_1_9_THREADS
 from harmonizer_classes import EnvironmentHandler, DataContainer, WorkflowOrchestrator
 import argparse
 
@@ -17,7 +17,6 @@ environment_handler = EnvironmentHandler(
     plink_2_0_path=PLINK_2_0_PATH,
     PLINK_PREFIX=PLINK_PREFIX,
     plink_reference_fasta=PLINK_REFERENCE_FASTA,
-    pvar_ref_file=PVAR_REF_FILE,
     plink_1_9_memory_mb=PLINK_1_9_MEMORY_MB,
     plink_1_9_threads=PLINK_1_9_THREADS
 )
@@ -36,12 +35,6 @@ print(f"Working directory initialized at: {workflow_orchestrator.environment_han
 
 
 workflow_orchestrator.read_parquet()
-
-print("Microarray data set in data container:")
-print(workflow_orchestrator.data_container.microarray_data.head())
-
-print("Harmonizing File")
-workflow_orchestrator.run_harmonization_workflow() #harmonize data if is_forward_strand is false (not implemented yet) or skip if true
 
 print("Converting harmonized file to BED format...")
 workflow_orchestrator.convert_23andme_to_bed()
