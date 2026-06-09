@@ -1,2 +1,0 @@
-The dockerfile.full contains the big file dependencies which makes the image HUGE and slow
-The normal dockerfile without file extension expects these to be mounted as volumes

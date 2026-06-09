@@ -7,14 +7,10 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    bcftools \
-    tabix \
-    && rm -rf /var/lib/apt/lists/*
-
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     openjdk-21-jre \
+    beagle \
     curl \
     bash \
     ca-certificates \
@@ -41,18 +37,18 @@ RUN pip install -r requirements.txt
 
 # Copy Python files (exclude large dependencies)
 COPY imputation_module/*.py .
-COPY vcf_utilities_module/vcf* .
+COPY imputation_module/*.nf .
 
-# Copy only needed dependencies (Beagle JAR and test data)
-COPY imputation_module/dependencies/beagle.27Feb25.75f.jar ./dependencies/
+# Copy only needed dependencies (test data)
 COPY imputation_module/dependencies/test_data ./dependencies/test_data
 
 
 
-ENV BEAGLE_JAR=/app/dependencies/beagle.27Feb25.75f.jar
+ENV BEAGLE_EXE=/usr/bin/beagle
+ENV BEAGLE_JAR=/usr/share/beagle/beagle.jar
 ENV JAVA_EXE=/usr/bin/java
 ENV HEAP_GB=6
-ENV THREADS=2
+ENV THREADS=1
 ENV GP_MIN=0.90
 ENV DS_TOL=0.05
 ENV SNPS_ONLY=True
@@ -64,7 +60,7 @@ ENV MERGED_SAMPLESHEET_DIR=/merged_samplesheets
 # Create directories for volume mounts
 RUN mkdir -p /data /work /output ${MERGED_SAMPLESHEET_DIR}
 # ---- Paths *inside the container* ----
-# Beagle JAR is baked into the image at /app/dependencies/
+# Beagle is installed from distro packages.
 
 
 

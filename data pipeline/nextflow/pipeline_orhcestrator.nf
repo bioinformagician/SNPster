@@ -81,7 +81,7 @@ process IMPUTE {
 
     maxForks 11
 
-    container 'imputer_new:latest'
+    container 'imputer:latest'
     containerOptions "-v ${params.imputation_dependencies}:/data"
 
     input:
