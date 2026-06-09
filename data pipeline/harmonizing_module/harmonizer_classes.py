@@ -208,7 +208,7 @@ class WorkflowOrchestrator:
         command = [
             self.environment_handler.plink_1_9_path,
             "--23file", csv_path,
-            "FAM001", self.data_container.imputation_id,
+            "IMPDID", self.data_container.imputation_id,
             "--memory", self.environment_handler.plink_1_9_memory_mb,
             "--threads", self.environment_handler.plink_1_9_threads,
             "--make-bed",
@@ -227,7 +227,6 @@ class WorkflowOrchestrator:
         prepared_fasta = self.prepare_reference_fasta()
         
         
-        chr_number = self.data_container.harmonized_data['chromosome'].iloc[0]
         file = self.environment_handler.bed_file_path
         
         print(f"Processing BED file: {file} to VCF format")

@@ -7,6 +7,8 @@ params.samplesheet = "/home/frederik/github_projects/SNPster/data pipeline/imput
 
 process STANDARDIZE {
 
+    maxForks 10
+
     container 'standardizer:latest'
     containerOptions "-v ${params.harmonizer_dependencies}:/data"
 
@@ -27,6 +29,9 @@ process STANDARDIZE {
 
 
 process HARMONIZE {
+
+    maxForks 20
+
     // harmonize all file in dir, the files are outputted to the dir from the standardizer process, so just use the same output dir for the input of the harmonizer process
     container 'harmonizer:latest'
     containerOptions "-v ${params.harmonizer_dependencies}:/data"
@@ -58,6 +63,7 @@ process MERGE_VCFS {
     
     script:
     """
+        mkdir -p merged_output
         echo "full_vcf_path,chrom" > samplesheet.csv
 
         for f in ${vcf_files.join(' ')}; do
@@ -65,7 +71,8 @@ process MERGE_VCFS {
         done
 
         python /app/vcf_combiner.py \
-            --vcf_samplesheet_path samplesheet.csv
+            --vcf_samplesheet_path samplesheet.csv \
+            --output_dir merged_output
     """
 }
 
@@ -74,7 +81,7 @@ process IMPUTE {
 
     maxForks 11
 
-    container 'imputer:latest'
+    container 'imputer_new:latest'
     containerOptions "-v ${params.imputation_dependencies}:/data"
 
     input:
@@ -109,7 +116,7 @@ process SPLIT_VCF {
 }
 
 
-process QC_VCFS {
+process QC_VCF {
 
     container 'imputation_qc:latest'
 
@@ -165,6 +172,10 @@ workflow {
     merged_ch = MERGE_VCFS(vcf_bundles_ch)
 
     imputed_ch = IMPUTE(merged_ch.flatten())
+
+    splitter_channel = SPLIT_VCF(imputed_ch)
+
+    QC_VCF(splitter_channel.flatten())
 
 
 }
