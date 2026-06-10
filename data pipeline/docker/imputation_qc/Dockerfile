@@ -42,10 +42,12 @@ WORKDIR /app
 # Copy and install Python requirements
 COPY qc_module/requirements.txt .
 RUN pip install -r requirements.txt
+COPY vcf_utilities_module/requirements.txt .
+RUN pip install -r requirements.txt
 
 # Copy Python files (exclude large dependencies)
 COPY qc_module/ .
-
+COPY vcf_utilities_module/vcf_classes.py .
 
 
 

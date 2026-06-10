@@ -15,11 +15,8 @@ while counter < max:
 
     imputation_runner.env_handler.validate_environment()
 
-    imputation_runner.query_handler.db_utils.db_handler.connect()
-
-    imputation_runner.set_job_df()
-
-    imputation_runner.query_handler.db_utils.db_handler.close()
+    with imputation_runner.query_handler.db_utils.db_handler:
+        imputation_runner.set_job_df()
 
     imputation_ids = imputation_runner.job_df["imputation_id"].tolist()
 
@@ -34,14 +31,24 @@ while counter < max:
 
     try:
         imputation_runner.run_imputation()
-        imputation_runner.query_handler.db_utils.db_handler.connect()
-        imputation_runner.query_handler.mark_jobs_completed(imputation_ids)
-        imputation_runner.query_handler.db_utils.db_handler.close()
+
+        
+
+        completed_ids, failed_ids = imputation_runner.evaluate_results()
+
+        with imputation_runner.query_handler.db_utils.db_handler:
+            if completed_ids:
+                imputation_runner.query_handler.mark_jobs_completed(completed_ids)
+            if failed_ids:
+                imputation_runner.query_handler.mark_jobs_failed(failed_ids)
     except Exception as e:
         print(f"Error occurred during imputation: {e}")
-        #imputation_runner.query_handler.db_utils.db_handler.connect()
-        #imputation_runner.query_handler.mark_jobs_failed(imputation_ids)
-        #imputation_runner.query_handler.db_utils.db_handler.close()
+        with imputation_runner.query_handler.db_utils.db_handler:
+            if imputation_ids:
+                imputation_runner.query_handler.mark_jobs_failed(imputation_ids)
+
+        imputation_runner.env_handler.clear_environment()
+        break
 
     imputation_runner.env_handler.clear_environment()
     #check file output and if file is missing, set job to failed, imputation id 8 is an example of a failed one (like three files inside compressed folder)

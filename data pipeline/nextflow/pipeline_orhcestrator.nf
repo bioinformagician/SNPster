@@ -8,6 +8,7 @@ params.samplesheet = "/home/frederik/github_projects/SNPster/data pipeline/imput
 process STANDARDIZE {
 
     maxForks 10
+    errorStrategy 'ignore'
 
     container 'standardizer:latest'
     containerOptions "-v ${params.harmonizer_dependencies}:/data"
@@ -122,8 +123,10 @@ process QC_VCF {
 
     maxForks 10
 
+    publishDir path: { output_dir }, mode: 'copy', overwrite: true
+
     input:
-    path split_vcf
+    tuple val(identifier), val(output_dir), path(split_vcf)
 
     output:
     path "qc_output/*"
@@ -156,6 +159,12 @@ workflow {
 
     all_vcfs = harmonized_ch.vcfs
 
+    id_output_dir_ch = samples_ch
+        .map { identifier, output_dir, microarray_file ->
+            tuple(identifier.toString(), output_dir)
+        }
+        .distinct()
+
     vcf_bundles_ch = all_vcfs
         .flatten()
         .map { vcf_path ->
@@ -175,7 +184,24 @@ workflow {
 
     splitter_channel = SPLIT_VCF(imputed_ch)
 
-    QC_VCF(splitter_channel.flatten())
+    split_with_id_ch = splitter_channel
+        .flatten()
+        .map { split_vcf ->
+            def m = split_vcf.name =~ /(?i)^IMPID(\d+)(?:_chr[^\.]+|\.chr[^\.]+)\.split\.vcf\.gz$/
+            if (!m) {
+                throw new IllegalArgumentException("Could not parse imputation ID from split VCF: ${split_vcf.name}")
+            }
+
+            tuple(m[0][1], split_vcf)
+        }
+
+    qc_input_ch = split_with_id_ch
+        .combine(id_output_dir_ch, by: 0)
+        .map { identifier, split_vcf, output_dir ->
+            tuple(identifier, output_dir, split_vcf)
+        }
+
+    QC_VCF(qc_input_ch)
 
 
 }

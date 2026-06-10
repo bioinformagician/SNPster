@@ -1,6 +1,7 @@
 import os
 import subprocess
 import shutil
+import re
 import pandas as pd
 from config import BASE_OUTPUT_DIR, IMPUTATION_DEPENDENCIES, HARMONIZER_DEPENDENCIES, NEXTFLOW_BIN, SAMPLESHEET_PATH, PIPELINE_PATH, NEXTFLOW_CONFIG, NEXTFLOW_WORK_DIR
 from db_handler import DbHandler, DbUtils
@@ -95,7 +96,7 @@ class DatabaseQueryHandler:
                     JOIN snpster_users.imputation_jobs ij ON ui.user_id = ij.user_id
                     WHERE ij.imputation_status = 'queued'
                     order by imputation_id asc
-                    LIMIT 5;"""
+                    LIMIT 100;"""
         
         results = self.db_utils.get_pd_dataframe_from_query(query)
         
@@ -154,6 +155,16 @@ class ImputationRunner:
     
     
     def write_samplesheet(self) -> None:
+        
+        """Write samplesheet like:
+            identifier,output_dir,file_path
+            76,/srv/imputed/75/76,/srv/raw/genome_Aaron_Hill_v3_Full_20191101162607.zip
+            77,/srv/imputed/76/77,/srv/raw/23andMe_results.zip
+            78,/srv/imputed/77/78,/srv/raw/genome_Orlando_Montalvo_Full_20140522160413.zip
+            79,/srv/imputed/78/79,/srv/raw/dna-data-2013-11-09.zip
+            80,/srv/imputed/79/80,/srv/raw/genome_Full_20141024183341.zip
+        """
+        
         self.job_df["output_dir"] = (
             self.env_handler.base_output_dir
             + "/"
@@ -179,13 +190,20 @@ class ImputationRunner:
     def run_imputation(self) -> None:
         
         print("Starting Nextflow run for imputation jobs with imputation IDs: ", self.job_df["imputation_id"].tolist())
+        pipeline_path = self.env_handler.pipeline_path
+
+        standardizer_output_dir = os.path.join(self.env_handler.nextflow_workdir, "std")
+        harmonizer_output_dir = os.path.join(self.env_handler.nextflow_workdir, "harm")
+        os.makedirs(standardizer_output_dir, exist_ok=True)
+        os.makedirs(harmonizer_output_dir, exist_ok=True)
+
         subprocess.run([
                         self.env_handler.nextflow_bin,
                         "run",
-                        self.env_handler.pipeline_path,
+                        pipeline_path,
                         "-c",
                         self.env_handler.nextflow_config,
-                        "-work-dir",
+                        "-w",
                         self.env_handler.nextflow_workdir,
                         "--samplesheet",
                         self.env_handler.samplesheet_path,
@@ -193,7 +211,47 @@ class ImputationRunner:
                         self.env_handler.imputation_dependencies,
                         "--harmonizer_dependencies",
                         self.env_handler.harmonizer_dependencies,
+                        "--standardizer_output_dir",
+                        standardizer_output_dir,
+                        "--harmonizer_output_dir",
+                        harmonizer_output_dir,
                     ], check=True)
+
+
+    
+    def evaluate_results(self) -> tuple[list[int], list[int]]:
+        """Evaluate the results of the imputation by checking output dir for files, if 22 files present -> success otherwise fail"""
+
+        successful_ids = []
+        failed_ids = []
+        for _, row in self.job_df.iterrows():
+            imputation_id = row["imputation_id"]
+            output_dir = row["output_dir"]
+
+            if not os.path.isdir(output_dir):
+                failed_ids.append(imputation_id)
+                continue
+
+            file_count = sum(len(files) for _, _, files in os.walk(output_dir))
+            if file_count == 22:
+                successful_ids.append(imputation_id)
+            else:
+                failed_ids.append(imputation_id)
+        
+        return successful_ids, failed_ids
+
+    def get_output_imputation_ids(self) -> set[int]:
+        """Extract imputation IDs from final output file names (e.g., ...ImpID5...)."""
+        found_ids: set[int] = set()
+        pattern = re.compile(r"ImpID(\d+)")
+
+        for path in self.get_final_output_files():
+            match = pattern.search(os.path.basename(path))
+            if match:
+                found_ids.add(int(match.group(1)))
+
+        return found_ids
+
 
     
         

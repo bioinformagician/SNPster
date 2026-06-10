@@ -7,6 +7,7 @@ import subprocess
 import gzip
 import re
 
+
 @dataclass(frozen=True)
 class QCThresholds:
     gp_min: float
@@ -22,6 +23,7 @@ class ImputedDataContainer:
     qc_thresholds: QCThresholds = QCThresholds(None, None, False, False)
     imputed_data: pd.DataFrame = None
     qc_status: bool = False
+    imputation_id: int = None
     
     
     
@@ -222,14 +224,6 @@ class ImputedDataContainer:
     
     
     
-    def _get_imputation_id_from_split_imputed_filename(self, filename) -> str:
-        match = re.search(r"split_imputed_ImpID(\d+)_chr\d+\.vcf\.gz$", filename)
-        if match:
-            return match.group(1)
-        else:
-            raise ValueError(f"Could not extract imputation ID from split imputed VCF filename: {filename}")
-    
-    
     
     
     def write_pandas_to_vcf(self, output_dir, chunk_size: int = 500000) -> None:
@@ -247,7 +241,6 @@ class ImputedDataContainer:
 
         #add qc to the filename
         out_path = os.path.join(f"{output_dir}", os.path.basename(self.file_path).replace(".vcf.gz", "_QC.vcf"))
-        imputation_id = self._get_imputation_id_from_split_imputed_filename(self.file_path)
 
         with open(out_path, "w", encoding="utf-8", newline="") as f:
             # --- header ---
@@ -258,7 +251,7 @@ class ImputedDataContainer:
             f.write('##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">\n')
             f.write('##FORMAT=<ID=DS,Number=1,Type=Float,Description="Dosage of ALT allele">\n')
             f.write('##FORMAT=<ID=GP,Number=3,Type=Float,Description="Genotype probabilities for 0/0,0/1,1/1">\n')
-            f.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t" + imputation_id + "\n")
+            f.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t" + str(self.imputation_id) + "\n")
 
             n = len(df)
             for start in range(0, n, chunk_size):
@@ -335,7 +328,7 @@ class ImputedDataContainer:
                     "FILTER": filter_col,
                     "INFO": info,
                     "FORMAT": format_col,
-                    imputation_id: sample_col,
+                    str(self.imputation_id): sample_col,
                 })
 
                 out_df.to_csv(f, sep="\t", index=False, header=False)

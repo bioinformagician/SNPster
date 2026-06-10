@@ -26,11 +26,30 @@ class VCFHandler: #split this into a VCFMerger and VCFSplitter class later, but 
         vcf_environment_handler: VCFEnvironmentHandler,
     ):
         self.vcf_environment_handler = vcf_environment_handler
+        self.vcf_utilities = VCFUtilities()
+
+
+    def _get_imputation_id_from_sample_id(self, sample_id) -> str:
+        return self.vcf_utilities._get_imputation_id_from_sample_id(sample_id)
+
+
+    def _get_sample_ids_from_vcf(self, vcf_file_path: str) -> list[str]:
+        return self.vcf_utilities._get_sample_ids_from_vcf(vcf_file_path)
+
+
+    def _get_imputation_id_from_vcf(self, vcf_file_path: str) -> str:
+        return self.vcf_utilities._get_imputation_id_from_vcf(vcf_file_path)
+
+
+    def _get_chromosome_from_vcf(self, vcf_file_path: str) -> str:
+        return self.vcf_utilities._get_chromosome_from_vcf(vcf_file_path)
 
 
     def _prepare_merge_input(self, input_path: str, tmp_dir: str) -> str:
         # Always convert to fresh BGZF in temp space and merge with --no-index.
         # This avoids failures from plain gzip files mislabeled as .vcf.gz.
+        # Also drop records with ALT='.' because malformed files can contain
+        # non-reference genotypes at such rows, which causes bcftools merge to fail.
         file_name = os.path.basename(input_path)
         if file_name.endswith(".vcf.gz"):
             file_name = file_name[:-7]
@@ -38,7 +57,12 @@ class VCFHandler: #split this into a VCFMerger and VCFSplitter class later, but 
             file_name = file_name[:-4]
 
         prepared_path = os.path.join(tmp_dir, f"{file_name}.bgzf.vcf.gz")
-        subprocess.run(["bcftools", "view", input_path, "-Oz", "-o", prepared_path], check=True)
+        subprocess.run([
+            "bcftools", "view",
+            "-e", "ALT='.'",
+            input_path,
+            "-Oz", "-o", prepared_path,
+        ], check=True)
 
         return prepared_path
 
@@ -121,41 +145,7 @@ class VCFHandler: #split this into a VCFMerger and VCFSplitter class later, but 
             if plain_tmp_path is not None and os.path.exists(plain_tmp_path):
                 os.remove(plain_tmp_path)
     
-    def _get_imputation_id_from_sample_id(self, sample_id) -> str:
-        return sample_id.split("_", 1)[1]
 
-
-    def _get_sample_ids_from_vcf(self, vcf_file_path: str) -> list[str]:
-        """Extract sample IDs from the #CHROM header line of a VCF/VCF.GZ file."""
-        opener = gzip.open if str(vcf_file_path).endswith(".gz") else open
-
-        with opener(vcf_file_path, "rt") as f:
-            for line in f:
-                if line.startswith("#CHROM"):
-                    columns = line.rstrip("\n").split("\t")
-                    sample_ids = columns[9:]
-                    if not sample_ids:
-                        raise ValueError(f"No sample IDs found in VCF header: {vcf_file_path}")
-                    return sample_ids
-
-        raise ValueError(f"No #CHROM header found in VCF file: {vcf_file_path}")
-
-
-    def _get_chromosome_from_vcf(self, vcf_file_path: str) -> str:
-        """Extract chromosome value from the first variant row in a VCF/VCF.GZ file."""
-        opener = gzip.open if str(vcf_file_path).endswith(".gz") else open
-
-        with opener(vcf_file_path, "rt") as f:
-            for line in f:
-                if line.startswith("#"):
-                    continue
-
-                fields = line.rstrip("\n").split("\t")
-                if not fields or not fields[0]:
-                    continue
-                return fields[0]
-
-        raise ValueError(f"No variant rows found in VCF file: {vcf_file_path}")
     
     
     def split_vcf_files(self) -> pd.DataFrame:
@@ -255,6 +245,48 @@ class VCFUtilities:
         finally:
             if plain_tmp_path is not None:
                 plain_tmp_path.unlink(missing_ok=True)
+    
+    def _get_imputation_id_from_sample_id(self, sample_id) -> str:
+        return sample_id.split("_", 1)[1]
+
+
+    def _get_sample_ids_from_vcf(self, vcf_file_path: str) -> list[str]:
+        """Extract sample IDs from the #CHROM header line of a VCF/VCF.GZ file."""
+        opener = gzip.open if str(vcf_file_path).endswith(".gz") else open
+
+        with opener(vcf_file_path, "rt") as f:
+            for line in f:
+                if line.startswith("#CHROM"):
+                    columns = line.rstrip("\n").split("\t")
+                    sample_ids = columns[9:]
+                    if not sample_ids:
+                        raise ValueError(f"No sample IDs found in VCF header: {vcf_file_path}")
+                    return sample_ids
+
+        raise ValueError(f"No #CHROM header found in VCF file: {vcf_file_path}")
+    
+    def _get_imputation_id_from_vcf(self, vcf_file_path: str) -> str:
+        sample_ids = self._get_sample_ids_from_vcf(vcf_file_path)
+        if not sample_ids:
+            raise ValueError(f"No sample IDs found in VCF file: {vcf_file_path}")
+        return self._get_imputation_id_from_sample_id(sample_ids[0])
+
+
+    def _get_chromosome_from_vcf(self, vcf_file_path: str) -> str:
+        """Extract chromosome value from the first variant row in a VCF/VCF.GZ file."""
+        opener = gzip.open if str(vcf_file_path).endswith(".gz") else open
+
+        with opener(vcf_file_path, "rt") as f:
+            for line in f:
+                if line.startswith("#"):
+                    continue
+
+                fields = line.rstrip("\n").split("\t")
+                if not fields or not fields[0]:
+                    continue
+                return fields[0]
+
+        raise ValueError(f"No variant rows found in VCF file: {vcf_file_path}")
 
     def add_imputation_id_to_vcf(self, vcf_file: str, imputation_id: list) -> None:
         """

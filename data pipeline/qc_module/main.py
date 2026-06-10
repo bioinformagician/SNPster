@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from qc_classes import *
 from config import *
+from vcf_classes import VCFUtilities
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--output_dir', type=str, required=False, default=os.getcwd())
@@ -14,8 +15,11 @@ args = parser.parse_args()
 
 qc_thresholds = QCThresholds(GP_MIN, DS_TOL, SNPS_ONLY, BIALLELIC_ONLY)
 
+vcf_utils = VCFUtilities()
+
 imputed_data_container = ImputedDataContainer(qc_thresholds = qc_thresholds,
-                                              file_path=args.input_file
+                                              file_path=args.input_file,
+                                              imputation_id = vcf_utils._get_imputation_id_from_vcf(args.input_file)
                                               )
 
 

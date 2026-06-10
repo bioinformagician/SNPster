@@ -17,6 +17,15 @@ class DbHandler:
         self.connection = connection
         self.cursor = cursor
 
+    def __enter__(self): #enable usage of with
+        if not self.connect():
+            raise RuntimeError("Failed to establish database connection.")
+        return self
+
+    def __exit__(self, exc_type, exc, tb):#enable usage of with
+        self.close()
+        return False
+
     def connect(self, retries = 10, wait_time = 60) -> bool:
         # Code to establish a connection to the database using the provided parameters
         for attempt in range(retries):
