@@ -148,7 +148,7 @@ class VCFHandler: #split this into a VCFMerger and VCFSplitter class later, but 
 
     
     
-    def split_vcf_files(self) -> pd.DataFrame:
+    def split_vcf_files(self) -> None:
         """Splits the merged VCF file into chromosome-specific files.
         
             columns in sample_sheet: full_vcf_path, chrom
@@ -157,36 +157,27 @@ class VCFHandler: #split this into a VCFMerger and VCFSplitter class later, but 
         vcf_file = self.vcf_environment_handler.vcf_file
         os.makedirs(self.vcf_environment_handler.output_dir, exist_ok=True)
         chrom = self._get_chromosome_from_vcf(vcf_file)
-        sample_ids = self._get_sample_ids_from_vcf(vcf_file)
         self._add_minimal_contig_header(vcf_file, vcf_file, chrom)  # in-place to add contig header, otherwise bcftools will not accept file format
         
-        output_df = pd.DataFrame()
+        print(f"Splitting vcf file using bcftools, outputting to {self.vcf_environment_handler.output_dir}...")
         
-        for sample_id in sample_ids:
-            
-            output_path = os.path.join(self.vcf_environment_handler.output_dir, f"IMPID{self._get_imputation_id_from_sample_id(sample_id)}.chr{chrom}.split.vcf.gz")
+        subprocess.run([
+            "bcftools", "+split",
+            "-Oz",
+            "-o", self.vcf_environment_handler.output_dir, vcf_file
+        ], check=True)
+        
+        outputted_files = [f for f in os.listdir(self.vcf_environment_handler.output_dir) if f.endswith(".vcf.gz")]
+        
+        #rename files from sample id to {IMPIDx}.{chrx}.{split}.vcf.gz
+        
+        for file in outputted_files:
+            sample_id = file.split(".vcf.gz")[0]
             imputation_id = self._get_imputation_id_from_sample_id(sample_id)
-            
-            print(f"Extracting sample {sample_id} (Imputation ID: {imputation_id}) from {vcf_file} to {output_path} using bcftools...")
-            
-            subprocess.run([
-                "bcftools", "view",
-                "-s", sample_id,
-                "-Oz",
-                "-o", output_path,
-                vcf_file
-            ], check=True)
-            
-            df = pd.DataFrame({
-                "chrom": chrom,
-                "imputation_id": imputation_id,
-                "split_vcf_filepath": output_path,
-                "qc_imputed_file": None
-            }, index=[0])
-            
-            output_df = pd.concat([output_df, df], ignore_index=True)
-    
-        return output_df
+            new_file_name = f"IMPID{imputation_id}.chr{chrom}.split.vcf.gz"
+            os.rename(os.path.join(self.vcf_environment_handler.output_dir, file), 
+                      os.path.join(self.vcf_environment_handler.output_dir, new_file_name))
+        
     
     
     
