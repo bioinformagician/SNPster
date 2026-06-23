@@ -1,1 +1,13 @@
-adapt harmonizer to take in parquet and only do everything after run_harmonization_workflow(handled by standardizer now)
+inspect the raw files that failed in the initial run of imputation_runner (user id (
+    '7', '14', '89', '105', '124',
+    '181', '234', '238', '249', '254'
+))
+
+test qc module with biallelic and snps_only set to false
+
+work on prsc_calc_module
+
+combine vcf files in pgs_calc module (try and add tabix to the vcf merger to index before merging)
+craete notebook to test how to merge imputation_runner output, eventually adding that as final step to the imputation
+
+identify the source of alt alleles being ="." (maybe plink standardizer step) and remove that such you dont have to use bcftools view subprocess

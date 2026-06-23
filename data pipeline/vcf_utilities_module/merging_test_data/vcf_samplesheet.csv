@@ -1,0 +1,4 @@
+full_vcf_path,chrom
+/app/test_data/IMPID6.chr22.split_QC.vcf.gz,22
+/app/test_data/IMPID9.chr22.split_QC.vcf.gz,22
+/app/test_data/IMPID10.chr22.split_QC.vcf.gz,22

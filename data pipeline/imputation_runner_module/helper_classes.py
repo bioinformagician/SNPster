@@ -58,8 +58,11 @@ class EnvironmentHandler:
         self.samplesheet_df = None
         
         
+        # Keep full Nextflow task history for debugging/resume.
+        # Only clear runner-owned staging dirs under the work dir.
         directories_to_clear = [
-            self.nextflow_workdir
+            os.path.join(self.nextflow_workdir, "std"),
+            os.path.join(self.nextflow_workdir, "harm"),
         ]
 
         for directory in directories_to_clear:
@@ -96,7 +99,7 @@ class DatabaseQueryHandler:
                     JOIN snpster_users.imputation_jobs ij ON ui.user_id = ij.user_id
                     WHERE ij.imputation_status = 'queued'
                     order by imputation_id asc
-                    LIMIT 100;"""
+                    LIMIT 33;"""
         
         results = self.db_utils.get_pd_dataframe_from_query(query)
         
@@ -227,6 +230,7 @@ class ImputationRunner:
         for _, row in self.job_df.iterrows():
             imputation_id = row["imputation_id"]
             output_dir = row["output_dir"]
+            output_dir = os.path.join(output_dir, "qc_output")
 
             if not os.path.isdir(output_dir):
                 failed_ids.append(imputation_id)

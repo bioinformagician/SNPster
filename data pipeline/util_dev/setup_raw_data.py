@@ -6,6 +6,7 @@ import re
 from urllib.parse import urlparse
 from urllib.request import urlopen
 import random as rd
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "database_module"))
 print(sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "database_module")))
 from db_handler import DbHandler
@@ -174,14 +175,20 @@ def setup_prsc_jobs():
     print(f"Using existing completed imputation IDs for PRSC job setup: {imputation_ids}")
 
     prsc_status = "queued"
+
     for imputation_id in imputation_ids:
         insert_query = """
         INSERT INTO snpster_users.prsc_jobs (imputation_id, prsc_status)
-        VALUES (%s, %s)
-        ON CONFLICT DO NOTHING;
+        SELECT %s, %s
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM snpster_users.prsc_jobs
+            WHERE imputation_id = %s
+        );
         """
-        db_handler.execute_query(insert_query, (imputation_id, prsc_status))
-        print(f"Inserted prsc job for imputation_id {imputation_id} with status {prsc_status}") 
+
+        db_handler.execute_query(insert_query, (imputation_id, prsc_status, imputation_id))
+        print(f"Inserted prsc job for imputation_id {imputation_id} with status {prsc_status}")
     
 
     #populate the prsc_job_parameters table with pgs_ids from pgs_reports_shop where report_name = 'cardiovascular_panel'
@@ -198,7 +205,7 @@ def setup_prsc_jobs():
         CROSS JOIN LATERAL (
             SELECT panel_name
             FROM unnest(%s::text[]) AS panel_name
-            ORDER BY random()
+            ORDER BY random() + (pj.prsc_id * 0)
             LIMIT 1
         ) AS picked_panel
         JOIN snpster_users.pgs_reports_shop AS prs

@@ -71,6 +71,19 @@ class VCFHandler: #split this into a VCFMerger and VCFSplitter class later, but 
         """columns in sample_sheet: full_vcf_path,chrom there will only be data from a single chrom when parsed to this module"""
         merged_file_sample_sheet = pd.read_csv(self.vcf_environment_handler.vcf_samplesheet_path, dtype=str)
 
+        required_columns = {"full_vcf_path", "chrom"}
+        missing_columns = required_columns.difference(merged_file_sample_sheet.columns)
+        if missing_columns:
+            raise ValueError(
+                f"Samplesheet {self.vcf_environment_handler.vcf_samplesheet_path} is missing required columns: {sorted(missing_columns)}"
+            )
+
+        merged_file_sample_sheet = merged_file_sample_sheet.dropna(subset=["full_vcf_path", "chrom"])
+        if merged_file_sample_sheet.empty:
+            raise ValueError(
+                f"Samplesheet {self.vcf_environment_handler.vcf_samplesheet_path} has no merge rows after filtering null values"
+            )
+
         chrom = merged_file_sample_sheet["chrom"].iloc[0] #this has the format "chr1", "chr2"...
         combined_vcf_path_string = merged_file_sample_sheet["full_vcf_path"].str.cat(sep=",")
 
@@ -81,8 +94,17 @@ class VCFHandler: #split this into a VCFMerger and VCFSplitter class later, but 
 
         tmp_dir = tempfile.mkdtemp()
         try:
+
+
             prepared_files = [self._prepare_merge_input(path, tmp_dir) for path in merged_file_sample_sheet["full_vcf_path"].tolist()]
-            subprocess.run(["bcftools", "merge", "--no-index", *prepared_files, "-Oz", "-o", output_path], check=True)
+
+            if len(prepared_files) == 1:
+                # bcftools merge requires at least two inputs; for single input,
+                # emit the normalized file as the merged output.
+                subprocess.run(["cp", prepared_files[0], output_path], check=True)
+            else:
+                #subprocess.run(["bcftools", "merge", *prepared_files, "-Oz", "-o", output_path], check=True)
+                subprocess.run(["bcftools", "merge", "--no-index", *prepared_files, "-Oz", "-o", output_path], check=True)
         finally:
             shutil.rmtree(tmp_dir, ignore_errors=True)
     
@@ -144,6 +166,19 @@ class VCFHandler: #split this into a VCFMerger and VCFSplitter class later, but 
         finally:
             if plain_tmp_path is not None and os.path.exists(plain_tmp_path):
                 os.remove(plain_tmp_path)
+
+    def _split_vcf_per_sample(self, input_vcf: str, output_dir: str) -> None:
+        """Fallback splitter when `bcftools +split` is unstable for a given input."""
+        sample_ids = self._get_sample_ids_from_vcf(input_vcf)
+
+        for sample_id in sample_ids:
+            out_path = os.path.join(output_dir, f"{sample_id}.vcf.gz")
+            subprocess.run([
+                "bcftools", "view",
+                "-s", sample_id,
+                input_vcf,
+                "-Oz", "-o", out_path,
+            ], check=True)
     
 
     
@@ -160,12 +195,21 @@ class VCFHandler: #split this into a VCFMerger and VCFSplitter class later, but 
         self._add_minimal_contig_header(vcf_file, vcf_file, chrom)  # in-place to add contig header, otherwise bcftools will not accept file format
         
         print(f"Splitting vcf file using bcftools, outputting to {self.vcf_environment_handler.output_dir}...")
-        
-        subprocess.run([
-            "bcftools", "+split",
-            "-Oz",
-            "-o", self.vcf_environment_handler.output_dir, vcf_file
-        ], check=True)
+
+        try:
+            subprocess.run([
+                "bcftools", "+split",
+                "-Oz",
+                "-o", self.vcf_environment_handler.output_dir, vcf_file
+            ], check=True)
+        except subprocess.CalledProcessError as exc:
+            print(f"bcftools +split failed ({exc}). Falling back to per-sample splitting.")
+
+            for existing in os.listdir(self.vcf_environment_handler.output_dir):
+                if existing.endswith(".vcf.gz"):
+                    os.remove(os.path.join(self.vcf_environment_handler.output_dir, existing))
+
+            self._split_vcf_per_sample(vcf_file, self.vcf_environment_handler.output_dir)
         
         outputted_files = [f for f in os.listdir(self.vcf_environment_handler.output_dir) if f.endswith(".vcf.gz")]
         
@@ -279,6 +323,36 @@ class VCFUtilities:
 
         raise ValueError(f"No variant rows found in VCF file: {vcf_file_path}")
 
+    def read_imputation_id_from_vcf(self, vcf_file: str) -> list[int]:
+        """
+        Reads imputation IDs from the VCF header.
+
+        """
+
+        vcf_path = Path(vcf_file)
+        if not vcf_path.exists():
+            raise FileNotFoundError(f"VCF file does not exist: {vcf_file}")
+        
+        opener = gzip.open if self._is_gzipped(vcf_path) else open
+
+        with opener(vcf_path, "rt") as f:
+            for line in f:
+                line = line.rstrip("\n")
+
+                if line.startswith(f"##{self.IMPUTATION_ID_KEY}="):
+                    value = line.split("=", 1)[1]
+
+                    return [
+                        int(item)
+                        for item in value.split(",")
+                        if item
+                    ]
+
+                if line.startswith("#CHROM"):
+                    break
+
+        return []
+
     def add_imputation_id_to_vcf(self, vcf_file: str, imputation_id: list) -> None:
         """
         Adds imputation ID metadata to the VCF header in place.
@@ -324,36 +398,6 @@ class VCFUtilities:
 
         self._rewrite_vcf_preserving_bgzf(vcf_path, line_rewriter)
     
-    
-    def read_imputation_id_from_vcf(self, vcf_file: str) -> list[int]:
-        """
-        Reads imputation IDs from the VCF header.
-
-        """
-
-        vcf_path = Path(vcf_file)
-        if not vcf_path.exists():
-            raise FileNotFoundError(f"VCF file does not exist: {vcf_file}")
-        
-        opener = gzip.open if self._is_gzipped(vcf_path) else open
-
-        with opener(vcf_path, "rt") as f:
-            for line in f:
-                line = line.rstrip("\n")
-
-                if line.startswith(f"##{self.IMPUTATION_ID_KEY}="):
-                    value = line.split("=", 1)[1]
-
-                    return [
-                        int(item)
-                        for item in value.split(",")
-                        if item
-                    ]
-
-                if line.startswith("#CHROM"):
-                    break
-
-        return []
     
     
     def get_chromosome_from_vcf(self, vcf_file: str) -> str | None:

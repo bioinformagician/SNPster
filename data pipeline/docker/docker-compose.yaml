@@ -27,6 +27,8 @@ services:
     build: 
       context: ..
       dockerfile: docker/imputation_runner/Dockerfile
+    mem_limit: 90g
+    cpuset: "11-21"
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
@@ -47,9 +49,39 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock #mount socket such that docker container only needs client to run nextflow pipeline which calls other docker containers to avoid dockerin docker issues
       - /srv/imputed:/srv/imputed # this is where the imputation outputs will be stored, must mount to :/srv/imputed, s3 bucket in the future
-      - ..:/app #why is this mounted?
       - /srv/dependencies/imputation_runner/imputer:/srv/dependencies/imputation_runner/imputer:ro
       - /srv/dependencies/imputation_runner/harmonizer:/srv/dependencies/imputation_runner/harmonizer:ro
     depends_on:
       - postgres
-    restart: always
+
+
+  pgs_calc:
+    build:
+      context: ..
+      dockerfile: docker/pgs_calc/Dockerfile
+    mem_limit: 90g
+    cpuset: "0-10"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: snpster_db
+      DB_USER: postgres
+      DB_PASSWORD: zod50902
+
+      REFERENCE_DATA_PATH: /data/pgsc_HGDP+1kGP_v1.tar.zst
+      OUTPUT_DIR: /app/pgs_output
+      SCORING_FILE_SOURCE_DIR: /data/scoring_files
+      SCORING_FILE_TARGET_DIR: /app/scoring_files
+      NF_WORK_DIR: /app/work
+      BCFTOOLS_THREADS: 1 #remove
+      SAMPLESET_NAME: MergedUserData
+      VCF_MERGE_SHEET_DIR: /app/vcf_merge_sheets
+      PYTHONPATH: /app:/app/database_module:/app/pgs_calc_module:/app/vcf_utilities_module
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /srv/dependencies/pgs_calc:/data:ro  # Mount reference data
+      - /srv/pgs_output:/app/pgs_output  # Output directory
+      - /srv/scoring_files:/srv/scoring_files:ro  # Scoring files directory
+      - /srv/imputed:/srv/imputed:ro # This is where the imputation outputs are stored, mount as read-only
+    depends_on:
+      - postgres

@@ -1,7 +1,14 @@
-params.samplsheet_dir = "/path/to/samplesheet/dir"
+params.vcf_samplesheet_dir = "/path/to/samplesheet/dir"
 params.output_dir = "/path/to/output/dir"
 
 process MERGE_VCFS {
+  
+  maxRetries 2
+  errorStrategy 'retry'
+
+  cpus 2
+  memory '20 GB'
+  maxForks 4
 
   input:
     path file
@@ -12,10 +19,7 @@ process MERGE_VCFS {
   """
 }
 
-
 workflow {
-
-    samplesheet_ch = Channel.fromPath("$params.samplsheet_dir/vcf_samplesheet_chr*.csv")
-    MERGE_VCFS(samplesheet_ch)
-
+  samplesheet_ch = Channel.fromPath("${params.vcf_samplesheet_dir}/vcf_merge_sheet_chr*.csv")
+  MERGE_VCFS(samplesheet_ch)
 }

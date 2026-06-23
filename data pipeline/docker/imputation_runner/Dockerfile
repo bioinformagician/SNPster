@@ -49,4 +49,4 @@ ENV IMPUTATION_DEPENDENCIES=/srv/dependencies/imputation_runner/imputer
 ENV HARMONIZER_DEPENDENCIES=/srv/dependencies/imputation_runner/harmonizer
 
 
-CMD ["python", "/app/imputation_runner_module/main.py"]
+CMD ["python", "/app/main.py"]

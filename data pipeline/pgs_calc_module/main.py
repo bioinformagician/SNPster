@@ -19,24 +19,29 @@ while True:
     jobs=pgs_calculator.set_job_parameters()
     
     if not jobs:
-        print("No pending jobs found.")
+        print("No eligible PGS jobs found. Requires queued PRSC jobs with completed imputations and matching prsc_job_parameters rows.")
         environment_handler.close_db_connection()
         time.sleep(60)
         continue
     
     #self.environment_handler.set_db_job_status("running") implement this when heartbeat function is implemented
     
-    pgs_calculator.create_combined_samplesheet()
+    #create samplesheets for each imputed dir
+    
+    pgs_calculator.create_samplesheets()
+    #pgs_calculator.create_chr_specific_samplesheet()
+    
+    
     environment_handler.close_db_connection()
     print(environment_handler.imputation_ids)
     if len(environment_handler.imputation_ids) > 1:
         
-        pgs_calculator.environment_handler.create_full_path_samplesheet() #this creates one sheet per chrom in the vcf_merge_sheet_dir with columns: sampleset, path_prefix, chrom, format for the nextflow process to merge them fast
-        
+        environment_handler.create_full_path_samplesheets() #this creates one sheet per chrom in the vcf_merge_sheet_dir with columns: sampleset, path_prefix, chrom, format for the nextflow process to merge them fast
+        #pgs_calculator.create_chr_specific_samplesheet()
         pgs_calculator.run_vcf_merging()
         
         
-        pgs_calculator.environment_handler.create_merged_vcf_samplesheet()
+        environment_handler.create_merged_vcf_samplesheet()
     
         pgs_calculator.run_pgs_calculation(environment_handler.merged_sample_sheet)
         pgs_score_path = f"{environment_handler.output_dir}/{environment_handler.sampleset_name}/score/{environment_handler.sampleset_name}_pgs.txt.gz"
@@ -54,6 +59,8 @@ while True:
         environment_handler.set_db_job_status("failed")
         environment_handler.close_db_connection()
         
+        environment_handler.clear_directories()
+        
         continue  # Skip uploading results and move to the next job
     
     environment_handler.connect_to_db()
@@ -62,4 +69,5 @@ while True:
     environment_handler.set_db_job_status("completed")  #maybe this should be a trigger function in db upon upload of data to prsc_job_results instead --- IGNORE ---
     environment_handler.close_db_connection()
     environment_handler.clear_directories()
+    
     

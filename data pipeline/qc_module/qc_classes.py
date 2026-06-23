@@ -24,7 +24,10 @@ class ImputedDataContainer:
     imputed_data: pd.DataFrame = None
     qc_status: bool = False
     imputation_id: int = None
+    chromosome: str = None
     
+    def set_chromosome_from_data(self):
+        self.chromosome = str(self.imputed_data["CHROM"].iloc[0])
     
     
     def load_vcf_to_df_pandas(self) -> None:
@@ -36,17 +39,28 @@ class ImputedDataContainer:
                     Peak CPU:  141.1%
         """
         
+        # Use the Python CSV engine here to avoid rare native-parser crashes on
+        # malformed user-derived rows while keeping QC deterministic.
         dataframe = pd.read_csv(
             self.file_path,
             sep="\t",
             comment="#",
             compression="gzip",
-            header=None
+            header=None,
+            dtype=str,
+            engine="python",
+            on_bad_lines="skip",
         )
-        dataframe.columns = ["CHROM","POS","ID","REF","ALT","QUAL","FILTER","INFO","FORMAT","FAM001_ID001"]
+
+        if dataframe.empty or dataframe.shape[1] < 10:
+            raise ValueError(f"VCF appears malformed or empty after parsing: {self.file_path}")
+
+        # Keep the expected VCF columns and a single-sample field.
+        dataframe = dataframe.iloc[:, :10].copy()
+        dataframe.columns = ["CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT", "SAMPLE"]
 
         # ---- FORMAT: GT / DS / GP ----
-        fmt = dataframe["FAM001_ID001"].str.split(":", n=2, expand=True)
+        fmt = dataframe["SAMPLE"].str.split(":", n=2, expand=True)
         dataframe["GT"] = fmt[0]
 
         # DS: keep first value only
@@ -57,7 +71,7 @@ class ImputedDataContainer:
         dataframe["GP_01"] = pd.to_numeric(gplist.str[1], errors="coerce")
         dataframe["GP_11"] = pd.to_numeric(gplist.str[2], errors="coerce")
 
-        dataframe.drop(columns=["FAM001_ID001", "FORMAT"], inplace=True)
+        dataframe.drop(columns=["SAMPLE", "FORMAT"], inplace=True)
 
         # ---- INFO: DR2 / AF / IMP ----
         info = dataframe["INFO"].astype(str)
@@ -241,17 +255,18 @@ class ImputedDataContainer:
 
         #add qc to the filename
         out_path = os.path.join(f"{output_dir}", os.path.basename(self.file_path).replace(".vcf.gz", "_QC.vcf"))
-
+        
         with open(out_path, "w", encoding="utf-8", newline="") as f:
             # --- header ---
             f.write("##fileformat=VCFv4.2\n")
+            f.write(f"##contig=<ID={self.chromosome}>\n")
             f.write('##INFO=<ID=DR2,Number=1,Type=Float,Description="Imputation quality (Beagle DR2)">\n')
             f.write('##INFO=<ID=AF,Number=1,Type=Float,Description="Allele frequency of ALT allele">\n')
             f.write('##INFO=<ID=IMP,Number=0,Type=Flag,Description="Imputed variant">\n')
             f.write('##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">\n')
             f.write('##FORMAT=<ID=DS,Number=1,Type=Float,Description="Dosage of ALT allele">\n')
             f.write('##FORMAT=<ID=GP,Number=3,Type=Float,Description="Genotype probabilities for 0/0,0/1,1/1">\n')
-            f.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t" + str(self.imputation_id) + "\n")
+            f.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t" + f"IMPID_{str(self.imputation_id)}" + "\n")
 
             n = len(df)
             for start in range(0, n, chunk_size):
@@ -328,7 +343,7 @@ class ImputedDataContainer:
                     "FILTER": filter_col,
                     "INFO": info,
                     "FORMAT": format_col,
-                    str(self.imputation_id): sample_col,
+                    f"IMPID_{str(self.imputation_id)}": sample_col,
                 })
 
                 out_df.to_csv(f, sep="\t", index=False, header=False)

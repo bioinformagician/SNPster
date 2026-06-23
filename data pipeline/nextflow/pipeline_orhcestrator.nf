@@ -7,7 +7,6 @@ params.samplesheet = "/home/frederik/github_projects/SNPster/data pipeline/imput
 
 process STANDARDIZE {
 
-    maxForks 10
     errorStrategy 'ignore'
 
     container 'standardizer:latest'
@@ -22,7 +21,9 @@ process STANDARDIZE {
 
     script:
     """
+
     python /app/main.py --microarray_file "${microarray_file}" --imputation_id "${identifier}" --output_dir .
+
     """
 }
 
@@ -31,7 +32,9 @@ process STANDARDIZE {
 
 process HARMONIZE {
 
-    maxForks 20
+    maxRetries 5
+    errorStrategy 'retry'
+
 
     // harmonize all file in dir, the files are outputted to the dir from the standardizer process, so just use the same output dir for the input of the harmonizer process
     container 'harmonizer:latest'
@@ -45,13 +48,18 @@ process HARMONIZE {
 
     script:
     """
+
     mkdir -p output
     python /app/main.py --microarray_file "${parquet_file}" --output_dir output
+
     """
 }
 
 
 process MERGE_VCFS {
+
+    maxRetries 2
+    errorStrategy 'retry'
 
     container 'vcf_merger:latest'
 
@@ -64,6 +72,7 @@ process MERGE_VCFS {
     
     script:
     """
+
         mkdir -p merged_output
         echo "full_vcf_path,chrom" > samplesheet.csv
 
@@ -74,11 +83,15 @@ process MERGE_VCFS {
         python /app/vcf_combiner.py \
             --vcf_samplesheet_path samplesheet.csv \
             --output_dir merged_output
+
     """
 }
 
 
 process IMPUTE {
+
+    maxRetries 2
+    errorStrategy 'retry'
 
     maxForks 11
 
@@ -93,13 +106,18 @@ process IMPUTE {
 
     script:
     """
+
     mkdir -p imputed_output
     python /app/main.py --vcf_file ${vcf_file} --output_dir imputed_output
+
     """
 }
 
 
 process SPLIT_VCF {
+
+    maxRetries 2
+    errorStrategy 'retry'
 
     container 'vcf_splitter:latest'
 
@@ -111,17 +129,20 @@ process SPLIT_VCF {
 
     script:
     """
+
     mkdir -p split_output
     python /app/vcf_splitter.py --vcf_file ${imputed_vcf} --output_dir split_output
+
     """
 }
 
 
 process QC_VCF {
 
+    maxRetries 5
+    errorStrategy 'retry'
     container 'imputation_qc:latest'
 
-    maxForks 10
 
     publishDir path: { output_dir }, mode: 'copy', overwrite: true
 
@@ -133,8 +154,11 @@ process QC_VCF {
 
     script:
     """
-    mkdir -p qc_output
-    python /app/main.py --input_file ${split_vcf} --output_dir qc_output
+
+    # Try default engine first for speed; fall back to pandas on native crashes.
+    python /app/main.py --input_file ${split_vcf} --output_dir qc_output || \
+    ENGINE=pandas python /app/main.py --input_file ${split_vcf} --output_dir qc_output
+
     """
 }
 

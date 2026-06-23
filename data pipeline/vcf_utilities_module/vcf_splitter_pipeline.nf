@@ -1,21 +1,23 @@
-params.samplsheet_dir = "/path/to/samplesheet/dir"
+params.vcf_dir = "/path/to/vcf/dir"
 params.output_dir = "/path/to/output/dir"
 
 process SPLIT_VCF {
+
+  errorStrategy 'ignore'
 
   input:
     path file
 
   script:
   """
-  python /app/vcf_splitter.py --vcf_samplesheet_path $file --output_dir $params.output_dir
+  python /app/vcf_splitter.py --vcf_file $file --output_dir $params.output_dir
   """
 }
 
 
 workflow {
 
-    samplesheet_ch = Channel.fromPath("$params.samplsheet_dir/vcf_splitting_chr*.csv")
-    SPLIT_VCF(samplesheet_ch)
+    vcf_ch = Channel.fromPath("$params.vcf_dir/*.vcf.gz")
+    SPLIT_VCF(vcf_ch)
 
 }
