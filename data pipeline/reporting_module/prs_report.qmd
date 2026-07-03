@@ -21,6 +21,7 @@ import plotly.express as px
 import sys
 from pathlib import Path
 
+
 sys.path.insert(0, str(Path.cwd().parent / "database_module"))
 
 from db_handler import DbHandler, DbUtils
@@ -35,53 +36,186 @@ db_utils = DbUtils(db_handler)
 
 
 
-user_pgs_scores = pd.read_csv(
-    r"C:\Users\frezz\Downloads\snpster\data pipeline\reporting_module\data\multiple_pgs_scores_example.zip", sep="\t"
-)
+query = f""" 
+SELECT
+    pjr.pgs_id,
+
+    CASE
+        WHEN pcd.reported_trait IN ('Coronary artery disease', 'Coronary Artery Disease')
+            THEN 'Coronary heart disease'
+        ELSE pcd.reported_trait
+    END AS reported_trait,
+
+    pp.reported_trait AS specific_trait,
+    pcd.ancestry_distribution_pgs_evaluation,
+    pjr.percentile_most_similar_pop,
+    pjr.z_most_similar_pop,
+    pjr.z_norm1,
+    pjr.z_norm2,
+    pp.ppm_id,
+    pp.pss_id,
+    pp.pgp_id,
+    ess.cases_evaluation,
+    ess.controls_evaluation,
+    /*pp.pgs_performance_other_relevant_info,*/
+    pp.publication_pmid,
+    pp.publication_doi,
+    pp.hazard_ratio,
+    pp.odds_ratio,
+    pp.beta,
+    pp.auroc,
+    pp.concordance_statistic,
+    pub.first_author,
+    pub.title,
+    pub.journal_name,
+    pub.publication_date,
+    pub.release_date,
+    pub.authors,
+    pub.pubmed_id_pmid
+
+FROM snpster_users.prsc_job_results AS pjr
+
+LEFT JOIN data_libraries.pgs_performance AS pp
+    ON pp.pgs_id = pjr.pgs_id
+
+LEFT JOIN data_libraries.pgs_publications AS pub
+    ON pub.pgp_id = pp.pgp_id
+
+LEFT JOIN data_libraries.pgscatalog_data AS pcd
+    ON pcd.pgs_id = pjr.pgs_id
+
+LEFT JOIN data_libraries.evaluation_sample_sets AS ess
+    ON ess.pss_id = pp.pss_id
+
+WHERE pjr.prsc_id = 2354
+  AND pp.auroc IS NOT NULL
+
+ORDER BY reported_trait;
 
 """
-Index(['sampleset', 'FID', 'IID', 'PGS', 'SUM', 'Z_MostSimilarPop', 'Z_norm1',   
-       'Z_norm2', 'percentile_MostSimilarPop'],
-      dtype='str')
-"""
+#2350 metabolic, 2351 cardiovascular, 2354 cancer
+
+data = db_utils.get_pd_dataframe_from_query(query)
+data = data.drop_duplicates()
+
+#filter for not relevant ethnicities
+
+ethnicity = "European" #hardcoded for now, query the user for this in the future
+
+def parse_superpopulation_dict(entry):
+    """
+    Converts:
+        "African:33.3|East Asian:33.3|South Asian:33.3"
+
+    Into:
+        {"African": 33.3, "East Asian": 33.3, "South Asian": 33.3}
+    """
+    if entry is None:
+        return {}
+
+    result = {}
+
+    for part in str(entry).split("|"):
+        part = part.strip()
+
+        if not part or ":" not in part:
+            continue
+
+        superpop, value = part.split(":", 1)
+
+        try:
+            value = float(value.strip())
+        except ValueError:
+            value = None
+
+        result[superpop.strip()] = value
+
+    return result
 
 
-#get metadata
+def filter_scores_by_ethnicity_and_best_share(data, ethnicity):
+    data = data.copy()
 
-user_pgs_scores["PGS"] = user_pgs_scores["PGS"].str.replace("_hmPOS_GRCh38", "", regex=False)
+    data["ancestry_distribution_dict"] = data[
+        "ancestry_distribution_pgs_evaluation"
+    ].apply(parse_superpopulation_dict)
 
-#only keep sampleset column != reference
+    data["target_ethnicity_share"] = data["ancestry_distribution_dict"].apply(
+        lambda d: d.get(ethnicity)
+    )
 
-user_pgs_scores = user_pgs_scores[user_pgs_scores["sampleset"] != "reference"]
+    before_ethnicity_filter = len(data)
+
+    data = data[data["target_ethnicity_share"].notna()].copy()
+
+    after_ethnicity_filter = len(data)
+
+    max_share_per_trait = data.groupby("reported_trait")[
+        "target_ethnicity_share"
+    ].transform("max")
+
+    before_best_share_filter = len(data)
+
+    data = data[data["target_ethnicity_share"] == max_share_per_trait].copy()
+
+    after_best_share_filter = len(data)
+
+    print(
+        f"Dropped {before_ethnicity_filter - after_ethnicity_filter} rows "
+        f"that did not include ethnicity: {ethnicity}"
+    )
+
+    print(
+        f"Dropped {before_best_share_filter - after_best_share_filter} rows "
+        f"that had lower {ethnicity} share within the same reported_trait"
+    )
+
+    return data.drop(columns=[
+        "ancestry_distribution_dict",
+        "target_ethnicity_share"
+    ])
+
+data = filter_scores_by_ethnicity_and_best_share(data, ethnicity)
+data = data.drop_duplicates()
 
 
-meta_data_query = f"""
-SELECT pgs_id, reported_trait, efo_id, number_of_variants,pgp_id, publication_pmid,publication_doi,ftp_link,release_date,ancestry_distribution_source_of_variant_associations_gwas,ancestry_distribution_pgs_evaluation 
-FROM data_libraries.pgscatalog_data
-WHERE pgs_id IN ({', '.join([f"'{pgs}'" for pgs in user_pgs_scores['PGS'].unique()])})
-"""
 
-meta_data = db_utils.get_pd_dataframe_from_query(meta_data_query)
+meta_data = data[[
+    "pgs_id",
+    "reported_trait",
+    "pgp_id",
+    "publication_pmid",
+    "publication_doi",
+    "release_date",
+    "ancestry_distribution_pgs_evaluation",
+    "cases_evaluation",
+    "controls_evaluation"
+]].drop_duplicates()
+
+publications_meta_data = data[[
+    "first_author",
+    "title",
+    "journal_name",
+    "publication_date",
+    "pgp_id"
+]].drop_duplicates()
+
+pgs_performance_data = data[[
+    "pgp_id",
+    "hazard_ratio",
+    "odds_ratio",
+    "auroc",
+    "ppm_id",
+    "pgs_id",
+    "pss_id",
+    "concordance_statistic"
+]].drop_duplicates()
 
 
-publications_meta_data_query = f"""SELECT first_author, title, journal_name, publication_date, pgp_id 
-FROM data_libraries.pgs_publications
-WHERE pgp_id IN ({', '.join([f"'{pgp}'" for pgp in meta_data['pgp_id'].unique()])})
-"""
-
-publications_meta_data = db_utils.get_pd_dataframe_from_query(publications_meta_data_query)
-
-pgs_performance_data_query = f"""SELECT pgp_id, hazard_ratio, odds_ratio, auroc, ppm_id, pgs_id, pss_id 
-FROM data_libraries.pgs_performance
-WHERE pgs_id IN ({', '.join([f"'{pgs}'" for pgs in user_pgs_scores['PGS'].unique()])})
-"""
-
-pgs_performance_data = db_utils.get_pd_dataframe_from_query(pgs_performance_data_query)
-
-display(user_pgs_scores.head())
-display(meta_data.head())
-display(publications_meta_data.head())
-display(pgs_performance_data.head())
+#display(data.head())
+#display(meta_data.head())
+#display(publications_meta_data.head())
+#display(pgs_performance_data.head())
 
 
 overview_query = f"""
@@ -112,105 +246,74 @@ ORDER BY cd.reported_trait, pp.auroc DESC;
 
 ## Prepare data
 
-
-```{python}
-
-#print all columns of user_pgs_scores, meta_data, publications_meta_data, pgs_performance_data
-#print("user_pgs_scores columns:", user_pgs_scores.columns.tolist())
-#print("meta_data columns:", meta_data.columns.tolist())
-#print("publications_meta_data columns:", publications_meta_data.columns.tolist())
-#print("pgs_performance_data columns:", pgs_performance_data.columns.tolist())
-
-
-
-user_pgs_scores = user_pgs_scores.merge(
-    meta_data,
-    left_on="PGS", #default column name from the prs_catalog nextlfow output
-    right_on="pgs_id",
-    how="left"
-)
-
-print(user_pgs_scores.columns.tolist())
-
-user_pgs_scores = user_pgs_scores.merge(
-    pgs_performance_data,
-    left_on=["pgs_id", "pgp_id"],
-    right_on=["pgs_id", "pgp_id"],
-    how="left"
-)
-
-print(user_pgs_scores.columns.tolist())
-
-user_pgs_scores = user_pgs_scores.merge(
-    publications_meta_data,
-    left_on="pgp_id",
-    right_on="pgp_id",
-    how="left"
-)
-
-
-print(user_pgs_scores.columns.tolist())
-
-```
 ```{python}
 import numpy as np
 
+data['reported_trait'] = data['reported_trait'].str.lower()
 
 
-user_pgs_scores["individual_hazard_ratio"] = (
-    user_pgs_scores["hazard_ratio"].astype(float) ** user_pgs_scores["Z_MostSimilarPop"].astype(float)
-)
 
-user_pgs_scores["individual_odds_ratio"] = (
-    user_pgs_scores["odds_ratio"].astype(float) ** user_pgs_scores["Z_MostSimilarPop"].astype(float)
-)
+data["individual_hazard_ratio"] = (
+    (data["hazard_ratio"].astype(float) ** data["z_most_similar_pop"].astype(float)) - 1
+) * 100
 
-user_pgs_scores["individual_risk_ratio"] = (
-    user_pgs_scores["individual_hazard_ratio"].combine_first(
-        user_pgs_scores["individual_odds_ratio"]
-    )
-)
+data["individual_odds_ratio"] = (
+    (data["odds_ratio"].astype(float) ** data["z_most_similar_pop"].astype(float)) - 1
+) * 100
 
-user_pgs_scores["risk"] = (
-    (user_pgs_scores["individual_risk_ratio"] - 1) * 100
-)
-#add column showing if score is hazard ratio or odds ratio
 
-conditions = [
-    user_pgs_scores["risk"].isna(),
-    user_pgs_scores["individual_hazard_ratio"].notna(),
-    user_pgs_scores["individual_odds_ratio"].notna(),
-]
+summarized_data = data.groupby("reported_trait").agg(
+    mean_hazard_ratio = ("individual_hazard_ratio", "mean"),
+    hazard_ratio_sd = ("individual_hazard_ratio", "std"),
+    mean_odds_ratio = ("individual_odds_ratio", "mean"),
+    odds_ratio_sd = ("individual_odds_ratio", "std"),
+    mean_auroc = ("auroc", "mean"),
+    auroc_sd = ("auroc", "std"),
+    mean_percentile = ("percentile_most_similar_pop", "mean"),
+    z_most_similar_pop = ("z_most_similar_pop", "mean") #calculated on a reported_trait basis
+).reset_index()
 
-choices = [
-    "percentile",
-    "hazard_ratio",
-    "odds_ratio",
-]
+display(summarized_data)
 
-user_pgs_scores["risk_type"] = np.select(conditions, choices, default=None)
+#first aggregate per specific_trait as they have a one to many relationship with the reported_trait
 
-user_pgs_scores["risk"] = user_pgs_scores["risk"].fillna(user_pgs_scores["percentile_MostSimilarPop"])
 
-user_pgs_scores["performance_score_id"] = user_pgs_scores["pgs_id"] + "_" + user_pgs_scores["pss_id"].astype(str)
 
-print(user_pgs_scores.columns.tolist())
+
+
+
+hazard_subset = data[data["individual_hazard_ratio"].notna()][["specific_trait", "individual_hazard_ratio", "reported_trait", "ppm_id"]]
+
+odds_ratio_subset = data[data["individual_odds_ratio"].notna()][["specific_trait", "individual_odds_ratio", "reported_trait", "ppm_id"]]
+
+
+percentile_subset = data.drop_duplicates(subset=["pgs_id"])
+percentile_subset["percentile_most_similar_pop"] = percentile_subset["percentile_most_similar_pop"]-50
+
 
 ```
 
 
 ## Percentile Plot
 ```{python}
+data = data.drop_duplicates()
 
-import plotly.express as px
 fig = px.bar(
-    user_pgs_scores.drop_duplicates(subset=["pgs_id"]),
-    x="pgs_id",
-    y="percentile_MostSimilarPop",
+    summarized_data,
+    x="reported_trait",
+    y="mean_percentile",
     color="reported_trait",
     title="Percentile of Most Similar Population for Each PGS",
-    template="plotly_white"
+    template="plotly_white",
+
+    labels={
+                     "mean_percentile": "Percentile in Most Similar Population",
+                        "reported_trait": "Crait"
+                 },
 )
+
+fig.update_yaxes(range=[0, 100.01])
+
 fig.show()
 
 ```
@@ -219,18 +322,28 @@ fig.show()
 ## hazard risk plot
 ```{python}
 
-#concatenate pss_id and pgs_id to create unique identifier for each performance score
 
 
-import plotly.express as px
+y_min = min(-100, summarized_data["mean_hazard_ratio"].min())
+y_max = max(100, summarized_data["mean_hazard_ratio"].max())
+
+
 fig = px.bar(
-    user_pgs_scores[user_pgs_scores["risk_type"] == "hazard_ratio"],
-    x="performance_score_id",
-    y="risk",
+    summarized_data[summarized_data["mean_hazard_ratio"].notna()],
+    x="reported_trait",
+    y="mean_hazard_ratio",
     color="reported_trait",
-    title="Hazard Ratio Risk for Each PGS",
-    template="plotly_white"
+    title="% Earlier Onset of Condition for Each Condition (Hazard Ratio)",
+    template="plotly_white",
+
+    labels={
+                     "mean_hazard_ratio": "<- Later onset of condition | Earlier onset of condition ->",
+                        "reported_trait": "Condition"
+                 },
 )
+
+fig.update_yaxes(range=[y_min, y_max])
+
 fig.show()
 
 ```
@@ -239,19 +352,47 @@ fig.show()
 ## odsratio risk plot
 ```{python}
 
-import plotly.express as px
+
+data_subset = odds_ratio_subset
+data_subset = data_subset.groupby("ppm_id").agg(
+    mean_risk=("individual_odds_ratio", "mean"),
+    specific_trait = ("specific_trait", "first"),
+    reported_trait = ("reported_trait", "first")
+).reset_index()
+
+data_subset = data_subset.groupby("specific_trait").agg(
+    mean_risk=("mean_risk", "mean"),
+    reported_trait = ("reported_trait", "first")
+).reset_index()
+
+data_subset = data_subset.groupby("reported_trait").agg(
+    mean_risk=("mean_risk", "mean"),
+    std_risk=("mean_risk", "std")
+).reset_index()
+
+
+
+
+y_min = min(-100, summarized_data["mean_odds_ratio"].min())
+y_max = max(100, summarized_data["mean_odds_ratio"].max())
+
 fig = px.bar(
-    user_pgs_scores[user_pgs_scores["risk_type"] == "odds_ratio"],
-    x="performance_score_id",
-    y="risk",
+    summarized_data,
+    x="reported_trait",
+    y="mean_odds_ratio",
     color="reported_trait",
-    title="Odds Ratio Risk for Each PGS",
-    template="plotly_white"
+    title="% Increased Risk for Each Condition (Odds Ratio)",
+    error_y = "odds_ratio_sd",
+    template="plotly_white",
+    labels={
+        "mean_odds_ratio": "<- Lower risk | Higher risk ->",
+        "reported_trait": "Condition"
+    },
 )
+fig.update_yaxes(range=[y_min, y_max])
+
 fig.show()
 
-
-#print(user_pgs_scores[user_pgs_scores["risk_type"] == "odds_ratio"])
 
 
 ```
@@ -259,19 +400,26 @@ fig.show()
 ## auroc performance plot
 ```{python}
 
-import plotly.express as px
+
+
 fig = px.bar(
-    user_pgs_scores[user_pgs_scores["auroc"].notna()],
-    x="performance_score_id",
-    y="auroc",
+    summarized_data,
+    x="reported_trait",
+    y="mean_auroc",
+    error_y = "auroc_sd",
     color="reported_trait",
     title="AUROC Performance for Each PGS",
-    template="plotly_white"
+    template="plotly_white",
+    labels = {
+        "mean_auroc": "AUROC",
+        "reported_trait": "Condition"
+    }
 )
+fig.update_yaxes(range=[0, 1.01])
+
+
 fig.show()
 
-
-#print(user_pgs_scores[user_pgs_scores["risk_type"] == "odds_ratio"])
 
 
 ```
