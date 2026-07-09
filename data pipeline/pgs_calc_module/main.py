@@ -49,18 +49,18 @@ while True:
     else:
         pgs_calculator.run_pgs_calculation(environment_handler.samplesheet_paths[0])
         pgs_score_path = f"{environment_handler.output_dir}/{environment_handler.imputation_ids[0]}/score/{environment_handler.imputation_ids[0]}_pgs.txt.gz"
+        pgs_scoring_summary_path = f"{environment_handler.output_dir}/{environment_handler.imputation_ids[0]}/match/{environment_handler.imputation_ids[0]}_summary.csv"
     
     
-    results_valid = pgs_calculator.validate_results(pgs_score_path) 
+    results_valid = pgs_calculator.validate_results(pgs_score_path)
+    results_valid_summary = pgs_calculator.validate_results(pgs_scoring_summary_path)
     
-    if not results_valid:
+    if not results_valid or not results_valid_summary:
         print("Validation failed.")
         environment_handler.connect_to_db()
         environment_handler.set_db_job_status("failed")
         environment_handler.close_db_connection()
-        
         environment_handler.clear_directories()
-        
         continue  # Skip uploading results and move to the next job
     
     environment_handler.connect_to_db()

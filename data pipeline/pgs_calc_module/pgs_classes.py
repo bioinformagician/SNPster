@@ -23,7 +23,6 @@ class EnvironmentHandler:
                  samplesheet_paths: list = None,
                  vcf_merge_sheet_dir: str = VCF_MERGE_SHEET_DIR,
                  vcf_merge_sheet: str = None,
-
                  sampleset_name: str = SAMPLESET_NAME,
                  scoring_file_source_dir: str = SCORING_FILE_SOURCE_DIR,
                  scoring_file_target_dir: str = SCORING_FILE_TARGET_DIR,
@@ -363,14 +362,22 @@ class PGSCalculator:
         
     
 
-    def upload_results(self, path) -> None:
+    def upload_results(self, scoring_file:str, summary_file:str) -> None:
         
         """Uploads the PGS calculation results to the database and updates job status."""
 
-        results = pd.read_csv(path, sep="\t")
+        results = pd.read_csv(scoring_file, sep="\t")
+        summary_statistics = pd.read_csv(summary_file, sep="\t")
+        #remove where match_status column != matched, match_IDs != true
+        summary_statistics = summary_statistics[(summary_statistics["match_status"] == "matched") & (summary_statistics["match_IDs"] == "true")]
+        
+        results = results[results["sampleset"] != "reference"]
+        
+        #join summary_statistics to results by summary file columns dataset and accession on results column sampleset and PGS
+        results = results.merge(summary_statistics, left_on=["sampleset", "PGS"], right_on=["dataset", "accession"], how="left")
         
         results["PGS"] = results["PGS"].str.replace("_hmPOS_GRCh38", "", regex=False)
-        results = results[results["sampleset"] != "reference"]
+        
         
         #group dataframe by sampleset
         
@@ -394,11 +401,12 @@ class PGSCalculator:
                 z_norm1 = float(row["Z_norm1"])
                 z_norm2 = float(row["Z_norm2"])
                 score_sum = float(row["SUM"])
-                percent_variants_matched = 'NULL'
+                percent_variants_matched = float(row["percent"])
+                n_variants_matched = int(row["count"])
 
 
-                insert_query = f"""INSERT INTO snpster_users.prsc_job_results (prsc_id, pgs_id, percentile_most_similar_pop, z_norm1, z_norm2, z_most_similar_pop, score_sum, percent_variants_matched)
-                                VALUES ({prsc_id}, '{pgs_id}', {percentile_most_similar_pop}, {z_norm1}, {z_norm2}, {z_most_similar_pop}, {score_sum}, {percent_variants_matched});"""
+                insert_query = f"""INSERT INTO snpster_users.prsc_job_results (prsc_id, pgs_id, percentile_most_similar_pop, z_norm1, z_norm2, z_most_similar_pop, score_sum, percent_variants_matched, n_variants_matched)
+                                VALUES ({prsc_id}, '{pgs_id}', {percentile_most_similar_pop}, {z_norm1}, {z_norm2}, {z_most_similar_pop}, {score_sum}, {percent_variants_matched}, {n_variants_matched});"""
                 
                 self.environment_handler.db_utils.db_handler.execute_query(insert_query)
             
