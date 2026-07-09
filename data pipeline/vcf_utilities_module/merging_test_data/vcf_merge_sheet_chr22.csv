@@ -1,0 +1,3 @@
+full_vcf_path,chrom
+/app/merging_test_data/IMPID29.chr22.plink_temp.vcf.gz,22
+/app/merging_test_data/IMPID62.chr22.plink_temp.vcf.gz,22

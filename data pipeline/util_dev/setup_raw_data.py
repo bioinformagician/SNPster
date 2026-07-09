@@ -40,19 +40,29 @@ def transfer_files(source_dir:str, target_dir:str, db_handler:DbHandler) -> None
             password_hash = "hashed_password"  # Placeholder, replace with actual hash if needed
             genefile_location = target_file
 
-            query = """
-            INSERT INTO snpster_users.user_information (user_id, email, password_hash, genefile_location)
-            VALUES (%s, %s, %s, %s)
+            upsert_user_query = """
+            INSERT INTO snpster_users.user_information (user_id, email, password_hash)
+            VALUES (%s, %s, %s)
             ON CONFLICT (user_id)
             DO UPDATE SET
                 email = EXCLUDED.email,
-                password_hash = EXCLUDED.password_hash,
-                genefile_location = EXCLUDED.genefile_location;
+                password_hash = EXCLUDED.password_hash;
             """
-            db_handler.execute_query(query, (str(user_id), email, password_hash, genefile_location))
-            print(f"Upserted database row with file location for {target_file}")
+            db_handler.execute_query(upsert_user_query, (str(user_id), email, password_hash))
 
-            #trigger function updates imputation_jobs table with imputation_id and sets status to queued for the new job
+            insert_file_query = """
+            INSERT INTO snpster_users.user_files (user_id, genefile_location)
+            SELECT %s, %s
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM snpster_users.user_files
+                WHERE user_id = %s AND genefile_location = %s
+            );
+            """
+            db_handler.execute_query(insert_file_query, (str(user_id), genefile_location, str(user_id), genefile_location))
+            print(f"Upserted user and ensured user_file row for {target_file}")
+
+            # Trigger on user_files inserts creates a queued imputation job and imputation_job_parameters row.
 
 
 def setup_pgs_reports():
@@ -192,7 +202,7 @@ def setup_prsc_jobs():
     
 
     #populate the prsc_job_parameters table with pgs_ids from pgs_reports_shop where report_name = 'cardiovascular_panel'
-    panels = ['cardiovascular_panel', 'cancer_panel', 'metabolic&autoimmune_panel']
+    panels = ['blood_panel_pgs_ids', 'cancer_pgs_ids', 'cardiovascular_pgs_ids', 'immune_and_autoimmune_pgs_ids', 'metabolic_and_endocrine_pgs_ids', 'neurological_and_psychiatric_pgs_ids', 'ophthalmology_pgs_ids', 'other_pgs_ids', 'respiratory_pgs_ids']
     
 
     
@@ -283,5 +293,5 @@ if __name__ == "__main__":
     db_handler.connect()
     #update_ftp_links_to_grch38()
     #transfer_files(RAW_DATA_DIR, TARGET_DIR)
-    #setup_pgs_reports()
+    setup_pgs_reports()
     setup_prsc_jobs()

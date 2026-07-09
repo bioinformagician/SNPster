@@ -251,7 +251,7 @@ class DbUtils:
 
         
     
-    def insert_dataframe_to_db(self, dataframe: pd.DataFrame, table_name: str) -> None:
+    def insert_dataframe_to_db(self, dataframe: pd.DataFrame, table_name: str, schema: str = "data_libraries") -> None:
         # Bulk insert all dataframe rows in a single efficient batch operation
         if dataframe.empty:
             print(f"No rows to insert for {table_name}")
@@ -268,7 +268,7 @@ class DbUtils:
         query = sql.SQL(
             "INSERT INTO {schema}.{table} ({fields}) VALUES %s"
         ).format(
-            schema=sql.Identifier("data_libraries"),
+            schema=sql.Identifier(schema),
             table=sql.Identifier(table_name),
             fields=sql.SQL(",").join(sql.Identifier(col) for col in columns),
         )
@@ -281,10 +281,76 @@ class DbUtils:
                 page_size=1000,
             )
             self.db_handler.connection.commit()
-            print(f"Inserted {len(values)} rows into data_libraries.{table_name}")
+            print(f"Inserted {len(values)} rows into {schema}.{table_name}")
         except Exception as e:
-            print(f"Error inserting into {table_name}: {e}")
+            print(f"Error inserting into {schema}.{table_name}: {e}")
             self.db_handler.connection.rollback()
+            raise
+
+    def upsert_dataframe_to_db(self, dataframe: pd.DataFrame, table_name: str, schema: str, conflict_columns: list) -> None:
+        """
+        Bulk upsert dataframe rows into database table.
+        Updates existing rows on conflict, inserts new ones otherwise.
+        
+        Args:
+            dataframe: DataFrame to upsert
+            table_name: Target table name
+            schema: Target schema (e.g., "snpster_users")
+            conflict_columns: List of columns to use for conflict detection (e.g., ['user_id'])
+        """
+        if dataframe.empty:
+            print(f"No rows to upsert for {table_name}")
+            return
+        
+        columns = list(dataframe.columns)
+        # Convert dataframe rows to tuples, handling NaN/NaT as None
+        values = [
+            tuple(None if pd.isna(val) else val for val in row)
+            for row in dataframe.itertuples(index=False, name=None)
+        ]
+        
+        # Build UPSERT query (INSERT ... ON CONFLICT DO UPDATE)
+        update_cols = [col for col in columns if col not in conflict_columns]
+        query = sql.SQL(
+            "INSERT INTO {schema}.{table} ({fields}) VALUES %s "
+            "ON CONFLICT ({conflict_fields}) DO UPDATE SET {updates}"
+        ).format(
+            schema=sql.Identifier(schema),
+            table=sql.Identifier(table_name),
+            fields=sql.SQL(",").join(sql.Identifier(col) for col in columns),
+            conflict_fields=sql.SQL(",").join(sql.Identifier(col) for col in conflict_columns),
+            updates=sql.SQL(",").join(
+                sql.SQL("{col} = EXCLUDED.{col}").format(col=sql.Identifier(col))
+                for col in update_cols
+            ),
+        )
+        
+        try:
+            execute_values(
+                self.db_handler.cursor,
+                query.as_string(self.db_handler.connection),
+                values,
+                page_size=1000,
+            )
+            self.db_handler.connection.commit()
+            print(f"Upserted {len(values)} rows into {schema}.{table_name}")
+        except Exception as e:
+            print(f"Error upserting into {schema}.{table_name}: {e}")
+            self.db_handler.connection.rollback()
+            raise
+            self.db_handler.connection.rollback()
+    
+    def get_user_id_from_imputation_id(self, imputation_id:list) -> pd.DataFrame:
+        """Input a list of imputation_ids and return a pandas df with the columns imputation_id and user_id. One imputation_id can have multiple user_ids"""
+        
+        query = sql.SQL("SELECT user_id, imputation_id FROM snpster_users.imputation_jobs WHERE imputation_id = ANY(%s)")
+        result = self.db_handler.execute_query(query, (imputation_id,))
+        if result:
+            return pd.DataFrame(result, columns=['user_id', 'imputation_id'])
+        else:
+            print(f"No user_id found for imputation_id: {imputation_id}")
+            return None
+    
         
         
 

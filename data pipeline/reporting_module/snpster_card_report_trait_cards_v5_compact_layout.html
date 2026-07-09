@@ -535,7 +535,7 @@ main.content,
 </style>
 <section id="load-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-data">Load data</h2>
-<div id="118beb3c" class="cell" data-execution_count="1">
+<div id="1a1556bd" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-stdout">
 <pre><code>Database connection established successfully.
 Query executed successfully.</code></pre>
@@ -544,41 +544,41 @@ Query executed successfully.</code></pre>
 </section>
 <section id="prepare-data" class="level2">
 <h2 class="anchored" data-anchor-id="prepare-data">Prepare data</h2>
-<div id="189822b5" class="cell" data-execution_count="2">
+<div id="c49249a7" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
-<pre><code>Dropped 5 performance rows with no positive European evaluation share.</code></pre>
+<pre><code>Dropped 2 performance rows with no positive European evaluation share.</code></pre>
 </div>
 </div>
 </section>
 <section id="report-overview" class="level2">
 <h2 class="anchored" data-anchor-id="report-overview">Report overview</h2>
-<div id="38942176" class="cell" data-execution_count="3">
+<div id="96d48df3" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 
 <div class="report-summary-grid">
   <div class="summary-card">
     <div class="summary-label">Traits covered</div>
-    <div class="summary-value">8</div>
+    <div class="summary-value">11</div>
     <div class="summary-subtext">One full-width card per reported trait.</div>
   </div>
   <div class="summary-card">
     <div class="summary-label">PGS models retained</div>
-    <div class="summary-value">12</div>
+    <div class="summary-value">11</div>
     <div class="summary-subtext">All retained models include positive European evaluation ancestry.</div>
   </div>
   <div class="summary-card">
     <div class="summary-label">Mean percentile</div>
-    <div class="summary-value">37</div>
+    <div class="summary-value">29</div>
     <div class="summary-subtext">Average percentile across selected primary trait cards.</div>
   </div>
   <div class="summary-card">
     <div class="summary-label">Mean AUROC</div>
-    <div class="summary-value">0.74</div>
+    <div class="summary-value">0.73</div>
     <div class="summary-subtext">Average AUROC of the selected primary model per trait.</div>
   </div>
   <div class="summary-card">
     <div class="summary-label">Risk effect sources</div>
-    <div class="summary-value">4/6</div>
+    <div class="summary-value">10/1</div>
     <div class="summary-subtext">Cards with individualized odds / hazard estimates.</div>
   </div>
 </div>
@@ -595,35 +595,35 @@ Query executed successfully.</code></pre>
 </section>
 <section id="polygenic-score-cards" class="level2">
 <h2 class="anchored" data-anchor-id="polygenic-score-cards">Polygenic score cards</h2>
-<div id="83d87f50" class="cell" data-execution_count="4">
+<div id="404516fa" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div class="pgs-card-grid">
   
     <article class="pgs-card">
       <div class="pgs-card-header">
         <div>
-          <h3 class="pgs-title anchored">Bladder cancer</h3>
-          <div class="pgs-subtitle">Selected primary model: PGS000782</div>
+          <h3 class="pgs-title anchored">Asthma</h3>
+          <div class="pgs-subtitle">Selected primary model: PGS002727</div>
         </div>
-        <div class="pgs-id-badge">PGS000782</div>
+        <div class="pgs-id-badge">PGS002727</div>
       </div>
 
-      <div class="risk-badge risk-normal">Normal</div>
+      <div class="risk-badge risk-lowered">Lowered</div>
 
       <div class="percentile-block">
         <div class="percentile-topline">
           <div class="percentile-label">Percentile</div>
-          <div class="percentile-value">65th</div>
+          <div class="percentile-value">20th</div>
         </div>
         
     <div class="percentile-track" aria-label="Percentile bar">
-      <div class="percentile-solid fill-normal" title="Predicted percentile range" style="width: 65.1%"></div>
+      <div class="percentile-solid fill-lowered" title="Predicted percentile range" style="width: 19.8%"></div>
       
-      <div class="percentile-marker" title="Best Model Prediction: 65th" style="left: 65.1%"></div>
+      <div class="percentile-marker" title="Best Model Prediction: 20th" style="left: 19.8%"></div>
     </div>
     <div class="percentile-legend" aria-label="Percentile bar legend">
       <span class="legend-item"><span class="legend-marker-key"></span>Best Model Prediction</span>
-      <span class="legend-item"><span class="legend-swatch fill-normal"></span>Predicted percentile range</span>
+      <span class="legend-item"><span class="legend-swatch fill-lowered"></span>Predicted percentile range</span>
       
     </div>
     
@@ -634,25 +634,25 @@ Query executed successfully.</code></pre>
         
     <div class="metric-box">
       <div class="metric-label">AUROC</div>
-      <div class="metric-value">0.80</div>
+      <div class="metric-value">0.73</div>
       <div class="metric-caption">Primary model validation</div>
     </div>
     
     <div class="metric-box">
-      <div class="metric-label">Hazard-based risk</div>
-      <div class="metric-value">11.4% higher</div>
-      <div class="metric-caption">HR per SD 1.30; z 0.41; source PGS000782</div>
+      <div class="metric-label">Odds-based risk</div>
+      <div class="metric-value">21.5% lower</div>
+      <div class="metric-caption">OR per SD 1.32; z -0.87; source PGS002727</div>
     </div>
     
     <div class="metric-box">
       <div class="metric-label">Evaluation ancestry match</div>
-      <div class="metric-value">100% European</div>
+      <div class="metric-value">20% European</div>
       <div class="metric-caption">Primary model</div>
     </div>
     
     <div class="metric-box">
       <div class="metric-label">Evaluation N</div>
-      <div class="metric-value">391,888</div>
+      <div class="metric-value">1,671</div>
       <div class="metric-caption">Primary model</div>
     </div>
     
@@ -687,16 +687,16 @@ Query executed successfully.</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>PGS000782</td>
-<td>65th</td>
-<td>0.80</td>
+<td>PGS002727</td>
+<td>20th</td>
+<td>0.73</td>
+<td>21.5% lower</td>
 <td></td>
-<td>11.4% higher</td>
-<td>100.0%</td>
-<td>391,888</td>
-<td>890</td>
-<td>390,998</td>
-<td>PMID: 33247094</td>
+<td>20.0%</td>
+<td>1,671</td>
+<td>49</td>
+<td>1,622</td>
+<td>PMID: 35595084</td>
 </tr>
 </tbody>
 </table>
@@ -710,52 +710,52 @@ Query executed successfully.</code></pre>
             
     <div class="meta-row">
       <div class="meta-key">Primary PGS</div>
-      <div class="meta-value">PGS000782</div>
+      <div class="meta-value">PGS002727</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary AUROC</div>
-      <div class="meta-value">0.80</div>
+      <div class="meta-value">0.73</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary ethnicity share</div>
-      <div class="meta-value">100.0%</div>
+      <div class="meta-value">20.0%</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary eval. N</div>
-      <div class="meta-value">391,888</div>
+      <div class="meta-value">1,671</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary cases</div>
-      <div class="meta-value">890</div>
+      <div class="meta-value">49</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary controls</div>
-      <div class="meta-value">390,998</div>
+      <div class="meta-value">1,622</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary ancestry</div>
-      <div class="meta-value">European:100</div>
+      <div class="meta-value">African:20|Hispanic or Latin American:20|East Asian:20|European:20|South Asian:20</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary literature</div>
-      <div class="meta-value">PMID: 33247094</div>
+      <div class="meta-value">PMID: 35595084</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary DOI</div>
-      <div class="meta-value">10.1038/s41467-020-19600-4</div>
+      <div class="meta-value">10.1016/j.jaci.2022.03.035</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary PMID</div>
-      <div class="meta-value">33247094</div>
+      <div class="meta-value">35595084.0</div>
     </div>
     
     <div class="meta-row">
@@ -765,32 +765,32 @@ Query executed successfully.</code></pre>
     
     <div class="meta-row">
       <div class="meta-key">Variants</div>
-      <div class="meta-value">15</div>
+      <div class="meta-value">985,837</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Development method</div>
-      <div class="meta-value">15 variants from Graff et al (PGS000071) with inverse variant weights</div>
+      <div class="meta-value">PRS-CS</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">PGS release date</div>
-      <div class="meta-value">2021-05-28</div>
+      <div class="meta-value">2022-06-29</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Performance ID</div>
-      <div class="meta-value">PPM002053</div>
+      <div class="meta-value">PPM014754</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Evaluation sample set ID</div>
-      <div class="meta-value">PSS001010</div>
+      <div class="meta-value">PSS009885</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Publication ID</div>
-      <div class="meta-value">PGP000186</div>
+      <div class="meta-value">PGP000335</div>
     </div>
     
           </div>
@@ -802,10 +802,10 @@ Query executed successfully.</code></pre>
     <article class="pgs-card">
       <div class="pgs-card-header">
         <div>
-          <h3 class="pgs-title anchored">Breast cancer</h3>
-          <div class="pgs-subtitle">Selected primary model: PGS004153</div>
+          <h3 class="pgs-title anchored">Celiac disease</h3>
+          <div class="pgs-subtitle">Selected primary model: PGS004930</div>
         </div>
-        <div class="pgs-id-badge">PGS004153</div>
+        <div class="pgs-id-badge">PGS004930</div>
       </div>
 
       <div class="risk-badge risk-normal">Normal</div>
@@ -817,9 +817,9 @@ Query executed successfully.</code></pre>
         </div>
         
     <div class="percentile-track" aria-label="Percentile bar">
-      <div class="percentile-solid fill-normal" title="Predicted percentile range" style="width: 61.5%"></div>
+      <div class="percentile-solid fill-normal" title="Predicted percentile range" style="width: 61.1%"></div>
       
-      <div class="percentile-marker" title="Best Model Prediction: 61st" style="left: 61.5%"></div>
+      <div class="percentile-marker" title="Best Model Prediction: 61st" style="left: 61.1%"></div>
     </div>
     <div class="percentile-legend" aria-label="Percentile bar legend">
       <span class="legend-item"><span class="legend-marker-key"></span>Best Model Prediction</span>
@@ -834,25 +834,25 @@ Query executed successfully.</code></pre>
         
     <div class="metric-box">
       <div class="metric-label">AUROC</div>
-      <div class="metric-value">0.66</div>
+      <div class="metric-value">0.67</div>
       <div class="metric-caption">Primary model validation</div>
     </div>
     
     <div class="metric-box">
       <div class="metric-label">Odds-based risk</div>
-      <div class="metric-value">18.5% higher</div>
-      <div class="metric-caption">OR per SD 1.80; z 0.29; source PGS004153</div>
+      <div class="metric-value">3.4% higher</div>
+      <div class="metric-caption">OR per SD 1.52; z 0.08; source PGS004930</div>
     </div>
     
     <div class="metric-box">
       <div class="metric-label">Evaluation ancestry match</div>
-      <div class="metric-value">67% European</div>
+      <div class="metric-value">100% European</div>
       <div class="metric-caption">Primary model</div>
     </div>
     
     <div class="metric-box">
       <div class="metric-label">Evaluation N</div>
-      <div class="metric-value">217,530</div>
+      <div class="metric-value">8,417</div>
       <div class="metric-caption">Primary model</div>
     </div>
     
@@ -887,15 +887,975 @@ Query executed successfully.</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>PGS004153</td>
+<td>PGS004930</td>
 <td>61st</td>
-<td>0.66</td>
-<td>18.5% higher</td>
+<td>0.67</td>
+<td>3.4% higher</td>
+<td></td>
+<td>100.0%</td>
+<td>8,417</td>
+<td></td>
+<td></td>
+<td>PMID: 39218908</td>
+</tr>
+</tbody>
+</table>
+
+      </div>
+    </details>
+    
+        <details>
+          <summary>Literature, validation metadata, and selected model sources</summary>
+          <div class="meta-grid">
+            
+    <div class="meta-row">
+      <div class="meta-key">Primary PGS</div>
+      <div class="meta-value">PGS004930</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary AUROC</div>
+      <div class="meta-value">0.67</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary ethnicity share</div>
+      <div class="meta-value">100.0%</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary eval. N</div>
+      <div class="meta-value">8,417</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary ancestry</div>
+      <div class="meta-value">European:100</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary literature</div>
+      <div class="meta-value">PMID: 39218908</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary DOI</div>
+      <div class="meta-value">10.1186/s40246-024-00664-y</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary PMID</div>
+      <div class="meta-value">39218908.0</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Genome build</div>
+      <div class="meta-value">hg19</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Variants</div>
+      <div class="meta-value">463</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Development method</div>
+      <div class="meta-value">SnpNet</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">PGS release date</div>
+      <div class="meta-value">2024-09-19</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Performance ID</div>
+      <div class="meta-value">PPM021718</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Evaluation sample set ID</div>
+      <div class="meta-value">PSS011762</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Publication ID</div>
+      <div class="meta-value">PGP000665</div>
+    </div>
+    
+          </div>
+        </details>
+      </div>
+    </article>
+    
+
+    <article class="pgs-card">
+      <div class="pgs-card-header">
+        <div>
+          <h3 class="pgs-title anchored">Cirrhosis</h3>
+          <div class="pgs-subtitle">Selected primary model: PGS004621</div>
+        </div>
+        <div class="pgs-id-badge">PGS004621</div>
+      </div>
+
+      <div class="risk-badge risk-lowered">Lowered</div>
+
+      <div class="percentile-block">
+        <div class="percentile-topline">
+          <div class="percentile-label">Percentile</div>
+          <div class="percentile-value">10th</div>
+        </div>
+        
+    <div class="percentile-track" aria-label="Percentile bar">
+      <div class="percentile-solid fill-lowered" title="Predicted percentile range" style="width: 10.0%"></div>
+      
+      <div class="percentile-marker" title="Best Model Prediction: 10th" style="left: 10.0%"></div>
+    </div>
+    <div class="percentile-legend" aria-label="Percentile bar legend">
+      <span class="legend-item"><span class="legend-marker-key"></span>Best Model Prediction</span>
+      <span class="legend-item"><span class="legend-swatch fill-lowered"></span>Predicted percentile range</span>
+      
+    </div>
+    
+        
+      </div>
+
+      <div class="metric-grid">
+        
+    <div class="metric-box">
+      <div class="metric-label">AUROC</div>
+      <div class="metric-value">0.68</div>
+      <div class="metric-caption">Primary model validation</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Odds-based risk</div>
+      <div class="metric-value">36.2% lower</div>
+      <div class="metric-caption">OR per SD 1.42; z -1.28; source PGS004621</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Evaluation ancestry match</div>
+      <div class="metric-value">100% European</div>
+      <div class="metric-caption">Primary model</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Evaluation N</div>
+      <div class="metric-value">1,153,995</div>
+      <div class="metric-caption">Primary model</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Retained models</div>
+      <div class="metric-value">1</div>
+      <div class="metric-caption">Models shown in dropdown</div>
+    </div>
+    
+      </div>
+
+      <div class="metadata-panel">
+        
+    <details>
+      <summary>Show all retained PGS models for this trait (1)</summary>
+      <div class="model-table-wrap">
+        
+<table class="model-table caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">PGS ID</th>
+<th data-quarto-table-cell-role="th">Percentile</th>
+<th data-quarto-table-cell-role="th">AUROC</th>
+<th data-quarto-table-cell-role="th">Odds-based risk</th>
+<th data-quarto-table-cell-role="th">Hazard-based risk</th>
+<th data-quarto-table-cell-role="th">European share</th>
+<th data-quarto-table-cell-role="th">Eval. N</th>
+<th data-quarto-table-cell-role="th">Cases</th>
+<th data-quarto-table-cell-role="th">Controls</th>
+<th data-quarto-table-cell-role="th">Literature</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PGS004621</td>
+<td>10th</td>
+<td>0.68</td>
+<td>36.2% lower</td>
+<td></td>
+<td>100.0%</td>
+<td>1,153,995</td>
+<td>12,910</td>
+<td>1,141,085</td>
+<td>PMID: 38632349</td>
+</tr>
+</tbody>
+</table>
+
+      </div>
+    </details>
+    
+        <details>
+          <summary>Literature, validation metadata, and selected model sources</summary>
+          <div class="meta-grid">
+            
+    <div class="meta-row">
+      <div class="meta-key">Primary PGS</div>
+      <div class="meta-value">PGS004621</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary AUROC</div>
+      <div class="meta-value">0.68</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary ethnicity share</div>
+      <div class="meta-value">100.0%</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary eval. N</div>
+      <div class="meta-value">1,153,995</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary cases</div>
+      <div class="meta-value">12,910</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary controls</div>
+      <div class="meta-value">1,141,085</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary ancestry</div>
+      <div class="meta-value">European:100</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary literature</div>
+      <div class="meta-value">PMID: 38632349</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary DOI</div>
+      <div class="meta-value">10.1038/s41588-024-01720-y</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary PMID</div>
+      <div class="meta-value">38632349.0</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Genome build</div>
+      <div class="meta-value">GRCh37</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Variants</div>
+      <div class="meta-value">1,089,806</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Development method</div>
+      <div class="meta-value">PRS-CS</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">PGS release date</div>
+      <div class="meta-value">2024-07-31</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Performance ID</div>
+      <div class="meta-value">PPM020806</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Evaluation sample set ID</div>
+      <div class="meta-value">PSS011418</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Publication ID</div>
+      <div class="meta-value">PGP000594</div>
+    </div>
+    
+          </div>
+        </details>
+      </div>
+    </article>
+    
+
+    <article class="pgs-card">
+      <div class="pgs-card-header">
+        <div>
+          <h3 class="pgs-title anchored">Gout</h3>
+          <div class="pgs-subtitle">Selected primary model: PGS004931</div>
+        </div>
+        <div class="pgs-id-badge">PGS004931</div>
+      </div>
+
+      <div class="risk-badge risk-normal">Normal</div>
+
+      <div class="percentile-block">
+        <div class="percentile-topline">
+          <div class="percentile-label">Percentile</div>
+          <div class="percentile-value">74th</div>
+        </div>
+        
+    <div class="percentile-track" aria-label="Percentile bar">
+      <div class="percentile-solid fill-normal" title="Predicted percentile range" style="width: 74.1%"></div>
+      
+      <div class="percentile-marker" title="Best Model Prediction: 74th" style="left: 74.1%"></div>
+    </div>
+    <div class="percentile-legend" aria-label="Percentile bar legend">
+      <span class="legend-item"><span class="legend-marker-key"></span>Best Model Prediction</span>
+      <span class="legend-item"><span class="legend-swatch fill-normal"></span>Predicted percentile range</span>
+      
+    </div>
+    
+        
+      </div>
+
+      <div class="metric-grid">
+        
+    <div class="metric-box">
+      <div class="metric-label">AUROC</div>
+      <div class="metric-value">0.73</div>
+      <div class="metric-caption">Primary model validation</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Odds-based risk</div>
+      <div class="metric-value">30.2% higher</div>
+      <div class="metric-caption">OR per SD 1.52; z 0.63; source PGS004931</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Evaluation ancestry match</div>
+      <div class="metric-value">100% European</div>
+      <div class="metric-caption">Primary model</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Evaluation N</div>
+      <div class="metric-value">8,417</div>
+      <div class="metric-caption">Primary model</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Retained models</div>
+      <div class="metric-value">1</div>
+      <div class="metric-caption">Models shown in dropdown</div>
+    </div>
+    
+      </div>
+
+      <div class="metadata-panel">
+        
+    <details>
+      <summary>Show all retained PGS models for this trait (1)</summary>
+      <div class="model-table-wrap">
+        
+<table class="model-table caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">PGS ID</th>
+<th data-quarto-table-cell-role="th">Percentile</th>
+<th data-quarto-table-cell-role="th">AUROC</th>
+<th data-quarto-table-cell-role="th">Odds-based risk</th>
+<th data-quarto-table-cell-role="th">Hazard-based risk</th>
+<th data-quarto-table-cell-role="th">European share</th>
+<th data-quarto-table-cell-role="th">Eval. N</th>
+<th data-quarto-table-cell-role="th">Cases</th>
+<th data-quarto-table-cell-role="th">Controls</th>
+<th data-quarto-table-cell-role="th">Literature</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PGS004931</td>
+<td>74th</td>
+<td>0.73</td>
+<td>30.2% higher</td>
+<td></td>
+<td>100.0%</td>
+<td>8,417</td>
+<td></td>
+<td></td>
+<td>PMID: 39218908</td>
+</tr>
+</tbody>
+</table>
+
+      </div>
+    </details>
+    
+        <details>
+          <summary>Literature, validation metadata, and selected model sources</summary>
+          <div class="meta-grid">
+            
+    <div class="meta-row">
+      <div class="meta-key">Primary PGS</div>
+      <div class="meta-value">PGS004931</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary AUROC</div>
+      <div class="meta-value">0.73</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary ethnicity share</div>
+      <div class="meta-value">100.0%</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary eval. N</div>
+      <div class="meta-value">8,417</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary ancestry</div>
+      <div class="meta-value">European:100</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary literature</div>
+      <div class="meta-value">PMID: 39218908</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary DOI</div>
+      <div class="meta-value">10.1186/s40246-024-00664-y</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary PMID</div>
+      <div class="meta-value">39218908.0</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Genome build</div>
+      <div class="meta-value">hg19</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Variants</div>
+      <div class="meta-value">1,138</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Development method</div>
+      <div class="meta-value">SnpNet</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">PGS release date</div>
+      <div class="meta-value">2024-09-19</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Performance ID</div>
+      <div class="meta-value">PPM021719</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Evaluation sample set ID</div>
+      <div class="meta-value">PSS011762</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Publication ID</div>
+      <div class="meta-value">PGP000665</div>
+    </div>
+    
+          </div>
+        </details>
+      </div>
+    </article>
+    
+
+    <article class="pgs-card">
+      <div class="pgs-card-header">
+        <div>
+          <h3 class="pgs-title anchored">Hypothyroidism</h3>
+          <div class="pgs-subtitle">Selected primary model: PGS004935</div>
+        </div>
+        <div class="pgs-id-badge">PGS004935</div>
+      </div>
+
+      <div class="risk-badge risk-normal">Normal</div>
+
+      <div class="percentile-block">
+        <div class="percentile-topline">
+          <div class="percentile-label">Percentile</div>
+          <div class="percentile-value">39th</div>
+        </div>
+        
+    <div class="percentile-track" aria-label="Percentile bar">
+      <div class="percentile-solid fill-normal" title="Predicted percentile range" style="width: 39.1%"></div>
+      
+      <div class="percentile-marker" title="Best Model Prediction: 39th" style="left: 39.1%"></div>
+    </div>
+    <div class="percentile-legend" aria-label="Percentile bar legend">
+      <span class="legend-item"><span class="legend-marker-key"></span>Best Model Prediction</span>
+      <span class="legend-item"><span class="legend-swatch fill-normal"></span>Predicted percentile range</span>
+      
+    </div>
+    
+        
+      </div>
+
+      <div class="metric-grid">
+        
+    <div class="metric-box">
+      <div class="metric-label">AUROC</div>
+      <div class="metric-value">0.70</div>
+      <div class="metric-caption">Primary model validation</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Odds-based risk</div>
+      <div class="metric-value">10.4% lower</div>
+      <div class="metric-caption">OR per SD 1.50; z -0.27; source PGS004935</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Evaluation ancestry match</div>
+      <div class="metric-value">100% European</div>
+      <div class="metric-caption">Primary model</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Evaluation N</div>
+      <div class="metric-value">8,417</div>
+      <div class="metric-caption">Primary model</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Retained models</div>
+      <div class="metric-value">1</div>
+      <div class="metric-caption">Models shown in dropdown</div>
+    </div>
+    
+      </div>
+
+      <div class="metadata-panel">
+        
+    <details>
+      <summary>Show all retained PGS models for this trait (1)</summary>
+      <div class="model-table-wrap">
+        
+<table class="model-table caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">PGS ID</th>
+<th data-quarto-table-cell-role="th">Percentile</th>
+<th data-quarto-table-cell-role="th">AUROC</th>
+<th data-quarto-table-cell-role="th">Odds-based risk</th>
+<th data-quarto-table-cell-role="th">Hazard-based risk</th>
+<th data-quarto-table-cell-role="th">European share</th>
+<th data-quarto-table-cell-role="th">Eval. N</th>
+<th data-quarto-table-cell-role="th">Cases</th>
+<th data-quarto-table-cell-role="th">Controls</th>
+<th data-quarto-table-cell-role="th">Literature</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PGS004935</td>
+<td>39th</td>
+<td>0.70</td>
+<td>10.4% lower</td>
+<td></td>
+<td>100.0%</td>
+<td>8,417</td>
+<td></td>
+<td></td>
+<td>PMID: 39218908</td>
+</tr>
+</tbody>
+</table>
+
+      </div>
+    </details>
+    
+        <details>
+          <summary>Literature, validation metadata, and selected model sources</summary>
+          <div class="meta-grid">
+            
+    <div class="meta-row">
+      <div class="meta-key">Primary PGS</div>
+      <div class="meta-value">PGS004935</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary AUROC</div>
+      <div class="meta-value">0.70</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary ethnicity share</div>
+      <div class="meta-value">100.0%</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary eval. N</div>
+      <div class="meta-value">8,417</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary ancestry</div>
+      <div class="meta-value">European:100</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary literature</div>
+      <div class="meta-value">PMID: 39218908</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary DOI</div>
+      <div class="meta-value">10.1186/s40246-024-00664-y</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary PMID</div>
+      <div class="meta-value">39218908.0</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Genome build</div>
+      <div class="meta-value">hg19</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Variants</div>
+      <div class="meta-value">6,127</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Development method</div>
+      <div class="meta-value">SnpNet</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">PGS release date</div>
+      <div class="meta-value">2024-09-19</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Performance ID</div>
+      <div class="meta-value">PPM021723</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Evaluation sample set ID</div>
+      <div class="meta-value">PSS011762</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Publication ID</div>
+      <div class="meta-value">PGP000665</div>
+    </div>
+    
+          </div>
+        </details>
+      </div>
+    </article>
+    
+
+    <article class="pgs-card">
+      <div class="pgs-card-header">
+        <div>
+          <h3 class="pgs-title anchored">Incident type 2 diabetes</h3>
+          <div class="pgs-subtitle">Selected primary model: PGS002780</div>
+        </div>
+        <div class="pgs-id-badge">PGS002780</div>
+      </div>
+
+      <div class="risk-badge risk-lowered">Lowered</div>
+
+      <div class="percentile-block">
+        <div class="percentile-topline">
+          <div class="percentile-label">Percentile</div>
+          <div class="percentile-value">11th</div>
+        </div>
+        
+    <div class="percentile-track" aria-label="Percentile bar">
+      <div class="percentile-solid fill-lowered" title="Predicted percentile range" style="width: 11.0%"></div>
+      
+      <div class="percentile-marker" title="Best Model Prediction: 11th" style="left: 11.0%"></div>
+    </div>
+    <div class="percentile-legend" aria-label="Percentile bar legend">
+      <span class="legend-item"><span class="legend-marker-key"></span>Best Model Prediction</span>
+      <span class="legend-item"><span class="legend-swatch fill-lowered"></span>Predicted percentile range</span>
+      
+    </div>
+    
+        
+      </div>
+
+      <div class="metric-grid">
+        
+    <div class="metric-box">
+      <div class="metric-label">AUROC</div>
+      <div class="metric-value">0.76</div>
+      <div class="metric-caption">Primary model validation</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Odds-based risk</div>
+      <div class="metric-value">33.3% lower</div>
+      <div class="metric-caption">OR per SD 1.35; z -1.35; source PGS002780</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Evaluation ancestry match</div>
+      <div class="metric-value">19% European</div>
+      <div class="metric-caption">Primary model</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Evaluation N</div>
+      <div class="metric-value">33,652</div>
+      <div class="metric-caption">Primary model</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Retained models</div>
+      <div class="metric-value">1</div>
+      <div class="metric-caption">Models shown in dropdown</div>
+    </div>
+    
+      </div>
+
+      <div class="metadata-panel">
+        
+    <details>
+      <summary>Show all retained PGS models for this trait (1)</summary>
+      <div class="model-table-wrap">
+        
+<table class="model-table caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">PGS ID</th>
+<th data-quarto-table-cell-role="th">Percentile</th>
+<th data-quarto-table-cell-role="th">AUROC</th>
+<th data-quarto-table-cell-role="th">Odds-based risk</th>
+<th data-quarto-table-cell-role="th">Hazard-based risk</th>
+<th data-quarto-table-cell-role="th">European share</th>
+<th data-quarto-table-cell-role="th">Eval. N</th>
+<th data-quarto-table-cell-role="th">Cases</th>
+<th data-quarto-table-cell-role="th">Controls</th>
+<th data-quarto-table-cell-role="th">Literature</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PGS002780</td>
+<td>11th</td>
+<td>0.76</td>
+<td>33.3% lower</td>
+<td></td>
+<td>18.8%</td>
+<td>33,652</td>
+<td>4,033</td>
+<td>29,619</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+      </div>
+    </details>
+    
+        <details>
+          <summary>Literature, validation metadata, and selected model sources</summary>
+          <div class="meta-grid">
+            
+    <div class="meta-row">
+      <div class="meta-key">Primary PGS</div>
+      <div class="meta-value">PGS002780</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary AUROC</div>
+      <div class="meta-value">0.76</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary ethnicity share</div>
+      <div class="meta-value">18.8%</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary eval. N</div>
+      <div class="meta-value">33,652</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary cases</div>
+      <div class="meta-value">4,033</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary controls</div>
+      <div class="meta-value">29,619</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary ancestry</div>
+      <div class="meta-value">African:18.8|East Asian:18.8|European:18.8|South Asian:18.8|Greater Middle Eastern:12.5|Hispanic or Latin American:6.2|Additional Asian Ancestries:6.2</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary DOI</div>
+      <div class="meta-value">10.1101/2024.08.22.24312440</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Genome build</div>
+      <div class="meta-value">hg19</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Variants</div>
+      <div class="meta-value">419,209</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Development method</div>
+      <div class="meta-value">Stacked clumping and thresholding (SCT)</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">PGS release date</div>
+      <div class="meta-value">2022-12-20</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Performance ID</div>
+      <div class="meta-value">PPM021508</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Evaluation sample set ID</div>
+      <div class="meta-value">PSS011736</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Publication ID</div>
+      <div class="meta-value">PGP000656</div>
+    </div>
+    
+          </div>
+        </details>
+      </div>
+    </article>
+    
+
+    <article class="pgs-card">
+      <div class="pgs-card-header">
+        <div>
+          <h3 class="pgs-title anchored">Inflammatory bowel disease (IBD)</h3>
+          <div class="pgs-subtitle">Selected primary model: PGS004038</div>
+        </div>
+        <div class="pgs-id-badge">PGS004038</div>
+      </div>
+
+      <div class="risk-badge risk-lowered">Lowered</div>
+
+      <div class="percentile-block">
+        <div class="percentile-topline">
+          <div class="percentile-label">Percentile</div>
+          <div class="percentile-value">18th</div>
+        </div>
+        
+    <div class="percentile-track" aria-label="Percentile bar">
+      <div class="percentile-solid fill-lowered" title="Predicted percentile range" style="width: 18.1%"></div>
+      
+      <div class="percentile-marker" title="Best Model Prediction: 18th" style="left: 18.1%"></div>
+    </div>
+    <div class="percentile-legend" aria-label="Percentile bar legend">
+      <span class="legend-item"><span class="legend-marker-key"></span>Best Model Prediction</span>
+      <span class="legend-item"><span class="legend-swatch fill-lowered"></span>Predicted percentile range</span>
+      
+    </div>
+    
+        
+      </div>
+
+      <div class="metric-grid">
+        
+    <div class="metric-box">
+      <div class="metric-label">AUROC</div>
+      <div class="metric-value">0.69</div>
+      <div class="metric-caption">Primary model validation</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Odds-based risk</div>
+      <div class="metric-value">45.1% lower</div>
+      <div class="metric-caption">OR per SD 2.01; z -0.86; source PGS004038</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Evaluation ancestry match</div>
+      <div class="metric-value">67% European</div>
+      <div class="metric-caption">Primary model</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Evaluation N</div>
+      <div class="metric-value">396,819</div>
+      <div class="metric-caption">Primary model</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Retained models</div>
+      <div class="metric-value">1</div>
+      <div class="metric-caption">Models shown in dropdown</div>
+    </div>
+    
+      </div>
+
+      <div class="metadata-panel">
+        
+    <details>
+      <summary>Show all retained PGS models for this trait (1)</summary>
+      <div class="model-table-wrap">
+        
+<table class="model-table caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">PGS ID</th>
+<th data-quarto-table-cell-role="th">Percentile</th>
+<th data-quarto-table-cell-role="th">AUROC</th>
+<th data-quarto-table-cell-role="th">Odds-based risk</th>
+<th data-quarto-table-cell-role="th">Hazard-based risk</th>
+<th data-quarto-table-cell-role="th">European share</th>
+<th data-quarto-table-cell-role="th">Eval. N</th>
+<th data-quarto-table-cell-role="th">Cases</th>
+<th data-quarto-table-cell-role="th">Controls</th>
+<th data-quarto-table-cell-role="th">Literature</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PGS004038</td>
+<td>18th</td>
+<td>0.69</td>
+<td>45.1% lower</td>
 <td></td>
 <td>66.7%</td>
-<td>217,530</td>
-<td>16,076</td>
-<td>201,454</td>
+<td>396,819</td>
+<td>389,004</td>
+<td>7,815</td>
 <td>PMID: 38908374</td>
 </tr>
 </tbody>
@@ -910,12 +1870,12 @@ Query executed successfully.</code></pre>
             
     <div class="meta-row">
       <div class="meta-key">Primary PGS</div>
-      <div class="meta-value">PGS004153</div>
+      <div class="meta-value">PGS004038</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary AUROC</div>
-      <div class="meta-value">0.66</div>
+      <div class="meta-value">0.69</div>
     </div>
     
     <div class="meta-row">
@@ -925,17 +1885,17 @@ Query executed successfully.</code></pre>
     
     <div class="meta-row">
       <div class="meta-key">Primary eval. N</div>
-      <div class="meta-value">217,530</div>
+      <div class="meta-value">396,819</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary cases</div>
-      <div class="meta-value">16,076</div>
+      <div class="meta-value">389,004</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary controls</div>
-      <div class="meta-value">201,454</div>
+      <div class="meta-value">7,815</div>
     </div>
     
     <div class="meta-row">
@@ -955,7 +1915,7 @@ Query executed successfully.</code></pre>
     
     <div class="meta-row">
       <div class="meta-key">Primary PMID</div>
-      <div class="meta-value">38908374</div>
+      <div class="meta-value">38908374.0</div>
     </div>
     
     <div class="meta-row">
@@ -965,12 +1925,12 @@ Query executed successfully.</code></pre>
     
     <div class="meta-row">
       <div class="meta-key">Variants</div>
-      <div class="meta-value">1,133,268</div>
+      <div class="meta-value">1,018,068</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Development method</div>
-      <div class="meta-value">UKBB-EUR.MultiPRS.CV</div>
+      <div class="meta-value">LDpred2.CV</div>
     </div>
     
     <div class="meta-row">
@@ -980,12 +1940,12 @@ Query executed successfully.</code></pre>
     
     <div class="meta-row">
       <div class="meta-key">Performance ID</div>
-      <div class="meta-value">PPM019384</div>
+      <div class="meta-value">PPM019216</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Evaluation sample set ID</div>
-      <div class="meta-value">PSS011227</div>
+      <div class="meta-value">PSS011231</div>
     </div>
     
     <div class="meta-row">
@@ -1002,10 +1962,10 @@ Query executed successfully.</code></pre>
     <article class="pgs-card">
       <div class="pgs-card-header">
         <div>
-          <h3 class="pgs-title anchored">Colorectal cancer</h3>
-          <div class="pgs-subtitle">Selected primary model: PGS000785</div>
+          <h3 class="pgs-title anchored">Non-insulin-dependent diabetes (time-to-event)</h3>
+          <div class="pgs-subtitle">Selected primary model: PGS001294</div>
         </div>
-        <div class="pgs-id-badge">PGS000785</div>
+        <div class="pgs-id-badge">PGS001294</div>
       </div>
 
       <div class="risk-badge risk-normal">Normal</div>
@@ -1013,264 +1973,46 @@ Query executed successfully.</code></pre>
       <div class="percentile-block">
         <div class="percentile-topline">
           <div class="percentile-label">Percentile</div>
-          <div class="percentile-value">56th</div>
+          <div class="percentile-value">22nd</div>
         </div>
         
     <div class="percentile-track" aria-label="Percentile bar">
-      <div class="percentile-solid fill-normal" title="Consensus area" style="width: 25.6%"></div>
-      <div class="percentile-uncertainty fill-normal" title="Model disagreement range" style="left: 25.6%; width: 30.4%"></div>
-      <div class="percentile-marker" title="Best Model Prediction: 56th" style="left: 56.1%"></div>
+      <div class="percentile-solid fill-normal" title="Predicted percentile range" style="width: 22.0%"></div>
+      
+      <div class="percentile-marker" title="Best Model Prediction: 22nd" style="left: 22.0%"></div>
     </div>
     <div class="percentile-legend" aria-label="Percentile bar legend">
       <span class="legend-item"><span class="legend-marker-key"></span>Best Model Prediction</span>
-      <span class="legend-item"><span class="legend-swatch fill-normal"></span>Consensus area</span>
-      <span class="legend-item"><span class="legend-swatch translucent fill-normal"></span>Model disagreement range</span>
+      <span class="legend-item"><span class="legend-swatch fill-normal"></span>Predicted percentile range</span>
+      
     </div>
     
         
-    <div class="consensus-box">
-      <div class="metric-label">Multi-model consensus</div>
-      <div class="consensus-value">26th–56th</div>
-      <div class="metric-caption">Range across 2 retained PGS models. Consensus area = solid bar; model disagreement range = translucent band.</div>
-    </div>
-    
       </div>
 
       <div class="metric-grid">
         
     <div class="metric-box">
       <div class="metric-label">AUROC</div>
-      <div class="metric-value">0.72</div>
+      <div class="metric-value">0.76</div>
       <div class="metric-caption">Primary model validation</div>
     </div>
     
     <div class="metric-box">
       <div class="metric-label">Hazard-based risk</div>
-      <div class="metric-value">5.2% higher</div>
-      <div class="metric-caption">HR per SD 1.48; z 0.13; source PGS000785</div>
+      <div class="metric-value">26.3% lower</div>
+      <div class="metric-caption">HR per SD 1.47; z -0.79; source PGS001294</div>
     </div>
     
     <div class="metric-box">
       <div class="metric-label">Evaluation ancestry match</div>
-      <div class="metric-value">100% European</div>
+      <div class="metric-value">29% European</div>
       <div class="metric-caption">Primary model</div>
     </div>
     
     <div class="metric-box">
       <div class="metric-label">Evaluation N</div>
-      <div class="metric-value">393,723</div>
-      <div class="metric-caption">Primary model</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">Retained models</div>
-      <div class="metric-value">2</div>
-      <div class="metric-caption">Models shown in dropdown</div>
-    </div>
-    
-      </div>
-
-      <div class="metadata-panel">
-        
-    <details>
-      <summary>Show all retained PGS models for this trait (2)</summary>
-      <div class="model-table-wrap">
-        
-<table class="model-table caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th">PGS ID</th>
-<th data-quarto-table-cell-role="th">Percentile</th>
-<th data-quarto-table-cell-role="th">AUROC</th>
-<th data-quarto-table-cell-role="th">Odds-based risk</th>
-<th data-quarto-table-cell-role="th">Hazard-based risk</th>
-<th data-quarto-table-cell-role="th">European share</th>
-<th data-quarto-table-cell-role="th">Eval. N</th>
-<th data-quarto-table-cell-role="th">Cases</th>
-<th data-quarto-table-cell-role="th">Controls</th>
-<th data-quarto-table-cell-role="th">Literature</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>PGS000785</td>
-<td>56th</td>
-<td>0.72</td>
-<td></td>
-<td>5.2% higher</td>
-<td>100.0%</td>
-<td>393,723</td>
-<td>2,725</td>
-<td>390,998</td>
-<td>PMID: 33247094</td>
-</tr>
-<tr class="even">
-<td>PGS003432</td>
-<td>26th</td>
-<td>0.73</td>
-<td></td>
-<td></td>
-<td>66.7%</td>
-<td>34,152</td>
-<td>611</td>
-<td>33,541</td>
-<td>PMID: 36351667</td>
-</tr>
-</tbody>
-</table>
-
-      </div>
-    </details>
-    
-        <details>
-          <summary>Literature, validation metadata, and selected model sources</summary>
-          <div class="meta-grid">
-            
-    <div class="meta-row">
-      <div class="meta-key">Primary PGS</div>
-      <div class="meta-value">PGS000785</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary AUROC</div>
-      <div class="meta-value">0.72</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary ethnicity share</div>
-      <div class="meta-value">100.0%</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary eval. N</div>
-      <div class="meta-value">393,723</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary cases</div>
-      <div class="meta-value">2,725</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary controls</div>
-      <div class="meta-value">390,998</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary ancestry</div>
-      <div class="meta-value">European:100</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary literature</div>
-      <div class="meta-value">PMID: 33247094</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary DOI</div>
-      <div class="meta-value">10.1038/s41467-020-19600-4</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary PMID</div>
-      <div class="meta-value">33247094</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Genome build</div>
-      <div class="meta-value">GRCh37</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Variants</div>
-      <div class="meta-value">103</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Development method</div>
-      <div class="meta-value">103 variants from Graff et al (PGS000074) with inverse variant weights</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">PGS release date</div>
-      <div class="meta-value">2021-05-28</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Performance ID</div>
-      <div class="meta-value">PPM002056</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Evaluation sample set ID</div>
-      <div class="meta-value">PSS001013</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Publication ID</div>
-      <div class="meta-value">PGP000186</div>
-    </div>
-    
-          </div>
-        </details>
-      </div>
-    </article>
-    
-
-    <article class="pgs-card">
-      <div class="pgs-card-header">
-        <div>
-          <h3 class="pgs-title anchored">Kidney cancer</h3>
-          <div class="pgs-subtitle">Selected primary model: PGS004908</div>
-        </div>
-        <div class="pgs-id-badge">PGS004908</div>
-      </div>
-
-      <div class="risk-badge risk-lowered">Lowered</div>
-
-      <div class="percentile-block">
-        <div class="percentile-topline">
-          <div class="percentile-label">Percentile</div>
-          <div class="percentile-value">18th</div>
-        </div>
-        
-    <div class="percentile-track" aria-label="Percentile bar">
-      <div class="percentile-solid fill-lowered" title="Predicted percentile range" style="width: 17.5%"></div>
-      
-      <div class="percentile-marker" title="Best Model Prediction: 18th" style="left: 17.5%"></div>
-    </div>
-    <div class="percentile-legend" aria-label="Percentile bar legend">
-      <span class="legend-item"><span class="legend-marker-key"></span>Best Model Prediction</span>
-      <span class="legend-item"><span class="legend-swatch fill-lowered"></span>Predicted percentile range</span>
-      
-    </div>
-    
-        
-      </div>
-
-      <div class="metric-grid">
-        
-    <div class="metric-box">
-      <div class="metric-label">AUROC</div>
-      <div class="metric-value">0.74</div>
-      <div class="metric-caption">Primary model validation</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">Odds-based risk</div>
-      <div class="metric-value">38.0% lower</div>
-      <div class="metric-caption">OR per SD 1.69; z -0.91; source PGS004908</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">Evaluation ancestry match</div>
-      <div class="metric-value">100% European</div>
-      <div class="metric-caption">Primary model</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">Evaluation N</div>
-      <div class="metric-value">324,805</div>
+      <div class="metric-value">2,143</div>
       <div class="metric-caption">Primary model</div>
     </div>
     
@@ -1305,16 +2047,16 @@ Query executed successfully.</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>PGS004908</td>
-<td>18th</td>
-<td>0.74</td>
-<td>38.0% lower</td>
+<td>PGS001294</td>
+<td>22nd</td>
+<td>0.76</td>
 <td></td>
-<td>100.0%</td>
-<td>324,805</td>
-<td>1,696</td>
-<td>323,109</td>
-<td>PMID: 38671320</td>
+<td>26.3% lower</td>
+<td>28.6%</td>
+<td>2,143</td>
+<td>199</td>
+<td>1,944</td>
+<td>PMID: 40468860</td>
 </tr>
 </tbody>
 </table>
@@ -1328,326 +2070,52 @@ Query executed successfully.</code></pre>
             
     <div class="meta-row">
       <div class="meta-key">Primary PGS</div>
-      <div class="meta-value">PGS004908</div>
+      <div class="meta-value">PGS001294</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary AUROC</div>
-      <div class="meta-value">0.74</div>
+      <div class="meta-value">0.76</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary ethnicity share</div>
-      <div class="meta-value">100.0%</div>
+      <div class="meta-value">28.6%</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary eval. N</div>
-      <div class="meta-value">324,805</div>
+      <div class="meta-value">2,143</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary cases</div>
-      <div class="meta-value">1,696</div>
+      <div class="meta-value">199</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary controls</div>
-      <div class="meta-value">323,109</div>
+      <div class="meta-value">1,944</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary ancestry</div>
-      <div class="meta-value">European:100</div>
+      <div class="meta-value">European:28.6|Greater Middle Eastern:28.6|African:14.3|East Asian:14.3|South Asian:14.3</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary literature</div>
-      <div class="meta-value">PMID: 38671320</div>
+      <div class="meta-value">PMID: 40468860</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary DOI</div>
-      <div class="meta-value">10.1038/s41588-024-01725-7</div>
+      <div class="meta-value">10.1111/dom.16490</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary PMID</div>
-      <div class="meta-value">38671320</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Genome build</div>
-      <div class="meta-value">GRCh38</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Variants</div>
-      <div class="meta-value">107</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Development method</div>
-      <div class="meta-value">Genome-wide significant SNPs</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">PGS release date</div>
-      <div class="meta-value">2024-05-22</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Performance ID</div>
-      <div class="meta-value">PPM021362</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Evaluation sample set ID</div>
-      <div class="meta-value">PSS011702</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Publication ID</div>
-      <div class="meta-value">PGP000640</div>
-    </div>
-    
-          </div>
-        </details>
-      </div>
-    </article>
-    
-
-    <article class="pgs-card">
-      <div class="pgs-card-header">
-        <div>
-          <h3 class="pgs-title anchored">Lung cancer</h3>
-          <div class="pgs-subtitle">Selected primary model: PGS004860</div>
-        </div>
-        <div class="pgs-id-badge">PGS004860</div>
-      </div>
-
-      <div class="risk-badge risk-normal">Normal</div>
-
-      <div class="percentile-block">
-        <div class="percentile-topline">
-          <div class="percentile-label">Percentile</div>
-          <div class="percentile-value">51st</div>
-        </div>
-        
-    <div class="percentile-track" aria-label="Percentile bar">
-      <div class="percentile-solid fill-normal" title="Consensus area" style="width: 50.7%"></div>
-      <div class="percentile-uncertainty fill-normal" title="Model disagreement range" style="left: 50.7%; width: 15.0%"></div>
-      <div class="percentile-marker" title="Best Model Prediction: 51st" style="left: 50.7%"></div>
-    </div>
-    <div class="percentile-legend" aria-label="Percentile bar legend">
-      <span class="legend-item"><span class="legend-marker-key"></span>Best Model Prediction</span>
-      <span class="legend-item"><span class="legend-swatch fill-normal"></span>Consensus area</span>
-      <span class="legend-item"><span class="legend-swatch translucent fill-normal"></span>Model disagreement range</span>
-    </div>
-    
-        
-    <div class="consensus-box">
-      <div class="metric-label">Multi-model consensus</div>
-      <div class="consensus-value">51st–66th</div>
-      <div class="metric-caption">Range across 2 retained PGS models. Consensus area = solid bar; model disagreement range = translucent band.</div>
-    </div>
-    
-      </div>
-
-      <div class="metric-grid">
-        
-    <div class="metric-box">
-      <div class="metric-label">AUROC</div>
-      <div class="metric-value">0.89</div>
-      <div class="metric-caption">Primary model validation</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">Odds-based risk</div>
-      <div class="metric-value">0.3% higher</div>
-      <div class="metric-caption">OR per SD 1.33; z 0.01; source PGS004860</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">Hazard-based risk</div>
-      <div class="metric-value">4.5% higher</div>
-      <div class="metric-caption">HR per SD 1.17; z 0.28; source PGS000789</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">Evaluation ancestry match</div>
-      <div class="metric-value">100% European</div>
-      <div class="metric-caption">Primary model</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">Evaluation N</div>
-      <div class="metric-value">24,012</div>
-      <div class="metric-caption">Primary model</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">Retained models</div>
-      <div class="metric-value">2</div>
-      <div class="metric-caption">Models shown in dropdown</div>
-    </div>
-    
-      </div>
-
-      <div class="metadata-panel">
-        
-    <details>
-      <summary>Show all retained PGS models for this trait (2)</summary>
-      <div class="model-table-wrap">
-        
-<table class="model-table caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th">PGS ID</th>
-<th data-quarto-table-cell-role="th">Percentile</th>
-<th data-quarto-table-cell-role="th">AUROC</th>
-<th data-quarto-table-cell-role="th">Odds-based risk</th>
-<th data-quarto-table-cell-role="th">Hazard-based risk</th>
-<th data-quarto-table-cell-role="th">European share</th>
-<th data-quarto-table-cell-role="th">Eval. N</th>
-<th data-quarto-table-cell-role="th">Cases</th>
-<th data-quarto-table-cell-role="th">Controls</th>
-<th data-quarto-table-cell-role="th">Literature</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>PGS004860</td>
-<td>51st</td>
-<td>0.89</td>
-<td>0.3% higher</td>
-<td></td>
-<td>100.0%</td>
-<td>24,012</td>
-<td>4,002</td>
-<td>20,010</td>
-<td>PMID: 38970920</td>
-</tr>
-<tr class="even">
-<td>PGS000789</td>
-<td>66th</td>
-<td>0.85</td>
-<td></td>
-<td>4.5% higher</td>
-<td>100.0%</td>
-<td>392,539</td>
-<td>1,541</td>
-<td>390,998</td>
-<td>PMID: 33247094</td>
-</tr>
-</tbody>
-</table>
-
-      </div>
-    </details>
-    
-        <details>
-          <summary>Literature, validation metadata, and selected model sources</summary>
-          <div class="meta-grid">
-            
-    <div class="meta-row">
-      <div class="meta-key">Primary PGS</div>
-      <div class="meta-value">PGS004860</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary AUROC</div>
-      <div class="meta-value">0.89</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary ethnicity share</div>
-      <div class="meta-value">100.0%</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary eval. N</div>
-      <div class="meta-value">24,012</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary cases</div>
-      <div class="meta-value">4,002</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary controls</div>
-      <div class="meta-value">20,010</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary ancestry</div>
-      <div class="meta-value">European:100</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary literature</div>
-      <div class="meta-value">PMID: 38970920</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary DOI</div>
-      <div class="meta-value">10.1016/j.ebiom.2024.105234</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary PMID</div>
-      <div class="meta-value">38970920</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Hazard source PGS</div>
-      <div class="meta-value">PGS000789</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Hazard source AUROC</div>
-      <div class="meta-value">0.85</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Hazard source ethnicity share</div>
-      <div class="meta-value">100.0%</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Hazard source eval. N</div>
-      <div class="meta-value">392,539</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Hazard source cases</div>
-      <div class="meta-value">1,541</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Hazard source controls</div>
-      <div class="meta-value">390,998</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Hazard source ancestry</div>
-      <div class="meta-value">European:100</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Hazard source literature</div>
-      <div class="meta-value">PMID: 33247094</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Hazard source DOI</div>
-      <div class="meta-value">10.1038/s41467-020-19600-4</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Hazard source PMID</div>
-      <div class="meta-value">33247094</div>
+      <div class="meta-value">40468860.0</div>
     </div>
     
     <div class="meta-row">
@@ -1657,32 +2125,32 @@ Query executed successfully.</code></pre>
     
     <div class="meta-row">
       <div class="meta-key">Variants</div>
-      <div class="meta-value">1,143,554</div>
+      <div class="meta-value">3,496</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Development method</div>
-      <div class="meta-value">LDpred2</div>
+      <div class="meta-value">snpnet</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">PGS release date</div>
-      <div class="meta-value">2024-07-31</div>
+      <div class="meta-value">2021-10-21</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Performance ID</div>
-      <div class="meta-value">PPM021091</div>
+      <div class="meta-value">PPM022927</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Evaluation sample set ID</div>
-      <div class="meta-value">PSS011520</div>
+      <div class="meta-value">PSS012081</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Publication ID</div>
-      <div class="meta-value">PGP000607</div>
+      <div class="meta-value">PGP000753</div>
     </div>
     
           </div>
@@ -1694,28 +2162,28 @@ Query executed successfully.</code></pre>
     <article class="pgs-card">
       <div class="pgs-card-header">
         <div>
-          <h3 class="pgs-title anchored">Ovarian cancer</h3>
-          <div class="pgs-subtitle">Selected primary model: PGS000793</div>
+          <h3 class="pgs-title anchored">Rheumatoid arthritis</h3>
+          <div class="pgs-subtitle">Selected primary model: PGS004163</div>
         </div>
-        <div class="pgs-id-badge">PGS000793</div>
+        <div class="pgs-id-badge">PGS004163</div>
       </div>
 
-      <div class="risk-badge risk-very-low">Very low</div>
+      <div class="risk-badge risk-normal">Normal</div>
 
       <div class="percentile-block">
         <div class="percentile-topline">
           <div class="percentile-label">Percentile</div>
-          <div class="percentile-value">2nd</div>
+          <div class="percentile-value">31st</div>
         </div>
         
     <div class="percentile-track" aria-label="Percentile bar">
-      <div class="percentile-solid fill-very-low" title="Predicted percentile range" style="width: 1.9%"></div>
+      <div class="percentile-solid fill-normal" title="Predicted percentile range" style="width: 30.8%"></div>
       
-      <div class="percentile-marker" title="Best Model Prediction: 2nd" style="left: 1.9%"></div>
+      <div class="percentile-marker" title="Best Model Prediction: 31st" style="left: 30.8%"></div>
     </div>
     <div class="percentile-legend" aria-label="Percentile bar legend">
       <span class="legend-item"><span class="legend-marker-key"></span>Best Model Prediction</span>
-      <span class="legend-item"><span class="legend-swatch fill-very-low"></span>Predicted percentile range</span>
+      <span class="legend-item"><span class="legend-swatch fill-normal"></span>Predicted percentile range</span>
       
     </div>
     
@@ -1726,25 +2194,25 @@ Query executed successfully.</code></pre>
         
     <div class="metric-box">
       <div class="metric-label">AUROC</div>
-      <div class="metric-value">0.66</div>
+      <div class="metric-value">0.75</div>
       <div class="metric-caption">Primary model validation</div>
     </div>
     
     <div class="metric-box">
-      <div class="metric-label">Hazard-based risk</div>
-      <div class="metric-value">33.0% lower</div>
-      <div class="metric-caption">HR per SD 1.20; z -2.20; source PGS000793</div>
+      <div class="metric-label">Odds-based risk</div>
+      <div class="metric-value">43.3% lower</div>
+      <div class="metric-caption">OR per SD 2.46; z -0.63; source PGS004163</div>
     </div>
     
     <div class="metric-box">
       <div class="metric-label">Evaluation ancestry match</div>
-      <div class="metric-value">100% European</div>
+      <div class="metric-value">80% European</div>
       <div class="metric-caption">Primary model</div>
     </div>
     
     <div class="metric-box">
       <div class="metric-label">Evaluation N</div>
-      <div class="metric-value">211,958</div>
+      <div class="metric-value">90,274</div>
       <div class="metric-caption">Primary model</div>
     </div>
     
@@ -1779,251 +2247,15 @@ Query executed successfully.</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>PGS000793</td>
-<td>2nd</td>
-<td>0.66</td>
+<td>PGS004163</td>
+<td>31st</td>
+<td>0.75</td>
+<td>43.3% lower</td>
 <td></td>
-<td>33.0% lower</td>
-<td>100.0%</td>
-<td>211,958</td>
-<td>445</td>
-<td>211,513</td>
-<td>PMID: 33247094</td>
-</tr>
-</tbody>
-</table>
-
-      </div>
-    </details>
-    
-        <details>
-          <summary>Literature, validation metadata, and selected model sources</summary>
-          <div class="meta-grid">
-            
-    <div class="meta-row">
-      <div class="meta-key">Primary PGS</div>
-      <div class="meta-value">PGS000793</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary AUROC</div>
-      <div class="meta-value">0.66</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary ethnicity share</div>
-      <div class="meta-value">100.0%</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary eval. N</div>
-      <div class="meta-value">211,958</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary cases</div>
-      <div class="meta-value">445</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary controls</div>
-      <div class="meta-value">211,513</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary ancestry</div>
-      <div class="meta-value">European:100</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary literature</div>
-      <div class="meta-value">PMID: 33247094</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary DOI</div>
-      <div class="meta-value">10.1038/s41467-020-19600-4</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Primary PMID</div>
-      <div class="meta-value">33247094</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Genome build</div>
-      <div class="meta-value">GRCh37</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Variants</div>
-      <div class="meta-value">36</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Development method</div>
-      <div class="meta-value">36 variants from Graff et al (PGS000082) with inverse variant weights</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">PGS release date</div>
-      <div class="meta-value">2021-05-28</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Performance ID</div>
-      <div class="meta-value">PPM002064</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Evaluation sample set ID</div>
-      <div class="meta-value">PSS001021</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Publication ID</div>
-      <div class="meta-value">PGP000186</div>
-    </div>
-    
-          </div>
-        </details>
-      </div>
-    </article>
-    
-
-    <article class="pgs-card">
-      <div class="pgs-card-header">
-        <div>
-          <h3 class="pgs-title anchored">Prostate cancer</h3>
-          <div class="pgs-subtitle">Selected primary model: PGS000795</div>
-        </div>
-        <div class="pgs-id-badge">PGS000795</div>
-      </div>
-
-      <div class="risk-badge risk-normal">Normal</div>
-
-      <div class="percentile-block">
-        <div class="percentile-topline">
-          <div class="percentile-label">Percentile</div>
-          <div class="percentile-value">39th</div>
-        </div>
-        
-    <div class="percentile-track" aria-label="Percentile bar">
-      <div class="percentile-solid fill-normal" title="Consensus area" style="width: 18.6%"></div>
-      <div class="percentile-uncertainty fill-normal" title="Model disagreement range" style="left: 18.6%; width: 26.5%"></div>
-      <div class="percentile-marker" title="Best Model Prediction: 39th" style="left: 38.8%"></div>
-    </div>
-    <div class="percentile-legend" aria-label="Percentile bar legend">
-      <span class="legend-item"><span class="legend-marker-key"></span>Best Model Prediction</span>
-      <span class="legend-item"><span class="legend-swatch fill-normal"></span>Consensus area</span>
-      <span class="legend-item"><span class="legend-swatch translucent fill-normal"></span>Model disagreement range</span>
-    </div>
-    
-        
-    <div class="consensus-box">
-      <div class="metric-label">Multi-model consensus</div>
-      <div class="consensus-value">19th–45th</div>
-      <div class="metric-caption">Range across 3 retained PGS models. Consensus area = solid bar; model disagreement range = translucent band.</div>
-    </div>
-    
-      </div>
-
-      <div class="metric-grid">
-        
-    <div class="metric-box">
-      <div class="metric-label">AUROC</div>
-      <div class="metric-value">0.77</div>
-      <div class="metric-caption">Primary model validation</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">Odds-based risk</div>
-      <div class="metric-value">41.7% lower</div>
-      <div class="metric-caption">OR per SD 1.83; z -0.89; source PGS000030</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">Hazard-based risk</div>
-      <div class="metric-value">14.8% lower</div>
-      <div class="metric-caption">HR per SD 1.77; z -0.28; source PGS000795</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">Evaluation ancestry match</div>
-      <div class="metric-value">100% European</div>
-      <div class="metric-caption">Primary model</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">Evaluation N</div>
-      <div class="metric-value">184,225</div>
-      <div class="metric-caption">Primary model</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">Retained models</div>
-      <div class="metric-value">3</div>
-      <div class="metric-caption">Models shown in dropdown</div>
-    </div>
-    
-      </div>
-
-      <div class="metadata-panel">
-        
-    <details>
-      <summary>Show all retained PGS models for this trait (3)</summary>
-      <div class="model-table-wrap">
-        
-<table class="model-table caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th">PGS ID</th>
-<th data-quarto-table-cell-role="th">Percentile</th>
-<th data-quarto-table-cell-role="th">AUROC</th>
-<th data-quarto-table-cell-role="th">Odds-based risk</th>
-<th data-quarto-table-cell-role="th">Hazard-based risk</th>
-<th data-quarto-table-cell-role="th">European share</th>
-<th data-quarto-table-cell-role="th">Eval. N</th>
-<th data-quarto-table-cell-role="th">Cases</th>
-<th data-quarto-table-cell-role="th">Controls</th>
-<th data-quarto-table-cell-role="th">Literature</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>PGS000795</td>
-<td>39th</td>
-<td>0.77</td>
-<td></td>
-<td>14.8% lower</td>
-<td>100.0%</td>
-<td>184,225</td>
-<td>4,740</td>
-<td>179,485</td>
-<td>PMID: 33247094</td>
-</tr>
-<tr class="even">
-<td>PGS000030</td>
-<td>19th</td>
-<td>0.67</td>
-<td>41.7% lower</td>
-<td></td>
-<td>70.0%</td>
-<td>4,580</td>
-<td>453</td>
-<td>4,127</td>
-<td>PMID: 35150601</td>
-</tr>
-<tr class="odd">
-<td>PGS004042</td>
-<td>45th</td>
-<td>0.73</td>
-<td>11.0% lower</td>
-<td></td>
-<td>66.7%</td>
-<td>4,976</td>
-<td>110</td>
-<td>4,866</td>
+<td>80.0%</td>
+<td>90,274</td>
+<td>205</td>
+<td>90,069</td>
 <td>PMID: 38908374</td>
 </tr>
 </tbody>
@@ -2038,137 +2270,87 @@ Query executed successfully.</code></pre>
             
     <div class="meta-row">
       <div class="meta-key">Primary PGS</div>
-      <div class="meta-value">PGS000795</div>
+      <div class="meta-value">PGS004163</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary AUROC</div>
-      <div class="meta-value">0.77</div>
+      <div class="meta-value">0.75</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary ethnicity share</div>
-      <div class="meta-value">100.0%</div>
+      <div class="meta-value">80.0%</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary eval. N</div>
-      <div class="meta-value">184,225</div>
+      <div class="meta-value">90,274</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary cases</div>
-      <div class="meta-value">4,740</div>
+      <div class="meta-value">205</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary controls</div>
-      <div class="meta-value">179,485</div>
+      <div class="meta-value">90,069</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary ancestry</div>
-      <div class="meta-value">European:100</div>
+      <div class="meta-value">European:80|South Asian:20</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary literature</div>
-      <div class="meta-value">PMID: 33247094</div>
+      <div class="meta-value">PMID: 38908374</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary DOI</div>
-      <div class="meta-value">10.1038/s41467-020-19600-4</div>
+      <div class="meta-value">10.1016/j.ajhg.2024.06.003</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary PMID</div>
-      <div class="meta-value">33247094</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Odds source PGS</div>
-      <div class="meta-value">PGS000030</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Odds source AUROC</div>
-      <div class="meta-value">0.67</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Odds source ethnicity share</div>
-      <div class="meta-value">70.0%</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Odds source eval. N</div>
-      <div class="meta-value">4,580</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Odds source cases</div>
-      <div class="meta-value">453</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Odds source controls</div>
-      <div class="meta-value">4,127</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Odds source ancestry</div>
-      <div class="meta-value">European:70|Not Reported:10|African:10|Multi-ancestry (including European):10</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Odds source literature</div>
-      <div class="meta-value">PMID: 35150601</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Odds source DOI</div>
-      <div class="meta-value">10.1016/s1470-2045(21)00752-x</div>
-    </div>
-    
-    <div class="meta-row">
-      <div class="meta-key">Odds source PMID</div>
-      <div class="meta-value">35150601</div>
+      <div class="meta-value">38908374.0</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Genome build</div>
-      <div class="meta-value">GRCh37</div>
+      <div class="meta-value">GRCh38</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Variants</div>
-      <div class="meta-value">161</div>
+      <div class="meta-value">778,275</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Development method</div>
-      <div class="meta-value">161 variants from Graff et al (PGS000084) with inverse variant weights</div>
+      <div class="meta-value">UKBB-EUR.MultiPRS.CV</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">PGS release date</div>
-      <div class="meta-value">2021-05-28</div>
+      <div class="meta-value">2023-12-19</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Performance ID</div>
-      <div class="meta-value">PPM002066</div>
+      <div class="meta-value">PPM020029</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Evaluation sample set ID</div>
-      <div class="meta-value">PSS001023</div>
+      <div class="meta-value">PSS011275</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Publication ID</div>
-      <div class="meta-value">PGP000186</div>
+      <div class="meta-value">PGP000517</div>
     </div>
     
           </div>
@@ -2180,10 +2362,10 @@ Query executed successfully.</code></pre>
     <article class="pgs-card">
       <div class="pgs-card-header">
         <div>
-          <h3 class="pgs-title anchored">Thyroid cancer</h3>
-          <div class="pgs-subtitle">Selected primary model: PGS000797</div>
+          <h3 class="pgs-title anchored">Type 1 diabetes (T1D)</h3>
+          <div class="pgs-subtitle">Selected primary model: PGS004162</div>
         </div>
-        <div class="pgs-id-badge">PGS000797</div>
+        <div class="pgs-id-badge">PGS004162</div>
       </div>
 
       <div class="risk-badge risk-lowered">Lowered</div>
@@ -2191,13 +2373,13 @@ Query executed successfully.</code></pre>
       <div class="percentile-block">
         <div class="percentile-topline">
           <div class="percentile-label">Percentile</div>
-          <div class="percentile-value">8th</div>
+          <div class="percentile-value">11th</div>
         </div>
         
     <div class="percentile-track" aria-label="Percentile bar">
-      <div class="percentile-solid fill-lowered" title="Predicted percentile range" style="width: 8.3%"></div>
+      <div class="percentile-solid fill-lowered" title="Predicted percentile range" style="width: 11.0%"></div>
       
-      <div class="percentile-marker" title="Best Model Prediction: 8th" style="left: 8.3%"></div>
+      <div class="percentile-marker" title="Best Model Prediction: 11th" style="left: 11.0%"></div>
     </div>
     <div class="percentile-legend" aria-label="Percentile bar legend">
       <span class="legend-item"><span class="legend-marker-key"></span>Best Model Prediction</span>
@@ -2212,25 +2394,25 @@ Query executed successfully.</code></pre>
         
     <div class="metric-box">
       <div class="metric-label">AUROC</div>
-      <div class="metric-value">0.70</div>
+      <div class="metric-value">0.77</div>
       <div class="metric-caption">Primary model validation</div>
     </div>
     
     <div class="metric-box">
-      <div class="metric-label">Hazard-based risk</div>
-      <div class="metric-value">54.3% lower</div>
-      <div class="metric-caption">HR per SD 1.75; z -1.40; source PGS000797</div>
+      <div class="metric-label">Odds-based risk</div>
+      <div class="metric-value">73.1% lower</div>
+      <div class="metric-caption">OR per SD 2.89; z -1.24; source PGS004162</div>
     </div>
     
     <div class="metric-box">
       <div class="metric-label">Evaluation ancestry match</div>
-      <div class="metric-value">100% European</div>
+      <div class="metric-value">80% European</div>
       <div class="metric-caption">Primary model</div>
     </div>
     
     <div class="metric-box">
       <div class="metric-label">Evaluation N</div>
-      <div class="metric-value">391,189</div>
+      <div class="metric-value">90,274</div>
       <div class="metric-caption">Primary model</div>
     </div>
     
@@ -2265,16 +2447,16 @@ Query executed successfully.</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>PGS000797</td>
-<td>8th</td>
-<td>0.70</td>
+<td>PGS004162</td>
+<td>11th</td>
+<td>0.77</td>
+<td>73.1% lower</td>
 <td></td>
-<td>54.3% lower</td>
-<td>100.0%</td>
-<td>391,189</td>
-<td>191</td>
-<td>390,998</td>
-<td>PMID: 33247094</td>
+<td>80.0%</td>
+<td>90,274</td>
+<td>201</td>
+<td>90,073</td>
+<td>PMID: 38908374</td>
 </tr>
 </tbody>
 </table>
@@ -2288,52 +2470,252 @@ Query executed successfully.</code></pre>
             
     <div class="meta-row">
       <div class="meta-key">Primary PGS</div>
-      <div class="meta-value">PGS000797</div>
+      <div class="meta-value">PGS004162</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary AUROC</div>
-      <div class="meta-value">0.70</div>
+      <div class="meta-value">0.77</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary ethnicity share</div>
-      <div class="meta-value">100.0%</div>
+      <div class="meta-value">80.0%</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary eval. N</div>
-      <div class="meta-value">391,189</div>
+      <div class="meta-value">90,274</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary cases</div>
-      <div class="meta-value">191</div>
+      <div class="meta-value">201</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary controls</div>
-      <div class="meta-value">390,998</div>
+      <div class="meta-value">90,073</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary ancestry</div>
-      <div class="meta-value">European:100</div>
+      <div class="meta-value">European:80|South Asian:20</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary literature</div>
-      <div class="meta-value">PMID: 33247094</div>
+      <div class="meta-value">PMID: 38908374</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary DOI</div>
-      <div class="meta-value">10.1038/s41467-020-19600-4</div>
+      <div class="meta-value">10.1016/j.ajhg.2024.06.003</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Primary PMID</div>
-      <div class="meta-value">33247094</div>
+      <div class="meta-value">38908374.0</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Genome build</div>
+      <div class="meta-value">GRCh38</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Variants</div>
+      <div class="meta-value">62,645</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Development method</div>
+      <div class="meta-value">UKBB-EUR.MultiPRS.CV</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">PGS release date</div>
+      <div class="meta-value">2023-12-19</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Performance ID</div>
+      <div class="meta-value">PPM019964</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Evaluation sample set ID</div>
+      <div class="meta-value">PSS011277</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Publication ID</div>
+      <div class="meta-value">PGP000517</div>
+    </div>
+    
+          </div>
+        </details>
+      </div>
+    </article>
+    
+
+    <article class="pgs-card">
+      <div class="pgs-card-header">
+        <div>
+          <h3 class="pgs-title anchored">Type 2 diabetes (T2D)</h3>
+          <div class="pgs-subtitle">Selected primary model: PGS003114</div>
+        </div>
+        <div class="pgs-id-badge">PGS003114</div>
+      </div>
+
+      <div class="risk-badge risk-lowered">Lowered</div>
+
+      <div class="percentile-block">
+        <div class="percentile-topline">
+          <div class="percentile-label">Percentile</div>
+          <div class="percentile-value">17th</div>
+        </div>
+        
+    <div class="percentile-track" aria-label="Percentile bar">
+      <div class="percentile-solid fill-lowered" title="Predicted percentile range" style="width: 17.1%"></div>
+      
+      <div class="percentile-marker" title="Best Model Prediction: 17th" style="left: 17.1%"></div>
+    </div>
+    <div class="percentile-legend" aria-label="Percentile bar legend">
+      <span class="legend-item"><span class="legend-marker-key"></span>Best Model Prediction</span>
+      <span class="legend-item"><span class="legend-swatch fill-lowered"></span>Predicted percentile range</span>
+      
+    </div>
+    
+        
+      </div>
+
+      <div class="metric-grid">
+        
+    <div class="metric-box">
+      <div class="metric-label">AUROC</div>
+      <div class="metric-value">0.83</div>
+      <div class="metric-caption">Primary model validation</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Odds-based risk</div>
+      <div class="metric-value">72.9% lower</div>
+      <div class="metric-caption">OR per SD 3.96; z -0.95; source PGS003114</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Evaluation ancestry match</div>
+      <div class="metric-value">50% European</div>
+      <div class="metric-caption">Primary model</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Evaluation N</div>
+      <div class="metric-value">203,197</div>
+      <div class="metric-caption">Primary model</div>
+    </div>
+    
+    <div class="metric-box">
+      <div class="metric-label">Retained models</div>
+      <div class="metric-value">1</div>
+      <div class="metric-caption">Models shown in dropdown</div>
+    </div>
+    
+      </div>
+
+      <div class="metadata-panel">
+        
+    <details>
+      <summary>Show all retained PGS models for this trait (1)</summary>
+      <div class="model-table-wrap">
+        
+<table class="model-table caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">PGS ID</th>
+<th data-quarto-table-cell-role="th">Percentile</th>
+<th data-quarto-table-cell-role="th">AUROC</th>
+<th data-quarto-table-cell-role="th">Odds-based risk</th>
+<th data-quarto-table-cell-role="th">Hazard-based risk</th>
+<th data-quarto-table-cell-role="th">European share</th>
+<th data-quarto-table-cell-role="th">Eval. N</th>
+<th data-quarto-table-cell-role="th">Cases</th>
+<th data-quarto-table-cell-role="th">Controls</th>
+<th data-quarto-table-cell-role="th">Literature</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PGS003114</td>
+<td>17th</td>
+<td>0.83</td>
+<td>72.9% lower</td>
+<td></td>
+<td>50.0%</td>
+<td>203,197</td>
+<td>9,797</td>
+<td>193,400</td>
+<td>PMID: 36152628</td>
+</tr>
+</tbody>
+</table>
+
+      </div>
+    </details>
+    
+        <details>
+          <summary>Literature, validation metadata, and selected model sources</summary>
+          <div class="meta-grid">
+            
+    <div class="meta-row">
+      <div class="meta-key">Primary PGS</div>
+      <div class="meta-value">PGS003114</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary AUROC</div>
+      <div class="meta-value">0.83</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary ethnicity share</div>
+      <div class="meta-value">50.0%</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary eval. N</div>
+      <div class="meta-value">203,197</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary cases</div>
+      <div class="meta-value">9,797</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary controls</div>
+      <div class="meta-value">193,400</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary ancestry</div>
+      <div class="meta-value">European:50|Greater Middle Eastern:50</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary literature</div>
+      <div class="meta-value">PMID: 36152628</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary DOI</div>
+      <div class="meta-value">10.1016/j.ajhg.2022.09.001</div>
+    </div>
+    
+    <div class="meta-row">
+      <div class="meta-key">Primary PMID</div>
+      <div class="meta-value">36152628.0</div>
     </div>
     
     <div class="meta-row">
@@ -2343,32 +2725,32 @@ Query executed successfully.</code></pre>
     
     <div class="meta-row">
       <div class="meta-key">Variants</div>
-      <div class="meta-value">12</div>
+      <div class="meta-value">555,528</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Development method</div>
-      <div class="meta-value">12 variants from Graff et al (PGS000087) with inverse variant weights</div>
+      <div class="meta-value">lassosum</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">PGS release date</div>
-      <div class="meta-value">2021-05-28</div>
+      <div class="meta-value">2022-11-23</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Performance ID</div>
-      <div class="meta-value">PPM002068</div>
+      <div class="meta-value">PPM016010</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Evaluation sample set ID</div>
-      <div class="meta-value">PSS001025</div>
+      <div class="meta-value">PSS010036</div>
     </div>
     
     <div class="meta-row">
       <div class="meta-key">Publication ID</div>
-      <div class="meta-value">PGP000186</div>
+      <div class="meta-value">PGP000393</div>
     </div>
     
           </div>

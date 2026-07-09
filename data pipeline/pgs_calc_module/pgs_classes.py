@@ -242,15 +242,19 @@ class PGSCalculator:
 
         """The query gets the oldest prsc job with status 'queued' and imputation job with status 'completed', and then get all other queued prsc jobs requiring the same pgs_id(s) to run together in the same NF execution, to optimize computational time from reference_population*n_prsc_ids to reference_population+n_prsc_ids"""
         query = """WITH eligible AS (
-                        SELECT
+                        SELECT DISTINCT
                             pj.imputation_id,
                             pj.prsc_id,
-                            ij.user_id,
+                            uf.user_id,
                             pj.prsc_status,
                             ij.imputation_status
                         FROM snpster_users.prsc_jobs pj
                         JOIN snpster_users.imputation_jobs ij
                             ON pj.imputation_id = ij.imputation_id
+                        JOIN snpster_users.imputation_job_parameters ijp
+                            ON ij.imputation_id = ijp.imputation_id
+                        JOIN snpster_users.user_files uf
+                            ON uf.file_id = ijp.file_id
                         WHERE pj.prsc_status = 'queued'
                         AND ij.imputation_status = 'completed'
                     ),
@@ -476,7 +480,7 @@ class PGSCalculator:
             "--target_build", self.pgscalculator_config.target_build,
             "--run_ancestry", self.environment_handler.reference_data_path,
             "--outdir", self.environment_handler.output_dir,
-            #"--min_overlap", "0.01",
+            "--min_overlap", "0.01",
             "--scorefile", self.environment_handler.scoring_file_str,
         ]
         

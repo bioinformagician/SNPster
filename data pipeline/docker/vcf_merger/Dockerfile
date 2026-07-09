@@ -47,6 +47,7 @@ RUN pip install -r requirements.txt
 COPY vcf_utilities_module/vcf_classes.py .
 COPY vcf_utilities_module/vcf_combiner.py .
 COPY vcf_utilities_module/vcf_combiner_pipeline.nf .
+COPY vcf_utilities_module/merging_test_data /app/merging_test_data
 
 
 # Run your script

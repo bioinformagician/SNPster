@@ -208,7 +208,7 @@ class WorkflowOrchestrator:
         command = [
             self.environment_handler.plink_1_9_path,
             "--23file", csv_path,
-            "IMPDID", self.data_container.imputation_id,
+            "IMPID", self.data_container.imputation_id,
             "--memory", self.environment_handler.plink_1_9_memory_mb,
             "--threads", self.environment_handler.plink_1_9_threads,
             "--make-bed",

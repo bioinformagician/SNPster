@@ -270,12 +270,12 @@ class VCFUtilities:
                         str(plain_tmp_path),
                         "-Oz", "-o", str(gz_tmp_path)
                     ], check=True)
-                    os.replace(gz_tmp_path, vcf_path)
+                    shutil.move(str(gz_tmp_path), str(vcf_path))
                 except Exception:
                     gz_tmp_path.unlink(missing_ok=True)
                     raise
             else:
-                os.replace(plain_tmp_path, vcf_path)
+                shutil.move(str(plain_tmp_path), str(vcf_path))
                 plain_tmp_path = None
         finally:
             if plain_tmp_path is not None:

@@ -94,11 +94,18 @@ class DatabaseQueryHandler:
     def get_queued_jobs(self) -> pd.DataFrame:
         
         
-        query = f"""SELECT ij.user_id, ij.imputation_id, ui.genefile_location 
-                    FROM snpster_users.user_information ui
-                    JOIN snpster_users.imputation_jobs ij ON ui.user_id = ij.user_id
+        query = f"""SELECT DISTINCT ON (ij.imputation_id)
+                        uf.user_id,
+                        ij.imputation_id,
+                        ijp.file_id,
+                        uf.genefile_location
+                    FROM snpster_users.imputation_jobs ij
+                    JOIN snpster_users.imputation_job_parameters ijp
+                        ON ij.imputation_id = ijp.imputation_id
+                    JOIN snpster_users.user_files uf
+                        ON uf.file_id = ijp.file_id
                     WHERE ij.imputation_status = 'queued'
-                    order by imputation_id asc
+                    ORDER BY ij.imputation_id ASC, ijp.file_id ASC
                     LIMIT 33;"""
         
         results = self.db_utils.get_pd_dataframe_from_query(query)

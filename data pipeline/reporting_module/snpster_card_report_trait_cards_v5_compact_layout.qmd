@@ -491,7 +491,7 @@ db_handler = DbHandler(port=PORT, db_url=None, user=USERNAME, password=PASSWORD,
 db_handler.connect()
 db_utils = DbUtils(db_handler)
 
-prsc_id = 2354  # 2350 metabolic, 2351 cardiovascular, 2354 cancer
+prsc_id = 2350  # 2350 metabolic, 2351 cardiovascular, 2354 cancer
 ethnicity = "European"  # TODO: query from user profile later
 
 query = f""" 

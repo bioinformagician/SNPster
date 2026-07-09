@@ -1,0 +1,691 @@
+pgs_id,reported_trait,category
+PGS003429,Abdominal aortic aneurysm,Cardiovascular
+PGS001784,Abdominal aortic aneurysm,Cardiovascular
+PGS003972,Abdominal aortic aneurysm,Cardiovascular
+PGS001369,Acute appendicitis (time-to-event),Metabolic & Endocrine
+PGS001314,Acute myocardial infarction (time-to-event),Cardiovascular
+PGS000717,Adult life body size,Metabolic & Endocrine
+PGS004952,Age-related macular degeneration,Ophthalmology
+PGS004606,Age-related macular degeneration,Ophthalmology
+PGS004280,All-cause dementia,Neurological & Psychiatric
+PGS004283,All-cause dementia,Neurological & Psychiatric
+PGS004282,All-cause dementia,Neurological & Psychiatric
+PGS005170,All-cause dementia,Neurological & Psychiatric
+PGS004284,All-cause dementia,Neurological & Psychiatric
+PGS004281,All-cause dementia,Neurological & Psychiatric
+PGS000929,All-cause dementia (algorithmically-defined),Neurological & Psychiatric
+PGS004285,Alzheimer's disease,Neurological & Psychiatric
+PGS004008,Alzheimer's disease,Neurological & Psychiatric
+PGS004286,Alzheimer's disease,Neurological & Psychiatric
+PGS004062,Alzheimer's disease,Neurological & Psychiatric
+PGS004092,Alzheimer's disease,Neurological & Psychiatric
+PGS004146,Alzheimer's disease,Neurological & Psychiatric
+PGS004289,Alzheimer's disease,Neurological & Psychiatric
+PGS004863,Alzheimer's disease,Neurological & Psychiatric
+PGS004034,Alzheimer's disease,Neurological & Psychiatric
+PGS004288,Alzheimer's disease,Neurological & Psychiatric
+PGS000779,Alzheimer's disease,Neurological & Psychiatric
+PGS004287,Alzheimer's disease,Neurological & Psychiatric
+PGS001348,Alzheimer's disease (algorithmically-defined),Neurological & Psychiatric
+PGS001349,Alzheimer's disease (time-to-event),Neurological & Psychiatric
+PGS001260,Angina,Cardiovascular
+PGS001261,Angina pectoris (time-to-event),Cardiovascular
+PGS003421,Ankylosing spondylitis,Immune & Autoimmune
+PGS003422,Ankylosing spondylitis,Immune & Autoimmune
+PGS003423,Ankylosing spondylitis,Immune & Autoimmune
+PGS003424,Ankylosing spondylitis,Immune & Autoimmune
+PGS001267,Ankylosing spondylitis,Immune & Autoimmune
+PGS003420,Ankylosing spondylitis,Immune & Autoimmune
+PGS001268,Ankylosing spondylitis (time-to-event),Immune & Autoimmune
+PGS001135,Arthritis (nos),Immune & Autoimmune
+PGS001112,Aspirin,Other
+PGS001113,Aspirin use self-reported,Other
+PGS002727,Asthma,Immune & Autoimmune
+PGS001787,Asthma,Immune & Autoimmune
+PGS001782,Asthma,Immune & Autoimmune
+PGS000799,Asthma,Immune & Autoimmune
+PGS001344,Asthma (diagnosed by doctor),Immune & Autoimmune
+PGS004293,Atrial fibrillation,Cardiovascular
+PGS004294,Atrial fibrillation,Cardiovascular
+PGS004187,Atrial fibrillation,Cardiovascular
+PGS005289,Atrial fibrillation,Cardiovascular
+PGS005288,Atrial fibrillation,Cardiovascular
+PGS005287,Atrial fibrillation,Cardiovascular
+PGS004189,Atrial fibrillation,Cardiovascular
+PGS004188,Atrial fibrillation,Cardiovascular
+PGS004186,Atrial fibrillation,Cardiovascular
+PGS004190,Atrial fibrillation,Cardiovascular
+PGS004290,Atrial fibrillation,Cardiovascular
+PGS005290,Atrial fibrillation,Cardiovascular
+PGS002814,Atrial fibrillation,Cardiovascular
+PGS005291,Atrial fibrillation,Cardiovascular
+PGS005292,Atrial fibrillation,Cardiovascular
+PGS004291,Atrial fibrillation,Cardiovascular
+PGS004292,Atrial fibrillation,Cardiovascular
+PGS001340,Atrial fibrillation,Cardiovascular
+PGS000338,Atrial fibrillation,Cardiovascular
+PGS004929,Atrial fibrillation,Cardiovascular
+PGS000016,Atrial fibrillation,Cardiovascular
+PGS005313,Atrial fibrillation,Cardiovascular
+PGS001339,Atrial fibrillation and flutter (time-to-event),Cardiovascular
+PGS001263,Atrial flutter,Cardiovascular
+PGS004239,Autoimmune Addison's disease,Metabolic & Endocrine
+PGS000071,Bladder cancer,Cancer
+PGS000782,Bladder cancer,Cancer
+PGS000930,Blood clot (diagnosed by doctor),Cardiovascular
+PGS004025,Breast cancer,Cancer
+PGS004688,Breast cancer,Cancer
+PGS004083,Breast cancer,Cancer
+PGS000015,Breast cancer,Cancer
+PGS000004,Breast cancer,Cancer
+PGS001778,Breast cancer,Cancer
+PGS000007,Breast cancer,Cancer
+PGS000051,Breast cancer,Cancer
+PGS004153,Breast cancer,Cancer
+PGS000001,Breast cancer,Cancer
+PGS004069,Breast cancer,Cancer
+PGS003380,Breast cancer,Cancer
+PGS004040,Breast cancer,Cancer
+PGS001336,Breast cancer,Cancer
+PGS000212,Breast cancer intrinsic-like subtype (luminal A-like),Cancer
+PGS001250,Calculus of kidney and ureter (time-to-event),Metabolic & Endocrine
+PGS000117,Cardiovascular disease,Cardiovascular
+PGS001302,Cataract,Ophthalmology
+PGS004930,Celiac disease,Metabolic & Endocrine
+PGS001300,"Celiac disease or gluten sensitivity, diagnosed",Metabolic & Endocrine
+PGS000073,Cervical cancer,Cancer
+PGS000784,Cervical cancer,Cancer
+PGS001299,Cervical cancer,Cancer
+PGS002248,Childhood asthma,Immune & Autoimmune
+PGS000942,Cholecystitis,Metabolic & Endocrine
+PGS000943,Cholecystitis (time-to-event),Metabolic & Endocrine
+PGS001174,Cholelithiasis (time-to-event),Metabolic & Endocrine
+PGS000192,Cholesterol,Blood Panel
+PGS000962,Chronic ischaemic heart disease (time-to-event),Cardiovascular
+PGS002237,Chronic kidney disease (stage 3 or greater),Metabolic & Endocrine
+PGS005090,Chronic kidney disease (stage 3 or higher),Metabolic & Endocrine
+PGS000649,Chronic lymphocytic leukemia,Cancer
+PGS000647,Chronic lymphocytic leukemia,Cancer
+PGS001783,Chronic obstructive pulmonary disease,Respiratory
+PGS001332,Chronic obstructive pulmonary disease,Respiratory
+PGS001788,Chronic obstructive pulmonary disease,Respiratory
+PGS001333,Chronic obstructive pulmonary disease (algorithmically-defined),Respiratory
+PGS001272,Chronic renal failure (time-to-event),Metabolic & Endocrine
+PGS004621,Cirrhosis,Metabolic & Endocrine
+PGS001777,Cirrhosis (alcohol related),Metabolic & Endocrine
+PGS000042,Coeliac disease,Metabolic & Endocrine
+PGS000041,Coeliac disease,Metabolic & Endocrine
+PGS000316,Coeliac disease,Metabolic & Endocrine
+PGS000040,Coeliac disease,Metabolic & Endocrine
+PGS003386,Colorectal cancer,Cancer
+PGS004301,Colorectal cancer,Cancer
+PGS004300,Colorectal cancer,Cancer
+PGS000785,Colorectal cancer,Cancer
+PGS001776,Colorectal cancer,Cancer
+PGS000074,Colorectal cancer,Cancer
+PGS003431,Colorectal cancer,Cancer
+PGS003432,Colorectal cancer,Cancer
+PGS003433,Colorectal cancer,Cancer
+PGS003434,Colorectal cancer,Cancer
+PGS003435,Colorectal cancer,Cancer
+PGS000765,Colorectal cancer,Cancer
+PGS004240,Colorectal cancer,Cancer
+PGS004304,Colorectal cancer,Cancer
+PGS003979,Colorectal cancer,Cancer
+PGS003436,Colorectal cancer,Cancer
+PGS003439,Colorectal cancer,Cancer
+PGS004303,Colorectal cancer,Cancer
+PGS004302,Colorectal cancer,Cancer
+PGS000959,Connective tissue disorder,Immune & Autoimmune
+PGS004305,Coronary artery disease,Cardiovascular
+PGS004309,Coronary artery disease,Cardiovascular
+PGS004308,Coronary artery disease,Cardiovascular
+PGS004307,Coronary artery disease,Cardiovascular
+PGS004306,Coronary artery disease,Cardiovascular
+PGS000748,Coronary artery disease,Cardiovascular
+PGS000337,Coronary artery disease,Cardiovascular
+PGS005091,Coronary artery disease,Cardiovascular
+PGS000296,Coronary artery disease,Cardiovascular
+PGS005092,Coronary artery disease,Cardiovascular
+PGS003866,Coronary artery disease,Cardiovascular
+PGS003446,Coronary artery disease,Cardiovascular
+PGS000116,Coronary artery disease,Cardiovascular
+PGS004196,Coronary artery disease,Cardiovascular
+PGS004197,Coronary artery disease,Cardiovascular
+PGS004198,Coronary artery disease,Cardiovascular
+PGS004199,Coronary artery disease,Cardiovascular
+PGS005293,Coronary artery disease,Cardiovascular
+PGS005294,Coronary artery disease,Cardiovascular
+PGS005295,Coronary artery disease,Cardiovascular
+PGS005296,Coronary artery disease,Cardiovascular
+PGS005297,Coronary artery disease,Cardiovascular
+PGS005298,Coronary artery disease,Cardiovascular
+PGS000018,Coronary artery disease,Cardiovascular
+PGS000013,Coronary artery disease,Cardiovascular
+PGS000011,Coronary artery disease,Cardiovascular
+PGS000747,Coronary artery disease,Cardiovascular
+PGS004237,Coronary Artery Disease,Cardiovascular
+PGS000329,Coronary heart disease,Cardiovascular
+PGS001780,Coronary heart disease,Cardiovascular
+PGS004698,Coronary heart disease,Cardiovascular
+PGS004697,Coronary heart disease,Cardiovascular
+PGS004696,Coronary heart disease,Cardiovascular
+PGS000200,Coronary heart disease,Cardiovascular
+PGS002272,COVID-19 infection,Other
+PGS000967,Coxarthrosis [arthrosis of hip] (time-to-event),Metabolic & Endocrine
+PGS004254,Crohn's disease,Metabolic & Endocrine
+PGS001331,Crohn's disease,Metabolic & Endocrine
+PGS001330,Crohn's disease [regional enteritis] (time-to-event),Metabolic & Endocrine
+PGS001264,Deep vein thrombosis,Cardiovascular
+PGS001265,Deep vein thrombosis (leg),Cardiovascular
+PGS000945,Dementia in Alzheimer's disease (time-to-event),Neurological & Psychiatric
+PGS000995,Dentures,Other
+PGS001327,Diabetes,Metabolic & Endocrine
+PGS001028,Diabetic eye disease,Ophthalmology
+PGS001050,Diaphragmatic hernia (time-to-event),Metabolic & Endocrine
+PGS004233,Diastolic blood pressure,Cardiovascular
+PGS002239,Diastolic blood pressure,Cardiovascular
+PGS004861,Dilated cardiomyopathy,Cardiovascular
+PGS004862,Dilated cardiomyopathy (MTAG),Cardiovascular
+PGS001318,Disorders of lipoprotein metabolism and other lipidaemias (time-to-event),Blood Panel
+PGS001023,Disorders of mineral metabolism (time-to-event),Metabolic & Endocrine
+PGS000924,Disorders of porphyrin and bilirubin metabolism (time-to-event),Blood Panel
+PGS004614,Diverticular disease,Metabolic & Endocrine
+PGS000996,Diverticular disease/diverticulitis,Metabolic & Endocrine
+PGS000997,Diverticular disease of intestine (time-to-event),Metabolic & Endocrine
+PGS001390,Duodenal ulcer (time-to-event),Metabolic & Endocrine
+PGS001254,Dupuytren's contracture,Other
+PGS000716,Early life body size,Metabolic & Endocrine
+PGS001246,Ease of skin tanning (get very tanned),Other
+PGS001247,"Ease of skin tanning (never tan, only burn)",Other
+PGS001326,Emphysema,Respiratory
+PGS000075,Endometrial cancer,Cancer
+PGS000786,Endometrial cancer,Cancer
+PGS001015,Enlarged prostate,Metabolic & Endocrine
+PGS000324,Enthesitis-related Juvenile Idiophatic Arthritis,Immune & Autoimmune
+PGS000005,ER-positive breast cancer,Cancer
+PGS003388,Esophageal adenocarcinoma,Cancer
+PGS003387,Esophageal adenocarcinoma or Barrett’s esophagus,Cancer
+PGS000958,Essential hypertension,Cardiovascular
+PGS000957,Essential (primary hypertension) (time-to-event),Cardiovascular
+PGS000883,Estimated glomerular filtration rate,Blood Panel
+PGS001182,Estradiol [> 212 pmol/L],Blood Panel
+PGS001321,Eye problems/disorders (Glaucoma),Ophthalmology
+PGS001141,Facial ageing (looking younger than you are),Other
+PGS001072,"Facial aging, looking 'older than you are'",Other
+PGS001801,FEV1/FVC ratio,Respiratory
+PGS001153,Folic acid or folate (Vitamin B9),Blood Panel
+PGS001800,Forced expiratory volume (FEV1),Respiratory
+PGS001026,Forearm or wrist fracture,Metabolic & Endocrine
+PGS001256,Gallstones,Metabolic & Endocrine
+PGS000137,Glaucoma,Ophthalmology
+PGS001322,Glaucoma,Ophthalmology
+PGS001323,Glaucoma (time-to-event),Ophthalmology
+PGS003384,Glioblastoma,Cancer
+PGS001044,Glucosamine intake,Other
+PGS001192,Gonarthrosis [arthrosis of knee] (time-to-event),Metabolic & Endocrine
+PGS001248,Gout,Metabolic & Endocrine
+PGS004076,Gout,Metabolic & Endocrine
+PGS001789,Gout,Metabolic & Endocrine
+PGS004090,Gout,Metabolic & Endocrine
+PGS004265,Gout,Metabolic & Endocrine
+PGS004266,Gout,Metabolic & Endocrine
+PGS004267,Gout,Metabolic & Endocrine
+PGS004268,Gout,Metabolic & Endocrine
+PGS004006,Gout,Metabolic & Endocrine
+PGS000199,Gout,Metabolic & Endocrine
+PGS004060,Gout,Metabolic & Endocrine
+PGS004269,Gout,Metabolic & Endocrine
+PGS004047,Gout,Metabolic & Endocrine
+PGS004160,Gout,Metabolic & Endocrine
+PGS000711,Gout,Metabolic & Endocrine
+PGS004032,Gout,Metabolic & Endocrine
+PGS004018,Gout,Metabolic & Endocrine
+PGS003990,Gout,Metabolic & Endocrine
+PGS004931,Gout,Metabolic & Endocrine
+PGS001249,Gout (time-to-event),Metabolic & Endocrine
+PGS005265,Graves' disease,Immune & Autoimmune
+PGS005266,Graves' disease,Immune & Autoimmune
+PGS005264,Graves' disease,Immune & Autoimmune
+PGS001092,"Hair color, black",Other
+PGS001093,"Hair color, blonde",Other
+PGS001094,"Hair color, brown",Other
+PGS001095,"Hair color, dark brown",Other
+PGS001096,"Hair color, light brown",Other
+PGS001097,"Hair color, other",Other
+PGS001098,"Hair color, red",Other
+PGS003390,Head and neck squamous cell carcinoma,Cancer
+PGS005097,Heart failure,Cardiovascular
+PGS001790,Heart failure,Cardiovascular
+PGS000657,Heel quantitative ultrasound speed of sound (SOS),Metabolic & Endocrine
+PGS001136,"Hematologic disease, genetic",Other
+PGS000865,Hepatic fat content,Blood Panel
+PGS000939,Hiatus hernia,Metabolic & Endocrine
+PGS000936,High cholesterol,Blood Panel
+PGS002728,Hip osteoarthritis,Metabolic & Endocrine
+PGS001338,Hyperplasia of prostate (time-to-event),Other
+PGS004191,Hypertension,Cardiovascular
+PGS004934,Hypertension,Cardiovascular
+PGS004192,Hypertension,Cardiovascular
+PGS004193,Hypertension,Cardiovascular
+PGS004194,Hypertension,Cardiovascular
+PGS004195,Hypertension,Cardiovascular
+PGS001320,Hypertension,Cardiovascular
+PGS004234,Hypertension,Cardiovascular
+PGS004236,Hypertension,Cardiovascular
+PGS001043,"Hyperthyroidism, thyrotoxicosis",Metabolic & Endocrine
+PGS004910,Hypertrophic cardiomyopathy,Cardiovascular
+PGS000739,Hypertrophic cardiomyopathy,Cardiovascular
+PGS004911,Hypertrophic cardiomyopathy (MTAG),Cardiovascular
+PGS004935,Hypothyroidism,Metabolic & Endocrine
+PGS005218,Hypothyroidism,Metabolic & Endocrine
+PGS000965,Hypothyroidism/myxoedema,Metabolic & Endocrine
+PGS001791,Idiopathic pulmonary fibrosis,Respiratory
+PGS002780,Incident type 2 diabetes,Metabolic & Endocrine
+PGS000017,Inflammatory bowel disease,Metabolic & Endocrine
+PGS001288,Inflammatory bowel disease,Metabolic & Endocrine
+PGS003981,Inflammatory bowel disease (IBD),Metabolic & Endocrine
+PGS003997,Inflammatory bowel disease (IBD),Metabolic & Endocrine
+PGS004151,Inflammatory bowel disease (IBD),Metabolic & Endocrine
+PGS004051,Inflammatory bowel disease (IBD),Metabolic & Endocrine
+PGS004067,Inflammatory bowel disease (IBD),Metabolic & Endocrine
+PGS004135,Inflammatory bowel disease (IBD),Metabolic & Endocrine
+PGS004081,Inflammatory bowel disease (IBD),Metabolic & Endocrine
+PGS004013,Inflammatory bowel disease (IBD),Metabolic & Endocrine
+PGS004023,Inflammatory bowel disease (IBD),Metabolic & Endocrine
+PGS004097,Inflammatory bowel disease (IBD),Metabolic & Endocrine
+PGS004038,Inflammatory bowel disease (IBD),Metabolic & Endocrine
+PGS000948,Inguinal hernia,Metabolic & Endocrine
+PGS000949,Inguinal hernia (time-to-event),Metabolic & Endocrine
+PGS001296,Insulin-dependent diabetes mellitus (time-to-event),Metabolic & Endocrine
+PGS000940,Intestinal malabsorption (time-to-event),Metabolic & Endocrine
+PGS000941,Iridocyclitis (time-to-event),Immune & Autoimmune
+PGS000966,Iritis,Immune & Autoimmune
+PGS002725,Ischemic stroke,Cardiovascular
+PGS000039,Ischemic stroke,Cardiovascular
+PGS000114,Juvenile Idiopathic Arthritis,Immune & Autoimmune
+PGS002292,Keratoconus,Ophthalmology
+PGS000076,Kidney cancer,Cancer
+PGS000787,Kidney cancer,Cancer
+PGS004908,Kidney cancer,Cancer
+PGS002729,Knee osteoarthritis,Metabolic & Endocrine
+PGS000875,LDL cholesterol,Blood Panel
+PGS003405,LDL cholesterol,Blood Panel
+PGS003393,Lung adenocarcinoma,Cancer
+PGS000392,Lung and bronchus cancer,Cancer
+PGS000391,Lung and bronchus cancer,Cancer
+PGS002270,Lung cancer,Cancer
+PGS000070,Lung cancer,Cancer
+PGS003391,Lung cancer,Cancer
+PGS000789,Lung cancer,Cancer
+PGS000740,Lung cancer,Cancer
+PGS000721,Lung cancer,Cancer
+PGS000156,Lung cancer,Cancer
+PGS004860,Lung cancer,Cancer
+PGS000078,Lung cancer,Cancer
+PGS003392,Lung squamous cell carcinoma,Cancer
+PGS000077,Lymphocytic leukemia,Cancer
+PGS000788,Lymphocytic leukemia,Cancer
+PGS001013,Macular degeneration,Ophthalmology
+PGS001301,Malabsorption/coeliac disease,Metabolic & Endocrine
+PGS001111,Male genital tract cancer,Cancer
+PGS000602,Malignant neoplasm of testis,Cancer
+PGS000604,Malignant neoplasm of testis,Cancer
+PGS000813,Melanoma,Cancer
+PGS000743,Melanoma,Cancer
+PGS002247,Melanoma,Cancer
+PGS002246,Melanoma,Cancer
+PGS002253,Melanoma,Cancer
+PGS001304,Melanoma (malignant),Cancer
+PGS001281,Migraine,Neurological & Psychiatric
+PGS001282,Migraine (time-to-event),Neurological & Psychiatric
+PGS002271,Mitral valve prolapse,Cardiovascular
+PGS000809,Multiple sclerosis,Neurological & Psychiatric
+PGS004700,Multiple sclerosis,Neurological & Psychiatric
+PGS001270,Multiple sclerosis,Neurological & Psychiatric
+PGS004699,Multiple sclerosis,Neurological & Psychiatric
+PGS002726,Multiple sclerosis,Neurological & Psychiatric
+PGS001271,Multiple sclerosis (time-to-event),Neurological & Psychiatric
+PGS001315,Myocardial infarction,Cardiovascular
+PGS001316,Myocardial infarction (algorithmically-defined),Cardiovascular
+PGS000757,Narcolepsy,Neurological & Psychiatric
+PGS000756,Narcolepsy,Neurological & Psychiatric
+PGS000934,Nasal polyps,Respiratory
+PGS000933,Nasal polyp (time-to-event),Respiratory
+PGS002291,Nasopharyngeal carcinoma,Cancer
+PGS001127,Never Smoker,Neurological & Psychiatric
+PGS000872,Non-alcoholic fatty liver disease,Metabolic & Endocrine
+PGS000080,Non-Hodgkin's lymphoma,Cancer
+PGS000791,Non-Hodgkin's lymphoma,Cancer
+PGS001294,Non-insulin-dependent diabetes (time-to-event),Metabolic & Endocrine
+PGS001040,Non melanoma skin cancer,Cancer
+PGS001025,Nonrheumatic aortic valve disorders (time-to-event),Cardiovascular
+PGS002266,Nonsyndromic cleft lip with or without cleft palate,Other
+PGS001048,NSTEMI (algorithmically-defined),Cardiovascular
+PGS003857,Obstructive sleep apnea,Neurological & Psychiatric
+PGS005219,Obstructive sleep apnea (AdjustedBMI),Neurological & Psychiatric
+PGS003858,Obstructive sleep apnea (BMI adjusted),Neurological & Psychiatric
+PGS005220,Obstructive sleep apnea (UnadjustedBMI),Neurological & Psychiatric
+PGS000325,Oligoarthritis Juvenile Idiophatic Arthritis,Immune & Autoimmune
+PGS000081,Oral cavity and pharyngeal cancers,Cancer
+PGS000792,Oral cavity and pharyngeal cancers,Cancer
+PGS001290,Osteoarthritis,Metabolic & Endocrine
+PGS001273,Osteoporosis,Metabolic & Endocrine
+PGS001274,Osteoporosis without pathological fracture (time-to-event),Metabolic & Endocrine
+PGS001303,Other cataract (time-to-event),Ophthalmology
+PGS001334,Other chronic obstructive pulmonary disease (time-to-event),Respiratory
+PGS001033,Other coagulation defects (time-to-event),Cardiovascular
+PGS001516,Other diseases of intestine (time-to-event),Metabolic & Endocrine
+PGS001293,Other diseases of liver (time-to-event),Metabolic & Endocrine
+PGS001029,Other disorders of cornea (time-to-event),Ophthalmology
+PGS001014,Other disorders of pancreatic internal secretion (time-to-event),Metabolic & Endocrine
+PGS001181,Other hypothyroidism (time-to-event),Metabolic & Endocrine
+PGS001251,Other interstitial pulmonary diseases (time-to-event),Respiratory
+PGS000932,Other intervertebral disk disorders (time-to-event),Other
+PGS001319,Other metabolic disorders (time-to-event),Metabolic & Endocrine
+PGS000928,Other non-toxic goitre (time-to-event),Metabolic & Endocrine
+PGS001275,Other retinal disorders (time-to-event),Ophthalmology
+PGS001309,Other rheumatoid arthritis (time-to-event),Immune & Autoimmune
+PGS000960,Other systemic involvement of connective tissue (time-to-event),Immune & Autoimmune
+PGS001255,Otosclerosis (time-to-event),Other
+PGS000793,Ovarian cancer,Cancer
+PGS000082,Ovarian cancer,Cancer
+PGS003385,Ovarian serous carcinoma,Cancer
+PGS000794,Pancreatic cancer,Cancer
+PGS000083,Pancreatic cancer,Cancer
+PGS002264,Pancreatic ductal adenocarcinoma,Cancer
+PGS001115,Paracetamol use self-reported,Other
+PGS001046,Past tobacco smoking (Smoked at least once),Neurological & Psychiatric
+PGS001047,Past tobacco smoking (Smoked occasionally),Neurological & Psychiatric
+PGS001277,PE +/- DVT,Cardiovascular
+PGS001280,PE (time-to-event),Other
+PGS000961,Phlebitis and thrombophlebitis (time-to-event),Cardiovascular
+PGS001051,Polymyalgia rheumatica,Immune & Autoimmune
+PGS001278,previously: Blood clot in the leg (DVT) or lung,Cardiovascular
+PGS001279,previously: Blood clot in the lung,Cardiovascular
+PGS001128,Previous smoker,Neurological & Psychiatric
+PGS004944,Primary open-angle glaucoma,Ophthalmology
+PGS002741,Primary open-angle glaucoma,Ophthalmology
+PGS001792,Primary open-angle glaucoma,Ophthalmology
+PGS001797,Primary open-angle glaucoma,Ophthalmology
+PGS003383,Prostate adenocarcinoma,Cancer
+PGS000588,Prostate cancer,Cancer
+PGS000584,Prostate cancer,Cancer
+PGS000585,Prostate cancer,Cancer
+PGS000662,Prostate cancer,Cancer
+PGS004055,Prostate cancer,Cancer
+PGS000586,Prostate cancer,Cancer
+PGS000587,Prostate cancer,Cancer
+PGS000583,Prostate cancer,Cancer
+PGS001291,Prostate cancer,Cancer
+PGS004155,Prostate cancer,Cancer
+PGS004001,Prostate cancer,Cancer
+PGS004139,Prostate cancer,Cancer
+PGS004125,Prostate cancer,Cancer
+PGS002268,Prostate cancer,Cancer
+PGS004109,Prostate cancer,Cancer
+PGS004099,Prostate cancer,Cancer
+PGS000084,Prostate cancer,Cancer
+PGS004599,Prostate cancer,Cancer
+PGS004085,Prostate cancer,Cancer
+PGS004027,Prostate cancer,Cancer
+PGS003985,Prostate cancer,Cancer
+PGS000030,Prostate cancer,Cancer
+PGS004071,Prostate cancer,Cancer
+PGS003419,Prostate cancer,Cancer
+PGS004694,Prostate cancer,Cancer
+PGS000795,Prostate cancer,Cancer
+PGS000333,Prostate cancer,Cancer
+PGS000719,Prostate cancer,Cancer
+PGS004042,Prostate cancer,Cancer
+PGS000582,Prostate cancer,Cancer
+PGS005238,Prostate carcinoma,Cancer
+PGS005240,Prostate carcinoma,Cancer
+PGS005237,Prostate carcinoma,Cancer
+PGS005241,Prostate carcinoma,Cancer
+PGS005239,Prostate carcinoma,Cancer
+PGS004262,Psoriasis,Immune & Autoimmune
+PGS004263,Psoriasis,Immune & Autoimmune
+PGS004261,Psoriasis,Immune & Autoimmune
+PGS004264,Psoriasis,Immune & Autoimmune
+PGS004260,Psoriasis,Immune & Autoimmune
+PGS001312,Psoriasis,Immune & Autoimmune
+PGS001313,Psoriasis (time-to-event),Immune & Autoimmune
+PGS001522,Psoriatic and enteropathic arthropathies (time-to-event),Immune & Autoimmune
+PGS001287,Psoriatic arthropathy,Immune & Autoimmune
+PGS003861,Pulmonary embolism,Cardiovascular
+PGS001030,Pulmonary fibrosis,Respiratory
+PGS001258,Radius fracture,Metabolic & Endocrine
+PGS001110,Reactive arthropathies (time-to-event),Immune & Autoimmune
+PGS003860,Refractive error,Ophthalmology
+PGS001137,Retinal detachment,Ophthalmology
+PGS000990,Retinal detachments and breaks (time-to-event),Ophthalmology
+PGS001276,Retinal disorders in diseases classified elsewhere (time-to-event),Ophthalmology
+PGS004010,Rheumatoid arthritis,Immune & Autoimmune
+PGS004255,Rheumatoid arthritis,Immune & Autoimmune
+PGS004256,Rheumatoid arthritis,Immune & Autoimmune
+PGS004257,Rheumatoid arthritis,Immune & Autoimmune
+PGS004258,Rheumatoid arthritis,Immune & Autoimmune
+PGS004259,Rheumatoid arthritis,Immune & Autoimmune
+PGS004021,Rheumatoid arthritis,Immune & Autoimmune
+PGS002745,Rheumatoid arthritis,Immune & Autoimmune
+PGS004049,Rheumatoid arthritis,Immune & Autoimmune
+PGS004064,Rheumatoid arthritis,Immune & Autoimmune
+PGS004079,Rheumatoid arthritis,Immune & Autoimmune
+PGS004094,Rheumatoid arthritis,Immune & Autoimmune
+PGS004103,Rheumatoid arthritis,Immune & Autoimmune
+PGS003994,Rheumatoid arthritis,Immune & Autoimmune
+PGS004148,Rheumatoid arthritis,Immune & Autoimmune
+PGS001310,Rheumatoid arthritis,Immune & Autoimmune
+PGS004163,Rheumatoid arthritis,Immune & Autoimmune
+PGS000194,Rheumatoid arthritis (CCP-negative),Immune & Autoimmune
+PGS000195,Rheumatoid arthritis (CCP-negative),Immune & Autoimmune
+PGS000326,Rheumatoid-factor-negative Polyarthritis (Juvenile Idiophatic Arthritis),Immune & Autoimmune
+PGS000922,Sarcoidosis,Immune & Autoimmune
+PGS000923,Sarcoidosis (time-to-event),Immune & Autoimmune
+PGS000135,Schizophrenia,Neurological & Psychiatric
+PGS001140,Seborrheic keratosis (time-to-event),Other
+PGS001311,Seropositive rheumatoid arthritis (time-to-event),Immune & Autoimmune
+PGS000126,Serum urate,Blood Panel
+PGS001308,Sjogren's syndrome/sicca syndrome,Immune & Autoimmune
+PGS001041,Skin cancer,Cancer
+PGS000950,Skin changes due to chronic exposure to nonionising radiation (time-to-event),Other
+PGS003382,Skin cutaneous melanoma,Cancer
+PGS000964,Slipped disc,Other
+PGS003066,Smoking status,Neurological & Psychiatric
+PGS003064,Smoking status,Neurological & Psychiatric
+PGS003065,Smoking status,Neurological & Psychiatric
+PGS001054,Snoring,Neurological & Psychiatric
+PGS001117,Started insulin within one year diagnosis of diabetes,Metabolic & Endocrine
+PGS001798,Stroke,Cardiovascular
+PGS001793,Stroke,Cardiovascular
+PGS003755,Systemic lupus erythematosus,Immune & Autoimmune
+PGS000328,Systemic lupus erythematosus,Immune & Autoimmune
+PGS003960,Systemic lupus erythematosus,Immune & Autoimmune
+PGS004917,Systemic lupus erythematosus,Immune & Autoimmune
+PGS000754,Systemic lupus erythematosus,Immune & Autoimmune
+PGS000196,Systemic lupus erythematosus,Immune & Autoimmune
+PGS002238,Systolic blood pressure,Cardiovascular
+PGS005120,Systolic blood pressure,Cardiovascular
+PGS004235,Systolic blood pressure,Cardiovascular
+PGS000712,T2D (cases vs HbA1c filtered controls),Blood Panel
+PGS000796,Testicular cancer,Cancer
+PGS000086,Testicular cancer,Cancer
+PGS001164,Testicular cancer,Cancer
+PGS000208,Thyroid cancer,Cancer
+PGS000209,Thyroid cancer,Cancer
+PGS004954,Thyroid cancer,Cancer
+PGS000797,Thyroid cancer,Cancer
+PGS001794,Thyroid cancer,Cancer
+PGS001289,Thyroid cancer,Cancer
+PGS001799,Thyroid cancer,Cancer
+PGS000207,Thyroid cancer,Cancer
+PGS001354,Thyroid cancer,Cancer
+PGS000087,Thyroid cancer,Cancer
+PGS005260,Thyroid carcenoma,Metabolic & Endocrine
+PGS005258,Thyroid carcenoma,Metabolic & Endocrine
+PGS005259,Thyroid carcenoma,Metabolic & Endocrine
+PGS001042,Thyrotoxicosis [hyperthyroidism] (time-to-event),Metabolic & Endocrine
+PGS004937,Triglycerides,Blood Panel
+PGS004172,Type 1 diabetes,Metabolic & Endocrine
+PGS004173,Type 1 diabetes,Metabolic & Endocrine
+PGS004174,Type 1 diabetes,Metabolic & Endocrine
+PGS004175,Type 1 diabetes,Metabolic & Endocrine
+PGS004171,Type 1 diabetes,Metabolic & Endocrine
+PGS000023,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS000021,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS003749,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS004102,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS004020,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS004093,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS000022,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS004078,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS004063,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS004035,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS000024,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS004162,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS004147,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS004132,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS001297,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS004009,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS003993,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS004117,Type 1 diabetes (T1D),Metabolic & Endocrine
+PGS004183,Type 2 diabetes,Metabolic & Endocrine
+PGS004184,Type 2 diabetes,Metabolic & Endocrine
+PGS004185,Type 2 diabetes,Metabolic & Endocrine
+PGS004181,Type 2 diabetes,Metabolic & Endocrine
+PGS004223,Type 2 diabetes,Metabolic & Endocrine
+PGS004182,Type 2 diabetes,Metabolic & Endocrine
+PGS004323,Type 2 diabetes,Metabolic & Endocrine
+PGS004226,Type 2 diabetes,Metabolic & Endocrine
+PGS000852,Type 2 diabetes (based on SNPs associated with insulin secretion),Metabolic & Endocrine
+PGS000032,Type 2 diabetes (based on SNPs involved in β-cell function),Metabolic & Endocrine
+PGS005314,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003353,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003119,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003118,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003117,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003116,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003115,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003114,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003113,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003111,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003110,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003109,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003108,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003104,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003103,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003102,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003101,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003100,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003099,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003096,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003095,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003094,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003093,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003092,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003089,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003443,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003444,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003445,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003728,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003729,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003730,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003731,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003732,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003733,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003734,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003735,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003751,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003752,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS002771,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003867,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS002733,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS002720,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003982,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS002671,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS002379,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003998,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS002354,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS002308,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004014,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS002243,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004024,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS002026,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS001818,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004039,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004052,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004068,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS001781,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004082,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS001357,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004106,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004122,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004136,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004152,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS001295,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000868,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000864,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000832,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000808,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000807,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004310,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004311,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004312,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004313,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004314,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004602,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000806,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000805,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004615,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004617,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004618,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004619,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004620,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000804,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000729,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004837,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004838,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004839,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004859,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000713,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004868,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004870,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004887,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004923,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000330,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS005242,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS005243,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS005244,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS005245,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS005246,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS005247,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000125,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000036,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000031,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000020,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS000014,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS003123,Type 2 diabetes (T2D),Metabolic & Endocrine
+PGS004253,Ulcerative colitis,Metabolic & Endocrine
+PGS001306,Ulcerative colitis,Metabolic & Endocrine
+PGS001307,Ulcerative colitis (time-to-event),Metabolic & Endocrine
+PGS000946,Unspecified dementia (time-to-event),Neurological & Psychiatric
+PGS001329,Unspecified diabetes mellitus (time-to-event),Metabolic & Endocrine
+PGS000982,Use of sun / ultraviolet protection (never / rarely),Other
+PGS001795,Uterine cancer,Cancer
+PGS003381,Uterine endometrial carcinoma,Cancer
+PGS001032,Uterine fibroids,Metabolic & Endocrine
+PGS000937,Varicose veins,Cardiovascular
+PGS000938,Varicose veins of lower extremities (time-to-event),Cardiovascular
+PGS001179,Vascular dementia (time-to-event),Cardiovascular
+PGS001262,Vascular/heart problems diagnosed by doctor Angina,Cardiovascular
+PGS001317,Vascular/heart problems diagnosed by doctor Heart attack,Cardiovascular
+PGS001335,Vascular/heart problems diagnosed by doctor High BP,Cardiovascular
+PGS003332,Venous thromboembolism,Cardiovascular
+PGS001796,Venous thromboembolism,Cardiovascular
+PGS001011,Viral warts (time-to-event),Immune & Autoimmune
+PGS001305,Vitamin B12 deficiency induced anemia (time-to-event),Blood Panel
+PGS001045,Vitamin B9 intake,Blood Panel
+PGS000702,Vitamin D [nmol/L],Blood Panel
+PGS001536,Vitiligo (time-to-event),Immune & Autoimmune
+PGS001131,Zoster [herpes zoster] (time-to-event),Immune & Autoimmune

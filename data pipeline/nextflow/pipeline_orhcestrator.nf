@@ -1,5 +1,6 @@
 params.harmonizer_dependencies = "/srv/dependencies/imputation_runner/harmonizer"
 params.imputation_dependencies = "/srv/dependencies/imputation_runner/imputer"
+params.ancestry_dependencies = "/srv/dependencies/imputation_runner/imputer/beagle_references"
 params.standardizer_output_dir = "/home/frederik/github_projects/SNPster/data pipeline/temp_test/std"
 params.harmonizer_output_dir = "/home/frederik/github_projects/SNPster/data pipeline/temp_test/harm"
 params.samplesheet = "/home/frederik/github_projects/SNPster/data pipeline/imputation_runner_module/samplesheet.csv" 
@@ -88,6 +89,39 @@ process MERGE_VCFS {
 }
 
 
+
+process CALCULATE_ANCESTRY {
+
+    maxRetries 2
+    errorStrategy 'retry'
+    
+    cpus 4
+
+    container 'ancestry:latest'
+    containerOptions "-v ${params.ancestry_dependencies}:/data --network docker_default --cpus=4 -e DB_HOST=postgres -e DB_PORT=5432 -e DB_NAME=snpster_db -e DB_USER=postgres -e DB_PASSWORD=zod50902"
+
+    input:
+    path merged_chr22_vcf
+
+    output:
+    path "ancestry_output/ancestry_success.txt", emit: success_marker
+
+
+    script:
+    """
+    mkdir -p ancestry_output
+
+    python /app/main.py \
+        --vcf_file ${merged_chr22_vcf}
+
+    # Only created if ancestry completed successfully.
+    echo "ok" > ancestry_output/ancestry_success.txt
+    """
+}
+
+
+
+
 process IMPUTE {
 
     maxRetries 2
@@ -139,8 +173,9 @@ process SPLIT_VCF {
 
 process QC_VCF {
 
-    maxRetries 5
-    errorStrategy 'retry'
+    maxRetries 3
+    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
+    time '15m'
     container 'imputation_qc:latest'
 
 
@@ -204,7 +239,14 @@ workflow {
 
     merged_ch = MERGE_VCFS(vcf_bundles_ch)
 
-    imputed_ch = IMPUTE(merged_ch.flatten())
+    merged_flat_ch = merged_ch.flatten()
+
+    chr22_merged_ch = merged_flat_ch
+        .filter { vcf_file -> vcf_file.name == "chr22.merged.vcf.gz" }
+
+    CALCULATE_ANCESTRY(chr22_merged_ch)
+
+    imputed_ch = IMPUTE(merged_flat_ch)
 
     splitter_channel = SPLIT_VCF(imputed_ch)
 
