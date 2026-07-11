@@ -5,7 +5,7 @@ import shutil
 import glob
 from db_handler import DbHandler, DbUtils
 from db_config import USERNAME, PASSWORD, HOST, PORT
-from config import SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR, OUTPUT_DIR, REFERENCE_DATA_PATH, BCFTOOLS_THREADS, SAMPLESET_NAME, VCF_MERGE_SHEET_DIR
+from config import PGS_CHUNK_SIZE, SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR, OUTPUT_DIR, REFERENCE_DATA_PATH, BCFTOOLS_THREADS, SAMPLESET_NAME, VCF_MERGE_SHEET_DIR
 from vcf_classes import VCFUtilities
 
 
@@ -14,7 +14,7 @@ vcf_utilities = VCFUtilities()
 class EnvironmentHandler:
     def __init__(self, 
                  merged_sample_sheet: str = None,
-                 scoring_file_str: str = None,
+                 scoring_file_strs: list[list] = None,
                  user_ids: list = None,
                  imputation_ids: list = None,
                  prsc_ids: list = None,
@@ -28,7 +28,8 @@ class EnvironmentHandler:
                  scoring_file_target_dir: str = SCORING_FILE_TARGET_DIR,
                  nf_work_dir: str = NF_WORK_DIR,
                  output_dir: str = OUTPUT_DIR,
-                 reference_data_path: str = REFERENCE_DATA_PATH
+                 reference_data_path: str = REFERENCE_DATA_PATH,
+                 pgs_chunk_size: int = PGS_CHUNK_SIZE
                  ):
         
         self.merged_sample_sheet = merged_sample_sheet
@@ -38,7 +39,7 @@ class EnvironmentHandler:
         self.user_ids = user_ids
         self.output_dir = output_dir
         self.reference_data_path = reference_data_path
-        self.scoring_file_str = scoring_file_str
+        self.scoring_file_strs = scoring_file_strs
         self.imputation_ids = imputation_ids
         self.prsc_ids = prsc_ids
         self.id_map = id_map
@@ -49,12 +50,13 @@ class EnvironmentHandler:
         self.scoring_file_target_dir = scoring_file_target_dir
         self.nf_work_dir = nf_work_dir
         self.sampleset_name = sampleset_name
+        self.pgs_chunk_size = pgs_chunk_size
         
-    def copy_scoring_files(self, scoring_file_list: list) -> None:
+    def copy_scoring_files(self, target_dir, scoring_file_list: list) -> None:
         """Copies scoring files from the mounted source directory to the scoring file directory."""
-        
+    
         for file in scoring_file_list:
-            subprocess.run(["cp", file, self.scoring_file_target_dir], check=True)
+            shutil.copy2(file, target_dir)
 
     def connect_to_db(self) -> None:
         if not self.db_utils.db_handler.connect():
@@ -322,13 +324,30 @@ class PGSCalculator:
         self.environment_handler.imputation_ids = imputation_ids
         self.environment_handler.user_ids = user_ids
         self.environment_handler.id_map = df_subset
+        
         self.environment_handler.base_folder_paths = [
             f"/srv/imputed/{row.user_id}/{row.imputation_id}/qc_output/"
             for row in df_subset.itertuples(index=False)
         ]
         self.environment_handler.samplesheet_paths = []  # Initialize empty, will be populated by create_samplesheets()
-        self.environment_handler.copy_scoring_files(sorted(set(results["scoring_file_path"].tolist())))
-        self.environment_handler.scoring_file_str = f"{self.environment_handler.scoring_file_target_dir}/*.txt.gz"
+        
+        scoring_files = sorted(set(results["scoring_file_path"].tolist()))
+        
+        #divide into chunks of 50 to avoid memory issues
+        
+        scoring_files_chunks = [scoring_files[i:i + self.environment_handler.pgs_chunk_size] for i in range(0, len(scoring_files), self.environment_handler.pgs_chunk_size)]
+        
+        #create subdir for each chunk
+        
+        subdirs = [os.path.join(self.environment_handler.scoring_file_target_dir, f"chunk_{i}") for i in range(len(scoring_files_chunks))]
+        
+        for subdir in subdirs:
+            os.makedirs(subdir, exist_ok=True)
+        
+        for subdir, chunk in zip(subdirs, scoring_files_chunks):
+            self.environment_handler.copy_scoring_files(subdir, chunk)
+
+        self.environment_handler.scoring_file_strs = [subdir + "/*.txt.gz" for subdir in subdirs]
 
         return True
     
@@ -472,37 +491,26 @@ class PGSCalculator:
                 "Check the pgs_calc volume mount and REFERENCE_DATA_PATH."
             )
 
-        score_files = glob.glob(self.environment_handler.scoring_file_str)
-        if not score_files:
-            raise FileNotFoundError(
-                "No scoring files matched "
-                f"{self.environment_handler.scoring_file_str}. "
-                "Check the scoring file copy step and mounted scoring file directories."
-            )
-
-        command = [
-            "nextflow", "run", "/opt/pgsc_calc/main.nf",
-            "-work-dir", self.environment_handler.nf_work_dir,
-            "-profile", "conda",
-            "--input", sample_sheet,
-            "--target_build", self.pgscalculator_config.target_build,
-            "--run_ancestry", self.environment_handler.reference_data_path,
-            "--outdir", self.environment_handler.output_dir,
-            "--min_overlap", "0.01",
-            "--scorefile", self.environment_handler.scoring_file_str,
-        ]
+        batch_number = 1
+        for scoring_file_str in self.environment_handler.scoring_file_strs:
+            
+            command = [
+                "nextflow", "run", "/opt/pgsc_calc/main.nf",
+                "-work-dir", self.environment_handler.nf_work_dir,
+                "-profile", "conda",
+                "--input", sample_sheet,
+                "--target_build", self.pgscalculator_config.target_build,
+                "--run_ancestry", self.environment_handler.reference_data_path,
+                "--outdir", self.environment_handler.output_dir,
+                "--min_overlap", "0.01",
+                "--scorefile", scoring_file_str,
+            ]
         
-        print(f"Running command {command}")
-    
-        #try:
-        subprocess.run(command, check=True)
-        print("PGS calculation completed successfully.")
-            
-            
+            print(f"Running batch number {batch_number} of PGS calculation with command: {' '.join(command)}")
 
-        #except subprocess.CalledProcessError as e:
-         #   print("Error during PGS calculation:")
-          #  print("Return code:", e.returncode)
+            subprocess.run(command, check=True)
+            print("PGS calculation completed successfully.")
+            
 
 
 
