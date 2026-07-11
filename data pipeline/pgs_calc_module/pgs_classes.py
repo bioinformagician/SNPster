@@ -105,6 +105,18 @@ class EnvironmentHandler:
                 elif os.path.isdir(path):
                     shutil.rmtree(path)
     
+    def clear_output_directory(self) -> None:
+        """Clears the output directory."""
+        if not self.output_dir or not os.path.isdir(self.output_dir):
+            return
+
+        for entry in os.listdir(self.output_dir):
+            path = os.path.join(self.output_dir, entry)
+            if os.path.isfile(path) or os.path.islink(path):
+                os.unlink(path)
+            elif os.path.isdir(path):
+                shutil.rmtree(path)
+    
     def create_samplesheet_for_directory(self, directory: str) -> None:
         """Creates a sample sheet for the VCF merging by listing all VCF files in the specified directory.
 
@@ -476,7 +488,7 @@ class PGSCalculator:
         subprocess.run(command, check=True)
 
     
-    def run_pgs_calculation(self, sample_sheet: str) -> None:
+    def run_pgs_calculation(self, sample_sheet: str, scoring_file_str) -> None:
         if not sample_sheet or not os.path.exists(sample_sheet):
             raise FileNotFoundError(f"PGS input samplesheet not found: {sample_sheet}")
 
@@ -490,11 +502,8 @@ class PGSCalculator:
                 f"{self.environment_handler.reference_data_path}. "
                 "Check the pgs_calc volume mount and REFERENCE_DATA_PATH."
             )
-
-        batch_number = 1
-        for scoring_file_str in self.environment_handler.scoring_file_strs:
-            
-            command = [
+    
+        command = [
                 "nextflow", "run", "/opt/pgsc_calc/main.nf",
                 "-work-dir", self.environment_handler.nf_work_dir,
                 "-profile", "conda",
@@ -506,10 +515,10 @@ class PGSCalculator:
                 "--scorefile", scoring_file_str,
             ]
         
-            print(f"Running batch number {batch_number} of PGS calculation with command: {' '.join(command)}")
+        print(f"Running PGS calculation with command: {' '.join(command)}")
 
-            subprocess.run(command, check=True)
-            print("PGS calculation completed successfully.")
+        subprocess.run(command, check=True)
+        print("PGS calculation completed successfully.")
             
 
 
