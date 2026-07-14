@@ -81,12 +81,13 @@ class EnvironmentHandler:
     
     
     def clear_directories(self) -> None:
-        """Clears the output and scoring file directories."""
+        """Clears working directories, including accumulated PGS result files."""
         directories_to_clear = [
             self.output_dir,
             self.scoring_file_target_dir,
             self.nf_work_dir,
-            self.vcf_merge_sheet_dir
+            self.vcf_merge_sheet_dir,
+            self.pgs_result_dir,
         ]
 
         for directory in directories_to_clear:
@@ -118,7 +119,7 @@ class EnvironmentHandler:
                 os.unlink(path)
             elif os.path.isdir(path):
                 shutil.rmtree(path)
-    
+
     def create_samplesheet_for_directory(self, directory: str) -> None:
         """Creates a sample sheet for the VCF merging by listing all VCF files in the specified directory.
 
@@ -466,8 +467,8 @@ class PGSCalculator:
         if "count" in summary_statistics.columns and "percent" in summary_statistics.columns:
             summary_agg = summary_statistics.groupby(["dataset", "accession_clean"]).agg({
                 "count": "sum",
-                "percent": lambda x: (x * summary_statistics.loc[x.index, "count"]).sum() / summary_statistics.loc[x.index, "count"].sum() if summary_statistics.loc[x.index, "count"].sum() > 0 else 0
-            }).reset_index()
+                "percent": "sum"})
+            summary_agg["percent"] = summary_agg["percent"].clip(upper=100.0)
             print(f"Aggregated to {len(summary_agg)} unique PGS scores per dataset")
             summary_statistics = summary_agg
         
@@ -484,20 +485,13 @@ class PGSCalculator:
         print(f"Unique samplesets in results: {results['sampleset'].unique()}")
         print(f"Unique datasets in summary: {summary_statistics['dataset'].unique()}")
         
-        # Merge results with summary statistics
-        if "dataset" in summary_statistics.columns and "accession_clean" in summary_statistics.columns:
-            results = results.merge(
+        results = results.merge(
                 summary_statistics, 
                 left_on=["sampleset", "PGS_clean"], 
                 right_on=["dataset", "accession_clean"], 
                 how="inner"  # Changed to inner join to only keep matched scores
             )
-            print(f"After merge: {len(results)} result rows")
-        else:
-            raise ValueError("Summary file missing expected columns 'dataset' or 'accession'")
-        
-        # Drop rows with NaN in critical columns
-        results = results.dropna(subset=["count", "percent"])
+        print(f"After merge: {len(results)} result rows")
 
         # Build a fast lookup for imputation_id -> prsc_id (keep first mapping, same behavior as before)
         id_map_df = self.environment_handler.id_map[["imputation_id", "prsc_id"]].drop_duplicates(subset=["imputation_id"])
@@ -534,9 +528,6 @@ class PGSCalculator:
                 f"{sorted(missing_imputation_ids)}. Available imputation_ids in id_map: {available_ids}"
             )
 
-        if not insert_rows:
-            print("No rows to insert into snpster_users.prsc_job_results after filtering/merging.")
-            return
 
         insert_df = pd.DataFrame(insert_rows)
         self.environment_handler.db_utils.insert_dataframe_to_db(
