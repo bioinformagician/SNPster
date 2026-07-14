@@ -41,12 +41,14 @@ while True:
     
     
     environment_handler.create_merged_vcf_samplesheet()
-
-    for scoring_file_str in environment_handler.scoring_file_strs:
     
-        pgs_calculator.run_pgs_calculation(scoring_file_str, environment_handler.merged_sample_sheet)
+    batch = 1
+    for scoring_file_str in environment_handler.scoring_file_strs:
+        print(f"Running PGS calculation for batch: {batch}")
+    
+        pgs_calculator.run_pgs_calculation(environment_handler.merged_sample_sheet, scoring_file_str)
         pgs_score_path = f"{environment_handler.output_dir}/{environment_handler.sampleset_name}/score/{environment_handler.sampleset_name}_pgs.txt.gz"
-        pgs_scoring_summary_path = f"{environment_handler.output_dir}/{environment_handler.imputation_ids[0]}/match/{environment_handler.imputation_ids[0]}_summary.csv"
+        pgs_scoring_summary_path = f"{environment_handler.output_dir}/{environment_handler.sampleset_name}/match/{environment_handler.sampleset_name}_summary.csv"
 
 
         
@@ -59,14 +61,23 @@ while True:
             environment_handler.set_db_job_status("failed")
             environment_handler.close_db_connection()
             environment_handler.clear_directories()
-            continue  # Skip uploading results and move to the next job
+            break  # Skip uploading results and move to the next job
         
         environment_handler.connect_to_db()
-        pgs_calculator.upload_results(path = pgs_score_path)
+        
+        pgs_calculator.move_pgs_results(scoring_file = pgs_score_path, summary_file = pgs_scoring_summary_path)
+        
         environment_handler.clear_output_directory()
+        batch += 1
     
+    
+    pgs_score_path = f"{environment_handler.pgs_result_dir}/{environment_handler.sampleset_name}_pgs.txt.gz"
+    pgs_scoring_summary_path = f"{environment_handler.pgs_result_dir}/{environment_handler.sampleset_name}_summary.csv"
+    pgs_calculator.upload_results(scoring_file=pgs_score_path, summary_file=pgs_scoring_summary_path)
+        
     environment_handler.set_db_job_status("completed")  #maybe this should be a trigger function in db upon upload of data to prsc_job_results instead --- IGNORE ---
     environment_handler.close_db_connection()
     environment_handler.clear_directories()
+    
     
     

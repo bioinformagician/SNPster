@@ -64,8 +64,9 @@ ENV BCFTOOLS_THREADS=8
 ENV SAMPLESET_NAME=MergedUserData
 ENV VCF_MERGE_SHEET_DIR=/app/vcf_merge_sheets
 ENV PGS_CHUNK_SIZE=50
+ENV PGS_RESULT_DIR=/app/pgs_results
 
-RUN mkdir -p "$OUTPUT_DIR" "$SCORING_FILE_TARGET_DIR" "$NF_WORK_DIR" "$VCF_MERGE_SHEET_DIR"
+RUN mkdir -p "$OUTPUT_DIR" "$SCORING_FILE_TARGET_DIR" "$NF_WORK_DIR" "$VCF_MERGE_SHEET_DIR" "$PGS_RESULT_DIR"
 
 COPY pgs_calc_module/requirements.txt /tmp/pgs_calc_requirements.txt
 COPY database_module/requirements.txt /tmp/database_requirements.txt

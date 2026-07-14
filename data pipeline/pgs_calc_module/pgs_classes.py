@@ -5,7 +5,7 @@ import shutil
 import glob
 from db_handler import DbHandler, DbUtils
 from db_config import USERNAME, PASSWORD, HOST, PORT
-from config import PGS_CHUNK_SIZE, SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR, OUTPUT_DIR, REFERENCE_DATA_PATH, BCFTOOLS_THREADS, SAMPLESET_NAME, VCF_MERGE_SHEET_DIR
+from config import PGS_CHUNK_SIZE, SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR, OUTPUT_DIR, REFERENCE_DATA_PATH, BCFTOOLS_THREADS, SAMPLESET_NAME, VCF_MERGE_SHEET_DIR, PGS_RESULT_DIR
 from vcf_classes import VCFUtilities
 
 
@@ -29,7 +29,8 @@ class EnvironmentHandler:
                  nf_work_dir: str = NF_WORK_DIR,
                  output_dir: str = OUTPUT_DIR,
                  reference_data_path: str = REFERENCE_DATA_PATH,
-                 pgs_chunk_size: int = PGS_CHUNK_SIZE
+                 pgs_chunk_size: int = PGS_CHUNK_SIZE,
+                 pgs_result_dir: str = PGS_RESULT_DIR
                  ):
         
         self.merged_sample_sheet = merged_sample_sheet
@@ -51,6 +52,7 @@ class EnvironmentHandler:
         self.nf_work_dir = nf_work_dir
         self.sampleset_name = sampleset_name
         self.pgs_chunk_size = pgs_chunk_size
+        self.pgs_result_dir = pgs_result_dir
         
     def copy_scoring_files(self, target_dir, scoring_file_list: list) -> None:
         """Copies scoring files from the mounted source directory to the scoring file directory."""
@@ -392,54 +394,157 @@ class PGSCalculator:
             group_df.to_csv(os.path.join(self.environment_handler.vcf_merge_sheet_dir, f"samplesheet_chr{chrom}.csv"), index=False)
         
     
-
+    
+    def move_pgs_results(self, scoring_file:str, summary_file:str) -> None:
+        """Moves the PGS calculation results to the designated result directory.
+           This is needed for batched runs so the full data can be uploaded to the db
+           after all batches are compeleted, so jobs are not half finished so the server
+           can just be shut down without issues"""
+           
+        if not os.path.exists(self.environment_handler.pgs_result_dir):
+            os.makedirs(self.environment_handler.pgs_result_dir, exist_ok=True)
+        
+        #if dir is empty, move the files, else append to existing files
+        
+        if os.listdir(self.environment_handler.pgs_result_dir):
+            # Append to existing files
+            existing_score_file = os.path.join(self.environment_handler.pgs_result_dir, os.path.basename(scoring_file))
+            existing_summary_file = os.path.join(self.environment_handler.pgs_result_dir, os.path.basename(summary_file))
+            
+            existing_score_file_pd = pd.read_csv(existing_score_file, sep="\t")
+            existing_summary_file_pd = pd.read_csv(existing_summary_file)
+            
+            new_score_file_pd = pd.read_csv(scoring_file, sep="\t")
+            new_summary_file_pd = pd.read_csv(summary_file)
+            
+            # Append new data to existing data
+            combined_score_file_pd = pd.concat([existing_score_file_pd, new_score_file_pd], ignore_index=True)
+            combined_summary_file_pd = pd.concat([existing_summary_file_pd, new_summary_file_pd], ignore_index=True)
+            
+            # Write combined data back to the existing files
+            combined_score_file_pd.to_csv(existing_score_file, sep="\t", index=False)
+            combined_summary_file_pd.to_csv(existing_summary_file, index=False)
+        
+        else:
+            # Move new files to the result directory
+            shutil.move(scoring_file, os.path.join(self.environment_handler.pgs_result_dir, os.path.basename(scoring_file)))
+            shutil.move(summary_file, os.path.join(self.environment_handler.pgs_result_dir, os.path.basename(summary_file)))
+            
+        
+        
+        
     def upload_results(self, scoring_file:str, summary_file:str) -> None:
         
-        """Uploads the PGS calculation results to the database and updates job status."""
+        """Uploads the PGS calculation results to the database and updates job status.
+        This has been enshittified by copilot, make clean version later"""
 
         results = pd.read_csv(scoring_file, sep="\t")
-        summary_statistics = pd.read_csv(summary_file, sep="\t")
-        #remove where match_status column != matched, match_IDs != true
-        summary_statistics = summary_statistics[(summary_statistics["match_status"] == "matched") & (summary_statistics["match_IDs"] == "true")]
+        summary_statistics = pd.read_csv(summary_file)
         
+        # Debug: Print available columns
+        print(f"Summary file columns: {list(summary_statistics.columns)}")
+        print(f"Results file columns: {list(results.columns)}")
+        print(f"Summary file shape: {summary_statistics.shape}")
+        print(f"First few rows of summary:\n{summary_statistics.head()}")
+        
+        # Filter summary statistics to only include matched scores with proper IDs
+        if "match_status" in summary_statistics.columns and "match_IDs" in summary_statistics.columns:
+            # Convert match_IDs to string for comparison (could be bool or string)
+            summary_statistics["match_IDs"] = summary_statistics["match_IDs"].astype(str)
+            summary_statistics = summary_statistics[
+                (summary_statistics["match_status"] == "matched") & 
+                (summary_statistics["match_IDs"].str.lower() == "true")
+            ]
+            print(f"Filtered summary to {len(summary_statistics)} matched score rows (before aggregation)")
+        
+        # Clean PGS names in summary for matching
+        if "accession" in summary_statistics.columns:
+            summary_statistics["accession_clean"] = summary_statistics["accession"].str.replace("_hmPOS_GRCh38", "", regex=False)
+        
+        # Aggregate by dataset and accession to combine match_flipped=true and match_flipped=false rows
+        # Sum counts and average percentages weighted by counts
+        if "count" in summary_statistics.columns and "percent" in summary_statistics.columns:
+            summary_agg = summary_statistics.groupby(["dataset", "accession_clean"]).agg({
+                "count": "sum",
+                "percent": lambda x: (x * summary_statistics.loc[x.index, "count"]).sum() / summary_statistics.loc[x.index, "count"].sum() if summary_statistics.loc[x.index, "count"].sum() > 0 else 0
+            }).reset_index()
+            print(f"Aggregated to {len(summary_agg)} unique PGS scores per dataset")
+            summary_statistics = summary_agg
+        
+        # Remove reference samples
         results = results[results["sampleset"] != "reference"]
         
-        #join summary_statistics to results by summary file columns dataset and accession on results column sampleset and PGS
-        results = results.merge(summary_statistics, left_on=["sampleset", "PGS"], right_on=["dataset", "accession"], how="left")
+        # Clean PGS names in results BEFORE merging
+        results["PGS_clean"] = results["PGS"].str.replace("_hmPOS_GRCh38", "", regex=False)
         
-        results["PGS"] = results["PGS"].str.replace("_hmPOS_GRCh38", "", regex=False)
+        # Debug: Show what we're trying to match
+        print(f"Sample PGS values in results: {results['PGS'].head(3).tolist()}")
+        print(f"Sample PGS_clean values: {results['PGS_clean'].head(3).tolist()}")
+        print(f"Sample accession_clean values: {summary_statistics['accession_clean'].head(3).tolist()}")
+        print(f"Unique samplesets in results: {results['sampleset'].unique()}")
+        print(f"Unique datasets in summary: {summary_statistics['dataset'].unique()}")
         
+        # Merge results with summary statistics
+        if "dataset" in summary_statistics.columns and "accession_clean" in summary_statistics.columns:
+            results = results.merge(
+                summary_statistics, 
+                left_on=["sampleset", "PGS_clean"], 
+                right_on=["dataset", "accession_clean"], 
+                how="inner"  # Changed to inner join to only keep matched scores
+            )
+            print(f"After merge: {len(results)} result rows")
+        else:
+            raise ValueError("Summary file missing expected columns 'dataset' or 'accession'")
         
-        #group dataframe by sampleset
-        
-        results = results.groupby("sampleset")
-        
-        for sampleset, group in results:
-            
-            for index, row in group.iterrows():
-                #split row by _ and take last index
-                
-                imputation_id = int(row['FID'].split("_")[-1])
-                
-                matched_rows = self.environment_handler.id_map[
-                    self.environment_handler.id_map["imputation_id"] == imputation_id
-                ]
-                
-                prsc_id = matched_rows["prsc_id"].values[0]
-                pgs_id = row["PGS"]
-                percentile_most_similar_pop = float(row["percentile_MostSimilarPop"])
-                z_most_similar_pop = float(row["Z_MostSimilarPop"])
-                z_norm1 = float(row["Z_norm1"])
-                z_norm2 = float(row["Z_norm2"])
-                score_sum = float(row["SUM"])
-                percent_variants_matched = float(row["percent"])
-                n_variants_matched = int(row["count"])
+        # Drop rows with NaN in critical columns
+        results = results.dropna(subset=["count", "percent"])
 
+        # Build a fast lookup for imputation_id -> prsc_id (keep first mapping, same behavior as before)
+        id_map_df = self.environment_handler.id_map[["imputation_id", "prsc_id"]].drop_duplicates(subset=["imputation_id"])
+        imputation_to_prsc = dict(zip(id_map_df["imputation_id"], id_map_df["prsc_id"]))
 
-                insert_query = f"""INSERT INTO snpster_users.prsc_job_results (prsc_id, pgs_id, percentile_most_similar_pop, z_norm1, z_norm2, z_most_similar_pop, score_sum, percent_variants_matched, n_variants_matched)
-                                VALUES ({prsc_id}, '{pgs_id}', {percentile_most_similar_pop}, {z_norm1}, {z_norm2}, {z_most_similar_pop}, {score_sum}, {percent_variants_matched}, {n_variants_matched});"""
-                
-                self.environment_handler.db_utils.db_handler.execute_query(insert_query)
+        insert_rows = []
+        missing_imputation_ids = set()
+
+        for _, row in results.iterrows():
+            # Extract imputation ID from FID
+            imputation_id = int(str(row["FID"]).split("_")[-1])
+            prsc_id = imputation_to_prsc.get(imputation_id)
+
+            if prsc_id is None:
+                missing_imputation_ids.add(imputation_id)
+                continue
+
+            insert_rows.append({
+                "prsc_id": int(prsc_id),
+                "pgs_id": row["PGS_clean"],
+                "percentile_most_similar_pop": float(row["percentile_MostSimilarPop"]),
+                "z_norm1": float(row["Z_norm1"]),
+                "z_norm2": float(row["Z_norm2"]),
+                "z_most_similar_pop": float(row["Z_MostSimilarPop"]),
+                "score_sum": float(row["SUM"]),
+                "percent_variants_matched": float(row["percent"]),
+                "n_variants_matched": int(row["count"]),
+            })
+
+        if missing_imputation_ids:
+            available_ids = sorted(self.environment_handler.id_map["imputation_id"].drop_duplicates().tolist())
+            raise ValueError(
+                "No matching prsc_id found for imputation_id(s): "
+                f"{sorted(missing_imputation_ids)}. Available imputation_ids in id_map: {available_ids}"
+            )
+
+        if not insert_rows:
+            print("No rows to insert into snpster_users.prsc_job_results after filtering/merging.")
+            return
+
+        insert_df = pd.DataFrame(insert_rows)
+        self.environment_handler.db_utils.insert_dataframe_to_db(
+            dataframe=insert_df,
+            table_name="prsc_job_results",
+            schema="snpster_users",
+        )
+        print(f"Inserted {len(insert_df)} rows into snpster_users.prsc_job_results.")
             
     def validate_results(self, path) -> bool:
         """Validates the PGS calculation results before uploading."""
