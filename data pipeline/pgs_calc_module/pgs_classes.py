@@ -5,7 +5,7 @@ import shutil
 import glob
 from db_handler import DbHandler, DbUtils
 from db_config import USERNAME, PASSWORD, HOST, PORT
-from config import PGS_CHUNK_SIZE, SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR, OUTPUT_DIR, REFERENCE_DATA_PATH, BCFTOOLS_THREADS, SAMPLESET_NAME, VCF_MERGE_SHEET_DIR, PGS_RESULT_DIR
+from config import PGS_BACTH_SIZE, SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR, OUTPUT_DIR, REFERENCE_DATA_PATH, BCFTOOLS_THREADS, SAMPLESET_NAME, VCF_MERGE_SHEET_DIR, PGS_RESULT_DIR
 from vcf_classes import VCFUtilities
 
 
@@ -29,7 +29,7 @@ class EnvironmentHandler:
                  nf_work_dir: str = NF_WORK_DIR,
                  output_dir: str = OUTPUT_DIR,
                  reference_data_path: str = REFERENCE_DATA_PATH,
-                 pgs_chunk_size: int = PGS_CHUNK_SIZE,
+                 pgs_batch_size: int = PGS_BACTH_SIZE,
                  pgs_result_dir: str = PGS_RESULT_DIR
                  ):
         
@@ -51,7 +51,7 @@ class EnvironmentHandler:
         self.scoring_file_target_dir = scoring_file_target_dir
         self.nf_work_dir = nf_work_dir
         self.sampleset_name = sampleset_name
-        self.pgs_chunk_size = pgs_chunk_size
+        self.pgs_batch_size = pgs_batch_size
         self.pgs_result_dir = pgs_result_dir
         
     def copy_scoring_files(self, target_dir, scoring_file_list: list) -> None:
@@ -303,7 +303,7 @@ class PGSCalculator:
                         SELECT prsc_id
                         FROM matching_jobs
                         ORDER BY prsc_id
-                        LIMIT 30
+                        LIMIT 50
                     )
                     SELECT
                         e.imputation_id,
@@ -350,7 +350,7 @@ class PGSCalculator:
         
         #divide into chunks of 50 to avoid memory issues
         
-        scoring_files_chunks = [scoring_files[i:i + self.environment_handler.pgs_chunk_size] for i in range(0, len(scoring_files), self.environment_handler.pgs_chunk_size)]
+        scoring_files_chunks = [scoring_files[i:i + self.environment_handler.pgs_batch_size] for i in range(0, len(scoring_files), self.environment_handler.pgs_batch_size)]
         
         #create subdir for each chunk
         
