@@ -23,18 +23,18 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="prs_report_median_for_gt4_cards_files/libs/clipboard/clipboard.min.js"></script>
-<script src="prs_report_median_for_gt4_cards_files/libs/quarto-html/quarto.js" type="module"></script>
-<script src="prs_report_median_for_gt4_cards_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="prs_report_median_for_gt4_cards_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="prs_report_median_for_gt4_cards_files/libs/quarto-html/popper.min.js"></script>
-<script src="prs_report_median_for_gt4_cards_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="prs_report_median_for_gt4_cards_files/libs/quarto-html/anchor.min.js"></script>
-<link href="prs_report_median_for_gt4_cards_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="prs_report_median_for_gt4_cards_files/libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="prs_report_median_for_gt4_cards_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="prs_report_median_for_gt4_cards_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="prs_report_median_for_gt4_cards_files/libs/bootstrap/bootstrap-19fe1175731d8705e8de1a4ca4f3520a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="SNPster_PGS_report_95CI_files/libs/clipboard/clipboard.min.js"></script>
+<script src="SNPster_PGS_report_95CI_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="SNPster_PGS_report_95CI_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="SNPster_PGS_report_95CI_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="SNPster_PGS_report_95CI_files/libs/quarto-html/popper.min.js"></script>
+<script src="SNPster_PGS_report_95CI_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="SNPster_PGS_report_95CI_files/libs/quarto-html/anchor.min.js"></script>
+<link href="SNPster_PGS_report_95CI_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="SNPster_PGS_report_95CI_files/libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="SNPster_PGS_report_95CI_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="SNPster_PGS_report_95CI_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="SNPster_PGS_report_95CI_files/libs/bootstrap/bootstrap-19fe1175731d8705e8de1a4ca4f3520a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -312,8 +312,8 @@ main.content,
   opacity: 0.32;
 }
 
-/* IQR overlay for >4 PGS cards: sits on top of the normal slim percentile bar. */
-.percentile-iqr-overlay {
+/* 95% confidence interval overlay for >4 PGS cards: sits on top of the normal slim percentile bar. */
+.percentile-ci-overlay {
   position: absolute;
   top: -4px;
   height: 21px;
@@ -324,7 +324,7 @@ main.content,
   z-index: 4;
 }
 
-.percentile-iqr-overlay + .percentile-marker,
+.percentile-ci-overlay + .percentile-marker,
 .percentile-track .percentile-marker {
   z-index: 5;
 }
@@ -483,7 +483,7 @@ main.content,
   border-radius: 999px;
 }
 
-.percentile-distribution-iqr {
+.percentile-distribution-ci {
   position: absolute;
   top: 6px;
   height: 22px;
@@ -550,7 +550,7 @@ main.content,
   box-shadow: 0 1px 5px rgba(17, 24, 39, .30);
 }
 
-.legend-iqr-key {
+.legend-ci-key {
   display: inline-block;
   width: 28px;
   height: 12px;
@@ -804,7 +804,7 @@ main.content,
 </style>
 <section id="load-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-data">Load data</h2>
-<div id="27454756" class="cell" data-execution_count="1">
+<div id="0f0d3164" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-stdout">
 <pre><code>Database connection established successfully.
 Query executed successfully.
@@ -814,7 +814,7 @@ Query executed successfully.</code></pre>
 </section>
 <section id="prepare-data" class="level2">
 <h2 class="anchored" data-anchor-id="prepare-data">Prepare data</h2>
-<div id="3b08ec00" class="cell" data-execution_count="2">
+<div id="89b3810e" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
 <pre><code>Dropped 75 performance rows with no positive European evaluation share.</code></pre>
 </div>
@@ -822,7 +822,7 @@ Query executed successfully.</code></pre>
 </section>
 <section id="report-overview" class="level2">
 <h2 class="anchored" data-anchor-id="report-overview">Report overview</h2>
-<div id="acc02141" class="cell" data-execution_count="3">
+<div id="31ef4718" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 
 <div class="report-summary-grid">
@@ -856,7 +856,7 @@ Query executed successfully.</code></pre>
 </div>
 <div class="method-note">
   <strong>Model selection.</strong>
-  The report first removes validation rows that do not contain a positive share of the user's target ancestry. A model must also have at least 70% matched variants to become the primary/top model. Each trait card then selects the primary eligible model by: highest AUROC, then highest target-ancestry share in the evaluation sample, then largest evaluation sample size. Additional retained models for the same trait are kept and shown in the expandable model-details section, including models below the primary-model variant-match threshold. Risk categories are based on the selected best model percentile for traits with fewer than 4 retained scores, and on the median retained-model percentile when more than 4 scores are available. For traits with more than 4 retained scores, the main percentile bar shows the observed retained-model percentile range, mean, and translucent IQR band. The 95% CONFIDENCE INTERVAL is shown only as a separate sub-card.
+  The report first removes validation rows that do not contain a positive share of the user's target ancestry. A model must also have at least 70% matched variants to become the primary/top model. Each trait card then selects the primary eligible model by: highest AUROC, then highest target-ancestry share in the evaluation sample, then largest evaluation sample size. Additional retained models for the same trait are kept and shown in the expandable model-details section, including models below the primary-model variant-match threshold. Risk categories are based on the selected best model percentile for traits with fewer than 4 retained scores, and on the median retained-model percentile when more than 4 scores are available. For traits with more than 4 retained scores, the main percentile bar shows the observed retained-model percentile range, median marker, and translucent approximate 95% confidence interval band.
 </div>
 <div class="method-note">
   <strong>How to read the odds and hazard fields.</strong>
@@ -865,7 +865,7 @@ Query executed successfully.</code></pre>
 </section>
 <section id="polygenic-score-cards" class="level2">
 <h2 class="anchored" data-anchor-id="polygenic-score-cards">Polygenic score cards</h2>
-<div id="4d565a32" class="cell" data-execution_count="4">
+<div id="318abc35" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div class="pgs-card-grid">
   
@@ -6598,15 +6598,15 @@ Query executed successfully.</code></pre>
       <div class="percentile-distribution-track">
         <div class="percentile-distribution-axis" title="Full percentile scale"></div>
         <div class="percentile-distribution-whisker fill-increased" title="Observed retained-model percentile range: 56th–94th" style="left: 55.8%; width: 38.1%;"></div>
-        <div class="percentile-distribution-iqr" title="Interquartile range: 67th–89th" style="left: 67.2%; width: 21.5%;"></div>
+        <div class="percentile-distribution-ci" title="Approx. 95% confidence interval: 72nd–84th" style="left: 71.9%; width: 12.3%;"></div>
         <div class="percentile-distribution-mean" title="Median retained-model percentile: 84th" style="left: 84.3%;"></div>
       </div>
       <div class="percentile-distribution-legend" aria-label="Percentile distribution legend">
         <span class="legend-item"><span class="legend-mean-key"></span>Median percentile</span>
-        <span class="legend-item"><span class="legend-iqr-key"></span>IQR</span>
+        <span class="legend-item"><span class="legend-ci-key"></span>Approx. 95% CI</span>
         <span class="legend-item"><span class="legend-swatch fill-increased"></span>Observed range</span>
       </div>
-      <div class="percentile-distribution-caption">Median 84th; IQR 67th–89th; observed range 56th–94th; SD 13.7 percentile points across 19 retained models.</div>
+      <div class="percentile-distribution-caption">Median 84th; approx. 95% CI 72nd–84th; observed range 56th–94th; SD 13.7 percentile points across 19 retained models.</div>
     </div>
     
         
@@ -6630,12 +6630,6 @@ Query executed successfully.</code></pre>
       <div class="metric-label">Hazard-based risk</div>
       <div class="metric-value">NA</div>
       <div class="metric-caption">HR per SD NA</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">95% CONFIDENCE INTERVAL</div>
-      <div class="metric-value">72nd–84th</div>
-      <div class="metric-caption">Approx. confidence interval across retained-model percentiles</div>
     </div>
     
     <div class="metric-box">
@@ -9250,15 +9244,15 @@ Query executed successfully.</code></pre>
       <div class="percentile-distribution-track">
         <div class="percentile-distribution-axis" title="Full percentile scale"></div>
         <div class="percentile-distribution-whisker fill-normal" title="Observed retained-model percentile range: 26th–85th" style="left: 25.7%; width: 59.4%;"></div>
-        <div class="percentile-distribution-iqr" title="Interquartile range: 42nd–78th" style="left: 41.9%; width: 36.3%;"></div>
+        <div class="percentile-distribution-ci" title="Approx. 95% confidence interval: 46th–72nd" style="left: 45.8%; width: 26.0%;"></div>
         <div class="percentile-distribution-mean" title="Median retained-model percentile: 63rd" style="left: 63.3%;"></div>
       </div>
       <div class="percentile-distribution-legend" aria-label="Percentile distribution legend">
         <span class="legend-item"><span class="legend-mean-key"></span>Median percentile</span>
-        <span class="legend-item"><span class="legend-iqr-key"></span>IQR</span>
+        <span class="legend-item"><span class="legend-ci-key"></span>Approx. 95% CI</span>
         <span class="legend-item"><span class="legend-swatch fill-normal"></span>Observed range</span>
       </div>
-      <div class="percentile-distribution-caption">Median 63rd; IQR 42nd–78th; observed range 26th–85th; SD 22.0 percentile points across 11 retained models.</div>
+      <div class="percentile-distribution-caption">Median 63rd; approx. 95% CI 46th–72nd; observed range 26th–85th; SD 22.0 percentile points across 11 retained models.</div>
     </div>
     
         
@@ -9282,12 +9276,6 @@ Query executed successfully.</code></pre>
       <div class="metric-label">Hazard-based risk</div>
       <div class="metric-value">NA</div>
       <div class="metric-caption">HR per SD NA</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">95% CONFIDENCE INTERVAL</div>
-      <div class="metric-value">46th–72nd</div>
-      <div class="metric-caption">Approx. confidence interval across retained-model percentiles</div>
     </div>
     
     <div class="metric-box">
@@ -13006,15 +12994,15 @@ Query executed successfully.</code></pre>
       <div class="percentile-distribution-track">
         <div class="percentile-distribution-axis" title="Full percentile scale"></div>
         <div class="percentile-distribution-whisker fill-normal" title="Observed retained-model percentile range: 30th–56th" style="left: 30.1%; width: 25.7%;"></div>
-        <div class="percentile-distribution-iqr" title="Interquartile range: 44th–53rd" style="left: 43.8%; width: 9.0%;"></div>
+        <div class="percentile-distribution-ci" title="Approx. 95% confidence interval: 37th–54th" style="left: 36.9%; width: 17.5%;"></div>
         <div class="percentile-distribution-mean" title="Median retained-model percentile: 46th" style="left: 45.7%;"></div>
       </div>
       <div class="percentile-distribution-legend" aria-label="Percentile distribution legend">
         <span class="legend-item"><span class="legend-mean-key"></span>Median percentile</span>
-        <span class="legend-item"><span class="legend-iqr-key"></span>IQR</span>
+        <span class="legend-item"><span class="legend-ci-key"></span>Approx. 95% CI</span>
         <span class="legend-item"><span class="legend-swatch fill-normal"></span>Observed range</span>
       </div>
-      <div class="percentile-distribution-caption">Median 46th; IQR 44th–53rd; observed range 30th–56th; SD 10.0 percentile points across 5 retained models.</div>
+      <div class="percentile-distribution-caption">Median 46th; approx. 95% CI 37th–54th; observed range 30th–56th; SD 10.0 percentile points across 5 retained models.</div>
     </div>
     
         
@@ -13038,12 +13026,6 @@ Query executed successfully.</code></pre>
       <div class="metric-label">Hazard-based risk</div>
       <div class="metric-value">NA</div>
       <div class="metric-caption">HR per SD NA</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">95% CONFIDENCE INTERVAL</div>
-      <div class="metric-value">37th–54th</div>
-      <div class="metric-caption">Approx. confidence interval across retained-model percentiles</div>
     </div>
     
     <div class="metric-box">
@@ -13288,15 +13270,15 @@ Query executed successfully.</code></pre>
       <div class="percentile-distribution-track">
         <div class="percentile-distribution-axis" title="Full percentile scale"></div>
         <div class="percentile-distribution-whisker fill-normal" title="Observed retained-model percentile range: 15th–99th" style="left: 15.2%; width: 83.9%;"></div>
-        <div class="percentile-distribution-iqr" title="Interquartile range: 49th–82nd" style="left: 49.2%; width: 33.1%;"></div>
+        <div class="percentile-distribution-ci" title="Approx. 95% confidence interval: 51st–73rd" style="left: 51.4%; width: 21.7%;"></div>
         <div class="percentile-distribution-mean" title="Median retained-model percentile: 61st" style="left: 61.2%;"></div>
       </div>
       <div class="percentile-distribution-legend" aria-label="Percentile distribution legend">
         <span class="legend-item"><span class="legend-mean-key"></span>Median percentile</span>
-        <span class="legend-item"><span class="legend-iqr-key"></span>IQR</span>
+        <span class="legend-item"><span class="legend-ci-key"></span>Approx. 95% CI</span>
         <span class="legend-item"><span class="legend-swatch fill-normal"></span>Observed range</span>
       </div>
-      <div class="percentile-distribution-caption">Median 61st; IQR 49th–82nd; observed range 15th–99th; SD 23.5 percentile points across 18 retained models.</div>
+      <div class="percentile-distribution-caption">Median 61st; approx. 95% CI 51st–73rd; observed range 15th–99th; SD 23.5 percentile points across 18 retained models.</div>
     </div>
     
         
@@ -13320,12 +13302,6 @@ Query executed successfully.</code></pre>
       <div class="metric-label">Hazard-based risk</div>
       <div class="metric-value">NA</div>
       <div class="metric-caption">HR per SD NA</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">95% CONFIDENCE INTERVAL</div>
-      <div class="metric-value">51st–73rd</div>
-      <div class="metric-caption">Approx. confidence interval across retained-model percentiles</div>
     </div>
     
     <div class="metric-box">
@@ -13827,15 +13803,15 @@ Query executed successfully.</code></pre>
       <div class="percentile-distribution-track">
         <div class="percentile-distribution-axis" title="Full percentile scale"></div>
         <div class="percentile-distribution-whisker fill-normal" title="Observed retained-model percentile range: 39th–81st" style="left: 39.4%; width: 41.3%;"></div>
-        <div class="percentile-distribution-iqr" title="Interquartile range: 58th–72nd" style="left: 58.3%; width: 13.5%;"></div>
+        <div class="percentile-distribution-ci" title="Approx. 95% confidence interval: 52nd–76th" style="left: 52.5%; width: 23.5%;"></div>
         <div class="percentile-distribution-mean" title="Median retained-model percentile: 69th" style="left: 68.8%;"></div>
       </div>
       <div class="percentile-distribution-legend" aria-label="Percentile distribution legend">
         <span class="legend-item"><span class="legend-mean-key"></span>Median percentile</span>
-        <span class="legend-item"><span class="legend-iqr-key"></span>IQR</span>
+        <span class="legend-item"><span class="legend-ci-key"></span>Approx. 95% CI</span>
         <span class="legend-item"><span class="legend-swatch fill-normal"></span>Observed range</span>
       </div>
-      <div class="percentile-distribution-caption">Median 69th; IQR 58th–72nd; observed range 39th–81st; SD 14.7 percentile points across 6 retained models.</div>
+      <div class="percentile-distribution-caption">Median 69th; approx. 95% CI 52nd–76th; observed range 39th–81st; SD 14.7 percentile points across 6 retained models.</div>
     </div>
     
         
@@ -13859,12 +13835,6 @@ Query executed successfully.</code></pre>
       <div class="metric-label">Hazard-based risk</div>
       <div class="metric-value">52.5% higher</div>
       <div class="metric-caption">HR per SD 1.68</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">95% CONFIDENCE INTERVAL</div>
-      <div class="metric-value">52nd–76th</div>
-      <div class="metric-caption">Approx. confidence interval across retained-model percentiles</div>
     </div>
     
     <div class="metric-box">
@@ -14585,15 +14555,15 @@ Query executed successfully.</code></pre>
       <div class="percentile-distribution-track">
         <div class="percentile-distribution-axis" title="Full percentile scale"></div>
         <div class="percentile-distribution-whisker fill-normal" title="Observed retained-model percentile range: 0th–98th" style="left: 0.0%; width: 97.8%;"></div>
-        <div class="percentile-distribution-iqr" title="Interquartile range: 18th–64th" style="left: 17.6%; width: 46.0%;"></div>
+        <div class="percentile-distribution-ci" title="Approx. 95% confidence interval: 34th–46th" style="left: 34.1%; width: 11.6%;"></div>
         <div class="percentile-distribution-mean" title="Median retained-model percentile: 32nd" style="left: 31.8%;"></div>
       </div>
       <div class="percentile-distribution-legend" aria-label="Percentile distribution legend">
         <span class="legend-item"><span class="legend-mean-key"></span>Median percentile</span>
-        <span class="legend-item"><span class="legend-iqr-key"></span>IQR</span>
+        <span class="legend-item"><span class="legend-ci-key"></span>Approx. 95% CI</span>
         <span class="legend-item"><span class="legend-swatch fill-normal"></span>Observed range</span>
       </div>
-      <div class="percentile-distribution-caption">Median 32nd; IQR 18th–64th; observed range 0th–98th; SD 26.7 percentile points across 81 retained models.</div>
+      <div class="percentile-distribution-caption">Median 32nd; approx. 95% CI 34th–46th; observed range 0th–98th; SD 26.7 percentile points across 81 retained models.</div>
     </div>
     
         
@@ -14617,12 +14587,6 @@ Query executed successfully.</code></pre>
       <div class="metric-label">Hazard-based risk</div>
       <div class="metric-value">3.6% higher</div>
       <div class="metric-caption">HR per SD 1.66</div>
-    </div>
-    
-    <div class="metric-box">
-      <div class="metric-label">95% CONFIDENCE INTERVAL</div>
-      <div class="metric-value">34th–46th</div>
-      <div class="metric-caption">Approx. confidence interval across retained-model percentiles</div>
     </div>
     
     <div class="metric-box">

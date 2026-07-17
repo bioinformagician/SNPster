@@ -5,7 +5,7 @@ import shutil
 import glob
 from db_handler import DbHandler, DbUtils
 from db_config import USERNAME, PASSWORD, HOST, PORT
-from config import PGS_BACTH_SIZE, SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR, OUTPUT_DIR, REFERENCE_DATA_PATH, BCFTOOLS_THREADS, SAMPLESET_NAME, VCF_MERGE_SHEET_DIR, PGS_RESULT_DIR
+from config import PGS_BACTH_SIZE, SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR, OUTPUT_DIR, REFERENCE_DATA_PATH, BCFTOOLS_THREADS, SAMPLESET_NAME, VCF_MERGE_SHEET_DIR, PGS_RESULT_DIR, NEXTFLOW_PGS_CONFIG, NEXTFLOW_VCF_MERGING_CONFIG
 from vcf_classes import VCFUtilities
 
 
@@ -30,7 +30,9 @@ class EnvironmentHandler:
                  output_dir: str = OUTPUT_DIR,
                  reference_data_path: str = REFERENCE_DATA_PATH,
                  pgs_batch_size: int = PGS_BACTH_SIZE,
-                 pgs_result_dir: str = PGS_RESULT_DIR
+                 pgs_result_dir: str = PGS_RESULT_DIR,
+                 nextflow_pgs_config: str = NEXTFLOW_PGS_CONFIG,
+                 nextflow_vcf_merging_config = NEXTFLOW_VCF_MERGING_CONFIG
                  ):
         
         self.merged_sample_sheet = merged_sample_sheet
@@ -53,6 +55,8 @@ class EnvironmentHandler:
         self.sampleset_name = sampleset_name
         self.pgs_batch_size = pgs_batch_size
         self.pgs_result_dir = pgs_result_dir
+        self.nextflow_pgs_config = nextflow_pgs_config
+        self.nextflow_vcf_merging_config = nextflow_vcf_merging_config
         
     def copy_scoring_files(self, target_dir, scoring_file_list: list) -> None:
         """Copies scoring files from the mounted source directory to the scoring file directory."""
@@ -467,7 +471,7 @@ class PGSCalculator:
         if "count" in summary_statistics.columns and "percent" in summary_statistics.columns:
             summary_agg = summary_statistics.groupby(["dataset", "accession_clean"]).agg({
                 "count": "sum",
-                "percent": "sum"})
+                "percent": "sum"}).reset_index()
             summary_agg["percent"] = summary_agg["percent"].clip(upper=100.0)
             print(f"Aggregated to {len(summary_agg)} unique PGS scores per dataset")
             summary_statistics = summary_agg
@@ -573,7 +577,9 @@ class PGSCalculator:
         print(f"Found {len(merge_sheets)} merge sheet files: {merge_sheets}")
         
         command = [
-            "nextflow", "run", "/app/vcf_combiner_pipeline.nf",
+            "nextflow", "run",
+            "-c", self.environment_handler.nextflow_vcf_merging_config,
+            "/app/vcf_combiner_pipeline.nf",
             "-work-dir", self.environment_handler.nf_work_dir,
             "--vcf_samplesheet_dir", self.environment_handler.vcf_merge_sheet_dir,
             "--output_dir", self.environment_handler.vcf_merge_sheet_dir,
@@ -600,7 +606,9 @@ class PGSCalculator:
             )
     
         command = [
-                "nextflow", "run", "/opt/pgsc_calc/main.nf",
+            "nextflow", "run",
+            "-c", self.environment_handler.nextflow_pgs_config,
+            "/opt/pgsc_calc/main.nf",
                 "-work-dir", self.environment_handler.nf_work_dir,
                 "-profile", "conda",
                 "--input", sample_sheet,

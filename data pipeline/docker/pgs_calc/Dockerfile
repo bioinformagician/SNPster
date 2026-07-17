@@ -65,6 +65,8 @@ ENV SAMPLESET_NAME=MergedUserData
 ENV VCF_MERGE_SHEET_DIR=/app/vcf_merge_sheets
 ENV PGS_BACTH_SIZE=50
 ENV PGS_RESULT_DIR=/app/pgs_results
+ENV NEXTFLOW_PGS_CONFIG=/app/nextflow_pgs.config
+ENV NEXTFLOW_VCF_MERGING_CONFIG=/app/nextflow_vcf_merging.config
 
 RUN mkdir -p "$OUTPUT_DIR" "$SCORING_FILE_TARGET_DIR" "$NF_WORK_DIR" "$VCF_MERGE_SHEET_DIR" "$PGS_RESULT_DIR"
 

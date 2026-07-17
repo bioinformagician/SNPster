@@ -248,8 +248,8 @@ main.content,
   opacity: 0.32;
 }
 
-/* IQR overlay for >4 PGS cards: sits on top of the normal slim percentile bar. */
-.percentile-iqr-overlay {
+/* 95% confidence interval overlay for >4 PGS cards: sits on top of the normal slim percentile bar. */
+.percentile-ci-overlay {
   position: absolute;
   top: -4px;
   height: 21px;
@@ -260,7 +260,7 @@ main.content,
   z-index: 4;
 }
 
-.percentile-iqr-overlay + .percentile-marker,
+.percentile-ci-overlay + .percentile-marker,
 .percentile-track .percentile-marker {
   z-index: 5;
 }
@@ -419,7 +419,7 @@ main.content,
   border-radius: 999px;
 }
 
-.percentile-distribution-iqr {
+.percentile-distribution-ci {
   position: absolute;
   top: 6px;
   height: 22px;
@@ -486,7 +486,7 @@ main.content,
   box-shadow: 0 1px 5px rgba(17, 24, 39, .30);
 }
 
-.legend-iqr-key {
+.legend-ci-key {
   display: inline-block;
   width: 28px;
   height: 12px;
@@ -1275,7 +1275,7 @@ display(HTML(summary_html))
 ```{=html}
 <div class="method-note">
   <strong>Model selection.</strong>
-  The report first removes validation rows that do not contain a positive share of the user's target ancestry. A model must also have at least 70% matched variants to become the primary/top model. Each trait card then selects the primary eligible model by: highest AUROC, then highest target-ancestry share in the evaluation sample, then largest evaluation sample size. Additional retained models for the same trait are kept and shown in the expandable model-details section, including models below the primary-model variant-match threshold. Risk categories are based on the selected best model percentile for traits with fewer than 4 retained scores, and on the median retained-model percentile when more than 4 scores are available. For traits with more than 4 retained scores, the main percentile bar shows the observed retained-model percentile range, mean, and translucent IQR band. The 95% CONFIDENCE INTERVAL is shown only as a separate sub-card.
+  The report first removes validation rows that do not contain a positive share of the user's target ancestry. A model must also have at least 70% matched variants to become the primary/top model. Each trait card then selects the primary eligible model by: highest AUROC, then highest target-ancestry share in the evaluation sample, then largest evaluation sample size. Additional retained models for the same trait are kept and shown in the expandable model-details section, including models below the primary-model variant-match threshold. Risk categories are based on the selected best model percentile for traits with fewer than 4 retained scores, and on the median retained-model percentile when more than 4 scores are available. For traits with more than 4 retained scores, the main percentile bar shows the observed retained-model percentile range, median marker, and translucent approximate 95% confidence interval band.
 </div>
 ```
 
@@ -1463,7 +1463,7 @@ def percentile_distribution_stats(models_df):
 
 
 def use_distribution_percentile_view(models_df):
-    """Use IQR/median display for traits with more than 4 retained scores."""
+    """Use multi-model median/95% CI display for traits with more than 4 retained scores."""
     return len(percentile_values(models_df)) > 4
 
 
@@ -1471,22 +1471,22 @@ def make_percentile_distribution_view(models_df, fill_class):
     """Use the compact distribution style for traits with >4 retained scores.
 
     The main bar shows the observed retained-model percentile range as a slim
-    colored segment on a gray 0-100 scale. The translucent overlay shows the IQR,
-    and the black marker shows the median percentile. The 95% CONFIDENCE INTERVAL
-    is intentionally kept as text in the metric sub-card, not drawn on the bar.
+    colored segment on a gray 0-100 scale. The translucent overlay shows the
+    approximate 95% confidence interval around the retained-model mean, and the
+    black marker shows the median retained-model percentile.
     """
     stats = percentile_distribution_stats(models_df)
     if stats is None:
         return ""
 
-    q1 = clamp_percentile(stats["q1"])
-    q3 = clamp_percentile(stats["q3"])
+    ci_low = clamp_percentile(stats["ci_low"])
+    ci_high = clamp_percentile(stats["ci_high"])
     median = clamp_percentile(stats["median"])
     min_pct = clamp_percentile(stats["min"])
     max_pct = clamp_percentile(stats["max"])
 
-    iqr_left = q1
-    iqr_width = max(0.0, q3 - q1)
+    ci_left = ci_low
+    ci_width = max(0.0, ci_high - ci_low)
     whisker_left = min_pct
     whisker_width = max(0.0, max_pct - min_pct)
 
@@ -1495,15 +1495,15 @@ def make_percentile_distribution_view(models_df, fill_class):
       <div class="percentile-distribution-track">
         <div class="percentile-distribution-axis" title="Full percentile scale"></div>
         <div class="percentile-distribution-whisker {fill_class}" title="Observed retained-model percentile range: {fmt_percentile(min_pct)}–{fmt_percentile(max_pct)}" style="left: {whisker_left:.1f}%; width: {whisker_width:.1f}%;"></div>
-        <div class="percentile-distribution-iqr" title="Interquartile range: {fmt_percentile(q1)}–{fmt_percentile(q3)}" style="left: {iqr_left:.1f}%; width: {iqr_width:.1f}%;"></div>
+        <div class="percentile-distribution-ci" title="Approx. 95% confidence interval: {fmt_percentile(ci_low)}–{fmt_percentile(ci_high)}" style="left: {ci_left:.1f}%; width: {ci_width:.1f}%;"></div>
         <div class="percentile-distribution-mean" title="Median retained-model percentile: {fmt_percentile(median)}" style="left: {median:.1f}%;"></div>
       </div>
       <div class="percentile-distribution-legend" aria-label="Percentile distribution legend">
         <span class="legend-item"><span class="legend-mean-key"></span>Median percentile</span>
-        <span class="legend-item"><span class="legend-iqr-key"></span>IQR</span>
+        <span class="legend-item"><span class="legend-ci-key"></span>Approx. 95% CI</span>
         <span class="legend-item"><span class="legend-swatch {fill_class}"></span>Observed range</span>
       </div>
-      <div class="percentile-distribution-caption">Median {fmt_percentile(stats['median'])}; IQR {fmt_percentile(stats['q1'])}–{fmt_percentile(stats['q3'])}; observed range {fmt_percentile(stats['min'])}–{fmt_percentile(stats['max'])}; SD {stats['sd']:.1f} percentile points across {stats['n']} retained models.</div>
+      <div class="percentile-distribution-caption">Median {fmt_percentile(stats['median'])}; approx. 95% CI {fmt_percentile(stats['ci_low'])}–{fmt_percentile(stats['ci_high'])}; observed range {fmt_percentile(stats['min'])}–{fmt_percentile(stats['max'])}; SD {stats['sd']:.1f} percentile points across {stats['n']} retained models.</div>
     </div>
     """
 
@@ -1511,7 +1511,7 @@ def make_consensus_box(models_df, primary_percentile):
     values = percentile_values(models_df)
 
     # For traits with many retained models, the main visualization already shows
-    # mean, IQR, and SD. Do not show the older consensus/disagreement panel.
+    # median, approx. 95% CI, observed range, and SD. Do not show the older consensus/disagreement panel.
     if use_distribution_percentile_view(models_df):
         return ""
 
@@ -1630,13 +1630,6 @@ def make_trait_card(record):
     metric_boxes += make_metric_box("AUROC", auroc_value, auroc_caption)
     metric_boxes += make_metric_box("Odds-based risk", odds_value, odds_caption)
     metric_boxes += make_metric_box("Hazard-based risk", hazard_value, hazard_caption)
-
-    if show_distribution_view and distribution_stats is not None:
-        metric_boxes += make_metric_box(
-            "95% CONFIDENCE INTERVAL",
-            fmt_percentile_range(distribution_stats["ci_low"], distribution_stats["ci_high"]),
-            "Approx. confidence interval across retained-model percentiles"
-        )
 
     metric_boxes += make_metric_box("Evaluation ancestry match", f"{float(primary['target_ethnicity_share']):.0f}% {ethnicity}", "Primary model")
     metric_boxes += make_metric_box("Variant match", variant_match_value, variant_match_caption)
