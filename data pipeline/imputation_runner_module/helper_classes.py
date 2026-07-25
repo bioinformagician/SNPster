@@ -2,10 +2,12 @@ import os
 import subprocess
 import shutil
 import re
+from pathlib import Path
 import pandas as pd
 from config import BASE_OUTPUT_DIR, IMPUTATION_DEPENDENCIES, HARMONIZER_DEPENDENCIES, NEXTFLOW_BIN, SAMPLESHEET_PATH, PIPELINE_PATH, NEXTFLOW_CONFIG, NEXTFLOW_WORK_DIR
 from db_handler import DbHandler, DbUtils
 from db_config import USERNAME, PASSWORD, HOST, PORT
+from vcf_classes import VCFUtilities
 
 
 
@@ -147,18 +149,40 @@ class DatabaseQueryHandler:
                                     WHERE imputation_id IN ({imputation_ids_sql});"""
                                     
         self.db_utils.db_handler.execute_query(mark_failed_query)
+    
+    
+    def upload_imputation_info(self, imputation_id: int, file_path: str, number_of_variants: int, chromosome: int) -> None:
+        """Uploads imputation info to the database."""
+        insert_query = f"""
+            INSERT INTO snpster_users.imputed_data (imputation_id, file_path, number_of_variants, chromosome)
+            VALUES ({imputation_id}, '{file_path}', {number_of_variants}, {chromosome})
+            ON CONFLICT (imputation_id, chromosome) DO UPDATE
+            SET file_path = EXCLUDED.file_path,
+                number_of_variants = EXCLUDED.number_of_variants;
+        """
         
-        
+        self.db_utils.db_handler.execute_query(insert_query)
 
+        
+        
+        
+        
+        
+        
 
 
 class ImputationRunner:
+    
     def __init__(self, env_handler: EnvironmentHandler,
                  query_handler: DatabaseQueryHandler,
+                 vcf_utilities: VCFUtilities,
                  job_df: pd.DataFrame = None):
+        
         self.env_handler = env_handler
         self.query_handler = query_handler
         self.job_df = job_df
+        self.vcf_utilities = vcf_utilities
+        
     
     def set_job_df(self) -> None:
         self.job_df = self.query_handler.get_queued_jobs()
@@ -249,7 +273,14 @@ class ImputationRunner:
             else:
                 failed_ids.append(imputation_id)
         
+        #remove failed ids from self.job_df
+        self.job_df = self.job_df[~self.job_df["imputation_id"].isin(failed_ids)]
+        
+        
         return successful_ids, failed_ids
+    
+    
+    
 
     def get_output_imputation_ids(self) -> set[int]:
         """Extract imputation IDs from final output file names (e.g., ...ImpID5...)."""
@@ -262,6 +293,47 @@ class ImputationRunner:
                 found_ids.add(int(match.group(1)))
 
         return found_ids
+    
+    
+    
+    def upload_number_of_variants(self) -> pd.DataFrame:
+        """Count variants in imputed VCFs and upsert the results into snpster_users.imputed_data."""
+
+        candidate_files = [
+            vcf_path
+            for result_dir in self.job_df["output_dir"].astype(str).tolist()
+            for vcf_path in sorted((Path(result_dir) / "qc_output").glob("*.vcf.gz"))
+        ]
+
+        rows = []
+
+        for vcf_path in candidate_files:
+            number_of_variants = self.vcf_utilities.get_number_of_variants_in_vcf(str(vcf_path))
+
+            rows.append({
+                "imputation_id": int(self.vcf_utilities._get_imputation_id_from_vcf(str(vcf_path))),
+                "file_path": str(vcf_path),
+                "number_of_variants": int(number_of_variants),
+                "chromosome": int(self.vcf_utilities._get_chromosome_from_vcf(str(vcf_path))),
+            })
+
+        upload_df = pd.DataFrame(rows, columns=["imputation_id", "file_path", "number_of_variants", "chromosome"])
+
+        self.query_handler.db_utils.upsert_dataframe_to_db(
+            dataframe=upload_df,
+            table_name="imputed_data",
+            schema="snpster_users",
+            conflict_columns=["imputation_id", "chromosome"],
+        )
+
+        print(f"Upserted {len(upload_df)} rows into snpster_users.imputed_data")
+        return upload_df
+        
+        
+        
+        
+    
+    
 
 
     

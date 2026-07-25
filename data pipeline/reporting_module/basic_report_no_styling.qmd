@@ -1,0 +1,2990 @@
+---
+title: "SNPster Polygenic Score Report"
+format:
+  html:
+    page-layout: article
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+    embed-resources: true
+jupyter: python3
+execute:
+  python: "/home/frederik/github_projects/SNPster/.venv/bin/python"
+  echo: false
+  warning: false
+  message: false
+---
+
+```{=html}
+<style>
+:root {
+  --snpster-bg: #f6f7fb;
+  --snpster-card: #ffffff;
+  --snpster-border: #e5e7eb;
+  --snpster-muted: #6b7280;
+  --snpster-text: #111827;
+  --snpster-soft: #f3f4f6;
+  --risk-very-low: #0f766e;
+  --risk-lowered: #16a34a;
+  --risk-normal: #2563eb;
+  --risk-increased: #d97706;
+  --risk-highly-increased: #b91c1c;
+}
+
+body {
+  background: var(--snpster-bg);
+}
+
+.quarto-title-block {
+  max-width: 980px;
+  margin: 0 auto 1.5rem auto;
+}
+
+/* Move the floating table of contents away from the card column on wide screens. */
+@media (min-width: 992px) {
+  #quarto-margin-sidebar {
+    transform: translateX(110px);
+    padding-left: 1.5rem;
+    max-width: 260px;
+  }
+}
+
+@media (min-width: 1400px) {
+  #quarto-margin-sidebar {
+    transform: translateX(150px);
+  }
+}
+
+/* Keep the report readable on wide monitors. page-layout: full makes cards stretch edge-to-edge. */
+#quarto-content,
+main.content,
+.page-columns,
+.column-page,
+.column-screen {
+  max-width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.report-summary-grid,
+.pgs-card-grid,
+.method-note {
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.report-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem auto 2rem auto;
+}
+
+.summary-card {
+  background: var(--snpster-card);
+  border: 1px solid var(--snpster-border);
+  border-radius: 18px;
+  padding: 1.1rem 1.2rem;
+  box-shadow: 0 10px 25px rgba(17, 24, 39, 0.05);
+}
+
+.summary-label {
+  color: var(--snpster-muted);
+  font-size: 0.82rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.summary-value {
+  color: var(--snpster-text);
+  font-size: 1.85rem;
+  line-height: 1.1;
+  font-weight: 800;
+  margin-top: .35rem;
+}
+
+.summary-subtext {
+  margin-top: .35rem;
+  color: var(--snpster-muted);
+  font-size: .9rem;
+}
+
+.pgs-card-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.05rem;
+  align-items: start;
+  margin: 1rem auto 0 auto;
+}
+
+.pgs-card {
+  background: var(--snpster-card);
+  border: 1px solid var(--snpster-border);
+  border-radius: 22px;
+  padding: 1.35rem 1.45rem;
+  box-shadow: 0 10px 25px rgba(17, 24, 39, 0.06);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: auto;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.pgs-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: .8rem;
+}
+
+.pgs-title {
+  font-size: 1.16rem;
+  font-weight: 800;
+  color: var(--snpster-text);
+  line-height: 1.25;
+  margin: 0;
+}
+
+.pgs-subtitle {
+  color: var(--snpster-muted);
+  font-size: .84rem;
+  margin-top: .25rem;
+}
+
+.pgs-id-badge {
+  white-space: nowrap;
+  background: var(--snpster-soft);
+  color: #374151;
+  border: 1px solid var(--snpster-border);
+  border-radius: 999px;
+  padding: .25rem .55rem;
+  font-size: .76rem;
+  font-weight: 700;
+}
+
+.risk-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: .3rem .65rem;
+  font-size: .78rem;
+  font-weight: 800;
+  margin-bottom: .9rem;
+  width: fit-content;
+}
+
+.risk-very-low {
+  color: #064e3b;
+  background: #ccfbf1;
+}
+
+.risk-lowered {
+  color: #14532d;
+  background: #dcfce7;
+}
+
+.risk-normal {
+  color: #1e3a8a;
+  background: #dbeafe;
+}
+
+.risk-increased {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.risk-highly-increased {
+  color: #7f1d1d;
+  background: #fee2e2;
+}
+
+
+.model-agreement {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .38rem .55rem;
+  margin: -.25rem 0 .95rem 0;
+  color: var(--snpster-muted);
+  font-size: .78rem;
+}
+
+.model-agreement-label {
+  color: #4b5563;
+  font-weight: 800;
+}
+
+.model-agreement-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: .2rem .5rem;
+  font-size: .7rem;
+  font-weight: 850;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.model-agreement-phenomenal {
+  color: #14532d;
+  background: #dcfce7;
+  border-color: #bbf7d0;
+}
+
+.model-agreement-very-good {
+  color: #1e3a8a;
+  background: #dbeafe;
+  border-color: #bfdbfe;
+}
+
+.model-agreement-good {
+  color: #92400e;
+  background: #fef3c7;
+  border-color: #fde68a;
+}
+
+
+.model-agreement-moderate {
+  color: #92400e;
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.model-agreement-bad {
+  color: #7f1d1d;
+  background: #fee2e2;
+  border-color: #fecaca;
+}
+
+.model-agreement-not-assessable {
+  color: #4b5563;
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+}
+
+.model-agreement-caption {
+  color: var(--snpster-muted);
+  font-weight: 650;
+}
+
+
+.model-agreement-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+}
+
+.model-agreement-header .model-agreement-badge {
+  font-size: .72rem;
+  padding: .28rem .58rem;
+}
+
+.percentile-block {
+  margin: .45rem 0 1rem 0;
+}
+
+.percentile-topline {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: .4rem;
+}
+
+.percentile-label {
+  color: var(--snpster-muted);
+  font-size: .92rem;
+  font-weight: 800;
+}
+
+.percentile-value {
+  color: var(--snpster-text);
+  font-size: 1.6rem;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.percentile-track {
+  position: relative;
+  height: 13px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: visible;
+}
+
+.percentile-track.has-jitter {
+  margin-top: .65rem;
+  margin-bottom: .75rem;
+}
+
+.percentile-model-point {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #6b7280;
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(17, 24, 39, .22);
+  transform: translateX(-50%);
+  z-index: 6;
+}
+
+.legend-model-point-key {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #6b7280;
+}
+
+.percentile-fill,
+.percentile-solid,
+.percentile-uncertainty {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 999px;
+}
+
+.percentile-solid {
+  left: 0;
+}
+
+.percentile-uncertainty {
+  opacity: 0.32;
+}
+
+/* IQR overlay for multi-PGS cards: sits on top of the skinny percentile baseline. */
+.percentile-iqr-overlay {
+  position: absolute;
+  top: -4px;
+  height: 21px;
+  background: rgba(37, 99, 235, 0.16);
+  border: 1px solid rgba(37, 99, 235, 0.50);
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(17, 24, 39, .10);
+  z-index: 4;
+}
+
+.percentile-iqr-overlay + .percentile-marker,
+.percentile-track .percentile-marker {
+  z-index: 5;
+}
+
+.percentile-marker {
+  position: absolute;
+  top: -5px;
+  width: 5px;
+  height: 23px;
+  border-radius: 999px;
+  background: #111827;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(17, 24, 39, .35);
+  transform: translateX(-50%);
+  z-index: 5;
+}
+
+
+.scale-axis-labels {
+  position: relative;
+  height: 1.15rem;
+  margin-top: .42rem;
+  color: var(--snpster-muted);
+  font-size: .68rem;
+  font-weight: 650;
+  line-height: 1;
+}
+
+.scale-axis-label {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.scale-axis-label.edge-left {
+  transform: translateX(0);
+}
+
+.scale-axis-label.edge-right {
+  transform: translateX(-100%);
+}
+
+.percentile-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem .9rem;
+  align-items: center;
+  margin-top: .55rem;
+  color: var(--snpster-muted);
+  font-size: .76rem;
+  font-weight: 650;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: .32rem;
+  white-space: nowrap;
+}
+
+.legend-swatch {
+  display: inline-block;
+  width: 26px;
+  height: 9px;
+  border-radius: 999px;
+}
+
+.legend-swatch.translucent {
+  opacity: .32;
+}
+
+.legend-marker-key {
+  display: inline-block;
+  width: 5px;
+  height: 18px;
+  border-radius: 999px;
+  background: #111827;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 5px rgba(17, 24, 39, .30);
+}
+
+.consensus-box {
+  background: #f9fafb;
+  border: 1px solid var(--snpster-border);
+  border-radius: 14px;
+  padding: .65rem .75rem;
+  margin-top: .65rem;
+}
+
+.consensus-value {
+  color: var(--snpster-text);
+  font-size: 1rem;
+  font-weight: 850;
+  margin-top: .15rem;
+}
+
+.percentile-boxplot {
+  position: relative;
+  height: 24px;
+  margin-top: .45rem;
+}
+
+.percentile-boxplot-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 10px;
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+
+.percentile-boxplot-whisker {
+  position: absolute;
+  top: 10px;
+  height: 4px;
+  background: #9ca3af;
+  border-radius: 999px;
+}
+
+.percentile-boxplot-iqr {
+  position: absolute;
+  top: 5px;
+  height: 14px;
+  background: rgba(37, 99, 235, 0.16);
+  border: 1px solid rgba(37, 99, 235, 0.45);
+  border-radius: 6px;
+}
+
+.percentile-boxplot-median,
+.percentile-boxplot-primary {
+  position: absolute;
+  top: 2px;
+  width: 4px;
+  height: 20px;
+  border-radius: 999px;
+  transform: translateX(-50%);
+}
+
+.percentile-boxplot-median {
+  background: #2563eb;
+}
+
+.percentile-boxplot-primary {
+  background: #111827;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 5px rgba(17, 24, 39, .30);
+}
+
+.percentile-boxplot-caption {
+  color: var(--snpster-muted);
+  font-size: .74rem;
+  font-weight: 650;
+  margin-top: .25rem;
+}
+
+.percentile-distribution {
+  margin-top: .55rem;
+}
+
+.percentile-distribution-track {
+  position: relative;
+  height: 34px;
+  margin-top: .35rem;
+}
+
+.percentile-distribution-axis {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 15px;
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+
+.percentile-distribution-whisker {
+  position: absolute;
+  top: 15px;
+  height: 4px;
+  border-radius: 999px;
+}
+
+.percentile-distribution-iqr {
+  position: absolute;
+  top: 6px;
+  height: 22px;
+  background: rgba(37, 99, 235, 0.16);
+  border: 1px solid rgba(37, 99, 235, 0.50);
+  border-radius: 7px;
+}
+
+.percentile-distribution-mean {
+  position: absolute;
+  top: 3px;
+  width: 5px;
+  height: 28px;
+  border-radius: 999px;
+  background: #111827;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 5px rgba(17, 24, 39, .30);
+  transform: translateX(-50%);
+}
+
+
+.percentile-distribution-weighted-mean {
+  position: absolute;
+  top: 5px;
+  width: 4px;
+  height: 24px;
+  border-radius: 999px;
+  background: #2563eb;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 5px rgba(37, 99, 235, .28);
+  transform: translateX(-50%);
+  z-index: 7;
+}
+
+.legend-weighted-mean-key {
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  border-radius: 999px;
+  background: #2563eb;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 5px rgba(37, 99, 235, .25);
+}
+
+
+.percentile-distribution-point {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #6b7280;
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(17, 24, 39, .22);
+  transform: translateX(-50%);
+  z-index: 6;
+}
+
+.percentile-distribution-iqr-marker {
+  position: absolute;
+  top: 10px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  transform: translateX(-50%);
+}
+
+.percentile-distribution-iqr-marker.left {
+  border-right: 8px solid #374151;
+}
+
+.percentile-distribution-iqr-marker.right {
+  border-left: 8px solid #374151;
+}
+
+.percentile-distribution-caption {
+  color: var(--snpster-muted);
+  font-size: .76rem;
+  font-weight: 650;
+  margin-top: .32rem;
+}
+
+.percentile-distribution-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem .9rem;
+  align-items: center;
+  margin-top: .55rem;
+  color: var(--snpster-muted);
+  font-size: .76rem;
+  font-weight: 650;
+}
+
+.legend-mean-key {
+  display: inline-block;
+  width: 5px;
+  height: 18px;
+  border-radius: 999px;
+  background: #111827;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 5px rgba(17, 24, 39, .30);
+}
+
+.legend-iqr-key {
+  display: inline-block;
+  width: 28px;
+  height: 12px;
+  border-radius: 6px;
+  background: rgba(37, 99, 235, 0.16);
+  border: 1px solid rgba(37, 99, 235, 0.50);
+}
+
+.fill-very-low {
+  background: var(--risk-very-low);
+}
+
+.fill-lowered {
+  background: var(--risk-lowered);
+}
+
+.fill-normal {
+  background: var(--risk-normal);
+}
+
+.fill-increased {
+  background: var(--risk-increased);
+}
+
+.fill-highly-increased {
+  background: var(--risk-highly-increased);
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .65rem;
+  margin: 1.45rem 0 1rem 0;
+}
+
+.metric-box {
+  background: #fbfcfe;
+  border: 1px solid var(--snpster-border);
+  border-radius: 14px;
+  padding: .75rem .8rem;
+}
+
+.metric-label {
+  color: var(--snpster-muted);
+  font-size: .75rem;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: .035em;
+}
+
+.metric-value {
+  color: var(--snpster-text);
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-top: .2rem;
+}
+
+.metric-caption {
+  color: var(--snpster-muted);
+  font-size: .76rem;
+  margin-top: .14rem;
+}
+
+
+.metric-value-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .65rem;
+  margin-top: .2rem;
+}
+
+.metric-value-row .metric-value {
+  margin-top: 0;
+}
+
+.metric-status-tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: .2rem .5rem;
+  font-size: .68rem;
+  font-weight: 800;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.metric-status-bad {
+  color: #7f1d1d;
+  background: #fee2e2;
+  border-color: #fecaca;
+}
+
+.metric-status-acceptable {
+  color: #92400e;
+  background: #fef3c7;
+  border-color: #fde68a;
+}
+
+.metric-status-good {
+  color: #1e3a8a;
+  background: #dbeafe;
+  border-color: #bfdbfe;
+}
+
+.metric-status-phenomenal {
+  color: #14532d;
+  background: #dcfce7;
+  border-color: #bbf7d0;
+}
+
+.validation-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem .9rem;
+  align-items: center;
+  margin: .1rem 0 1rem 0;
+  color: var(--snpster-muted);
+  font-size: .78rem;
+  font-weight: 650;
+}
+
+.validation-inline-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .3rem;
+}
+
+.validation-inline-key {
+  color: #4b5563;
+  font-weight: 750;
+}
+
+.validation-inline-value {
+  color: var(--snpster-muted);
+}
+
+
+.effect-bar-stack {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 0 0 1rem 0;
+}
+
+.effect-bar-panel {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.effect-bar-panel.unavailable {
+  background: transparent;
+  box-shadow: none;
+}
+
+.effect-bar-topline {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .4rem;
+}
+
+.effect-bar-label {
+  color: var(--snpster-muted);
+  font-size: .92rem;
+  font-weight: 800;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.effect-bar-value {
+  color: var(--snpster-text);
+  font-size: 1.6rem;
+  font-weight: 850;
+  line-height: 1;
+  text-align: right;
+}
+
+.effect-bar-caption {
+  color: var(--snpster-muted);
+  font-size: .76rem;
+  font-weight: 650;
+  margin-top: .32rem;
+}
+
+.effect-distribution {
+  margin: 0;
+}
+
+.effect-distribution-track {
+  position: relative;
+  height: 13px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: visible;
+  margin-top: .65rem;
+  margin-bottom: .75rem;
+}
+
+.effect-distribution-axis {
+  display: none;
+}
+
+.effect-distribution-centerfill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 999px;
+  z-index: 1;
+}
+
+.effect-distribution-zero {
+  position: absolute;
+  top: -5px;
+  width: 2px;
+  height: 23px;
+  border-radius: 999px;
+  background: #6b7280;
+  transform: translateX(-50%);
+  z-index: 4;
+}
+
+.effect-distribution-range {
+  position: absolute;
+  top: 4px;
+  height: 5px;
+  background: #6b7280;
+  border-radius: 999px;
+  z-index: 3;
+}
+
+
+.effect-distribution-range.fill-increased {
+  background: var(--risk-increased);
+}
+
+.effect-distribution-range.fill-lowered {
+  background: var(--risk-lowered);
+}
+
+.effect-distribution-iqr {
+  position: absolute;
+  top: -4px;
+  height: 21px;
+  background: rgba(37, 99, 235, 0.16);
+  border: 1px solid rgba(37, 99, 235, 0.50);
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(17, 24, 39, .10);
+  z-index: 2;
+}
+
+/* 3+ effect models: use the colored observed-range line as the skinny baseline and place the thicker IQR band over it. */
+.effect-distribution-track.multi-model {
+  height: 34px;
+  background: transparent;
+  margin-top: .35rem;
+  margin-bottom: .15rem;
+}
+
+.effect-distribution-track.multi-model .effect-distribution-axis {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 15px;
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  z-index: 0;
+}
+
+.effect-distribution-track.multi-model .effect-distribution-centerfill {
+  top: 15px;
+  height: 4px;
+}
+
+.effect-distribution-track.multi-model .effect-distribution-range {
+  top: 15px;
+  height: 4px;
+}
+
+.effect-distribution-track.multi-model .effect-distribution-iqr {
+  top: 6px;
+  height: 22px;
+  border-radius: 7px;
+}
+
+.effect-distribution-track.multi-model .effect-distribution-zero {
+  top: 6px;
+  height: 22px;
+}
+
+.effect-distribution-track.multi-model .effect-distribution-median {
+  top: 3px;
+  height: 28px;
+}
+
+.effect-distribution-point {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #6b7280;
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(17, 24, 39, .22);
+  transform: translateX(-50%);
+  z-index: 6;
+}
+
+.effect-distribution-median {
+  position: absolute;
+  top: -5px;
+  width: 5px;
+  height: 23px;
+  border-radius: 999px;
+  background: #111827;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(17, 24, 39, .35);
+  transform: translateX(-50%);
+  z-index: 7;
+}
+
+.effect-distribution-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem .9rem;
+  align-items: center;
+  margin-top: .55rem;
+  color: var(--snpster-muted);
+  font-size: .76rem;
+  font-weight: 650;
+}
+
+.effect-point-key {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #6b7280;
+}
+
+.effect-median-key {
+  display: inline-block;
+  width: 5px;
+  height: 18px;
+  border-radius: 999px;
+  background: #111827;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 5px rgba(17, 24, 39, .30);
+}
+
+.effect-iqr-key {
+  display: inline-block;
+  width: 28px;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.16);
+  border: 1px solid rgba(37, 99, 235, 0.50);
+}
+
+.effect-range-key {
+  display: inline-block;
+  width: 26px;
+  height: 5px;
+  border-radius: 999px;
+  background: #6b7280;
+}
+
+.effect-zero-key {
+  display: inline-block;
+  width: 2px;
+  height: 18px;
+  border-radius: 999px;
+  background: #6b7280;
+}
+
+.metadata-panel {
+  margin-top: auto;
+  border-top: 1px solid var(--snpster-border);
+  padding-top: .75rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.metadata-panel details {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: .3rem 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.metadata-panel summary {
+  cursor: pointer;
+  color: #374151;
+  font-size: .85rem;
+  font-weight: 800;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .45rem;
+  margin-top: .7rem;
+}
+
+.meta-row {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: .6rem;
+  font-size: .82rem;
+  line-height: 1.35;
+}
+
+.meta-key {
+  color: var(--snpster-muted);
+  font-weight: 700;
+}
+
+.meta-value {
+  color: #1f2937;
+  overflow-wrap: anywhere;
+}
+
+.model-table-wrap {
+  display: block;
+  inline-size: 100%;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  contain: inline-size;
+  margin-top: .75rem;
+  border: 1px solid var(--snpster-border);
+  border-radius: 12px;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+
+.model-table-scroll-hint {
+  color: var(--snpster-muted);
+  font-size: .74rem;
+  font-weight: 650;
+  margin-top: .45rem;
+}
+
+.model-table {
+  width: 1420px;
+  min-width: 1420px;
+  max-width: none;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: .70rem;
+}
+
+.model-table th,
+.model-table td {
+  border-bottom: 1px solid var(--snpster-border);
+  padding: .32rem .36rem;
+  text-align: left;
+  vertical-align: top;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.model-table th {
+  color: #374151;
+  background: #f9fafb;
+  font-weight: 800;
+}
+
+.model-table td {
+  color: #1f2937;
+}
+
+.model-table th:nth-child(1),
+.model-table td:nth-child(1) {
+  width: 82px;
+}
+
+.model-table th:nth-child(2),
+.model-table td:nth-child(2),
+.model-table th:nth-child(3),
+.model-table td:nth-child(3),
+.model-table th:nth-child(6),
+.model-table td:nth-child(6),
+.model-table th:nth-child(8),
+.model-table td:nth-child(8) {
+  width: 82px;
+}
+
+.model-table th:nth-child(4),
+.model-table td:nth-child(4),
+.model-table th:nth-child(5),
+.model-table td:nth-child(5) {
+  width: 98px;
+}
+
+.model-table th:nth-child(7),
+.model-table td:nth-child(7),
+.model-table th:nth-child(9),
+.model-table td:nth-child(9) {
+  width: 78px;
+}
+
+.model-table th:nth-child(10),
+.model-table td:nth-child(10) {
+  width: 130px;
+}
+
+
+.model-table th:nth-child(11),
+.model-table td:nth-child(11) {
+  width: 175px;
+}
+
+.model-table th:nth-child(12),
+.model-table td:nth-child(12) {
+  width: 82px;
+}
+
+.model-table th:nth-child(13),
+.model-table td:nth-child(13) {
+  width: 190px;
+}
+
+.method-note {
+  color: var(--snpster-muted);
+  font-size: .92rem;
+  line-height: 1.55;
+  background: #ffffff;
+  border: 1px solid var(--snpster-border);
+  border-radius: 18px;
+  padding: 1rem 1.1rem;
+  margin: 1rem 0 1.5rem 0;
+}
+
+@media (max-width: 760px) {
+  .metric-grid,
+  .report-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pgs-card {
+    padding: 1rem;
+    border-radius: 18px;
+  }
+
+  .pgs-card-header {
+    flex-direction: column;
+  }
+
+  .meta-row {
+    grid-template-columns: 1fr;
+    gap: .15rem;
+  }
+}
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .pgs-card,
+  .summary-card {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+}
+</style>
+```
+
+## Load data
+
+```{python}
+from IPython.display import HTML, display
+import html
+import math
+import hashlib
+import numpy as np
+import pandas as pd
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path.cwd().parent / "database_module"))
+
+from db_handler import DbHandler, DbUtils
+from db_config import USERNAME, PASSWORD, DATABASE_NAME, HOST, PORT, PGS_EXCEL_FILEPATH
+
+db_handler = DbHandler(port=PORT, db_url=None, user=USERNAME, password=PASSWORD, host=HOST)
+db_handler.connect()
+db_utils = DbUtils(db_handler)
+
+prsc_id = 2844  # placeholder for testing jobs, 2842 psychi, 2685 cardiovascular, 2821 opth, 2820 other, 2918 blood panel, 2843 cancer
+#issue with 2667 bottom card, oddsratio % increase calculated wrong
+
+ethnicity_query = f"""
+SELECT *
+FROM snpster_users.user_ancestry
+WHERE user_id = (
+    SELECT user_id
+    FROM snpster_users.imputation_jobs
+    WHERE imputation_id IN (
+        SELECT imputation_id
+        FROM snpster_users.prsc_jobs
+        WHERE prsc_id = {prsc_id}
+        LIMIT 1
+    )
+)
+"""
+
+""" CREATE TABLE snpster_users.user_ancestry (
+    user_id VARCHAR(100) PRIMARY KEY
+        REFERENCES snpster_users.user_information(user_id)
+        ON DELETE CASCADE,
+
+    eur NUMERIC(8,6) CHECK (eur >= 0 AND eur <= 1),
+    afr NUMERIC(8,6) CHECK (afr >= 0 AND afr <= 1),
+    eas NUMERIC(8,6) CHECK (eas >= 0 AND eas <= 1),
+    sas NUMERIC(8,6) CHECK (sas >= 0 AND sas <= 1),
+    amr NUMERIC(8,6) CHECK (amr >= 0 AND amr <= 1),
+
+    primary_ancestry VARCHAR(10)
+        CHECK (primary_ancestry IN ('EUR', 'AFR', 'EAS', 'SAS', 'AMR')),
+
+    primary_ancestry_percentage NUMERIC(8,6)
+        CHECK (primary_ancestry_percentage >= 0 AND primary_ancestry_percentage <= 1),
+
+    ancestry_method VARCHAR(100),
+    reference_panel VARCHAR(100),
+
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+"""
+
+
+query = f""" 
+SELECT
+    pjr.pgs_id,
+
+    CASE
+        WHEN pcd.reported_trait IN ('Coronary artery disease', 'Coronary Artery Disease')
+            THEN 'Coronary heart disease'
+        ELSE pcd.reported_trait
+    END AS reported_trait,
+
+    pp.reported_trait AS specific_trait,
+    pcd.ancestry_distribution_pgs_evaluation,
+    pjr.percentile_most_similar_pop,
+    pjr.z_most_similar_pop,
+    pjr.z_norm1,
+    pjr.z_norm2,
+    pjr.percent_variants_matched,
+    pjr.n_variants_matched,
+    pp.ppm_id,
+    pp.pss_id,
+    pp.pgp_id,
+    ess.individuals_evaluation,
+    ess.cases_evaluation,
+    ess.controls_evaluation,
+    ess.percent_male_evaluation,
+    pp.pgs_performance_other_relevant_info,
+    pp.publication_pmid,
+    pp.publication_doi,
+    pp.hazard_ratio,
+    pp.odds_ratio,
+    pp.beta,
+    pp.auroc,
+    pp.concordance_statistic,
+    pub.first_author,
+    pub.title,
+    pub.journal_name,
+    pub.publication_date,
+    pub.release_date AS publication_release_date,
+    pub.authors,
+    pub.pubmed_id_pmid,
+    pcd.number_of_variants,
+    pcd.original_genome_build,
+    pcd.type_of_variant_weight,
+    pcd.pgs_development_method,
+    pcd.release_date AS pgs_release_date
+
+FROM snpster_users.prsc_job_results AS pjr
+
+LEFT JOIN data_libraries.pgs_performance AS pp
+    ON pp.pgs_id = pjr.pgs_id
+
+LEFT JOIN data_libraries.pgs_publications AS pub
+    ON pub.pgp_id = pp.pgp_id
+
+LEFT JOIN data_libraries.pgscatalog_data AS pcd
+    ON pcd.pgs_id = pjr.pgs_id
+
+LEFT JOIN data_libraries.evaluation_sample_sets AS ess
+    ON ess.pss_id = pp.pss_id
+
+WHERE pjr.prsc_id = {prsc_id}
+  AND pp.auroc IS NOT NULL
+
+ORDER BY reported_trait, pp.auroc DESC;
+"""
+
+data = db_utils.get_pd_dataframe_from_query(query)
+data = data.drop_duplicates()
+
+ancestry_df = db_utils.get_pd_dataframe_from_query(ethnicity_query)  # use full dataframe in future to more gracefully weigh scoring files
+primary_ancestry_code = ancestry_df["primary_ancestry"].iloc[0]  # EUR, AMR, AFR, EAS, SAS
+
+ancestry_label_map = {
+    "EUR": "European",
+    "AFR": "African",
+    "EAS": "East Asian",
+    "SAS": "South Asian",
+    "AMR": "Admixed American",
+}
+
+ethnicity = ancestry_label_map.get(primary_ancestry_code, primary_ancestry_code)
+MIN_PRIMARY_VARIANT_MATCH_PCT = 70.0
+
+```
+
+## Prepare data
+
+```{python}
+def parse_superpopulation_dict(entry):
+    """
+    Converts:
+        "African:33.3|East Asian:33.3|South Asian:33.3"
+    into:
+        {"African": 33.3, "East Asian": 33.3, "South Asian": 33.3}
+    """
+    if entry is None or pd.isna(entry):
+        return {}
+
+    result = {}
+
+    for part in str(entry).split("|"):
+        part = part.strip()
+
+        if not part or ":" not in part:
+            continue
+
+        superpop, value = part.split(":", 1)
+
+        try:
+            value = float(value.strip())
+        except ValueError:
+            value = None
+
+        result[superpop.strip()] = value
+
+    return result
+
+
+def risk_level(percentile):
+    """Five-category percentile classification based on the selected best model.
+
+    Thresholds can be tuned later, but these are simple launch defaults:
+      <5   = Very low
+      5-19 = Lowered
+      20-79 = Normal
+      80-94 = Increased
+      >=95 = Highly Increased
+    """
+    if pd.isna(percentile):
+        return ("Unknown", "normal", "fill-normal")
+
+    percentile = float(percentile)
+
+    if percentile >= 95:
+        return ("Highly Increased", "highly-increased", "fill-highly-increased")
+    if percentile >= 80:
+        return ("Increased", "increased", "fill-increased")
+    if percentile >= 20:
+        return ("Normal", "normal", "fill-normal")
+    if percentile >= 5:
+        return ("Lowered", "lowered", "fill-lowered")
+    return ("Very low", "very-low", "fill-very-low")
+
+
+def ordinal_suffix(n):
+    n = int(n)
+    if 10 <= (n % 100) <= 20:
+        return "th"
+    return {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+
+
+def fmt_percentile(x):
+    if pd.isna(x):
+        return "Not available"
+    n = int(round(float(x)))
+    return f"{n}{ordinal_suffix(n)}"
+
+
+def fmt_percentile_range(low, high):
+    if pd.isna(low) or pd.isna(high):
+        return None
+
+    low_i = int(round(float(low)))
+    high_i = int(round(float(high)))
+
+    if low_i == high_i:
+        return fmt_percentile(low_i)
+
+    return f"{fmt_percentile(low_i)}–{fmt_percentile(high_i)}"
+
+
+def clamp_percentile(x):
+    if pd.isna(x):
+        return 0.0
+    return max(0.0, min(100.0, float(x)))
+
+
+def fmt_float(x, digits=2):
+    if pd.isna(x):
+        return None
+    return f"{float(x):.{digits}f}"
+
+
+def fmt_int(x):
+    if pd.isna(x):
+        return None
+    return f"{int(float(x)):,}"
+
+
+def variant_match_percent_value(x):
+    """Return variant match as a 0-100 percentage for filtering/ranking."""
+    if pd.isna(x):
+        return np.nan
+
+    x = float(x)
+    if x <= 1:
+        x = x * 100
+    return x
+
+
+def fmt_variant_match_pct(x):
+    if pd.isna(x):
+        return None
+
+    x = variant_match_percent_value(x)
+    return f"{x:.1f}%"
+
+
+def fmt_variant_match_summary(row):
+    if row is None:
+        return None
+
+    pct = fmt_variant_match_pct(row.get("percent_variants_matched", np.nan))
+    n = fmt_int(row.get("n_variants_matched", np.nan))
+
+    if pct and n:
+        return f"{pct} ({n} variants)"
+    if pct:
+        return pct
+    if n:
+        return f"{n} variants"
+    return None
+
+
+def fmt_date(x):
+    if pd.isna(x):
+        return None
+    return str(pd.to_datetime(x).date())
+
+
+def safe_text(x, fallback="Not available"):
+    if x is None or pd.isna(x) or str(x).strip() == "":
+        return fallback
+    return html.escape(str(x))
+
+
+def shorten(text, n=170):
+    if text is None or pd.isna(text):
+        return None
+    text = str(text).strip()
+    if len(text) <= n:
+        return text
+    return text[: n - 1].rstrip() + "…"
+
+
+def get_eval_n(row):
+    if not pd.isna(row.get("individuals_evaluation", np.nan)):
+        return float(row["individuals_evaluation"])
+
+    cases = 0 if pd.isna(row.get("cases_evaluation", np.nan)) else float(row["cases_evaluation"])
+    controls = 0 if pd.isna(row.get("controls_evaluation", np.nan)) else float(row["controls_evaluation"])
+    total = cases + controls
+    return total if total > 0 else np.nan
+
+
+def add_ranking_columns(df, ethnicity):
+    df = df.copy()
+
+    df["ancestry_distribution_dict"] = df["ancestry_distribution_pgs_evaluation"].apply(parse_superpopulation_dict)
+    df["target_ethnicity_share"] = df["ancestry_distribution_dict"].apply(lambda d: d.get(ethnicity))
+    df["evaluation_n"] = df.apply(get_eval_n, axis=1)
+
+    df["auroc"] = pd.to_numeric(df["auroc"], errors="coerce")
+    df["percentile_most_similar_pop"] = pd.to_numeric(df["percentile_most_similar_pop"], errors="coerce")
+    df["z_most_similar_pop"] = pd.to_numeric(df["z_most_similar_pop"], errors="coerce")
+    df["odds_ratio"] = pd.to_numeric(df["odds_ratio"], errors="coerce")
+    df["hazard_ratio"] = pd.to_numeric(df["hazard_ratio"], errors="coerce")
+    df["evaluation_n"] = pd.to_numeric(df["evaluation_n"], errors="coerce")
+    df["percent_variants_matched"] = pd.to_numeric(df["percent_variants_matched"], errors="coerce")
+    df["n_variants_matched"] = pd.to_numeric(df["n_variants_matched"], errors="coerce")
+    df["variant_match_pct_for_ranking"] = df["percent_variants_matched"].apply(variant_match_percent_value)
+    df["primary_model_eligible"] = df["variant_match_pct_for_ranking"].ge(MIN_PRIMARY_VARIANT_MATCH_PCT)
+
+    # User-specific percent change, not the raw OR/HR per SD.
+    # This assumes OR/HR are reported per 1 SD increase in PRS.
+    df["individual_odds_ratio"] = np.where(
+        df["odds_ratio"].notna() & df["z_most_similar_pop"].notna(),
+        ((df["odds_ratio"] ** df["z_most_similar_pop"]) - 1) * 100,
+        np.nan,
+    )
+
+    df["individual_hazard_ratio"] = np.where(
+        df["hazard_ratio"].notna() & df["z_most_similar_pop"].notna(),
+        ((df["hazard_ratio"] ** df["z_most_similar_pop"]) - 1) * 100,
+        np.nan,
+    )
+
+    return df.drop(columns=["ancestry_distribution_dict"])
+
+
+def normalize_pmid_value(value):
+    """Return a stable string representation of a PMID."""
+    if value is None or pd.isna(value):
+        return None
+
+    text_value = str(value).strip()
+    if not text_value:
+        return None
+
+    try:
+        numeric = float(text_value)
+        if numeric.is_integer():
+            return str(int(numeric))
+    except (TypeError, ValueError):
+        pass
+
+    return text_value
+
+
+def stable_method_family_id(pmid, reported_trait, development_method):
+    """Create a deterministic descriptive family ID from PMID + trait + development method."""
+    canonical = "||".join([
+        str(pmid),
+        str(reported_trait).strip(),
+        str(development_method).strip(),
+    ])
+    digest = hashlib.sha1(canonical.encode("utf-8")).hexdigest()[:8].upper()
+    return f"FAM_{pmid}_{digest}"
+
+
+def singleton_family_id(pgs_id):
+    """Create a deterministic singleton family ID for one PGS."""
+    return f"FAM_{str(pgs_id).strip()}"
+
+
+def assign_report_family_ids(df):
+    """Assign descriptive model-lineage family IDs without changing report scoring.
+
+    Rules:
+      1. Work within each PMID + reported_trait group.
+      2. If the group contains only 1 unique PGS ID, that PGS is a singleton family.
+      3. If the group contains >1 unique PGS IDs:
+         - PGS IDs with the same non-missing pgs_development_method share a family ID.
+         - Different development methods receive different family IDs.
+         - Missing development methods are kept as singleton families.
+
+    These family IDs are descriptive metadata only. They are NOT used for scoring,
+    aggregation, weighting, or primary-model selection.
+    """
+    df = df.copy()
+
+    publication_pmid = df["publication_pmid"].apply(normalize_pmid_value)
+    fallback_pmid = df["pubmed_id_pmid"].apply(normalize_pmid_value)
+    df["family_pmid"] = publication_pmid.where(publication_pmid.notna(), fallback_pmid)
+
+    df["family_id"] = None
+    df["family_grouping_rule"] = None
+
+    for (pmid, trait), group in df.groupby(
+        ["family_pmid", "reported_trait"],
+        dropna=False,
+        sort=False,
+    ):
+        unique_pgs_ids = [
+            str(x).strip()
+            for x in group["pgs_id"].dropna().unique().tolist()
+        ]
+
+        # One PGS only, or no usable PMID: keep singleton.
+        if pd.isna(pmid) or pmid is None or len(unique_pgs_ids) <= 1:
+            for pgs_id in unique_pgs_ids:
+                mask = group["pgs_id"].astype(str).eq(pgs_id)
+                indices = group.index[mask]
+                df.loc[indices, "family_id"] = singleton_family_id(pgs_id)
+                df.loc[indices, "family_grouping_rule"] = (
+                    "Singleton family: PMID/trait group contains only one PGS ID "
+                    "or no usable PMID."
+                )
+            continue
+
+        # Resolve one non-missing development method per PGS ID.
+        pgs_method_map = {}
+        for pgs_id, pgs_rows in group.groupby("pgs_id", sort=False):
+            methods = (
+                pgs_rows["pgs_development_method"]
+                .dropna()
+                .astype(str)
+                .str.strip()
+            )
+            methods = methods[methods.ne("")]
+            method = methods.iloc[0] if not methods.empty else None
+            pgs_method_map[str(pgs_id).strip()] = method
+
+        method_to_pgs = {}
+        missing_method_pgs = []
+
+        for pgs_id, method in pgs_method_map.items():
+            if method is None:
+                missing_method_pgs.append(pgs_id)
+            else:
+                method_to_pgs.setdefault(method, []).append(pgs_id)
+
+        # Same PMID + trait + development method => same descriptive family ID.
+        for method, pgs_ids in method_to_pgs.items():
+            family_id = stable_method_family_id(pmid, trait, method)
+            mask = group["pgs_id"].astype(str).isin(pgs_ids)
+            indices = group.index[mask]
+            df.loc[indices, "family_id"] = family_id
+            df.loc[indices, "family_grouping_rule"] = (
+                f"Descriptive lineage grouping within PMID {pmid} and trait '{trait}' "
+                f"using pgs_development_method='{method}'."
+            )
+
+        # Missing method: do not infer grouping.
+        for pgs_id in missing_method_pgs:
+            mask = group["pgs_id"].astype(str).eq(pgs_id)
+            indices = group.index[mask]
+            df.loc[indices, "family_id"] = singleton_family_id(pgs_id)
+            df.loc[indices, "family_grouping_rule"] = (
+                "Singleton family: development method is missing."
+            )
+
+    # Safety fallback.
+    missing_family = df["family_id"].isna()
+    if missing_family.any():
+        df.loc[missing_family, "family_id"] = df.loc[
+            missing_family, "pgs_id"
+        ].apply(singleton_family_id)
+        df.loc[missing_family, "family_grouping_rule"] = (
+            "Singleton family: fallback assignment."
+        )
+
+    family_sizes = (
+        df.groupby("family_id")["pgs_id"]
+        .nunique()
+        .to_dict()
+    )
+    df["family_size"] = df["family_id"].map(family_sizes).fillna(1).astype(int)
+
+    return df
+
+
+def filter_to_target_ethnicity(df, ethnicity):
+    """Remove validation rows without any target ancestry after the query."""
+    before = len(df)
+    df = df[df["target_ethnicity_share"].notna() & (df["target_ethnicity_share"] > 0)].copy()
+    after = len(df)
+    print(f"Dropped {before - after} performance rows with no positive {ethnicity} evaluation share.")
+    return df
+
+
+def sort_for_best_model(df):
+    return df.sort_values(
+        by=["auroc", "target_ethnicity_share", "evaluation_n"],
+        ascending=[False, False, False],
+        na_position="last",
+    )
+
+
+def eligible_for_primary(df):
+    """Only models with enough variant overlap can become the displayed primary/top model."""
+    return df[df["primary_model_eligible"].fillna(False)].copy()
+
+
+def best_row(df, require_primary_eligible=False):
+    if df.empty:
+        return None
+
+    if require_primary_eligible:
+        df = eligible_for_primary(df)
+        if df.empty:
+            return None
+
+    return sort_for_best_model(df).iloc[0]
+
+
+def best_rows_per_pgs(df):
+    """Keep every PGS ID, but collapse duplicate validation rows for the same PGS to its best row."""
+    rows = []
+    for _, pgs_df in df.groupby("pgs_id", sort=False):
+        row = best_row(pgs_df)
+        if row is not None:
+            rows.append(row)
+    if not rows:
+        return pd.DataFrame(columns=df.columns)
+    return pd.DataFrame(rows).reset_index(drop=True)
+
+
+def valid_metric_models(trait_models, metric_col):
+    """Return all primary-eligible PGS models with a usable individualized effect."""
+    if trait_models is None or trait_models.empty:
+        return pd.DataFrame(columns=trait_models.columns if trait_models is not None else [])
+
+    return trait_models[
+        trait_models["primary_model_eligible"].fillna(False)
+        & trait_models[metric_col].notna()
+    ].copy()
+
+
+def percent_change_text(x):
+    """Display individualized percent change derived from OR/HR and user z-score."""
+    if pd.isna(x):
+        return "NA"
+
+    x = float(x)
+    if abs(x) < 0.05:
+        return "No material change"
+
+    direction = "higher" if x > 0 else "lower"
+    return f"{abs(x):.1f}% {direction}"
+
+
+def effect_per_sd_text(row, raw_col, label):
+    """Display the published per-SD OR/HR as a caption under the individualized % value."""
+    if row is None:
+        return f"{label} per SD NA"
+
+    raw = row.get(raw_col, np.nan)
+    if pd.isna(raw):
+        return f"{label} per SD NA"
+
+    return f"{label} per SD {float(raw):.2f}"
+
+
+def effect_source_caption(row, raw_col, label):
+    """Caption shown under the odds/hazard percent-change metric box."""
+    return effect_per_sd_text(row, raw_col, label)
+
+
+def summarize_individual_effects(models_df, metric_col):
+    """Summarize individualized percent changes across eligible PGS models."""
+    if models_df is None or models_df.empty or metric_col not in models_df.columns:
+        return None
+
+    values = pd.to_numeric(models_df[metric_col], errors="coerce").dropna()
+    if values.empty:
+        return None
+
+    return {
+        "n": int(len(values)),
+        "values": values.astype(float).tolist(),
+        "median": float(values.median()),
+        "q1": float(values.quantile(0.25)),
+        "q3": float(values.quantile(0.75)),
+        "min": float(values.min()),
+        "max": float(values.max()),
+    }
+
+
+def effect_interval_text(low, high):
+    """Human-readable range/IQR that preserves direction around zero."""
+    low = float(low)
+    high = float(high)
+
+    if low >= 0 and high >= 0:
+        return f"{abs(low):.1f}–{abs(high):.1f}% higher"
+
+    if low <= 0 and high <= 0:
+        # low is more negative, so reverse absolute values for readable ascending magnitude.
+        return f"{abs(high):.1f}–{abs(low):.1f}% lower"
+
+    return f"{abs(low):.1f}% lower to {abs(high):.1f}% higher"
+
+
+def effect_summary_display(models_df, metric_col, raw_col, ratio_label):
+    """Return the main value and caption for an OR/HR metric box."""
+    stats = summarize_individual_effects(models_df, metric_col)
+
+    if stats is None:
+        return "NA", f"{ratio_label} per SD NA", None
+
+    n = stats["n"]
+    value = percent_change_text(stats["median"])
+
+    if n == 1:
+        row = models_df.iloc[0]
+        caption = f"Based on 1 eligible model · {effect_per_sd_text(row, raw_col, ratio_label)}"
+        return value, caption, stats
+
+    if n == 2:
+        caption = f"Based on 2 models · range {effect_interval_text(stats['min'], stats['max'])}"
+        return value, caption, stats
+
+    caption = f"Median across {n} models · IQR {effect_interval_text(stats['q1'], stats['q3'])}"
+    return value, caption, stats
+
+
+def effect_axis_label(x):
+    """Compact signed label for the mini effect-distribution axis."""
+    x = float(x)
+    if abs(x) < 0.05:
+        return "0%"
+    return f"{x:+.1f}%"
+
+
+def effect_axis_tick_text(x):
+    """Compact signed percentage for an effect bar x-axis."""
+    x = float(x)
+
+    if abs(x) < 0.05:
+        return "0%"
+
+    if abs(x) >= 10:
+        return f"{x:+.0f}%"
+
+    return f"{x:+.1f}%"
+
+
+def effect_axis_labels(axis_low, axis_high):
+    """Five evenly spaced x-axis labels beneath an individualized effect bar."""
+    ticks = np.linspace(float(axis_low), float(axis_high), 5)
+    labels = []
+
+    for i, value in enumerate(ticks):
+        position = i * 25.0
+        edge_class = ""
+        if i == 0:
+            edge_class = " edge-left"
+        elif i == len(ticks) - 1:
+            edge_class = " edge-right"
+
+        labels.append(
+            f'<span class="scale-axis-label{edge_class}" '
+            f'style="left: {position:.1f}%;">{effect_axis_tick_text(value)}</span>'
+        )
+
+    return f"""
+    <div class="scale-axis-labels" aria-label="Individualized percentage change axis">
+      {''.join(labels)}
+    </div>
+    """
+
+
+def make_effect_distribution(models_df, metric_col, metric_name):
+    """Individualized OR/HR effect bar with a symmetric 0%-centered axis."""
+    stats = summarize_individual_effects(models_df, metric_col)
+    if stats is None:
+        return ""
+
+    values = stats["values"]
+    n = stats["n"]
+    track_class = " multi-model" if n >= 3 else ""
+
+    # Symmetric scale around 0%: decreases always extend left, increases right.
+    max_abs = max(abs(float(stats["min"])), abs(float(stats["max"])), 1.0)
+    axis_limit = max_abs * 1.15
+    axis_low = -axis_limit
+    axis_high = axis_limit
+    axis_span = axis_high - axis_low
+
+    def pos(x):
+        return max(0.0, min(100.0, ((float(x) - axis_low) / axis_span) * 100.0))
+
+    min_pos = pos(stats["min"])
+    max_pos = pos(stats["max"])
+    q1_pos = pos(stats["q1"])
+    q3_pos = pos(stats["q3"])
+    median_pos = pos(stats["median"])
+    zero_pos = 50.0
+
+    range_color_class = "fill-increased" if stats["median"] > 0 else "fill-lowered"
+
+    range_html = ""
+    iqr_html = ""
+    point_html = []
+
+    if n >= 2:
+        range_left = min(min_pos, max_pos)
+        range_width = abs(max_pos - min_pos)
+        range_html = (
+            f'<div class="effect-distribution-range {range_color_class}" '
+            f'title="Observed model range" '
+            f'style="left: {range_left:.2f}%; width: {range_width:.2f}%;"></div>'
+        )
+
+    if n >= 3:
+        iqr_left = min(q1_pos, q3_pos)
+        iqr_width = abs(q3_pos - q1_pos)
+        iqr_html = (
+            f'<div class="effect-distribution-iqr" title="Interquartile range" '
+            f'style="left: {iqr_left:.2f}%; width: {iqr_width:.2f}%;"></div>'
+        )
+
+    if n >= 2:
+        vertical_offsets = ([3, 23, 0, 26, 6, 20, 9, 17] if n >= 3 else [-8, 13])
+        for i, value in enumerate(values):
+            top = vertical_offsets[i % len(vertical_offsets)]
+            pgs_id = html.escape(str(models_df.iloc[i].get("pgs_id", "PGS model")))
+            point_html.append(
+                f'<span class="effect-distribution-point" '
+                f'title="{pgs_id}: {html.escape(percent_change_text(value))}" '
+                f'style="left: {pos(value):.2f}%; top: {top}px;"></span>'
+            )
+
+    median_label = "Estimate" if n == 1 else "Median"
+
+    return f"""
+    <div class="effect-distribution" aria-label="{html.escape(metric_name)} across eligible PGS models">
+      <div class="effect-distribution-track{track_class}">
+        <div class="effect-distribution-axis"></div>
+        {range_html}
+        {iqr_html}
+        <div class="effect-distribution-zero" title="No change (0%)" style="left: 50%;"></div>
+        {''.join(point_html)}
+        <div class="effect-distribution-median" title="{median_label}: {html.escape(percent_change_text(stats['median']))}" style="left: {median_pos:.2f}%;"></div>
+      </div>
+      {effect_axis_labels(axis_low, axis_high)}
+    </div>
+    """
+
+
+def make_effect_bar_panel(label, models_df, metric_col, raw_col, ratio_label):
+    """Render a flat OR/HR-derived risk section directly below the percentile scale."""
+    value, caption, stats = effect_summary_display(
+        models_df,
+        metric_col,
+        raw_col,
+        ratio_label,
+    )
+
+    if stats is None:
+        return ""
+
+    visual = make_effect_distribution(models_df, metric_col, label)
+
+    return f"""
+    <div class="effect-bar-panel">
+      <div class="effect-bar-topline">
+        <div class="effect-bar-label">{html.escape(label)}</div>
+        <div class="effect-bar-value">{html.escape(value)}</div>
+      </div>
+      {visual}
+      <div class="effect-bar-caption">{html.escape(caption)}</div>
+    </div>
+    """
+
+
+
+
+data = add_ranking_columns(data, ethnicity)
+data = assign_report_family_ids(data)
+data = filter_to_target_ethnicity(data, ethnicity)
+data = data.drop_duplicates()
+
+# One display card per reported_trait.
+# Every PGS model with target-ancestry validation is kept for the dropdown.
+# Primary model ranking:
+#   0. model must have at least MIN_PRIMARY_VARIANT_MATCH_PCT variants matched
+#   1. highest AUROC
+#   2. highest evaluation ancestry match for the user
+#   3. largest evaluation sample size
+# OR/HR metrics are summarized across all eligible retained PGS models with a valid
+# individualized effect. One model is shown directly; two models use the median plus
+# observed range; three or more models use the median plus IQR and a compact distribution.
+# Models below the variant-match threshold are still shown in the expandable table,
+# but they cannot become the primary/top model.
+card_records = []
+for trait, trait_df in data.groupby("reported_trait", sort=True):
+    trait_models = best_rows_per_pgs(trait_df)
+    trait_models = sort_for_best_model(trait_models)
+
+    primary = best_row(trait_models, require_primary_eligible=True)
+    odds_models = valid_metric_models(trait_models, "individual_odds_ratio")
+    hazard_models = valid_metric_models(trait_models, "individual_hazard_ratio")
+
+    if primary is None:
+        continue
+
+    card_records.append({
+        "reported_trait": trait,
+        "primary": primary,
+        "odds_models": odds_models,
+        "hazard_models": hazard_models,
+        "all_models": trait_models,
+    })
+
+cards_df = pd.DataFrame([
+    {
+        "reported_trait": record["reported_trait"],
+        "primary_pgs_id": record["primary"]["pgs_id"],
+        "primary_auroc": record["primary"]["auroc"],
+        "primary_percentile": record["primary"]["percentile_most_similar_pop"],
+        "primary_evaluation_n": record["primary"]["evaluation_n"],
+        "primary_ethnicity_share": record["primary"]["target_ethnicity_share"],
+        "primary_percent_variants_matched": record["primary"].get("percent_variants_matched", np.nan),
+        "primary_n_variants_matched": record["primary"].get("n_variants_matched", np.nan),
+        "primary_variant_match_pct_for_ranking": record["primary"].get("variant_match_pct_for_ranking", np.nan),
+        "n_models": len(record["all_models"]),
+        "has_odds": not record["odds_models"].empty,
+        "has_hazard": not record["hazard_models"].empty,
+    }
+    for record in card_records
+]).sort_values(["reported_trait"])
+```
+
+## Report overview
+
+```{python}
+n_traits = len(card_records)
+n_models = int(cards_df["n_models"].sum()) if not cards_df.empty else 0
+mean_percentile = cards_df["primary_percentile"].mean() if not cards_df.empty else np.nan
+mean_auroc = cards_df["primary_auroc"].mean() if not cards_df.empty else np.nan
+n_with_odds = int(cards_df["has_odds"].sum()) if not cards_df.empty else 0
+n_with_hazard = int(cards_df["has_hazard"].sum()) if not cards_df.empty else 0
+
+summary_html = f"""
+<div class="report-summary-grid">
+  <div class="summary-card">
+    <div class="summary-label">Traits covered</div>
+    <div class="summary-value">{n_traits}</div>
+    <div class="summary-subtext">One full-width card per reported trait.</div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label">PGS models retained</div>
+    <div class="summary-value">{n_models}</div>
+    <div class="summary-subtext">All retained models include positive {ethnicity} evaluation ancestry.</div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label">Mean percentile</div>
+    <div class="summary-value">{mean_percentile:.0f}</div>
+    <div class="summary-subtext">Average percentile across selected primary trait cards.</div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label">Mean AUROC</div>
+    <div class="summary-value">{mean_auroc:.2f}</div>
+    <div class="summary-subtext">Average AUROC of the selected primary model per trait.</div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label">Risk effect sources</div>
+    <div class="summary-value">{n_with_odds}/{n_with_hazard}</div>
+    <div class="summary-subtext">Cards with individualized odds / hazard estimates.</div>
+  </div>
+</div>
+"""
+
+display(HTML(summary_html))
+```
+
+```{=html}
+<div class="method-note">
+  <strong>Model selection and descriptive model families.</strong>
+  The report first removes validation rows that do not contain a positive share of the user's target ancestry. A model must also have at least 70% matched variants to become the primary/top model. Each trait card then selects the primary eligible PGS model by: highest AUROC, then highest target-ancestry share in the evaluation sample, then largest evaluation sample size. Additional retained PGS models for the same trait are kept and shown in the expandable model-details section, including models below the primary-model variant-match threshold. Risk categories are based on the selected best-model percentile for traits with fewer than 4 retained scores, and on the median across retained PGS-model percentiles when more than 4 scores are available.
+  <br><br>
+  <strong>Family IDs are descriptive only.</strong>
+  Within each PMID and reported trait, when more than one PGS ID is present, scores with the same non-missing <code>pgs_development_method</code> receive the same descriptive family ID; different development methods receive different family IDs. A single PGS remains its own family, and missing development methods are not grouped. These family IDs represent possible model lineage or relatedness. They do not affect primary-model selection, the median percentile, AUROC, variant match, odds-ratio summaries, or hazard-ratio summaries. They are used in the additional quality-weighted percentile mean. Each contributing PGS receives a raw weight of <code>(1 / family size) × AUROC × variant-match fraction</code>; for example, a score from a family of four with AUROC 0.90 and 80% variant match receives raw weight <code>1/4 × 0.90 × 0.80 = 0.18</code>. These raw weights are then normalized across contributing scores for the trait.
+</div>
+```
+
+```{=html}
+<div class="method-note">
+  <strong>Model agreement.</strong>
+  The model-agreement label is based only on the spread of retained PGS percentile predictions; it is a descriptive measure of consistency, not clinical validity or statistical confidence. For cards with more than four retained percentile values, where the boxplot-style distribution is shown, agreement is classified from the IQR width. For cards with two to four retained percentile values, agreement is classified from the full minimum-to-maximum distance. Spread below 5 percentile points is <strong>Phenomenal</strong>, below 10 is <strong>Very good</strong>, below 20 is <strong>Good</strong>, 20–25 is <strong>Moderate</strong>, and above 25 is <strong>Bad</strong>. A single retained PGS is marked <strong>Not assessable</strong>. In multi-PGS boxplot views, the colored skinny segment represents the Tukey boxplot whisker range (observed values within 1.5×IQR of Q1 and Q3), while more extreme values remain visible as individual PGS points.
+</div>
+
+<div class="method-note">
+  <strong>How to read the percentile, odds, and hazard scales.</strong>
+  The percentile distribution shows individual retained PGS models as gray jittered points, the median as a black marker, and the quality-weighted mean as a blue marker. For multi-model percentile displays, the translucent band is the interquartile range (IQR), not a confidence interval, because the retained PGS models are not assumed to be statistically independent. The skinny colored segment shows the Tukey boxplot whisker range.
+  <br><br>
+  Odds- and hazard-based risk bars use the same visual language. Their horizontal scale is symmetric around <strong>0% change</strong>, which is fixed at the center: lower estimated risk extends to the left and higher estimated risk extends to the right. The skinny observed-range line carries the direction color, while the region from 0% to the estimate is left unfilled. These spreads describe between-model variation and are not statistical confidence intervals.
+</div>
+```
+
+```{=html}
+<div class="method-note">
+  <strong>Chart legend.</strong>
+  On multi-PGS percentile bars, gray dots are individual retained PGS predictions, the black vertical marker is the median, the blue vertical marker is the quality-weighted mean, the translucent band is the IQR, and the skinny colored line is the Tukey boxplot whisker range. Values outside the whiskers remain visible as gray points. The text beneath the bar reports only the IQR and SD.
+  <br><br>
+  On odds- and hazard-based bars, 0% change is fixed at the center. Decreases extend left and increases extend right. Gray dots are individual eligible PGS estimates, the black marker is the estimate or median, the translucent band is the IQR when available, and the skinny colored line is the observed model range. The bar is no longer filled from 0% to the median.
+</div>
+```
+
+## Polygenic score cards
+
+```{python}
+def make_metric_box(label, value, caption=None, extra_html="", status=None):
+    if value is None:
+        return ""
+
+    caption_html = f'<div class="metric-caption">{html.escape(caption)}</div>' if caption else ""
+
+    status_html = ""
+    if status is not None:
+        status_label, status_class = status
+        status_html = (
+            f'<span class="metric-status-tag metric-status-{html.escape(status_class)}">'
+            f'{html.escape(status_label)}</span>'
+        )
+
+    return f"""
+    <div class="metric-box">
+      <div class="metric-label">{html.escape(label)}</div>
+      <div class="metric-value-row">
+        <div class="metric-value">{html.escape(value)}</div>
+        {status_html}
+      </div>
+      {caption_html}
+      {extra_html}
+    </div>
+    """
+
+
+def make_meta_row(key, value):
+    if value is None or pd.isna(value) or str(value).strip() == "":
+        return ""
+
+    return f"""
+    <div class="meta-row">
+      <div class="meta-key">{html.escape(str(key))}</div>
+      <div class="meta-value">{html.escape(str(value))}</div>
+    </div>
+    """
+
+
+def publication_summary(row):
+    if row is None:
+        return None
+
+    pmid = row.get("pubmed_id_pmid", np.nan)
+
+    if pd.isna(pmid):
+        return None
+
+    return f"PMID: {int(float(pmid))}"
+
+def add_source_metadata(meta_rows, prefix, row):
+    if row is None:
+        return meta_rows
+
+    meta_rows += make_meta_row(f"{prefix} PGS", row.get("pgs_id", np.nan))
+    meta_rows += make_meta_row(f"{prefix} AUROC", fmt_float(row.get("auroc", np.nan), 2))
+    meta_rows += make_meta_row(f"{prefix} variants matched", fmt_variant_match_summary(row))
+    meta_rows += make_meta_row(f"{prefix} variant match %", fmt_variant_match_pct(row.get("percent_variants_matched", np.nan)))
+    meta_rows += make_meta_row(f"{prefix} n variants matched", fmt_int(row.get("n_variants_matched", np.nan)))
+    meta_rows += make_meta_row(f"{prefix} ethnicity share", f"{float(row['target_ethnicity_share']):.1f}%" if not pd.isna(row.get("target_ethnicity_share", np.nan)) else None)
+    meta_rows += make_meta_row(f"{prefix} eval. N", fmt_int(row.get("evaluation_n", np.nan)))
+    meta_rows += make_meta_row(f"{prefix} ancestry", row.get("ancestry_distribution_pgs_evaluation", np.nan))
+    meta_rows += make_meta_row(f"{prefix} literature", publication_summary(row))
+    meta_rows += make_meta_row(f"{prefix} DOI", row.get("publication_doi", np.nan))
+    meta_rows += make_meta_row(f"{prefix} PMID", row.get("publication_pmid", np.nan))
+    return meta_rows
+
+
+def model_table_value(value):
+    if value is None or pd.isna(value):
+        return ""
+    return html.escape(str(value))
+
+
+def make_model_rows(models_df):
+    rows = []
+    for _, row in models_df.iterrows():
+        odds = effect_per_sd_text(row, "odds_ratio", "OR")
+        hazard = effect_per_sd_text(row, "hazard_ratio", "HR")
+        pub = publication_summary(row)
+
+        rows.append(f"""
+        <tr>
+          <td>{model_table_value(row.get('pgs_id', np.nan))}</td>
+          <td>{model_table_value(fmt_percentile(row.get('percentile_most_similar_pop', np.nan)))}</td>
+          <td>{model_table_value(fmt_float(row.get('auroc', np.nan), 2))}</td>
+          <td>{model_table_value(odds)}</td>
+          <td>{model_table_value(hazard)}</td>
+          <td>{model_table_value(fmt_variant_match_pct(row.get('percent_variants_matched', np.nan)))}</td>
+          <td>{model_table_value(fmt_int(row.get('n_variants_matched', np.nan)))}</td>
+          <td>{model_table_value(f"{float(row['target_ethnicity_share']):.1f}%" if not pd.isna(row.get('target_ethnicity_share', np.nan)) else None)}</td>
+          <td>{model_table_value(fmt_int(row.get('evaluation_n', np.nan)))}</td>
+          <td>{model_table_value(pub)}</td>
+          <td>{model_table_value(row.get('family_id', np.nan))}</td>
+          <td>{model_table_value(row.get('family_size', np.nan))}</td>
+          <td>{model_table_value(row.get('pgs_development_method', np.nan))}</td>
+        </tr>
+        """)
+    return "\n".join(rows)
+
+
+def make_models_dropdown(models_df):
+    if models_df is None or models_df.empty:
+        return ""
+
+    rows = make_model_rows(models_df)
+    n_families = (
+        models_df["family_id"].nunique()
+        if "family_id" in models_df.columns
+        else len(models_df)
+    )
+
+    return f"""
+    <details style="max-width: 100%; overflow: hidden;">
+      <summary>Show all retained PGS models for this trait ({len(models_df)} PGS; {n_families} descriptive families)</summary>
+      <div class="model-table-scroll-hint">Scroll horizontally to view all model metadata.</div>
+      <div class="model-table-wrap" aria-label="Scrollable retained PGS model table" style="max-width: 100%; width: 100%; overflow-x: auto; overflow-y: hidden;">
+        <table class="model-table" style="width: 1420px; min-width: 1420px; max-width: none; table-layout: fixed;">
+          <thead>
+            <tr>
+              <th>PGS ID</th>
+              <th>Percentile</th>
+              <th>AUROC</th>
+              <th>OR per SD</th>
+              <th>HR per SD</th>
+              <th>Variant match %</th>
+              <th>Variants matched</th>
+              <th>{html.escape(ethnicity)} share</th>
+              <th>Eval. N</th>
+              <th>Literature</th>
+              <th>Family ID</th>
+              <th>Family size</th>
+              <th>Development method</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows}
+          </tbody>
+        </table>
+      </div>
+    </details>
+    """
+
+
+def percentile_values(models_df):
+    if models_df is None or models_df.empty:
+        return pd.Series(dtype=float)
+    return pd.to_numeric(models_df["percentile_most_similar_pop"], errors="coerce").dropna()
+
+
+def percentile_distribution_stats(models_df):
+    if models_df is None or models_df.empty:
+        return None
+
+    df = models_df.copy()
+    df["percentile_numeric"] = pd.to_numeric(
+        df["percentile_most_similar_pop"],
+        errors="coerce",
+    )
+    df = df[df["percentile_numeric"].notna()].copy()
+
+    if df.empty:
+        return None
+
+    values_series = df["percentile_numeric"].astype(float)
+    values = values_series.to_numpy()
+
+    # Combined descriptive weighting:
+    #
+    #   raw weight =
+    #       (1 / family_size)
+    #       * AUROC
+    #       * variant_match_fraction
+    #
+    # Variant match is converted to a 0-1 fraction before weighting.
+    # The raw weights are normalized automatically by np.average.
+    #
+    # Example:
+    #   family_size = 4
+    #   AUROC = 0.90
+    #   variant match = 80% = 0.80
+    #   raw weight = 1/4 * 0.90 * 0.80 = 0.18
+
+    # Prefer the descriptive family_size assigned earlier. If unavailable,
+    # fall back to the number of contributing PGS IDs in the family.
+    if "family_size" in df.columns:
+        family_size = pd.to_numeric(
+            df["family_size"],
+            errors="coerce",
+        )
+    else:
+        family_size = pd.Series(np.nan, index=df.index)
+
+    if "family_id" in df.columns:
+        valid_family = (
+            df["family_id"].notna()
+            & df["family_id"].astype(str).str.strip().ne("")
+        )
+        fallback_ids = "PGS_SINGLETON_" + df["pgs_id"].astype(str)
+        df["weighted_family_id"] = df["family_id"].where(
+            valid_family,
+            fallback_ids,
+        )
+    else:
+        df["weighted_family_id"] = (
+            "PGS_SINGLETON_" + df["pgs_id"].astype(str)
+        )
+
+    fallback_family_size = (
+        df.groupby("weighted_family_id")["pgs_id"]
+        .transform("nunique")
+        .clip(lower=1)
+        .astype(float)
+    )
+
+    family_size = family_size.where(
+        family_size.notna() & family_size.gt(0),
+        fallback_family_size,
+    ).astype(float)
+
+    df["family_balance_weight"] = 1.0 / family_size
+
+    # AUROC is expected on a 0-1 scale.
+    df["auroc_weight"] = (
+        pd.to_numeric(df["auroc"], errors="coerce")
+        .clip(lower=0.0, upper=1.0)
+    )
+
+    # Convert variant-match values to 0-1, supporting either 0-1 or 0-100 input.
+    df["variant_match_weight"] = (
+        pd.to_numeric(
+            df["percent_variants_matched"],
+            errors="coerce",
+        )
+        .apply(variant_match_percent_value)
+        .div(100.0)
+        .clip(lower=0.0, upper=1.0)
+    )
+
+    df["combined_percentile_weight"] = (
+        df["family_balance_weight"]
+        * df["auroc_weight"]
+        * df["variant_match_weight"]
+    )
+
+    valid_weight = (
+        df["combined_percentile_weight"].notna()
+        & df["combined_percentile_weight"].gt(0)
+    )
+
+    if valid_weight.any():
+        weighted_mean = float(
+            np.average(
+                df.loc[valid_weight, "percentile_numeric"].astype(float),
+                weights=df.loc[
+                    valid_weight,
+                    "combined_percentile_weight",
+                ].astype(float),
+            )
+        )
+        total_raw_weight = float(
+            df.loc[valid_weight, "combined_percentile_weight"].sum()
+        )
+        n_weighted_models = int(valid_weight.sum())
+    else:
+        # Conservative fallback if no usable AUROC/variant-match weights exist.
+        weighted_mean = float(values_series.mean())
+        total_raw_weight = 0.0
+        n_weighted_models = 0
+
+    mean = float(values_series.mean())
+    sd = float(values_series.std()) if len(values) > 1 else 0.0
+
+    q1 = float(values_series.quantile(0.25))
+    median = float(values_series.median())
+    q3 = float(values_series.quantile(0.75))
+    minimum = float(values_series.min())
+    maximum = float(values_series.max())
+    iqr = q3 - q1
+
+    # Tukey boxplot whiskers: farthest observed values still inside Q1/Q3 ± 1.5*IQR.
+    lower_fence = q1 - 1.5 * iqr
+    upper_fence = q3 + 1.5 * iqr
+
+    lower_candidates = values_series[values_series >= lower_fence]
+    upper_candidates = values_series[values_series <= upper_fence]
+
+    lower_whisker = (
+        float(lower_candidates.min())
+        if not lower_candidates.empty
+        else minimum
+    )
+    upper_whisker = (
+        float(upper_candidates.max())
+        if not upper_candidates.empty
+        else maximum
+    )
+
+    return {
+        "n": len(values),
+        "mean": mean,
+        "weighted_mean": weighted_mean,
+        "sd": sd,
+        "q1": q1,
+        "median": median,
+        "q3": q3,
+        "min": minimum,
+        "max": maximum,
+        "iqr_width": float(iqr),
+        "range_width": float(maximum - minimum),
+        "lower_whisker": lower_whisker,
+        "upper_whisker": upper_whisker,
+        "total_raw_weight": total_raw_weight,
+        "n_weighted_models": n_weighted_models,
+    }
+
+
+def percentile_risk_category(percentile):
+    """Return the report's qualitative risk category for one percentile."""
+    if pd.isna(percentile):
+        return None
+    return risk_level(float(percentile))[0]
+
+
+def classify_agreement_spread(spread_width):
+    """Classify model agreement from percentile spread only."""
+    spread_width = float(spread_width)
+
+    if spread_width < 5:
+        return "Phenomenal", "phenomenal"
+    if spread_width < 10:
+        return "Very good", "very-good"
+    if spread_width < 20:
+        return "Good", "good"
+    if spread_width <= 25:
+        return "Moderate", "moderate"
+    return "Bad", "bad"
+
+
+def model_agreement_stats(models_df):
+    """Assess agreement from percentile spread.
+
+    For cards using the multi-PGS boxplot view (>4 percentile values), agreement
+    is based on IQR width.
+
+    For cards without the boxplot view (2-4 percentile values), agreement is
+    based on the full min-to-max distance.
+
+    Thresholds:
+      <5    = Phenomenal
+      <10   = Very good
+      <20   = Good
+      20-25 = Moderate
+      >25   = Bad
+    """
+    stats = percentile_distribution_stats(models_df)
+    if stats is None:
+        return None
+
+    n = int(stats["n"])
+
+    if n == 1:
+        return {
+            "n": 1,
+            "status": "Not assessable",
+            "status_class": "not-assessable",
+            "spread_type": "single",
+            "spread_width": 0.0,
+        }
+
+    if use_distribution_percentile_view(models_df):
+        spread_type = "IQR"
+        spread_width = float(stats["iqr_width"])
+    else:
+        spread_type = "Range"
+        spread_width = float(stats["range_width"])
+
+    status, status_class = classify_agreement_spread(spread_width)
+
+    return {
+        "n": n,
+        "status": status,
+        "status_class": status_class,
+        "spread_type": spread_type,
+        "spread_width": spread_width,
+    }
+
+
+def make_model_agreement(models_df):
+    """Render a compact model-agreement tag for the card header."""
+    stats = model_agreement_stats(models_df)
+
+    if stats is None:
+        return ""
+
+    if stats["n"] == 1:
+        title = "Model agreement cannot be assessed from a single retained PGS model"
+    else:
+        title = (
+            f"Agreement based on {stats['spread_type']} spread of "
+            f"{stats['spread_width']:.1f} percentile points across "
+            f"{stats['n']} retained PGS models"
+        )
+
+    return f"""
+    <div class="model-agreement-header" title="{html.escape(title)}">
+      <span class="model-agreement-badge model-agreement-{html.escape(stats['status_class'])}">
+        Model agreement · {html.escape(stats['status'])}
+      </span>
+    </div>
+    """
+
+
+
+def use_distribution_percentile_view(models_df):
+    """Use multi-model median/IQR display for traits with more than 4 retained scores."""
+    return len(percentile_values(models_df)) > 4
+
+
+def make_percentile_jitter_points(models_df):
+    """Jitter retained-model percentile points around the main percentile bar."""
+    if models_df is None or models_df.empty:
+        return "", ""
+
+    rows = models_df.copy()
+    rows["percentile_numeric"] = pd.to_numeric(
+        rows["percentile_most_similar_pop"],
+        errors="coerce",
+    )
+    rows = rows[rows["percentile_numeric"].notna()].reset_index(drop=True)
+
+    if len(rows) <= 1:
+        return "", ""
+
+    # Deterministic vertical jitter around the bar so overlapping models remain visible.
+    vertical_offsets = [-8, 13, -5, 10, -10, 15, -3, 8]
+    points = []
+
+    for i, row in rows.iterrows():
+        pct = clamp_percentile(row["percentile_numeric"])
+        top = vertical_offsets[i % len(vertical_offsets)]
+        pgs_id = html.escape(str(row.get("pgs_id", "PGS model")))
+        points.append(
+            f'<span class="percentile-model-point" '
+            f'title="{pgs_id}: {fmt_percentile(pct)} percentile" '
+            f'style="left: {pct:.2f}%; top: {top}px;"></span>'
+        )
+
+    legend = (
+        '<span class="legend-item">'
+        '<span class="legend-model-point-key"></span>Retained PGS model'
+        '</span>'
+    )
+
+    return "".join(points), legend
+
+
+def percentile_axis_labels():
+    """Fixed 0-100 percentile x-axis shown beneath percentile bars."""
+    ticks = [
+        (0, "0"),
+        (25, "25"),
+        (50, "50"),
+        (75, "75"),
+        (100, "100"),
+    ]
+
+    labels = []
+    for i, (position, label) in enumerate(ticks):
+        edge_class = ""
+        if i == 0:
+            edge_class = " edge-left"
+        elif i == len(ticks) - 1:
+            edge_class = " edge-right"
+
+        labels.append(
+            f'<span class="scale-axis-label{edge_class}" '
+            f'style="left: {position:.1f}%;">{label}</span>'
+        )
+
+    return f"""
+    <div class="scale-axis-labels" aria-label="Percentile axis from 0 to 100">
+      {''.join(labels)}
+    </div>
+    """
+
+
+def make_percentile_distribution_view(models_df, fill_class):
+    """Use a boxplot-style percentile display for >4 retained models."""
+    stats = percentile_distribution_stats(models_df)
+    if stats is None:
+        return ""
+
+    q1 = clamp_percentile(stats["q1"])
+    q3 = clamp_percentile(stats["q3"])
+    median = clamp_percentile(stats["median"])
+    weighted_mean = clamp_percentile(stats["weighted_mean"])
+    lower_whisker = clamp_percentile(stats["lower_whisker"])
+    upper_whisker = clamp_percentile(stats["upper_whisker"])
+
+    iqr_left = q1
+    iqr_width = max(0.0, q3 - q1)
+    whisker_left = lower_whisker
+    whisker_width = max(0.0, upper_whisker - lower_whisker)
+
+    rows = models_df.copy()
+    rows["percentile_numeric"] = pd.to_numeric(
+        rows["percentile_most_similar_pop"],
+        errors="coerce",
+    )
+    rows = rows[rows["percentile_numeric"].notna()].reset_index(drop=True)
+
+    jitter_offsets = [3, 23, 0, 26, 6, 20, 9, 17]
+    jitter_points = []
+
+    for i, row in rows.iterrows():
+        pct = clamp_percentile(row["percentile_numeric"])
+        top = jitter_offsets[i % len(jitter_offsets)]
+        pgs_id = html.escape(str(row.get("pgs_id", "PGS model")))
+        family_id = html.escape(str(row.get("family_id", "No family ID")))
+        jitter_points.append(
+            f'<span class="percentile-distribution-point" '
+            f'title="{pgs_id} · {family_id}: {fmt_percentile(pct)} percentile" '
+            f'style="left: {pct:.2f}%; top: {top}px;"></span>'
+        )
+
+    return f"""
+    <div class="percentile-distribution" aria-label="Percentile distribution across retained PGS models">
+      <div class="percentile-distribution-track">
+        <div class="percentile-distribution-axis" title="Full percentile scale"></div>
+        <div class="percentile-distribution-whisker {fill_class}" title="Boxplot whisker range: {fmt_percentile(lower_whisker)}–{fmt_percentile(upper_whisker)}" style="left: {whisker_left:.1f}%; width: {whisker_width:.1f}%;"></div>
+        <div class="percentile-distribution-iqr" title="Interquartile range: {fmt_percentile(q1)}–{fmt_percentile(q3)}" style="left: {iqr_left:.1f}%; width: {iqr_width:.1f}%;"></div>
+        {''.join(jitter_points)}
+        <div class="percentile-distribution-mean" title="Median percentile: {fmt_percentile(median)}" style="left: {median:.1f}%;"></div>
+        <div class="percentile-distribution-weighted-mean" title="Quality-weighted mean (1/family size × AUROC × variant match): {fmt_percentile(weighted_mean)}" style="left: {weighted_mean:.1f}%;"></div>
+      </div>
+      {percentile_axis_labels()}
+      <div class="percentile-distribution-caption">IQR {fmt_percentile(stats['q1'])}–{fmt_percentile(stats['q3'])} · SD {stats['sd']:.1f} percentile points</div>
+    </div>
+    """
+
+
+def make_consensus_box(models_df, primary_percentile):
+    values = percentile_values(models_df)
+
+    # For traits with many retained models, the main visualization already shows
+    # median, family-weighted mean, IQR, observed range, and SD. Do not show the older consensus/disagreement panel.
+    if use_distribution_percentile_view(models_df):
+        return ""
+
+    if len(values) <= 1:
+        return ""
+
+    low = values.min()
+    high = values.max()
+    range_text = fmt_percentile_range(low, high)
+
+    return f"""
+    <div class="consensus-box">
+      <div class="metric-label">Multi-model consensus</div>
+      <div class="consensus-value">{html.escape(range_text)}</div>
+      <div class="metric-caption">Range across {len(values)} retained PGS models. Consensus area = solid bar; model disagreement range = translucent band.</div>
+    </div>
+    """
+
+
+def make_percentile_bar(primary_percentile, models_df, fill_class):
+    if use_distribution_percentile_view(models_df):
+        return make_percentile_distribution_view(models_df, fill_class)
+
+    primary_pct = clamp_percentile(primary_percentile)
+    values = percentile_values(models_df)
+
+    if values.empty:
+        low = primary_pct
+        high = primary_pct
+    else:
+        low = clamp_percentile(values.min())
+        high = clamp_percentile(values.max())
+
+    solid_width = low if len(values) > 1 else primary_pct
+    band_left = low
+    band_width = max(0.0, high - low)
+
+    uncertainty_html = ""
+    if len(values) > 1 and band_width > 0:
+        uncertainty_html = (
+            f'<div class="percentile-uncertainty {fill_class}" '
+            f'title="Model disagreement range" '
+            f'style="left: {band_left:.1f}%; width: {band_width:.1f}%"></div>'
+        )
+
+    jitter_points, _ = make_percentile_jitter_points(models_df)
+    jitter_class = " has-jitter" if len(values) > 1 else ""
+
+    consensus_label = "Consensus area" if len(values) > 1 else "Predicted percentile range"
+
+    return f"""
+    <div class="percentile-track{jitter_class}" aria-label="Percentile bar">
+      <div class="percentile-solid {fill_class}" title="{consensus_label}" style="width: {solid_width:.1f}%"></div>
+      {uncertainty_html}
+      {jitter_points}
+      <div class="percentile-marker" title="Best Model Prediction: {fmt_percentile(primary_pct)}" style="left: {primary_pct:.1f}%"></div>
+    </div>
+    {percentile_axis_labels()}
+    """
+
+
+def mean_numeric(models_df, col):
+    if models_df is None or models_df.empty or col not in models_df.columns:
+        return np.nan
+    return pd.to_numeric(models_df[col], errors="coerce").mean()
+
+
+def mean_variant_match_pct(models_df):
+    if models_df is None or models_df.empty or "percent_variants_matched" not in models_df.columns:
+        return np.nan
+    values = pd.to_numeric(models_df["percent_variants_matched"], errors="coerce").apply(variant_match_percent_value)
+    return values.mean()
+
+def metric_rating(metric_name, value):
+    """Return a four-level qualitative rating for selected validation metrics."""
+    if value is None or pd.isna(value):
+        return None
+
+    value = float(value)
+
+    if metric_name == "auroc":
+        if value < 0.60:
+            return ("Bad", "bad")
+        if value < 0.70:
+            return ("Acceptable", "acceptable")
+        if value < 0.80:
+            return ("Good", "good")
+        return ("Phenomenal", "phenomenal")
+
+    if metric_name == "variant_match":
+        value = variant_match_percent_value(value)
+        if pd.isna(value):
+            return None
+        if value < 70:
+            return ("Bad", "bad")
+        if value < 80:
+            return ("Acceptable", "acceptable")
+        if value < 95:
+            return ("Good", "good")
+        return ("Phenomenal", "phenomenal")
+
+    return None
+
+
+def make_validation_inline(primary):
+    """Compact validation metadata shown beneath the two main validation metric cards."""
+    items = []
+
+    ancestry_share = primary.get("target_ethnicity_share", np.nan)
+    if not pd.isna(ancestry_share):
+        items.append(
+            f"""
+            <span class="validation-inline-item">
+              <span class="validation-inline-key">Evaluation ancestry match</span>
+              <span class="validation-inline-value">{float(ancestry_share):.0f}% {html.escape(ethnicity)}</span>
+            </span>
+            """
+        )
+
+    evaluation_n = fmt_int(primary.get("evaluation_n", np.nan))
+    if evaluation_n:
+        items.append(
+            f"""
+            <span class="validation-inline-item">
+              <span class="validation-inline-key">Evaluation N</span>
+              <span class="validation-inline-value">{html.escape(evaluation_n)}</span>
+            </span>
+            """
+        )
+
+    if not items:
+        return ""
+
+    return f"""
+    <div class="validation-inline" aria-label="Primary model validation metadata">
+      {''.join(items)}
+    </div>
+    """
+
+
+def make_trait_card(record):
+    primary = record["primary"]
+    odds_models = record["odds_models"]
+    hazard_models = record["hazard_models"]
+    all_models = record["all_models"]
+
+    percentile = primary["percentile_most_similar_pop"]
+    distribution_stats = percentile_distribution_stats(all_models)
+    show_distribution_view = use_distribution_percentile_view(all_models)
+    display_percentile = distribution_stats["median"] if show_distribution_view and distribution_stats is not None else percentile
+
+    risk_label, risk_class, fill_class = risk_level(display_percentile)
+    model_agreement = make_model_agreement(all_models)
+    percentile_bar = make_percentile_bar(percentile, all_models, fill_class)
+    consensus_box = make_consensus_box(all_models, percentile)
+
+    trait = safe_text(primary["reported_trait"])
+
+    odds_bar = make_effect_bar_panel(
+        "Odds-based risk",
+        odds_models,
+        "individual_odds_ratio",
+        "odds_ratio",
+        "OR",
+    )
+
+    hazard_bar = make_effect_bar_panel(
+        "Hazard-based risk",
+        hazard_models,
+        "individual_hazard_ratio",
+        "hazard_ratio",
+        "HR",
+    )
+
+    effect_bar_items = "".join([odds_bar, hazard_bar])
+
+    effect_bars = (
+        f"""
+        <div class="effect-bar-stack">
+          {effect_bar_items}
+        </div>
+        """
+        if effect_bar_items.strip()
+        else ""
+    )
+
+    if show_distribution_view:
+        auroc_value = fmt_float(mean_numeric(all_models, "auroc"), 2)
+        auroc_caption = f"Mean across {len(all_models)} retained models"
+        variant_match_value = fmt_variant_match_pct(mean_variant_match_pct(all_models))
+        variant_match_caption = f"Mean across {len(all_models)} retained models"
+    else:
+        auroc_value = fmt_float(primary["auroc"], 2)
+        auroc_caption = "Primary model validation"
+        variant_match_value = fmt_variant_match_pct(primary.get("percent_variants_matched", np.nan))
+        variant_match_caption = (
+            f"{fmt_int(primary.get('n_variants_matched', np.nan))} variants matched in primary model"
+            if fmt_int(primary.get("n_variants_matched", np.nan))
+            else "Primary model"
+        )
+
+    auroc_rating = metric_rating("auroc", float(auroc_value) if auroc_value is not None else np.nan)
+    variant_rating = metric_rating(
+        "variant_match",
+        mean_variant_match_pct(all_models) if show_distribution_view else primary.get("percent_variants_matched", np.nan),
+    )
+
+    metric_boxes = ""
+    metric_boxes += make_metric_box("AUROC", auroc_value, auroc_caption, status=auroc_rating)
+    metric_boxes += make_metric_box("Variant match", variant_match_value, variant_match_caption, status=variant_rating)
+
+    validation_inline = make_validation_inline(primary)
+
+    models_dropdown = make_models_dropdown(all_models)
+
+    return f"""
+    <article class="pgs-card">
+      <div class="pgs-card-header">
+        <div>
+          <h3 class="pgs-title">{trait}</h3>
+        </div>
+        {model_agreement}
+      </div>
+
+      <div class="risk-badge risk-{risk_class}">{risk_label}</div>
+
+      <div class="percentile-block">
+        <div class="percentile-topline">
+          <div class="percentile-label">{"Median percentile" if show_distribution_view else "Percentile"}</div>
+          <div class="percentile-value">{fmt_percentile(display_percentile)}</div>
+        </div>
+        {percentile_bar}
+        {consensus_box}
+      </div>
+
+      {effect_bars}
+
+      <div class="metric-grid">
+        {metric_boxes}
+      </div>
+
+      {validation_inline}
+
+      <div class="metadata-panel">
+        {models_dropdown}
+      </div>
+    </article>
+    """
+
+cards = "\n".join(make_trait_card(record) for record in sorted(card_records, key=lambda r: str(r["reported_trait"]).lower()))
+
+html_out = f"""
+<div class="pgs-card-grid">
+  {cards}
+</div>
+"""
+
+display(HTML(html_out))
+```
+
+## Methodological notes
+
+```{=html}
+<div class="method-note">
+  <strong>Important limitations.</strong>
+  Polygenic scores estimate inherited genetic predisposition; they are not diagnostic tests.
+  AUROC, odds ratio, and hazard ratio values come from specific validation cohorts and may not transfer perfectly to every ancestry, age group, sex, genotyping array, or imputation pipeline.
+  The individualized risk-effect calculation assumes that the source odds ratio or hazard ratio is reported per standard deviation of the PRS. If the original publication used a different effect unit or comparison group, the transformed percentage may be misleading and should be flagged in your score-selection database.
+</div>
+```

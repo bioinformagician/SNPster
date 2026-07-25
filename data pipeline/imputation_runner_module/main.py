@@ -1,11 +1,12 @@
-from helper_classes import EnvironmentHandler, DatabaseQueryHandler, ImputationRunner
+from helper_classes import EnvironmentHandler, DatabaseQueryHandler, ImputationRunner, VCFUtilities
 import time
 
-
+VCFUtilities = VCFUtilities()
 environment_handler = EnvironmentHandler()
 database_query_handler = DatabaseQueryHandler()
 imputation_runner = ImputationRunner(env_handler=environment_handler,
-                                   query_handler=database_query_handler)
+                                   query_handler=database_query_handler,
+                                   vcf_utilities=VCFUtilities)
 
 
 
@@ -46,6 +47,9 @@ while True:
                 imputation_runner.query_handler.mark_jobs_completed(completed_ids)
             if failed_ids:
                 imputation_runner.query_handler.mark_jobs_failed(failed_ids)
+            
+            imputation_runner.upload_number_of_variants()
+        
     except Exception as e:
         print(f"Error occurred during imputation: {e}")
 

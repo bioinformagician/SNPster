@@ -248,6 +248,40 @@ class VCFUtilities:
     """Class to provide utilities such as adding and reading metadata to/from VCF files """
     
     IMPUTATION_ID_KEY = "IMPUTATION_ID"
+    
+    
+    def get_number_of_variants_in_vcf(self, vcf_file: str) -> int:
+        """Returns the number of variant records in a VCF file, requires bcftools"""
+        
+        vcf_path = Path(vcf_file)
+        if not vcf_path.exists():
+            raise FileNotFoundError(f"VCF file does not exist: {vcf_file}")
+
+        
+        proc = subprocess.Popen(
+                ["bcftools", "view", "-H", str(vcf_path)],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+        
+        count = 0
+        assert proc.stdout is not None
+        for _ in proc.stdout:
+            count += 1
+
+        stderr_text = ""
+        if proc.stderr is not None:
+            stderr_text = proc.stderr.read().strip()
+
+        return_code = proc.wait()
+        if return_code != 0:
+            raise RuntimeError(
+                f"bcftools failed while counting variants for {vcf_file}: {stderr_text or f'exit code {return_code}'}"
+            )
+
+        return count
+    
 
     def _rewrite_vcf_preserving_bgzf(self, vcf_path: Path, line_rewriter) -> None:
         """Rewrite VCF text while keeping BGZF framing for .vcf.gz files."""

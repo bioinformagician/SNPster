@@ -182,9 +182,10 @@ CREATE TABLE snpster_users.imputation_job_parameters (
 
 CREATE TABLE snpster_users.imputed_data (
     imputation_id integer NOT NULL REFERENCES snpster_users.imputation_jobs(imputation_id) ON DELETE CASCADE,
-    file_type VARCHAR(20) CHECK (file_type IN ('imputed VCF', 'samplesheet')),
     file_path TEXT,
-    PRIMARY KEY (imputation_id, file_type, file_path)
+    number_of_variants INTEGER,
+    chromosome smallint CHECK (chromosome >= 1 AND chromosome <= 22),
+    PRIMARY KEY (imputation_id, chromosome)
 );
 
 -- ===================================

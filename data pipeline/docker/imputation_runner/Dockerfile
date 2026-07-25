@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     bash \
     ca-certificates \
+    bcftools \
     docker-cli \
     git \
     procps \
@@ -32,13 +33,16 @@ WORKDIR /app
 
 COPY database_module/requirements.txt /tmp/database_requirements.txt
 COPY imputation_runner_module/requirements.txt /tmp/imputation_runner_requirements.txt
-
+COPY vcf_utilities_module/requirements.txt /tmp/vcf_utilities_requirements.txt
 RUN pip install --no-cache-dir -r /tmp/database_requirements.txt \
- && pip install --no-cache-dir -r /tmp/imputation_runner_requirements.txt
+ && pip install --no-cache-dir -r /tmp/imputation_runner_requirements.txt 
+ && pip install --no-cache-dir -r /tmp/vcf_utilities_requirements.txt
+
 
 COPY database_module/ /app/
 COPY imputation_runner_module/ /app/
 COPY nextflow/ /app/nextflow/
+COPY vcf_utilities_module/vcf_classes.py /app/
 
 RUN mkdir -p /srv/imputed/nf_runtime
 RUN mkdir -p /app/imputation_runner_module
