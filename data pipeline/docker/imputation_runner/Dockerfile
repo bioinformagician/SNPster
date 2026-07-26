@@ -35,7 +35,7 @@ COPY database_module/requirements.txt /tmp/database_requirements.txt
 COPY imputation_runner_module/requirements.txt /tmp/imputation_runner_requirements.txt
 COPY vcf_utilities_module/requirements.txt /tmp/vcf_utilities_requirements.txt
 RUN pip install --no-cache-dir -r /tmp/database_requirements.txt \
- && pip install --no-cache-dir -r /tmp/imputation_runner_requirements.txt 
+ && pip install --no-cache-dir -r /tmp/imputation_runner_requirements.txt \
  && pip install --no-cache-dir -r /tmp/vcf_utilities_requirements.txt
 
 
