@@ -191,12 +191,9 @@ class ImputationRunner:
     def write_samplesheet(self) -> None:
         
         """Write samplesheet like:
-            identifier,output_dir,file_path
-            76,/srv/imputed/75/76,/srv/raw/genome_Aaron_Hill_v3_Full_20191101162607.zip
-            77,/srv/imputed/76/77,/srv/raw/23andMe_results.zip
-            78,/srv/imputed/77/78,/srv/raw/genome_Orlando_Montalvo_Full_20140522160413.zip
-            79,/srv/imputed/78/79,/srv/raw/dna-data-2013-11-09.zip
-            80,/srv/imputed/79/80,/srv/raw/genome_Full_20141024183341.zip
+            identifier,file_id,output_dir,file_path
+            76,101,/srv/imputed/75/76,/srv/raw/genome_Aaron_Hill_v3_Full_20191101162607.zip
+            77,202,/srv/imputed/76/77,/srv/raw/23andMe_results.zip
         """
         
         self.job_df["output_dir"] = (
@@ -208,7 +205,7 @@ class ImputationRunner:
         )
 
         samplesheet_df = self.job_df[
-            ["imputation_id", "output_dir", "genefile_location"]
+            ["imputation_id", "file_id", "output_dir", "genefile_location"]
         ].rename(
             columns={
                 "imputation_id": "identifier",

@@ -8,15 +8,21 @@ parser.add_argument('--output_dir', type=str, required=False, default=os.getcwd(
 parser.add_argument('--microarray_file', type=str, required=False, default = TEST_FILE, help='Path to the user microarray data file (e.g., 23andMe, Ancestry, Myheritage...).')
 parser.add_argument(
     '--imputation_id',
-    type=str,
+    type=int,
     help='The identifier should always be imputation_id',
     default=f"{pd.Timestamp.now().strftime('%Y%m%d%H%M%S')}-{os.urandom(8).hex()}",
+)
+parser.add_argument(
+    '--file_id',
+    type=int,
+    help='The file_id from the database',
+    default=0,
 )
 
 args = parser.parse_args()
 
 
-data_container = DataContainer(imputation_id=args.imputation_id)
+data_container = DataContainer(imputation_id=args.imputation_id, file_id=str(args.file_id))
 
 environment_handler = EnvironmentHandler(
     chain_file_dict=CHAIN_FILE_DICT,

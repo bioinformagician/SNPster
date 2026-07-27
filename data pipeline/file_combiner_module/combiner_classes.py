@@ -66,9 +66,9 @@ class Combiner:
                 self.parquet_metadata = dict(file_metadata)
                 continue
 
-            # Keep metadata stable across files (except vendor, which will be set to "combined").
+            # Keep metadata stable across files (except vendor and file_id).
             for key, value in file_metadata.items():
-                if key == b'vendor':
+                if key in {b'vendor', b'file_id'}:
                     continue
                 if key not in self.parquet_metadata:
                     self.parquet_metadata[key] = value
@@ -81,6 +81,10 @@ class Combiner:
         return self.combined_data
     
     def validate_combined_data(self) -> pd.DataFrame:
+        if len(self.file_paths) == 1:
+            print("Single input parquet detected; skipping cross-file genotype validation.")
+            return self.combined_data
+
         # Normalize genotype order: TA -> AT, GA -> AG, etc.
         self.combined_data["genotype"] = (
             self.combined_data["genotype"]
@@ -140,6 +144,7 @@ class Combiner:
 
         metadata = dict(self.parquet_metadata)
         metadata[b'vendor'] = b'combined'
+        metadata.pop(b'file_id', None)
 
         resolved_imputation_id = self.imputation_id
         if resolved_imputation_id is None and b'imputation_id' in metadata:

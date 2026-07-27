@@ -86,6 +86,8 @@ class WorkflowOrchestrator:
         self.data_container.vendor = metadata[b'vendor'].decode('utf-8')
         self.data_container.genome_build = metadata[b'genome_build'].decode('utf-8')
         self.data_container.imputation_id = metadata[b'imputation_id'].decode('utf-8')
+        if b'file_id' in metadata:
+            self.data_container.file_id = metadata[b'file_id'].decode('utf-8')
         
         self.data_container.is_forward_strand = metadata[b'is_forward_strand'].decode('utf-8')
         if self.data_container.is_forward_strand == 'True':
@@ -94,7 +96,13 @@ class WorkflowOrchestrator:
             self.data_container.is_forward_strand = False
 
         
-        print(f"Loaded parquet with metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, is_forward_strand={self.data_container.is_forward_strand}")
+        print(
+            f"Loaded parquet with metadata: vendor={self.data_container.vendor}, "
+            f"genome_build={self.data_container.genome_build}, "
+            f"is_forward_strand={self.data_container.is_forward_strand}, "
+            f"imputation_id={self.data_container.imputation_id}, "
+            f"file_id={self.data_container.file_id}"
+        )
         
 
     def prepare_reference_fasta(self) -> str:

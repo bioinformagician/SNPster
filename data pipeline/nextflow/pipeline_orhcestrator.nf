@@ -15,7 +15,7 @@ process STANDARDIZE {
 
 
     input:
-      tuple val(identifier), val(output_dir), path(microarray_file)
+            tuple val(identifier), val(file_id), val(output_dir), path(microarray_file)
 
     output:
                 tuple val(identifier), val(output_dir), path("*.parquet"), emit: standardized
@@ -23,7 +23,7 @@ process STANDARDIZE {
     script:
     """
 
-    python /app/main.py --microarray_file "${microarray_file}" --imputation_id "${identifier}" --output_dir .
+    python /app/main.py --microarray_file "${microarray_file}" --imputation_id "${identifier}" --file_id "${file_id}" --output_dir .
 
     """
 }
@@ -234,6 +234,7 @@ workflow {
         .map { row ->
             tuple(
                 row.identifier,
+                row.file_id,
                 row.output_dir,
                 file(row.file_path)
             )
@@ -243,16 +244,15 @@ workflow {
 
     standardized_records_ch = standardized_ch.standardized
         .map { identifier, output_dir, parquet_file ->
-            def parquet_list = (parquet_file instanceof Collection) ? parquet_file : [parquet_file]
-            parquet_list.collect { one_parquet ->
-                tuple(identifier.toString(), output_dir.toString(), one_parquet)
-            }
+            tuple(identifier.toString(), output_dir.toString(), parquet_file)
         }
-        .flatten()
 
     combiner_input_ch = standardized_records_ch
-        .groupTuple(by: 0)
-        .map { identifier, output_dirs, parquet_files ->
+        .groupTuple()
+        .map { grouped ->
+            def identifier = grouped[0]
+            def output_dirs = grouped[1]
+            def parquet_files = grouped[2]
             def unique_output_dirs = output_dirs.unique()
             if (unique_output_dirs.size() != 1) {
                 throw new IllegalArgumentException(
