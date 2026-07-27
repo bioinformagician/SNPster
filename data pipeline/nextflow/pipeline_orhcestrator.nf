@@ -18,12 +18,38 @@ process STANDARDIZE {
       tuple val(identifier), val(output_dir), path(microarray_file)
 
     output:
-        path("*.parquet"), emit: parquets
+                tuple val(identifier), val(output_dir), path("*.parquet"), emit: standardized
 
     script:
     """
 
     python /app/main.py --microarray_file "${microarray_file}" --imputation_id "${identifier}" --output_dir .
+
+    """
+}
+
+
+process COMBINE_MICROARRAY {
+
+    maxRetries 2
+    errorStrategy 'ignore'
+
+    container 'file_combiner:latest'
+
+    input:
+    tuple val(identifier), val(output_dir), path(parquet_files)
+
+    output:
+    path("combined_output/*.parquet"), emit: parquets
+
+    script:
+    """
+
+    mkdir -p combined_output
+    python /app/main.py \
+        --parquet_files ${parquet_files.collect { "\"${it}\"" }.join(' ')} \
+        --imputation_id "${identifier}" \
+        --output_dir combined_output
 
     """
 }
@@ -214,15 +240,37 @@ workflow {
         }
 
     standardized_ch = STANDARDIZE(samples_ch)
-    harmonized_ch = HARMONIZE(standardized_ch.parquets.flatten())
 
-    all_vcfs = harmonized_ch.vcfs
+    standardized_records_ch = standardized_ch.standardized
+        .map { identifier, output_dir, parquet_file ->
+            def parquet_list = (parquet_file instanceof Collection) ? parquet_file : [parquet_file]
+            parquet_list.collect { one_parquet ->
+                tuple(identifier.toString(), output_dir.toString(), one_parquet)
+            }
+        }
+        .flatten()
 
-    id_output_dir_ch = samples_ch
-        .map { identifier, output_dir, microarray_file ->
+    combiner_input_ch = standardized_records_ch
+        .groupTuple(by: 0)
+        .map { identifier, output_dirs, parquet_files ->
+            def unique_output_dirs = output_dirs.unique()
+            if (unique_output_dirs.size() != 1) {
+                throw new IllegalArgumentException(
+                    "Identifier ${identifier} has multiple output directories: ${unique_output_dirs}"
+                )
+            }
+            tuple(identifier, unique_output_dirs[0], parquet_files)
+        }
+
+    id_output_dir_ch = combiner_input_ch
+        .map { identifier, output_dir, parquet_files ->
             tuple(identifier.toString(), output_dir)
         }
-        .distinct()
+
+    combined_ch = COMBINE_MICROARRAY(combiner_input_ch)
+    harmonized_ch = HARMONIZE(combined_ch.parquets.flatten())
+
+    all_vcfs = harmonized_ch.vcfs
 
     vcf_bundles_ch = all_vcfs
         .flatten()

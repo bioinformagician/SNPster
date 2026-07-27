@@ -1,0 +1,3 @@
+import os
+
+MAXIMUM_OVERLAP_PERCENTAGE = float(os.environ.get("MAXIMUM_OVERLAP_PERCENTAGE", 5))

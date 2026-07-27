@@ -116,37 +116,39 @@ class WorkflowOrchestrator:
         
     
     def write_parquet_output(self) -> None:
-        """ Naming of file should follow {IMPIDx}.{CHR}.{STAGE}.filextension"""
-        
-        
-        for chrom, df_chrom in self.data_container.harmonized_data.groupby("chromosome", sort = False):
-        
-            
-            output_path = os.path.join(self.environment_handler.output_dir, f"IMPID{self.data_container.imputation_id}.chr{chrom}.standardizedMicroarray.parquet")
-            
-            # Convert DataFrame to PyArrow Table
-            table = pa.Table.from_pandas(df_chrom)
-            
-            # Add custom metadata
-            metadata = {
-                b'vendor': self.data_container.vendor.encode('utf-8'),
-                b'genome_build': self.data_container.genome_build.encode('utf-8'),
-                b'is_forward_strand': str(self.data_container.is_forward_strand).encode('utf-8'),
-                b'imputation_id': str(self.data_container.imputation_id).encode('utf-8')
-            }
-            
-            # Merge with existing schema metadata
-            existing_metadata = table.schema.metadata or {}
-            combined_metadata = {**existing_metadata, **metadata}
-            
-            # Create new schema with metadata
-            new_schema = table.schema.with_metadata(combined_metadata)
-            table = table.cast(new_schema)
-            
-            # Write parquet with metadata
-            pq.write_table(table, output_path)
-            print(f"Standardized data written to {output_path}")
-            print(f"Metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, is_forward_strand={self.data_container.is_forward_strand}, imputation_id={self.data_container.imputation_id}")
+        """ Naming of file should follow {IMPIDx}.chr{ALL}.{STAGE}.filextension"""
+        df = self.data_container.harmonized_data
+        if df is None:
+            raise ValueError("No harmonized data available to write.")
+
+        output_path = os.path.join(
+            self.environment_handler.output_dir,
+            f"IMPID{self.data_container.imputation_id}.chrALL.standardizedMicroarray.parquet",
+        )
+
+        # Convert DataFrame to PyArrow Table
+        table = pa.Table.from_pandas(df)
+
+        # Add custom metadata
+        metadata = {
+            b'vendor': self.data_container.vendor.encode('utf-8'),
+            b'genome_build': self.data_container.genome_build.encode('utf-8'),
+            b'is_forward_strand': str(self.data_container.is_forward_strand).encode('utf-8'),
+            b'imputation_id': str(self.data_container.imputation_id).encode('utf-8')
+        }
+
+        # Merge with existing schema metadata
+        existing_metadata = table.schema.metadata or {}
+        combined_metadata = {**existing_metadata, **metadata}
+
+        # Create new schema with metadata
+        new_schema = table.schema.with_metadata(combined_metadata)
+        table = table.cast(new_schema)
+
+        # Write parquet with metadata
+        pq.write_table(table, output_path)
+        print(f"Standardized data written to {output_path}")
+        print(f"Metadata: vendor={self.data_container.vendor}, genome_build={self.data_container.genome_build}, is_forward_strand={self.data_container.is_forward_strand}, imputation_id={self.data_container.imputation_id}")
             
             
             
