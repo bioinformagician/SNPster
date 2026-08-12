@@ -118,7 +118,11 @@ CREATE TABLE data_libraries.pgs_performance (
     publication_pmid int,
     publication_doi VARCHAR(255),
     hazard_ratio DECIMAL(10,6),
+    hazard_ratio_ci_lower DECIMAL(10,6),
+    hazard_ratio_ci_upper DECIMAL(10,6),
     odds_ratio DECIMAL(10,6),
+    odds_ratio_ci_lower DECIMAL(10,6),
+    odds_ratio_ci_upper DECIMAL(10,6),
     beta DECIMAL(10,6),
     auroc DECIMAL(5,2),
     concordance_statistic DECIMAL(5,2),
@@ -131,15 +135,20 @@ CREATE TABLE data_libraries.score_development_samples (
     individuals_development INTEGER, 
     cases_development INTEGER, 
     controls_development INTEGER, 
-    percent_male_development FLOAT
+    percent_male_development FLOAT,
+    broad_ancestry_category text
 ); 
 
 CREATE TABLE data_libraries.evaluation_sample_sets (
-    pss_id VARCHAR(50), 
+    pss_id VARCHAR(50),
+    pgs_id VARCHAR(50) REFERENCES data_libraries.pgscatalog_data(pgs_id) ON DELETE CASCADE, 
     individuals_evaluation INTEGER, 
     cases_evaluation INTEGER, 
     controls_evaluation INTEGER, 
-    percent_male_evaluation FLOAT
+    percent_male_evaluation FLOAT,
+    broad_ancestry_category text,
+    country_of_recruitment text,
+    cohort text
 );
 
 CREATE TABLE data_libraries.pipeline_dependencies (
@@ -212,7 +221,7 @@ CREATE TABLE snpster_users.prsc_job_parameters (
 CREATE TABLE snpster_users.prsc_job_results (
     prsc_id integer NOT NULL REFERENCES snpster_users.prsc_jobs(prsc_id) ON DELETE CASCADE,
     pgs_id varchar(100) NOT NULL REFERENCES data_libraries.pgscatalog_data(pgs_id) ON DELETE CASCADE,
-    sum Decimal(10,6),
+    score_sum NUMERIC,
     percentile_most_similar_pop DECIMAL(8,5) CHECK (percentile_most_similar_pop >= 0 AND percentile_most_similar_pop <= 100),
     z_norm1 DECIMAL(8,5),
     z_norm2 DECIMAL(8,5),

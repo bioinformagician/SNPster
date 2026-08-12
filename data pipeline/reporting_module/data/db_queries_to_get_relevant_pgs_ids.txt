@@ -1,0 +1,72 @@
+WITH pss_summary AS (
+    SELECT
+        pss_id,
+        pgs_id,
+        SUM(individuals_evaluation) AS individuals_evaluation
+    FROM data_libraries.evaluation_sample_sets
+    GROUP BY
+        pss_id,
+        pgs_id
+),
+
+eligible_pgs AS (
+    SELECT DISTINCT
+        pp.pgs_id
+    FROM data_libraries.pgs_performance AS pp
+    INNER JOIN pss_summary AS ps
+        ON ps.pss_id = pp.pss_id
+       AND ps.pgs_id = pp.pgs_id
+    WHERE
+        ps.individuals_evaluation > 500
+        AND (
+            pp.auroc > 0.65
+            OR pp.concordance_statistic > 0.65
+        )
+),
+
+pgs_ancestry AS (
+    SELECT DISTINCT
+        ess.pgs_id,
+        ess.broad_ancestry_category
+    FROM data_libraries.evaluation_sample_sets AS ess
+)
+
+SELECT
+    pcd.reported_trait,
+
+    COUNT(DISTINCT pcd.pgs_id) AS number_of_pgs_ids,
+
+    COUNT(DISTINCT pcd.pgs_id)
+        FILTER (WHERE pa.broad_ancestry_category = 'European')
+        AS european,
+
+    COUNT(DISTINCT pcd.pgs_id)
+        FILTER (WHERE pa.broad_ancestry_category = 'East Asian')
+        AS east_asian,
+
+    COUNT(DISTINCT pcd.pgs_id)
+        FILTER (WHERE pa.broad_ancestry_category = 'African')
+        AS african,
+
+    COUNT(DISTINCT pcd.pgs_id)
+        FILTER (WHERE pa.broad_ancestry_category = 'South Asian')
+        AS south_asian,
+
+    COUNT(DISTINCT pcd.pgs_id)
+        FILTER (WHERE pa.broad_ancestry_category = 'Hispanic or Latin American')
+        AS hispanic_or_latin_american
+
+FROM data_libraries.pgscatalog_data AS pcd
+
+INNER JOIN eligible_pgs AS ep
+    ON ep.pgs_id = pcd.pgs_id
+
+LEFT JOIN pgs_ancestry AS pa
+    ON pa.pgs_id = pcd.pgs_id
+
+GROUP BY
+    pcd.reported_trait
+
+ORDER BY
+
+    pcd.reported_trait;

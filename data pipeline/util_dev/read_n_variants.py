@@ -40,7 +40,7 @@ def main() -> None:
 	parser.add_argument(
 		"vcf_dir",
 		nargs="?",
-		default="/srv/imputed/231/232/qc_output",
+		default="/srv/imputed/frederik_myheritage/306/qc_output",
 		help="Directory containing *.vcf.gz files",
 	)
 	args = parser.parse_args()

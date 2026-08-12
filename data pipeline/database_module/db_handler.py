@@ -132,13 +132,35 @@ class DbUtils:
         print(score_development_samples.columns)
         print(evaluation_sample_sets.columns)
         
+        def _pick_existing_column(df: pd.DataFrame, candidates: list[str], default=None) -> pd.Series:
+            cols = list(df.columns)
+            normalized = {" ".join(str(c).strip().lower().split()): c for c in cols}
+
+            for candidate in candidates:
+                if candidate in cols:
+                    return df[candidate]
+
+                key = " ".join(str(candidate).strip().lower().split())
+                if key in normalized:
+                    return df[normalized[key]]
+
+            return pd.Series([default] * len(df), index=df.index)
+
         score_development_samples = score_development_samples[["Polygenic Score (PGS) ID", "Stage of PGS Development",
                                                               "Number of Individuals", "Number of Cases",
                                                               "Number of Controls", "Percent of Participants Who are Male"]]
-        
-        evaluation_sample_sets = evaluation_sample_sets[["PGS Sample Set (PSS)","Number of Individuals",
-                                                        "Number of Cases", "Number of Controls",
-                                                        "Percent of Participants Who are Male"]]
+
+        evaluation_sample_sets = pd.DataFrame({
+            "PGS Sample Set (PSS)": _pick_existing_column(evaluation_sample_sets, ["PGS Sample Set (PSS)"]),
+            "Polygenic Score (PGS) ID": _pick_existing_column(evaluation_sample_sets, ["Polygenic Score (PGS) ID", "Evaluated Score", "PGS ID"]),
+            "Number of Individuals": _pick_existing_column(evaluation_sample_sets, ["Number of Individuals"]),
+            "Number of Cases": _pick_existing_column(evaluation_sample_sets, ["Number of Cases"]),
+            "Number of Controls": _pick_existing_column(evaluation_sample_sets, ["Number of Controls"]),
+            "Percent of Participants Who are Male": _pick_existing_column(evaluation_sample_sets, ["Percent of Participants Who are Male"]),
+            "Broad Ancestry Category": _pick_existing_column(evaluation_sample_sets, ["Broad Ancestry Category", "Broad Ancestry Category(ies)", "Broad ancestry category"]),
+            "Country of Recruitment": _pick_existing_column(evaluation_sample_sets, ["Country of Recruitment", "Country/Countries of Recruitment", "Countries of recruitment"]),
+            "Cohort": _pick_existing_column(evaluation_sample_sets, ["Cohort", "Cohort(s)", "Cohorts", "Cohort(s) Included", "Cohort Name"]),
+        })
         
         score_development_samples.rename(columns={
             'Polygenic Score (PGS) ID': 'pgs_id',
@@ -151,10 +173,14 @@ class DbUtils:
         
         evaluation_sample_sets.rename(columns={
             'PGS Sample Set (PSS)': 'pss_id',
+            'Polygenic Score (PGS) ID': 'pgs_id',
             'Number of Individuals': 'individuals_evaluation',
             'Number of Cases': 'cases_evaluation',
             'Number of Controls': 'controls_evaluation',
-            'Percent of Participants Who are Male': 'percent_male_evaluation'
+            'Percent of Participants Who are Male': 'percent_male_evaluation',
+            'Broad Ancestry Category': 'broad_ancestry_category',
+            'Country of Recruitment': 'country_of_recruitment',
+            'Cohort': 'cohort',
         }, inplace=True)
         
         pgscatalog_data.rename(columns={

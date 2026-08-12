@@ -3,6 +3,8 @@ import shutil
 from pathlib import Path
 import sys
 import re
+import gzip
+import csv
 from urllib.parse import urlparse
 from urllib.request import urlopen
 import random as rd
@@ -15,6 +17,54 @@ from db_config import USERNAME, PASSWORD, DATABASE_NAME, HOST, PORT, PGS_EXCEL_F
 
 RAW_DATA_DIR = "/home/frederik/snpster_project/zipped"
 TARGET_DIR = "/srv/raw"
+
+
+def validate_scoring_file_effect_weight(scorefile_path: str) -> tuple[bool, str]:
+    """Return (is_valid, reason) after checking effect_weight values in scoring file."""
+    if not os.path.exists(scorefile_path):
+        return False, "file not found"
+
+    opener = gzip.open if scorefile_path.endswith(".gz") else open
+    try:
+        with opener(scorefile_path, "rt", encoding="utf-8", errors="replace") as handle:
+            # PGS files contain metadata lines prefixed with '#'; the actual table
+            # header is the first non-comment, non-empty line.
+            header_fields = None
+            for raw_line in handle:
+                line = raw_line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                header_fields = [part.strip() for part in raw_line.rstrip("\n\r").split("\t")]
+                break
+
+            if not header_fields:
+                return False, "missing table header row"
+
+            effect_weight_col = None
+            for name in header_fields:
+                if name and name.lstrip("#").strip() == "effect_weight":
+                    effect_weight_col = name
+                    break
+
+            if effect_weight_col is None:
+                return False, "missing effect_weight column"
+
+            reader = csv.DictReader(handle, delimiter="\t", fieldnames=header_fields)
+
+            for row_nr, row in enumerate(reader, start=1):
+                raw = row.get(effect_weight_col)
+                value = "" if raw is None else str(raw).strip()
+                if value == "":
+                    return False, f"empty effect_weight at data row {row_nr}"
+                try:
+                    float(value)
+                except ValueError:
+                    return False, f"non-numeric effect_weight '{value}' at data row {row_nr}"
+    except Exception as exc:
+        return False, f"read error: {exc}"
+
+    return True, ""
+
 
 
 
@@ -88,12 +138,18 @@ def setup_pgs_reports():
             f for f in os.listdir(scoring_target_dir)
             if f.startswith(f"{pgs_id}_")
         )
+
+        # Prefer a cached file that matches the exact expected (GRCh38 harmonized) filename.
+        expected_cached_path = os.path.join(scoring_target_dir, local_name)
+        if os.path.exists(expected_cached_path) and os.path.getsize(expected_cached_path) > 0:
+            print(f"Scoring file already exists for {pgs_id}: {expected_cached_path}")
+            return expected_cached_path
+
         if existing_files:
-            existing_path = os.path.join(scoring_target_dir, existing_files[0])
-            if os.path.getsize(existing_path) > 0:
-                print(f"Scoring file already exists for {pgs_id}: {existing_path}")
-                return existing_path
-            print(f"Existing scoring file for {pgs_id} is empty. Re-downloading: {existing_path}")
+            print(
+                f"Found existing cached files for {pgs_id} that do not match expected target file "
+                f"{local_name}. Downloading expected file instead."
+            )
 
         if not os.path.exists(local_path):
             print(f"Downloading scoring file for {pgs_id} from {ftp_link}")
@@ -108,6 +164,8 @@ def setup_pgs_reports():
                     shutil.copyfileobj(response, out_file)
 
         return local_path
+
+    report_templates: dict[str, list[str]] = {}
 
     for filename in os.listdir(report_library_folder):
 
@@ -128,6 +186,8 @@ def setup_pgs_reports():
             print(f"No PGS IDs found in report file: {file_path}")
             continue
 
+        report_templates[report_name] = pgs_ids
+
         for pgs_id in pgs_ids:
             ftp_query = """
             SELECT ftp_link
@@ -145,10 +205,30 @@ def setup_pgs_reports():
 
             ftp_link = ftp_rows[0][0]
 
+            # Force harmonized GRCh38 scorefile URL when DB still contains legacy links.
+            if "_hmPOS_GRCh38" not in ftp_link:
+                ftp_link = (
+                    f"https://ftp.ebi.ac.uk/pub/databases/spot/pgs/scores/{pgs_id}/"
+                    f"ScoringFiles/Harmonized/{pgs_id}_hmPOS_GRCh38.txt.gz"
+                )
+
             try:
                 local_scoring_file = download_scoring_file(ftp_link, pgs_id)
             except Exception as exc:
                 print(f"Failed to download scoring file for {pgs_id} from {ftp_link}: {exc}")
+                continue
+
+            is_valid, reason = validate_scoring_file_effect_weight(local_scoring_file)
+            if not is_valid:
+                print(
+                    f"Skipping invalid scoring file for {pgs_id} in report '{report_name}': "
+                    f"{local_scoring_file} ({reason})"
+                )
+                delete_invalid_query = """
+                DELETE FROM snpster_users.pgs_reports_shop
+                WHERE pgs_id = %s AND report_name = %s;
+                """
+                db_handler.execute_query(delete_invalid_query, (pgs_id, report_name))
                 continue
 
             insert_query = """
@@ -168,6 +248,30 @@ def setup_pgs_reports():
             print(
                 f"Report '{report_name}' mapped to {pgs_id}; scoring file stored at {local_scoring_file}"
             )
+
+    if not report_templates:
+        print(f"No report templates found in {report_library_folder}")
+        return
+
+    delete_stale_reports_query = """
+    DELETE FROM snpster_users.pgs_reports_shop
+    WHERE NOT (report_name = ANY(%s));
+    """
+    db_handler.execute_query(delete_stale_reports_query, (list(report_templates.keys()),))
+
+    delete_stale_ids_query = """
+    DELETE FROM snpster_users.pgs_reports_shop
+    WHERE report_name = %s
+      AND NOT (pgs_id = ANY(%s));
+    """
+
+    for report_name, pgs_ids in report_templates.items():
+        db_handler.execute_query(delete_stale_ids_query, (report_name, pgs_ids))
+
+    print(
+        f"Synced snpster_users.pgs_reports_shop from {report_library_folder} "
+        f"for {len(report_templates)} report templates."
+    )
 
 def setup_prsc_jobs():
     
@@ -288,10 +392,8 @@ def update_ftp_links_to_grch38():
 
 
 if __name__ == "__main__":
-    
-    db_handler = DbHandler(port=PORT, db_url=None, user=USERNAME, password=PASSWORD, host=HOST)
-    db_handler.connect()
-    #update_ftp_links_to_grch38()
-    #transfer_files(RAW_DATA_DIR, TARGET_DIR)
-    setup_pgs_reports()
-    setup_prsc_jobs()
+    with DbHandler(port=PORT, db_url=None, user=USERNAME, password=PASSWORD, host=HOST) as db_handler:
+        #update_ftp_links_to_grch38()
+        #transfer_files(RAW_DATA_DIR, TARGET_DIR, db_handler)
+        setup_pgs_reports()
+        #setup_prsc_jobs()
