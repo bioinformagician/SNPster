@@ -258,21 +258,23 @@ def parse_args() -> argparse.Namespace:
 #bullino:
 #/srv/raw/sara_christensen_raw_dna_data.zip
 
+#murtaza
+#/srv/raw/MyHeritage_raw_dna_murtaza.zip
+
 if __name__ == "__main__":
-	#args = parse_args()
+	args = parse_args()
 	db_handler = DbHandler(port=PORT, db_url=None, user=USERNAME, password=PASSWORD, host=HOST)
 	db_handler.connect()
 	try:
-		#result = setup_user_with_jobs(db_handler, args.username, args.file_paths)
-		#print("Setup completed:")
-		#print(f"username={result['username']}")
-		#print(f"file_ids={result['file_ids']}")
-		#print(f"imputation_id={result['imputation_id']}")
-		#print("prsc_jobs=[")
-		#for prsc_id, report_name in result["prsc_jobs"]:
-		#	print(f"  (prsc_id={prsc_id}, report_name={report_name})")
-		#print("]")
-		prsc_jobs = create_prsc_jobs_for_all_reports(db_handler, 309) #bullino 309, frede all 307, 
+		result = setup_user_with_jobs(db_handler, args.username, args.file_paths)
+		print("Setup completed:")
+		print(f"username={result['username']}")
+		print(f"file_ids={result['file_ids']}")
+		print(f"imputation_id={result['imputation_id']}")
+		print("prsc_jobs=[")
+		for prsc_id, report_name in result["prsc_jobs"]:
+			print(f"  (prsc_id={prsc_id}, report_name={report_name})")
+		print("]")
   
 	finally:
 		db_handler.close()

@@ -48,7 +48,7 @@ class EnvironmentHandler:
     def set_beagle_files(self) -> dict:
         beagle_files = {}
         for file in os.listdir(self.beagle_reference_dir):
-            if file.endswith(".vcf.gz") or file.endswith(".bref3"):
+            if file.endswith(".vcf.gz") or file.endswith(".bref3") or file.endswith(".bcf"):
                 chrom = re.search(r"chr(\d+)\.", file)
                 if chrom:
                     beagle_files[chrom.group(1)] = os.path.join(self.beagle_reference_dir, file)

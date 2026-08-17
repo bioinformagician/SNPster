@@ -38,8 +38,8 @@ def get_number_of_variants_in_vcf(vcf_file: str) -> int:
 def main() -> None:
 	parser = argparse.ArgumentParser(description="Benchmark bcftools variant counting on VCF files")
 	parser.add_argument(
-		"vcf_dir",
-		nargs="?",
+		"--vcf_dir",
+		type=str,
 		default="/srv/imputed/frederik_myheritage/306/qc_output",
 		help="Directory containing *.vcf.gz files",
 	)

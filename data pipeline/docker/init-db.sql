@@ -41,14 +41,22 @@ CREATE TABLE snpster_users.user_ancestry (
         REFERENCES snpster_users.user_information(user_id)
         ON DELETE CASCADE,
 
-    eur NUMERIC(8,6) CHECK (eur >= 0 AND eur <= 1),
-    afr NUMERIC(8,6) CHECK (afr >= 0 AND afr <= 1),
-    eas NUMERIC(8,6) CHECK (eas >= 0 AND eas <= 1),
-    sas NUMERIC(8,6) CHECK (sas >= 0 AND sas <= 1),
-    amr NUMERIC(8,6) CHECK (amr >= 0 AND amr <= 1),
+    -- Core 4 super populations
+    eur NUMERIC(8,6) CHECK (eur >= 0 AND eur <= 1),  -- European
+    eas NUMERIC(8,6) CHECK (eas >= 0 AND eas <= 1),  -- East Asian
+    sas NUMERIC(8,6) CHECK (sas >= 0 AND sas <= 1),  -- South Asian
+    ssa NUMERIC(8,6) CHECK (ssa >= 0 AND ssa <= 1),  -- Sub-Saharan African
+    
+    -- Extended populations for better stratification
+    mid NUMERIC(8,6) CHECK (mid >= 0 AND mid <= 1),  -- Greater Middle Eastern
+    amr NUMERIC(8,6) CHECK (amr >= 0 AND amr <= 1),  -- Hispanic/Latin American (Americas)
+    sea NUMERIC(8,6) CHECK (sea >= 0 AND sea <= 1),  -- South East Asian
+    cas NUMERIC(8,6) CHECK (cas >= 0 AND cas <= 1),  -- Central Asian
+    nam NUMERIC(8,6) CHECK (nam >= 0 AND nam <= 1),  -- Native American
+    oce NUMERIC(8,6) CHECK (oce >= 0 AND oce <= 1),  -- Oceanian
 
     primary_ancestry VARCHAR(10)
-        CHECK (primary_ancestry IN ('EUR', 'AFR', 'EAS', 'SAS', 'AMR')),
+        CHECK (primary_ancestry IN ('EUR', 'EAS', 'SAS', 'SSA', 'MID', 'AMR', 'SEA', 'CAS', 'NAM', 'OCE')),
 
     primary_ancestry_percentage NUMERIC(8,6)
         CHECK (primary_ancestry_percentage >= 0 AND primary_ancestry_percentage <= 1),
