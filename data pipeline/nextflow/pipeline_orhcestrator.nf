@@ -1,7 +1,7 @@
 params.harmonizer_dependencies = "/srv/dependencies/imputation_runner/harmonizer"
 params.imputation_dependencies = "/srv/dependencies/imputation_runner/imputer"
-params.ancestry_dependencies = "/srv/dependencies/imputation_runner/imputer/beagle_references_hgdp/prepared_vcf"
-params.ancestry_population_panel = "/srv/dependencies/imputation_runner/1000G_panel.txt"
+params.ancestry_dependencies = "/srv/dependencies/ancestry/hgdp_1kg_references"
+params.ancestry_population_panel = "/srv/dependencies/ancestry/hgdp_1kg_references/hgdp_1kg_panel_10pop.txt"
 params.ancestry_reference_pattern = "hgdp1kgp_chr{chrom}.filtered.SNV_INDEL.phased.shapeit5.SNV_biallelic.numericCHR.vcf.gz"
 params.standardizer_output_dir = "/home/frederik/github_projects/SNPster/data pipeline/temp_test/std"
 params.harmonizer_output_dir = "/home/frederik/github_projects/SNPster/data pipeline/temp_test/harm"
@@ -126,7 +126,7 @@ process CALCULATE_ANCESTRY {
     cpus 4
 
     container 'ancestry:latest'
-    containerOptions "-v ${params.ancestry_dependencies}:/data/references:ro -v ${params.ancestry_population_panel}:/data/1000G_panel.txt:ro --network docker_default --cpus=4 -e DB_HOST=postgres -e DB_PORT=5432 -e DB_NAME=snpster_db -e DB_USER=postgres -e DB_PASSWORD=zod50902 -e REFERENCE_VCF_DIR=/data/references -e REFERENCE_VCF_PATTERN=${params.ancestry_reference_pattern} -e POPULATION_PANEL_FILE=/data/1000G_panel.txt -e REFERENCE_PANEL=HGDP+1kGP"
+    containerOptions "-v ${params.ancestry_dependencies}:/data/references:ro -v ${params.ancestry_population_panel}:/data/hgdp_1kg_panel.txt:ro --network docker_default --cpus=4 -e DB_HOST=postgres -e DB_PORT=5432 -e DB_NAME=snpster_db -e DB_USER=postgres -e DB_PASSWORD=zod50902 -e REFERENCE_VCF_DIR=/data/references -e REFERENCE_VCF_PATTERN=${params.ancestry_reference_pattern} -e POPULATION_PANEL_FILE=/data/hgdp_1kg_panel.txt -e REFERENCE_PANEL=HGDP+1kGP -e K_POPULATIONS=10"
 
     input:
     path merged_chr1_vcf
@@ -291,7 +291,7 @@ workflow {
 
     merged_flat_ch = merged_ch.flatten()
 
-    chr22_merged_ch = merged_flat_ch
+    chr1_merged_ch = merged_flat_ch
         .filter { vcf_file -> vcf_file.name == "chr1.merged.vcf.gz" }
 
     CALCULATE_ANCESTRY(chr1_merged_ch)
