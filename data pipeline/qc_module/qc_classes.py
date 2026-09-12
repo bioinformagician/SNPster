@@ -356,7 +356,9 @@ class ImputedDataContainer:
     def zip_vcf(self, vcf_path) -> str:
         """Compress VCF using bgzip for block compression (allows tabix indexing)"""
         gz_path = vcf_path + ".gz"
-        subprocess.run(["bgzip", "-c", vcf_path], stdout=open(gz_path, "wb"), check=True)
+        with open(gz_path, "wb") as output_file:
+            subprocess.run(["bgzip", "-c", vcf_path], stdout=output_file, check=True)
+        subprocess.run(["tabix", "-f", "-p", "vcf", gz_path], check=True)
         os.remove(vcf_path)
         return gz_path
     

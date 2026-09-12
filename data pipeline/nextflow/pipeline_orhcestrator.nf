@@ -3,6 +3,7 @@ params.imputation_dependencies = "/srv/dependencies/imputation_runner/imputer"
 params.ancestry_dependencies = "/srv/dependencies/ancestry/hgdp_1kg_references"
 params.ancestry_population_panel = "/srv/dependencies/ancestry/hgdp_1kg_references/hgdp_1kg_panel_10pop.txt"
 params.ancestry_reference_pattern = "hgdp1kgp_chr{chrom}.filtered.SNV_INDEL.phased.shapeit5.SNV_biallelic.numericCHR.vcf.gz"
+params.ancestry_chromosomes = ['1', '2', '21', '22']
 params.standardizer_output_dir = "/home/frederik/github_projects/SNPster/data pipeline/temp_test/std"
 params.harmonizer_output_dir = "/home/frederik/github_projects/SNPster/data pipeline/temp_test/harm"
 params.samplesheet = "/home/frederik/github_projects/SNPster/data pipeline/imputation_runner_module/samplesheet.csv" 
@@ -123,24 +124,23 @@ process CALCULATE_ANCESTRY {
     maxRetries 2
     errorStrategy 'retry'
     
-    cpus 4
+    cpus 1
 
     container 'ancestry:latest'
     containerOptions "-v ${params.ancestry_dependencies}:/data/references:ro -v ${params.ancestry_population_panel}:/data/hgdp_1kg_panel.txt:ro --network docker_default --cpus=4 -e DB_HOST=postgres -e DB_PORT=5432 -e DB_NAME=snpster_db -e DB_USER=postgres -e DB_PASSWORD=zod50902 -e REFERENCE_VCF_DIR=/data/references -e REFERENCE_VCF_PATTERN=${params.ancestry_reference_pattern} -e POPULATION_PANEL_FILE=/data/hgdp_1kg_panel.txt -e REFERENCE_PANEL=HGDP+1kGP -e K_POPULATIONS=10"
 
     input:
-    path merged_chr1_vcf
+    tuple val(identifier), path(harmonized_chr_vcfs)
 
     output:
-    path "ancestry_output/ancestry_success.txt", emit: success_marker
+    tuple val(identifier), path("ancestry_output/ancestry_success.txt"), emit: success_marker
 
 
     script:
     """
     mkdir -p ancestry_output
-
     python /app/main.py \
-        --vcf_file ${merged_chr1_vcf}
+        --vcf_files ${harmonized_chr_vcfs.collect { "\"${it}\"" }.join(' ')}
 
     # Only created if ancestry completed successfully.
     echo "ok" > ancestry_output/ancestry_success.txt
@@ -180,6 +180,7 @@ process SPLIT_VCF {
 
     maxRetries 2
     errorStrategy 'retry'
+    time '2h'
 
     container 'vcf_splitter:latest'
 
@@ -291,10 +292,23 @@ workflow {
 
     merged_flat_ch = merged_ch.flatten()
 
-    chr1_merged_ch = merged_flat_ch
-        .filter { vcf_file -> vcf_file.name == "chr1.merged.vcf.gz" }
+    ancestry_vcfs_ch = harmonized_ch.vcfs
+        .flatten()
+        .filter { vcf_file ->
+            params.ancestry_chromosomes.any { chrom ->
+                vcf_file.name ==~ "(?i)^IMPID\\d+\\.chr${chrom}\\..*\\.vcf\\.gz\\z"
+            }
+        }
+        .map { vcf_file ->
+            def m = vcf_file.name =~ /(?i)^IMPID(\d+)\.chr[^\.]+\..*\.vcf\.gz$/
+            if (!m) {
+                throw new IllegalArgumentException("Could not parse imputation ID from VCF: ${vcf_file.name}")
+            }
+            tuple(m[0][1], vcf_file)
+        }
+        .groupTuple()
 
-    CALCULATE_ANCESTRY(chr1_merged_ch)
+    CALCULATE_ANCESTRY(ancestry_vcfs_ch)
 
     imputed_ch = IMPUTE(merged_flat_ch)
 

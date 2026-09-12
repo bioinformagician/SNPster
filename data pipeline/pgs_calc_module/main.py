@@ -1,4 +1,5 @@
 from pgs_classes import EnvironmentHandler, PGSCalculator_Config, PGSCalculator
+import os
 import time
 
 
@@ -42,8 +43,18 @@ while True:
     
     environment_handler.create_merged_vcf_samplesheet()
     
-    batch = 1
-    for scoring_file_str in environment_handler.scoring_file_strs:
+    checkpoint_path = os.path.join(environment_handler.pgs_result_dir, ".completed_batches")
+    try:
+        with open(checkpoint_path) as checkpoint_file:
+            completed_batches = int(checkpoint_file.read().strip())
+    except (FileNotFoundError, ValueError):
+        completed_batches = 0
+
+    for batch, scoring_file_str in enumerate(environment_handler.scoring_file_strs, start=1):
+        if batch <= completed_batches:
+            print(f"Skipping completed PGS batch: {batch}")
+            continue
+
         print(f"Running PGS calculation for batch: {batch}")
     
         pgs_calculator.run_pgs_calculation(environment_handler.merged_sample_sheet, scoring_file_str)
@@ -66,9 +77,13 @@ while True:
         environment_handler.connect_to_db()
         
         pgs_calculator.move_pgs_results(scoring_file = pgs_score_path, summary_file = pgs_scoring_summary_path)
+
+        checkpoint_tmp_path = f"{checkpoint_path}.tmp"
+        with open(checkpoint_tmp_path, "w") as checkpoint_file:
+            checkpoint_file.write(str(batch))
+        os.replace(checkpoint_tmp_path, checkpoint_path)
         
         environment_handler.clear_output_directory()
-        batch += 1
     
     
     pgs_score_path = f"{environment_handler.pgs_result_dir}/{environment_handler.sampleset_name}_pgs.txt.gz"

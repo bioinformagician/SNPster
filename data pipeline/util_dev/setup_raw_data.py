@@ -8,6 +8,7 @@ import csv
 from urllib.parse import urlparse
 from urllib.request import urlopen
 import random as rd
+import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "database_module"))
 print(sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "database_module")))
@@ -20,7 +21,7 @@ TARGET_DIR = "/srv/raw"
 
 
 def validate_scoring_file_effect_weight(scorefile_path: str) -> tuple[bool, str]:
-    """Return (is_valid, reason) after checking effect_weight values in scoring file."""
+    """Return (is_valid, reason) after checking numeric score values."""
     if not os.path.exists(scorefile_path):
         return False, "file not found"
 
@@ -40,26 +41,36 @@ def validate_scoring_file_effect_weight(scorefile_path: str) -> tuple[bool, str]
             if not header_fields:
                 return False, "missing table header row"
 
-            effect_weight_col = None
-            for name in header_fields:
-                if name and name.lstrip("#").strip() == "effect_weight":
-                    effect_weight_col = name
-                    break
+            columns_by_name = {
+                name.lstrip("#").strip(): name
+                for name in header_fields
+                if name
+            }
+            effect_weight_col = columns_by_name.get("effect_weight")
 
             if effect_weight_col is None:
                 return False, "missing effect_weight column"
 
+            numeric_columns = {
+                name: columns_by_name[name]
+                for name in ("effect_weight", "OR", "HR")
+                if name in columns_by_name
+            }
             reader = csv.DictReader(handle, delimiter="\t", fieldnames=header_fields)
 
             for row_nr, row in enumerate(reader, start=1):
-                raw = row.get(effect_weight_col)
-                value = "" if raw is None else str(raw).strip()
-                if value == "":
-                    return False, f"empty effect_weight at data row {row_nr}"
-                try:
-                    float(value)
-                except ValueError:
-                    return False, f"non-numeric effect_weight '{value}' at data row {row_nr}"
+                if not any(value and str(value).strip() for value in row.values()):
+                    continue
+
+                for column_name, column in numeric_columns.items():
+                    raw = row.get(column)
+                    value = "" if raw is None else str(raw).strip()
+                    if value == "":
+                        return False, f"empty {column_name} at data row {row_nr}"
+                    try:
+                        float(value)
+                    except ValueError:
+                        return False, f"non-numeric {column_name} '{value}' at data row {row_nr}"
     except Exception as exc:
         return False, f"read error: {exc}"
 
@@ -115,12 +126,41 @@ def transfer_files(source_dir:str, target_dir:str, db_handler:DbHandler) -> None
             # Trigger on user_files inserts creates a queued imputation job and imputation_job_parameters row.
 
 
-def setup_pgs_reports():
+def setup_pgs_reports(
+    categorized_scores_file: str = "/home/frederik/github_projects/SNPster/data pipeline/pgs_libraries/pgs_disease_relevant_categorized.csv",
+):
+    """Download and register disease-relevant PGS scores from one categorized CSV."""
 
-
-    # read data:
-    report_library_folder = "/home/frederik/github_projects/SNPster/data pipeline/pgs_libraries"
     scoring_target_dir = "/srv/scoring_files"
+    required_columns = {"pgs_id", "category"}
+
+    try:
+        categorized_scores = pd.read_csv(categorized_scores_file, dtype=str)
+    except FileNotFoundError as exc:
+        raise FileNotFoundError(f"Categorized PGS file not found: {categorized_scores_file}") from exc
+
+    missing_columns = required_columns.difference(categorized_scores.columns)
+    if missing_columns:
+        raise ValueError(
+            f"Categorized PGS file is missing required columns: {sorted(missing_columns)}"
+        )
+
+    categorized_scores = categorized_scores[["pgs_id", "category"]].dropna()
+    categorized_scores["pgs_id"] = categorized_scores["pgs_id"].str.strip()
+    categorized_scores["category"] = categorized_scores["category"].str.strip()
+    categorized_scores = categorized_scores[
+        (categorized_scores["pgs_id"] != "") & (categorized_scores["category"] != "")
+    ].drop_duplicates()
+
+    if categorized_scores.empty:
+        raise ValueError(f"No valid pgs_id/category rows found in {categorized_scores_file}")
+
+    invalid_ids = categorized_scores.loc[
+        ~categorized_scores["pgs_id"].str.fullmatch(r"PGS\d{6}"), "pgs_id"
+    ].unique()
+    if len(invalid_ids):
+        raise ValueError(f"Invalid PGS IDs in {categorized_scores_file}: {', '.join(invalid_ids[:10])}")
+
     os.makedirs(scoring_target_dir, exist_ok=True)
 
     def extract_pgs_ids(content: str) -> list:
@@ -165,112 +205,57 @@ def setup_pgs_reports():
 
         return local_path
 
-    report_templates: dict[str, list[str]] = {}
-
-    for filename in os.listdir(report_library_folder):
-
-        if "all" in filename:
-            continue  # skip the all file, which is just a combined file of all reports for testing purposes
-
-        if not filename.endswith(".txt"):
+    score_files: dict[str, str] = {}
+    for pgs_id in categorized_scores["pgs_id"].unique():
+        ftp_query = """
+        SELECT ftp_link
+        FROM data_libraries.pgscatalog_data
+        WHERE pgs_id = %s
+          AND ftp_link IS NOT NULL
+          AND ftp_link <> ''
+        LIMIT 1;
+        """
+        ftp_rows = db_handler.execute_query(ftp_query, (pgs_id,))
+        if not ftp_rows:
+            print(f"No catalog FTP link found for {pgs_id}; it will not be registered.")
             continue
 
-        report_name = filename.replace(".txt", "")
-        file_path = os.path.join(report_library_folder, filename)
-
-        with open(file_path, "r", encoding="utf-8") as f:
-            report_content = f.read()
-
-        pgs_ids = extract_pgs_ids(report_content)
-        if not pgs_ids:
-            print(f"No PGS IDs found in report file: {file_path}")
-            continue
-
-        report_templates[report_name] = pgs_ids
-
-        for pgs_id in pgs_ids:
-            ftp_query = """
-            SELECT ftp_link
-            FROM data_libraries.pgscatalog_data
-            WHERE pgs_id = %s
-              AND ftp_link IS NOT NULL
-              AND ftp_link <> ''
-            LIMIT 1;
-            """
-            ftp_rows = db_handler.execute_query(ftp_query, (pgs_id,))
-
-            if not ftp_rows:
-                print(f"No ftp_link found for {pgs_id}, skipping download and DB update.")
-                continue
-
-            ftp_link = ftp_rows[0][0]
-
-            # Force harmonized GRCh38 scorefile URL when DB still contains legacy links.
-            if "_hmPOS_GRCh38" not in ftp_link:
-                ftp_link = (
-                    f"https://ftp.ebi.ac.uk/pub/databases/spot/pgs/scores/{pgs_id}/"
-                    f"ScoringFiles/Harmonized/{pgs_id}_hmPOS_GRCh38.txt.gz"
-                )
-
-            try:
-                local_scoring_file = download_scoring_file(ftp_link, pgs_id)
-            except Exception as exc:
-                print(f"Failed to download scoring file for {pgs_id} from {ftp_link}: {exc}")
-                continue
-
-            is_valid, reason = validate_scoring_file_effect_weight(local_scoring_file)
-            if not is_valid:
-                print(
-                    f"Skipping invalid scoring file for {pgs_id} in report '{report_name}': "
-                    f"{local_scoring_file} ({reason})"
-                )
-                delete_invalid_query = """
-                DELETE FROM snpster_users.pgs_reports_shop
-                WHERE pgs_id = %s AND report_name = %s;
-                """
-                db_handler.execute_query(delete_invalid_query, (pgs_id, report_name))
-                continue
-
-            insert_query = """
-            INSERT INTO snpster_users.pgs_reports_shop (pgs_id, report_name, scoring_file_path)
-            VALUES (%s, %s, %s)
-            ON CONFLICT DO NOTHING;
-            """
-            db_handler.execute_query(insert_query, (pgs_id, report_name, local_scoring_file))
-
-            update_query = """
-            UPDATE snpster_users.pgs_reports_shop
-            SET scoring_file_path = %s
-            WHERE pgs_id = %s AND report_name = %s;
-            """
-            db_handler.execute_query(update_query, (local_scoring_file, pgs_id, report_name))
-
-            print(
-                f"Report '{report_name}' mapped to {pgs_id}; scoring file stored at {local_scoring_file}"
+        ftp_link = ftp_rows[0][0]
+        if "_hmPOS_GRCh38" not in ftp_link:
+            ftp_link = (
+                f"https://ftp.ebi.ac.uk/pub/databases/spot/pgs/scores/{pgs_id}/"
+                f"ScoringFiles/Harmonized/{pgs_id}_hmPOS_GRCh38.txt.gz"
             )
 
-    if not report_templates:
-        print(f"No report templates found in {report_library_folder}")
-        return
+        try:
+            local_scoring_file = download_scoring_file(ftp_link, pgs_id)
+        except Exception as exc:
+            print(f"Failed to download {pgs_id} from {ftp_link}: {exc}")
+            continue
 
-    delete_stale_reports_query = """
-    DELETE FROM snpster_users.pgs_reports_shop
-    WHERE NOT (report_name = ANY(%s));
+        is_valid, reason = validate_scoring_file_effect_weight(local_scoring_file)
+        if not is_valid:
+            print(f"Skipping invalid score file for {pgs_id}: {local_scoring_file} ({reason})")
+            continue
+        score_files[pgs_id] = local_scoring_file
+
+    db_handler.execute_query("DELETE FROM snpster_users.pgs_reports_shop;")
+
+    insert_query = """
+    INSERT INTO snpster_users.pgs_reports_shop (pgs_id, report_name, scoring_file_path)
+    VALUES (%s, %s, %s);
     """
-    db_handler.execute_query(delete_stale_reports_query, (list(report_templates.keys()),))
-
-    delete_stale_ids_query = """
-    DELETE FROM snpster_users.pgs_reports_shop
-    WHERE report_name = %s
-      AND NOT (pgs_id = ANY(%s));
-    """
-
-    for report_name, pgs_ids in report_templates.items():
-        db_handler.execute_query(delete_stale_ids_query, (report_name, pgs_ids))
+    registered = 0
+    for row in categorized_scores.itertuples(index=False):
+        scoring_file = score_files.get(row.pgs_id)
+        if scoring_file is None:
+            continue
+        db_handler.execute_query(insert_query, (row.pgs_id, row.category, scoring_file))
+        registered += 1
 
     print(
-        f"Synced snpster_users.pgs_reports_shop from {report_library_folder} "
-        f"for {len(report_templates)} report templates."
+        f"Rebuilt snpster_users.pgs_reports_shop from {categorized_scores_file}: "
+        f"{registered} category mappings for {len(score_files)} downloaded scores."
     )
 
 def setup_prsc_jobs():
@@ -305,31 +290,26 @@ def setup_prsc_jobs():
         print(f"Inserted prsc job for imputation_id {imputation_id} with status {prsc_status}")
     
 
-    #populate the prsc_job_parameters table with pgs_ids from pgs_reports_shop where report_name = 'cardiovascular_panel'
-    panels = ['blood_panel_pgs_ids', 'cancer_pgs_ids', 'cardiovascular_pgs_ids', 'immune_and_autoimmune_pgs_ids', 'metabolic_and_endocrine_pgs_ids', 'neurological_and_psychiatric_pgs_ids', 'ophthalmology_pgs_ids', 'other_pgs_ids', 'respiratory_pgs_ids']
-    
-
-    
-    random_panel_query = """
+    all_panels_query = """
         INSERT INTO snpster_users.prsc_job_parameters (prsc_id, pgs_id)
-        SELECT
+        SELECT DISTINCT
             pj.prsc_id,
             prs.pgs_id
         FROM snpster_users.prsc_jobs AS pj
-        CROSS JOIN LATERAL (
-            SELECT panel_name
-            FROM unnest(%s::text[]) AS panel_name
-            ORDER BY random() + (pj.prsc_id * 0)
-            LIMIT 1
-        ) AS picked_panel
         JOIN snpster_users.pgs_reports_shop AS prs
-            ON prs.report_name = picked_panel.panel_name
+            ON TRUE
         WHERE pj.imputation_id = ANY(%s)
+          AND NOT EXISTS (
+              SELECT 1
+              FROM snpster_users.prsc_job_parameters AS existing
+              WHERE existing.prsc_id = pj.prsc_id
+                AND existing.pgs_id = prs.pgs_id
+          )
         ON CONFLICT DO NOTHING;
         """
     
-    db_handler.execute_query(random_panel_query, (panels, imputation_ids))
-    print("Populated prsc_job_parameters table with PGS IDs for reports.")
+    db_handler.execute_query(all_panels_query, (imputation_ids,))
+    print("Populated prsc_job_parameters table with PGS IDs for all panels.")
     
     
     
@@ -393,7 +373,7 @@ def update_ftp_links_to_grch38():
 
 if __name__ == "__main__":
     with DbHandler(port=PORT, db_url=None, user=USERNAME, password=PASSWORD, host=HOST) as db_handler:
-        #update_ftp_links_to_grch38()
-        #transfer_files(RAW_DATA_DIR, TARGET_DIR, db_handler)
+        update_ftp_links_to_grch38()
+        transfer_files(RAW_DATA_DIR, TARGET_DIR, db_handler)
         setup_pgs_reports()
-        #setup_prsc_jobs()
+        setup_prsc_jobs()

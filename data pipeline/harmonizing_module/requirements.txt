@@ -7,4 +7,7 @@ pyarrow>=10.0.0
 # Optional: For better performance with large datasets
 numpy>=1.21.0
 
+# Reference-aware VCF construction and BGZF indexing
+pysam>=0.22.0
+
 argparse>=1.1.0

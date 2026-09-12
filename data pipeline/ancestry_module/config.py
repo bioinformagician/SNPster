@@ -25,6 +25,10 @@ DEFAULT_CHROMOSOME = int(os.getenv("ANCESTRY_CHROMOSOME", "22"))
 # 10 = enhanced stratification (adds MID, SSA, SEA, CAS, NAM, OCE)
 K_POPULATIONS = int(os.getenv("K_POPULATIONS", "5"))
 
+# Minimum number of markers required (after intersecting with the reference panel)
+# before trusting supervised ADMIXTURE output enough to upload it.
+MIN_ANCESTRY_MARKERS = int(os.getenv("MIN_ANCESTRY_MARKERS", "2000"))
+
 ANCESTRY_METHOD = os.getenv("ANCESTRY_METHOD", "ADMIXTURE")  # Options: ADMIXTURE, PCA, or other methods
 REFERENCE_PANEL = os.getenv("REFERENCE_PANEL", "1000G 30x HGDP")  # Options: 1000G, HGDP, or other panels
 

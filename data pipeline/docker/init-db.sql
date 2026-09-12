@@ -231,9 +231,9 @@ CREATE TABLE snpster_users.prsc_job_results (
     pgs_id varchar(100) NOT NULL REFERENCES data_libraries.pgscatalog_data(pgs_id) ON DELETE CASCADE,
     score_sum NUMERIC,
     percentile_most_similar_pop DECIMAL(8,5) CHECK (percentile_most_similar_pop >= 0 AND percentile_most_similar_pop <= 100),
-    z_norm1 DECIMAL(8,5),
-    z_norm2 DECIMAL(8,5),
-    z_most_similar_pop DECIMAL(8,5),
+    z_norm1 NUMERIC,
+    z_norm2 NUMERIC,
+    z_most_similar_pop NUMERIC,
     percent_variants_matched DECIMAL(8,5),
     n_variants_matched INTEGER,
     PRIMARY KEY (prsc_id, pgs_id)

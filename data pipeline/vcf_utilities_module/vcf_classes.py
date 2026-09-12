@@ -48,8 +48,8 @@ class VCFHandler: #split this into a VCFMerger and VCFSplitter class later, but 
     def _prepare_merge_input(self, input_path: str, tmp_dir: str) -> str:
         # Always convert to fresh BGZF in temp space and merge with --no-index.
         # This avoids failures from plain gzip files mislabeled as .vcf.gz.
-        # Also drop records with ALT='.' because malformed files can contain
-        # non-reference genotypes at such rows, which causes bcftools merge to fail.
+        # PLINK emits valid homozygous-reference microarray calls with ALT='.'.
+        # Drop only inconsistent calls that use an alternate allele without ALT.
         file_name = os.path.basename(input_path)
         if file_name.endswith(".vcf.gz"):
             file_name = file_name[:-7]
@@ -59,7 +59,7 @@ class VCFHandler: #split this into a VCFMerger and VCFSplitter class later, but 
         prepared_path = os.path.join(tmp_dir, f"{file_name}.bgzf.vcf.gz")
         subprocess.run([
             "bcftools", "view",
-            "-e", "ALT='.'",
+            "-e", "ALT='.' && GT='alt'",
             input_path,
             "-Oz", "-o", prepared_path,
         ], check=True)
@@ -143,16 +143,14 @@ class VCFHandler: #split this into a VCFMerger and VCFSplitter class later, but 
             plain_tmp_path = plain_tmp.name
 
         try:
-            with input_opener(input_vcf, "rt") as f:
-                lines = f.readlines()
-
-            has_contig = any(line.startswith(f"##contig=<ID={chrom}") for line in lines)
-
-            with open(plain_tmp_path, "wt") as f:
-                for line in lines:
+            has_contig = False
+            with input_opener(input_vcf, "rt") as input_file, open(plain_tmp_path, "wt") as output_file:
+                for line in input_file:
+                    if line.startswith(f"##contig=<ID={chrom}"):
+                        has_contig = True
                     if line.startswith("#CHROM") and not has_contig:
-                        f.write(contig_line)
-                    f.write(line)
+                        output_file.write(contig_line)
+                    output_file.write(line)
 
             if is_gzipped:
                 subprocess.run([
@@ -257,6 +255,15 @@ class VCFUtilities:
         if not vcf_path.exists():
             raise FileNotFoundError(f"VCF file does not exist: {vcf_file}")
 
+        if Path(f"{vcf_path}.tbi").exists() or Path(f"{vcf_path}.csi").exists():
+            result = subprocess.run(
+                ["bcftools", "index", "-n", str(vcf_path)],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return int(result.stdout.strip())
+
         
         proc = subprocess.Popen(
                 ["bcftools", "view", "-H", str(vcf_path)],
@@ -305,6 +312,10 @@ class VCFUtilities:
                         "-Oz", "-o", str(gz_tmp_path)
                     ], check=True)
                     shutil.move(str(gz_tmp_path), str(vcf_path))
+                    os.chmod(vcf_path, 0o644)
+                    subprocess.run([
+                        "bcftools", "index", "-t", "-f", str(vcf_path)
+                    ], check=True)
                 except Exception:
                     gz_tmp_path.unlink(missing_ok=True)
                     raise

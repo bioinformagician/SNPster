@@ -1,6 +1,7 @@
 import os
 import subprocess
 import gzip
+import pysam
 from data_models import *
 import pyarrow.parquet as pq
 from vcf_classes import VCFUtilities 
@@ -231,54 +232,72 @@ class WorkflowOrchestrator:
     
     
     def convert_bed_to_vcf(self) -> None:
-        # Prepare reference FASTA (decompress and index if needed) once before processing
         prepared_fasta = self.prepare_reference_fasta()
-        
-        
         file = self.environment_handler.bed_file_path
-        
         print(f"Processing BED file: {file} to VCF format")
-        
-        filename = file.replace(".bed", "") #the extension is removed because the plink program will need the .bed, .bim, and .fam files, therefore we provide the generic filename. It will find all three files automatically from the generic filename
-            
-        """Convert PLINK binary files to VCF format using a reference genome.
-        Using --ref-from-fa to ensure all samples have consistent REF alleles matching the reference FASTA.
-        Then normalize with bcftools to ensure consistent REF orientation across all samples.
-        """
-        command = [
-            self.environment_handler.plink_2_0_path,
-            "--bfile", filename,
-            "--split-par", "b38", #hg38 for grch38 genome build 
-            "--fa", self.environment_handler.plink_reference_fasta,
-            "--ref-from-fa", "force",
-            "--export", "vcf", "bgz",
-            "--out", rf"{filename}"
-        ]
-        
-        self.run_command(command)
-        
-        # Normalize VCF to ensure consistent REF alleles across all samples
-        # This fixes cases where PLINK sets different REF for homozygous vs heterozygous sites
-        vcf_path = rf"{filename}.vcf.gz"
-        normalized_vcf = rf"{filename}.normalized.vcf.gz"
-        
-        print(f"Normalizing VCF file: {vcf_path}")
-        norm_command = [
-            "bcftools", "norm",
-            "--check-ref", "s",  # Swap REF/ALT if REF doesn't match FASTA
-            "--fasta-ref", prepared_fasta,  # Use decompressed and indexed FASTA
-            "-Oz", "-o", normalized_vcf,
-            vcf_path
-        ]
-        
-        self.run_command(norm_command)
-        
-        # Replace original VCF with normalized version
-        os.replace(normalized_vcf, vcf_path)
-        
-        # Reindex the normalized VCF
-        index_command = ["bcftools", "index", "-f", vcf_path]
-        self.run_command(index_command)
+        filename = file.replace(".bed", "")
+        vcf_path = f"{filename}.vcf.gz"
+
+        fasta = pysam.FastaFile(prepared_fasta)
+        harmonized_df = self.data_container.harmonized_data.sort_values(
+            by=["position", "# rsid"],
+            kind="mergesort"
+        )
+        chromosome = str(harmonized_df["chromosome"].iloc[0]).replace("chr", "").replace(".0", "")
+
+        sample_id = f"IMPID_{self.data_container.imputation_id}"
+
+        written = 0
+        skipped = 0
+        with pysam.BGZFile(vcf_path, "w") as output_vcf:
+            header_lines = [
+                "##fileformat=VCFv4.2",
+                f"##contig=<ID={chromosome},length={fasta.get_reference_length(chromosome)}>",
+                '##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">',
+                f"#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t{sample_id}"
+            ]
+            output_vcf.write(("\n".join(header_lines) + "\n").encode())
+
+            grouped_loci = harmonized_df.groupby(["# rsid", "position"], sort=False)
+            for (_, _), locus_df in grouped_loci:
+                normalized_genotypes = locus_df["genotype"].astype(str).str.upper().apply(
+                    lambda genotype: "".join(sorted(genotype))
+                ).unique()
+                if len(normalized_genotypes) != 1:
+                    skipped += len(locus_df)
+                    continue
+
+                row = locus_df.iloc[0].copy()
+                row["genotype"] = normalized_genotypes[0]
+                position = int(row["position"])
+                genotype = str(row["genotype"]).upper()
+                alleles = list(genotype)
+                reference = fasta.fetch(chromosome, position - 1, position).upper()
+
+                if len(alleles) != 2 or any(allele not in "ACGT" for allele in alleles):
+                    skipped += 1
+                    continue
+
+                alternate_alleles = sorted(set(alleles) - {reference})
+                if len(alternate_alleles) > 1:
+                    skipped += 1
+                    continue
+
+                record_alleles = (reference, *alternate_alleles)
+                allele_indexes = {allele: index for index, allele in enumerate(record_alleles)}
+                genotype_indexes = tuple(allele_indexes[allele] for allele in alleles)
+                alternate = alternate_alleles[0] if alternate_alleles else "."
+                genotype_value = "/".join(str(index) for index in genotype_indexes)
+                record = (
+                    f'{chromosome}\t{position}\t{row["# rsid"]}\t{reference}\t{alternate}'
+                    f"\t.\tPASS\t.\tGT\t{genotype_value}\n"
+                )
+                output_vcf.write(record.encode())
+                written += 1
+
+        fasta.close()
+        pysam.tabix_index(vcf_path, preset="vcf", force=True)
+        print(f"Wrote {written} reference-aligned variants to {vcf_path}; skipped {skipped} incompatible variants")
 
                 
         self.environment_handler.vcf_file_path = vcf_path
@@ -289,7 +308,10 @@ class WorkflowOrchestrator:
 
     def add_imputation_id_to_vcfs(self) -> None:
         
-        vcf_utilities.add_imputation_id_to_vcf(vcf_file=self.environment_handler.vcf_file_path, imputation_id=self.data_container.imputation_id)
+        vcf_utilities.add_imputation_id_to_vcf(
+            vcf_file=self.environment_handler.vcf_file_path,
+            imputation_id=[self.data_container.imputation_id]
+        )
             
     
 

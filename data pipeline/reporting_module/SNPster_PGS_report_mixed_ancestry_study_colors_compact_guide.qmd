@@ -226,6 +226,240 @@ main.content,
   overflow-wrap: anywhere;
 }
 
+.ancestry-profile-card {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 245px minmax(0, 1fr);
+  gap: 1.35rem;
+  align-items: center;
+  margin-top: .85rem;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid var(--snpster-border);
+  border-radius: 22px;
+  background:
+    radial-gradient(
+      circle at 8% 10%,
+      rgba(129, 140, 248, .055),
+      transparent 18rem
+    ),
+    rgba(255, 255, 255, .95);
+  box-shadow: 0 10px 27px rgba(17, 24, 39, .045);
+}
+
+.ancestry-profile-card::after {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  right: -90px;
+  top: -105px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, .10);
+  box-shadow:
+    inset 0 0 0 28px rgba(148, 163, 184, .018),
+    inset 0 0 0 58px rgba(148, 163, 184, .012);
+  pointer-events: none;
+}
+
+.ancestry-profile-visual,
+.ancestry-profile-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.ancestry-sunburst-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ancestry-sunburst {
+  position: relative;
+  width: 205px;
+  height: 205px;
+  border-radius: 999px;
+  background: var(--ancestry-gradient);
+  box-shadow:
+    0 10px 24px rgba(71, 85, 105, .10),
+    inset 0 0 0 1px rgba(255, 255, 255, .55);
+}
+
+.ancestry-sunburst::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      rgba(255, 255, 255, .20) 0deg 0.65deg,
+      transparent .65deg 12deg
+    ),
+    radial-gradient(
+      circle,
+      transparent 0 58%,
+      rgba(255, 255, 255, .10) 58.5% 59%,
+      transparent 59.5% 73%,
+      rgba(255, 255, 255, .14) 73.5% 74%,
+      transparent 74.5%
+    );
+  pointer-events: none;
+}
+
+.ancestry-sunburst-core {
+  position: absolute;
+  inset: 51px;
+  border-radius: 999px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: .55rem;
+  background:
+    radial-gradient(
+      circle at 35% 25%,
+      rgba(255, 255, 255, .98),
+      rgba(248, 250, 252, .94)
+    );
+  border: 1px solid rgba(203, 213, 225, .82);
+  box-shadow:
+    0 5px 14px rgba(71, 85, 105, .09),
+    inset 0 1px 0 rgba(255, 255, 255, .85);
+}
+
+.ancestry-sunburst-primary-value {
+  color: #334155;
+  font-size: 1.35rem;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -.035em;
+}
+
+.ancestry-sunburst-primary-label {
+  margin-top: .28rem;
+  color: #64748b;
+  font-size: .59rem;
+  line-height: 1.25;
+  font-weight: 790;
+}
+
+.ancestry-profile-kicker {
+  color: #6366f1;
+  font-size: .67rem;
+  font-weight: 860;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+}
+
+.ancestry-profile-title {
+  margin-top: .22rem;
+  color: #172033;
+  font-size: 1.22rem;
+  line-height: 1.2;
+  font-weight: 880;
+  letter-spacing: -.015em;
+}
+
+.ancestry-profile-subtitle {
+  margin-top: .34rem;
+  color: #64748b;
+  font-size: .74rem;
+  line-height: 1.45;
+  max-width: 650px;
+}
+
+.ancestry-profile-legend {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .38rem .85rem;
+  margin-top: .82rem;
+}
+
+.ancestry-profile-legend-item {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  gap: .42rem;
+  align-items: center;
+  min-width: 0;
+  padding: .34rem .42rem;
+  border-radius: 10px;
+  background: rgba(248, 250, 252, .72);
+}
+
+.ancestry-profile-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--ancestry-color);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .55);
+}
+
+.ancestry-profile-name {
+  min-width: 0;
+  color: #475569;
+  font-size: .67rem;
+  line-height: 1.2;
+  font-weight: 740;
+}
+
+.ancestry-profile-percent {
+  color: #334155;
+  font-size: .68rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.ancestry-profile-meta {
+  margin-top: .72rem;
+  color: #94a3b8;
+  font-size: .61rem;
+  line-height: 1.4;
+}
+
+.ancestry-profile-note {
+  margin-top: .72rem;
+  padding: .58rem .68rem;
+  border-radius: 13px;
+  color: #64748b;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(248, 250, 252, .94),
+      rgba(241, 245, 249, .76)
+    );
+  border: 1px solid rgba(203, 213, 225, .72);
+  font-size: .64rem;
+  line-height: 1.48;
+}
+
+.ancestry-profile-note strong {
+  color: #475569;
+  font-weight: 850;
+}
+
+@media (max-width: 760px) {
+  .ancestry-profile-card {
+    grid-template-columns: 1fr;
+    gap: .85rem;
+    padding: 1rem;
+  }
+
+  .ancestry-sunburst {
+    width: 190px;
+    height: 190px;
+  }
+
+  .ancestry-sunburst-core {
+    inset: 47px;
+  }
+
+  .ancestry-profile-legend {
+    grid-template-columns: 1fr;
+  }
+}
+
 .report-intro-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(280px, .92fr);
@@ -1477,6 +1711,48 @@ main.content,
   margin-top: .3rem;
 }
 
+.reader-guide-normalization {
+  margin-top: .65rem;
+  border-top: 1px solid #e6ecf3;
+}
+
+.reader-guide-normalization-item {
+  padding: .52rem .15rem;
+  border-bottom: 1px solid #e6ecf3;
+}
+
+.reader-guide-normalization-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .35rem;
+  color: #334155;
+  font-size: .69rem;
+  line-height: 1.25;
+  font-weight: 860;
+}
+
+.reader-guide-normalization-name span {
+  display: inline;
+  margin: 0;
+  color: #94a3b8;
+  font-size: .56rem;
+  line-height: 1.25;
+  font-weight: 760;
+}
+
+.reader-guide-normalization-description {
+  margin-top: .18rem;
+  color: #64748b;
+  font-size: .64rem;
+  line-height: 1.38;
+}
+
+.reader-guide-normalization-primary {
+  padding-left: .6rem;
+  border-left: 3px solid rgba(129, 140, 248, .50);
+}
+
 .reader-guide-callout {
   margin-top: .72rem;
   padding: .65rem .72rem;
@@ -1602,8 +1878,8 @@ main.content,
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  background: rgba(75, 85, 99, .56);
-  border: 1px solid rgba(255, 255, 255, .82);
+  background: var(--study-color, #7C8AA5);
+  border: 1px solid rgba(255, 255, 255, .88);
   transform: translateX(-50%);
   z-index: 5;
 }
@@ -1637,10 +1913,16 @@ main.content,
 }
 
 .guide-key-dot {
-  width: 7px;
+  width: 22px;
   height: 7px;
   border-radius: 999px;
-  background: rgba(75, 85, 99, .58);
+  background:
+    linear-gradient(
+      90deg,
+      #5B8DC5 0 33%,
+      #C4778A 33% 66%,
+      #5FA083 66% 100%
+    );
 }
 
 .guide-key-iqr {
@@ -1725,8 +2007,8 @@ main.content,
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  background: rgba(75, 85, 99, .56);
-  border: 1px solid rgba(255, 255, 255, .82);
+  background: var(--study-color, #7C8AA5);
+  border: 1px solid rgba(255, 255, 255, .88);
   transform: translateX(-50%);
   z-index: 5;
 }
@@ -2574,9 +2856,46 @@ main.content,
 .pgs-percentile-hero {
   grid-column: 1 / -1;
   justify-self: center;
-  min-width: 190px;
+  width: min(100%, 570px);
+  min-width: 0;
   padding: .9rem 1rem .45rem 1rem;
   text-align: center;
+}
+
+.pgs-percentile-hero-values {
+  display: grid;
+  grid-template-columns: minmax(105px, 1fr) auto minmax(105px, 1fr);
+  gap: 1.15rem;
+  align-items: end;
+  margin-top: .12rem;
+}
+
+.pgs-percentile-secondary {
+  min-width: 0;
+  padding-bottom: .22rem;
+  color: #94a3b8;
+}
+
+.pgs-percentile-secondary-label {
+  color: #94a3b8;
+  font-size: .57rem;
+  line-height: 1.15;
+  font-weight: 790;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.pgs-percentile-secondary-value {
+  margin-top: .24rem;
+  color: #64748b;
+  font-size: 1.08rem;
+  line-height: 1;
+  font-weight: 790;
+  letter-spacing: -.025em;
+}
+
+.pgs-percentile-primary {
+  min-width: 145px;
 }
 
 .pgs-percentile-hero-label {
@@ -2901,8 +3220,8 @@ main.content,
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: rgba(75, 85, 99, .58);
-  border: 1.5px solid rgba(255, 255, 255, .82);
+  background: var(--study-color, rgba(75, 85, 99, .58));
+  border: 1.5px solid rgba(255, 255, 255, .88);
   box-shadow: 0 1px 3px rgba(17, 24, 39, .12);
   transform: translateX(-50%);
   z-index: 6;
@@ -2910,10 +3229,16 @@ main.content,
 
 .legend-model-point-key {
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 22px;
+  height: 7px;
   border-radius: 999px;
-  background: rgba(75, 85, 99, .68);
+  background:
+    linear-gradient(
+      90deg,
+      #5B8DC5 0 33%,
+      #C4778A 33% 66%,
+      #5FA083 66% 100%
+    );
 }
 
 .percentile-fill,
@@ -3168,8 +3493,8 @@ main.content,
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  background: rgba(75, 85, 99, .54);
-  border: 1.25px solid rgba(255, 255, 255, .78);
+  background: var(--study-color, rgba(75, 85, 99, .54));
+  border: 1.25px solid rgba(255, 255, 255, .88);
   box-shadow: 0 1px 3px rgba(17, 24, 39, .10);
   transform: translateX(-50%);
   z-index: 6;
@@ -3618,8 +3943,8 @@ main.content,
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  background: rgba(75, 85, 99, .52);
-  border: 1.25px solid rgba(255, 255, 255, .76);
+  background: var(--study-color, rgba(75, 85, 99, .52));
+  border: 1.25px solid rgba(255, 255, 255, .88);
   box-shadow: 0 1px 3px rgba(17, 24, 39, .10);
   transform: translateX(-50%);
   z-index: 6;
@@ -3890,6 +4215,23 @@ main.content,
     padding: .65rem 0 .35rem 0;
   }
 
+  .pgs-percentile-hero-values {
+    grid-template-columns: minmax(72px, 1fr) auto minmax(72px, 1fr);
+    gap: .55rem;
+  }
+
+  .pgs-percentile-secondary-value {
+    font-size: .92rem;
+  }
+
+  .pgs-percentile-secondary-label {
+    font-size: .5rem;
+  }
+
+  .pgs-percentile-primary {
+    min-width: 120px;
+  }
+
   .story-section-header {
     grid-template-columns: minmax(0, 1fr);
     align-items: flex-start;
@@ -3981,7 +4323,7 @@ db_handler = DbHandler(
 db_handler.connect()
 db_utils = DbUtils(db_handler)
 
-prsc_id = 3263  # placeholder for testing jobs
+prsc_id = 3980  # placeholder for testing jobs
 
 
 # -------------------------------------------------------------------
@@ -4016,44 +4358,65 @@ if pd.isna(primary_ancestry_code):
 
 primary_ancestry_code = str(primary_ancestry_code).strip().upper()
 
-# Map SNPster's five ancestry codes onto the broad-ancestry labels that
-# actually occur in evaluation_sample_sets.broad_ancestry_category.
+# Map SNPster's current ancestry codes onto broad ancestry labels used in
+# evaluation_sample_sets.broad_ancestry_category.
 #
 # The ESS field can contain several comma-separated ancestry labels in one
-# value (for example "European, African unspecified, East Asian").  Therefore
-# the SQL below matches individual recognized tokens instead of requiring the
-# entire field to equal one string.
+# value, so the SQL below matches recognized tokens rather than requiring the
+# whole field to equal one string. Ambiguous generic ancestry labels are not
+# forced into a specific SNPster ancestry component.
 #
-# Ambiguous categories such as "Asian unspecified", "Other admixed ancestry",
-# "Greater Middle Eastern ...", "Oceanian", "Other", and NR/Not reported are
-# deliberately NOT forced into one of the five SNPster superpopulations.
+# AFR is retained as a legacy alias for older records; the current schema uses
+# SSA for Sub-Saharan African ancestry.
+if primary_ancestry_code == "AFR":
+    primary_ancestry_code = "SSA"
+
 ancestry_display_map = {
     "EUR": "European",
-    "AFR": "African",
     "EAS": "East Asian",
     "SAS": "South Asian",
-    "AMR": "Admixed American",
+    "SSA": "Sub-Saharan African",
+    "MID": "Greater Middle Eastern",
+    "AMR": "Hispanic / Latin American",
+    "SEA": "South East Asian",
+    "CAS": "Central Asian",
+    "NAM": "Native American",
+    "OCE": "Oceanian",
 }
 
 ancestry_token_map = {
     "EUR": [
         "European",
     ],
-    "AFR": [
-        "African unspecified",
-        "African American or Afro-Caribbean",
-        "Sub-Saharan African",
-    ],
     "EAS": [
         "East Asian",
-        "South East Asian",
     ],
     "SAS": [
         "South Asian",
     ],
+    "SSA": [
+        "African unspecified",
+        "African American or Afro-Caribbean",
+        "Sub-Saharan African",
+    ],
+    "MID": [
+        "Greater Middle Eastern",
+        "Greater Middle Eastern (Middle Eastern, North African or Persian)",
+    ],
     "AMR": [
         "Hispanic or Latin American",
+    ],
+    "SEA": [
+        "South East Asian",
+    ],
+    "CAS": [
+        "Central Asian",
+    ],
+    "NAM": [
         "Native American",
+    ],
+    "OCE": [
+        "Oceanian",
     ],
 }
 
@@ -4062,8 +4425,66 @@ if primary_ancestry_code not in ancestry_token_map:
         f"Unsupported primary ancestry code: {primary_ancestry_code}"
     )
 
-ethnicity = ancestry_display_map[primary_ancestry_code]
-ancestry_tokens = ancestry_token_map[primary_ancestry_code]
+# Validation evidence is not restricted to one population for substantially
+# admixed individuals. Any ancestry component above 20% contributes compatible
+# evaluation cohorts; the recorded primary ancestry is always retained as a
+# fallback even when no component exceeds the threshold.
+MIXED_ANCESTRY_VALIDATION_THRESHOLD = 0.20
+
+ancestry_fraction_column_map = {
+    "EUR": "eur",
+    "EAS": "eas",
+    "SAS": "sas",
+    "SSA": "ssa",
+    "MID": "mid",
+    "AMR": "amr",
+    "SEA": "sea",
+    "CAS": "cas",
+    "NAM": "nam",
+    "OCE": "oce",
+}
+
+ancestry_row = ancestry_df.iloc[0]
+ancestry_fraction_by_code = {}
+
+for code, column in ancestry_fraction_column_map.items():
+    value = pd.to_numeric(
+        pd.Series([ancestry_row.get(column, np.nan)]),
+        errors="coerce",
+    ).iloc[0]
+    if not pd.isna(value):
+        ancestry_fraction_by_code[code] = float(value)
+
+selected_validation_ancestry_codes = [primary_ancestry_code]
+
+additional_codes = sorted(
+    [
+        code
+        for code, fraction in ancestry_fraction_by_code.items()
+        if fraction > MIXED_ANCESTRY_VALIDATION_THRESHOLD
+        and code != primary_ancestry_code
+        and code in ancestry_token_map
+    ],
+    key=lambda code: (
+        -ancestry_fraction_by_code.get(code, 0.0),
+        code,
+    ),
+)
+selected_validation_ancestry_codes.extend(additional_codes)
+
+ancestry_tokens = []
+seen_ancestry_tokens = set()
+for code in selected_validation_ancestry_codes:
+    for token in ancestry_token_map[code]:
+        token_key = token.casefold().strip()
+        if token_key and token_key not in seen_ancestry_tokens:
+            seen_ancestry_tokens.add(token_key)
+            ancestry_tokens.append(token)
+
+ethnicity = " + ".join(
+    ancestry_display_map[code]
+    for code in selected_validation_ancestry_codes
+)
 
 # These labels are fixed application constants, but quote them defensively
 # before embedding them into the SQL ARRAY literal.
@@ -4259,6 +4680,7 @@ matched_pss_metadata AS (
 
     LEFT JOIN data_libraries.evaluation_sample_sets AS ess
         ON BTRIM(ess.pss_id) = BTRIM(matched.pss_id)
+       AND BTRIM(ess.pgs_id) = BTRIM(matched.pgs_id)
 
     GROUP BY
         matched.pgs_id,
@@ -4354,7 +4776,7 @@ FROM snpster_users.prsc_job_results AS pjr
 INNER JOIN data_libraries.pgscatalog_data AS pcd
     ON pcd.pgs_id = pjr.pgs_id
 
--- Step 1: retain only PSS IDs relevant to the user's primary ancestry.
+-- Step 1: retain PSS IDs matching the selected validation ancestries.
 INNER JOIN ancestry_matched_pss AS matched_pss
     ON matched_pss.pgs_id = pjr.pgs_id
 
@@ -4458,6 +4880,54 @@ def clamp_percentile(x):
     return max(0.0, min(100.0, float(x)))
 
 
+def z_to_percentile(z):
+    """Convert a standard-normal z-score to a 0-100 percentile."""
+    if z is None or pd.isna(z):
+        return np.nan
+
+    z = float(z)
+    probability = 0.5 * (
+        1.0 + math.erf(z / math.sqrt(2.0))
+    )
+    return max(0.0, min(100.0, probability * 100.0))
+
+
+def display_percentile_for_column(primary, all_models, column):
+    """Use the report's existing display rule for any percentile source.
+
+    With >4 retained models, show the median across models. Otherwise show the
+    selected primary PGS value, falling back to the median if that value is
+    unavailable.
+    """
+    if all_models is None or all_models.empty:
+        return np.nan
+
+    if column not in all_models.columns:
+        return np.nan
+
+    values = pd.to_numeric(
+        all_models[column],
+        errors="coerce",
+    ).dropna()
+
+    if len(values) > 4:
+        return float(values.median())
+
+    primary_value = (
+        primary.get(column, np.nan)
+        if primary is not None
+        else np.nan
+    )
+
+    if primary_value is not None and not pd.isna(primary_value):
+        return float(primary_value)
+
+    if not values.empty:
+        return float(values.median())
+
+    return np.nan
+
+
 def fmt_float(x, digits=2):
     if pd.isna(x):
         return None
@@ -4545,6 +5015,8 @@ def add_ranking_columns(df):
         "concordance_statistic",
         "percentile_most_similar_pop",
         "z_most_similar_pop",
+        "z_norm1",
+        "z_norm2",
         "odds_ratio",
         "hazard_ratio",
         "individuals_evaluation",
@@ -4557,6 +5029,13 @@ def add_ranking_columns(df):
     for col in numeric_columns:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
+
+    # Norm 2 is the report's canonical percentile normalization because it is
+    # more appropriate for individuals who do not sit cleanly inside a single
+    # reference-population cluster. Norm 1 and closest-population normalization
+    # remain visible as secondary context.
+    df["percentile_norm1"] = df["z_norm1"].apply(z_to_percentile)
+    df["percentile_norm2"] = df["z_norm2"].apply(z_to_percentile)
 
     df["evaluation_n"] = df.apply(get_eval_n, axis=1)
 
@@ -4589,14 +5068,14 @@ def add_ranking_columns(df):
     # User-specific percent change, not the raw OR/HR per SD.
     # This assumes OR/HR are reported per 1 SD increase in PRS.
     df["individual_odds_ratio"] = np.where(
-        df["odds_ratio"].notna() & df["z_most_similar_pop"].notna(),
-        ((df["odds_ratio"] ** df["z_most_similar_pop"]) - 1) * 100,
+        df["odds_ratio"].notna() & df["z_norm2"].notna(),
+        ((df["odds_ratio"] ** df["z_norm2"]) - 1) * 100,
         np.nan,
     )
 
     df["individual_hazard_ratio"] = np.where(
-        df["hazard_ratio"].notna() & df["z_most_similar_pop"].notna(),
-        ((df["hazard_ratio"] ** df["z_most_similar_pop"]) - 1) * 100,
+        df["hazard_ratio"].notna() & df["z_norm2"].notna(),
+        ((df["hazard_ratio"] ** df["z_norm2"]) - 1) * 100,
         np.nan,
     )
 
@@ -4669,9 +5148,22 @@ def publication_reference_value(
 
 
 def publication_identifier_for_row(row):
-    """Canonical key matching the publication shown in Literature."""
+    """Canonical publication key for an ancestry-matched PERFORMANCE record.
+
+    Prefer the PGS Catalog performance-publication ID (PGP ID). Fall back to
+    the publication identifiers carried by the PPM record. Deliberately do not
+    fall back to the PGS development publication, because the Publications orb
+    is intended to count publications contributing the retained validation
+    evidence rather than unrelated development-paper metadata.
+    """
     if row is None:
         return None
+
+    pgp_id = row.get("pgp_id", np.nan)
+    if pgp_id is not None and not pd.isna(pgp_id):
+        pgp_id = str(pgp_id).strip()
+        if pgp_id:
+            return f"pgp:{pgp_id}".lower()
 
     joined_pmid = normalize_pmid_value(
         row.get("pubmed_id_pmid", np.nan)
@@ -4685,14 +5177,19 @@ def publication_identifier_for_row(row):
     if joined_doi:
         return f"doi:{joined_doi}".lower()
 
-    reference = publication_reference_value(
-        row.get("publication_pmid", np.nan),
-        row.get("publication_doi", np.nan),
-        row.get("development_publication_pmid", np.nan),
-        row.get("development_publication_doi", np.nan),
+    publication_pmid = normalize_pmid_value(
+        row.get("publication_pmid", np.nan)
     )
+    if publication_pmid:
+        return f"pmid:{publication_pmid}".lower()
 
-    return reference.lower() if reference else None
+    publication_doi = normalize_doi_value(
+        row.get("publication_doi", np.nan)
+    )
+    if publication_doi:
+        return f"doi:{publication_doi}".lower()
+
+    return None
 
 
 def count_unique_publications(df):
@@ -4707,6 +5204,71 @@ def count_unique_publications(df):
     identifiers = identifiers.dropna().astype(str).str.strip()
     identifiers = identifiers[identifiers.ne("")]
     return int(identifiers.nunique())
+
+
+STUDY_COLOR_PALETTE = [
+    "#5B8DC5", "#C4778A", "#5FA083", "#B88A4A",
+    "#7C70B5", "#4F9BA7", "#C27652", "#829A50",
+    "#A06D9B", "#6B88A7", "#B56F5E", "#638D71",
+]
+
+
+def study_color(study_key):
+    """Return a deterministic color for a publication/study identifier."""
+    if study_key is None or not str(study_key).strip():
+        return "#6B7280"
+
+    digest = hashlib.sha1(
+        str(study_key).strip().casefold().encode("utf-8")
+    ).hexdigest()
+    index = int(digest[:8], 16) % len(STUDY_COLOR_PALETTE)
+    return STUDY_COLOR_PALETTE[index]
+
+
+def development_study_identity(row):
+    """Study identity for a PGS percentile point."""
+    pmid = normalize_pmid_value(
+        row.get("development_publication_pmid", np.nan)
+    )
+    if pmid:
+        return f"pmid:{pmid}", f"PMID {pmid}"
+
+    doi = normalize_doi_value(
+        row.get("development_publication_doi", np.nan)
+    )
+    if doi:
+        return f"doi:{doi}", f"DOI {doi}"
+
+    pgp_id = row.get("development_pgp_id", np.nan)
+    if pgp_id is not None and not pd.isna(pgp_id):
+        pgp_id = str(pgp_id).strip()
+        if pgp_id:
+            return f"pgp:{pgp_id}", pgp_id
+
+    return None, "Study not available"
+
+
+def performance_study_identity(row):
+    """Study identity for a validation/effect point."""
+    pmid = normalize_pmid_value(row.get("pubmed_id_pmid", np.nan))
+    if not pmid:
+        pmid = normalize_pmid_value(row.get("publication_pmid", np.nan))
+    if pmid:
+        return f"pmid:{pmid}", f"PMID {pmid}"
+
+    doi = normalize_doi_value(row.get("digital_object_identifier_doi", np.nan))
+    if not doi:
+        doi = normalize_doi_value(row.get("publication_doi", np.nan))
+    if doi:
+        return f"doi:{doi}", f"DOI {doi}"
+
+    pgp_id = row.get("pgp_id", np.nan)
+    if pgp_id is not None and not pd.isna(pgp_id):
+        pgp_id = str(pgp_id).strip()
+        if pgp_id:
+            return f"pgp:{pgp_id}", pgp_id
+
+    return None, "Study not available"
 
 
 
@@ -5365,12 +5927,15 @@ def make_effect_distribution(models_df, metric_col, metric_name):
                 else "Unspecified outcome"
             )
 
+            study_key, study_label = performance_study_identity(row)
+            point_color = study_color(study_key)
+
             point_html.append(
                 f'<span class="effect-distribution-point" '
-                f'title="{pgs_id} · {endpoint_text}: '
-                f'{html.escape(percent_change_text(value))}" '
-                f'style="left: {pos(value):.2f}%; '
-                f'top: {top}px;"></span>'
+                f'title="{pgs_id} · {html.escape(study_label)} · '
+                f'{endpoint_text}: {html.escape(percent_change_text(value))}" '
+                f'style="--study-color: {point_color}; '
+                f'left: {pos(value):.2f}%; top: {top}px;"></span>'
             )
 
     snpster_marker_html = ""
@@ -5883,6 +6448,7 @@ for cluster_id, cluster_df in data.groupby(
 
     retained_ppms = trait_ppms[
         trait_ppms["pgs_id"].astype(str).isin(retained_pgs_ids)
+        & trait_ppms["primary_model_eligible"].fillna(False)
     ].copy()
 
     cluster_families = {
@@ -5931,7 +6497,7 @@ cards_df = pd.DataFrame([
         "primary_pgs_id": record["primary"]["pgs_id"],
         "primary_discrimination_value": record["primary"]["discrimination_value"],
         "primary_discrimination_metric": record["primary"]["discrimination_metric"],
-        "primary_percentile": record["primary"]["percentile_most_similar_pop"],
+        "primary_percentile": record["primary"]["percentile_norm2"],
         "primary_evaluation_n": record["primary"]["evaluation_n"],
         "primary_evaluation_ancestry": record["primary"].get("broad_ancestry_category", np.nan),
         "primary_n_ppm_evaluations": record["primary"].get("n_ppm_evaluations", np.nan),
@@ -5974,17 +6540,18 @@ def overview_record_context(record):
     all_ppms = record["all_ppms"]
 
     values = pd.to_numeric(
-        all_models["percentile_most_similar_pop"],
+        all_models["percentile_norm2"],
         errors="coerce",
     ).dropna()
 
     n_models = int(len(all_models))
     is_single = n_models <= 1
 
-    if len(values) > 4:
-        display_percentile = float(values.median())
-    else:
-        display_percentile = float(primary["percentile_most_similar_pop"])
+    display_percentile = display_percentile_for_column(
+        primary,
+        all_models,
+        "percentile_norm2",
+    )
 
     if len(values) <= 1:
         agreement_status = "Not assessable"
@@ -6053,6 +6620,190 @@ overview_text = (
     f"the final section."
 )
 
+
+ANCESTRY_COMPONENTS = [
+    ("eur", "EUR", "European", "#9FC4E7"),
+    ("eas", "EAS", "East Asian", "#F3C6A8"),
+    ("sas", "SAS", "South Asian", "#E9B7CF"),
+    ("ssa", "SSA", "Sub-Saharan African", "#C9B7E8"),
+    ("mid", "MID", "Greater Middle Eastern", "#E9D49A"),
+    ("amr", "AMR", "Hispanic / Latin American", "#A8D9C6"),
+    ("sea", "SEA", "South East Asian", "#9ED7D9"),
+    ("cas", "CAS", "Central Asian", "#C7D7A4"),
+    ("nam", "NAM", "Native American", "#E6B3A8"),
+    ("oce", "OCE", "Oceanian", "#B4C9E8"),
+]
+
+
+def make_ancestry_profile(row, primary_code):
+    """Render the user's ancestry fractions as a radial sunburst-style chart."""
+    if row is None:
+        return ""
+
+    components = []
+
+    for column, code, label, color in ANCESTRY_COMPONENTS:
+        value = pd.to_numeric(
+            pd.Series([row.get(column, np.nan)]),
+            errors="coerce",
+        ).iloc[0]
+
+        if pd.isna(value) or float(value) <= 0:
+            continue
+
+        components.append({
+            "column": column,
+            "code": code,
+            "label": label,
+            "color": color,
+            "fraction": float(value),
+        })
+
+    if not components:
+        return ""
+
+    total = sum(item["fraction"] for item in components)
+    if total <= 0:
+        return ""
+
+    # Normalize the geometry to a complete circle while displaying the original
+    # database fractions in the legend.
+    current_degrees = 0.0
+    gradient_parts = []
+
+    for item in components:
+        visual_share = item["fraction"] / total
+        start = current_degrees
+        end = current_degrees + visual_share * 360.0
+        gradient_parts.append(
+            f"{item['color']} {start:.3f}deg {end:.3f}deg"
+        )
+        current_degrees = end
+
+    gradient = "conic-gradient(" + ", ".join(gradient_parts) + ")"
+
+    sorted_components = sorted(
+        components,
+        key=lambda item: (-item["fraction"], item["label"]),
+    )
+
+    legend_items = []
+    for item in sorted_components:
+        legend_items.append(
+            f"""
+            <div class="ancestry-profile-legend-item">
+              <span
+                class="ancestry-profile-swatch"
+                style="--ancestry-color: {item['color']};"
+                aria-hidden="true"
+              ></span>
+              <span class="ancestry-profile-name">
+                {html.escape(item['label'])}
+              </span>
+              <span class="ancestry-profile-percent">
+                {item['fraction'] * 100:.1f}%
+              </span>
+            </div>
+            """
+        )
+
+    primary_component = next(
+        (
+            item
+            for item in components
+            if item["code"] == primary_code
+        ),
+        max(components, key=lambda item: item["fraction"]),
+    )
+
+    primary_fraction = row.get(
+        "primary_ancestry_percentage",
+        np.nan,
+    )
+    primary_fraction = pd.to_numeric(
+        pd.Series([primary_fraction]),
+        errors="coerce",
+    ).iloc[0]
+
+    if pd.isna(primary_fraction):
+        primary_fraction = primary_component["fraction"]
+
+    ancestry_method = first_nonempty_value(
+        row,
+        ["ancestry_method"],
+    )
+    reference_panel = first_nonempty_value(
+        row,
+        ["reference_panel"],
+    )
+
+    metadata_bits = [
+        value
+        for value in [
+            ancestry_method,
+            reference_panel,
+        ]
+        if value
+    ]
+    metadata_text = " · ".join(metadata_bits)
+
+    return f"""
+    <div class="ancestry-profile-card">
+      <div class="ancestry-profile-visual">
+        <div class="ancestry-sunburst-wrap">
+          <div
+            class="ancestry-sunburst"
+            style="--ancestry-gradient: {gradient};"
+            role="img"
+            aria-label="Genetic ancestry composition"
+          >
+            <div class="ancestry-sunburst-core">
+              <div class="ancestry-sunburst-primary-value">
+                {float(primary_fraction) * 100:.1f}%
+              </div>
+              <div class="ancestry-sunburst-primary-label">
+                {html.escape(primary_component['label'])}<br>
+                primary ancestry
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ancestry-profile-copy">
+        <div class="ancestry-profile-kicker">Genetic ancestry</div>
+        <div class="ancestry-profile-title">Ancestry composition</div>
+        <div class="ancestry-profile-subtitle">
+          Estimated ancestry fractions used for population context. Validation
+          evidence is retained for every ancestry component above 20%.
+        </div>
+
+        <div class="ancestry-profile-legend">
+          {''.join(legend_items)}
+        </div>
+
+        <div class="ancestry-profile-note">
+          <strong>Small ancestry components:</strong>
+          values around 5% or less are often low-confidence and may reflect
+          reference/model noise. Treat them as trace signals unless supported
+          by other ancestry evidence.
+        </div>
+
+        {
+            f'<div class="ancestry-profile-meta">{html.escape(metadata_text)}</div>'
+            if metadata_text
+            else ''
+        }
+      </div>
+    </div>
+    """
+
+
+ancestry_profile_html = make_ancestry_profile(
+    ancestry_df.iloc[0],
+    primary_ancestry_code,
+)
+
 report_header_html = f"""
 <div class="report-frontmatter">
   <div class="report-masthead">
@@ -6116,6 +6867,8 @@ report_header_html = f"""
       </div>
     </div>
   </div>
+
+  {ancestry_profile_html}
 </div>
 """
 
@@ -6363,7 +7116,7 @@ spectrum_html = f"""
     <div>
       <div class="profile-spectrum-title">Your percentile profile across evaluated traits</div>
       <div class="profile-spectrum-subtitle">
-        Each marker represents one trait positioned by its displayed genetic percentile.
+        Each marker represents one trait positioned by its ancestry-standardized genetic percentile.
         Hover over a marker to see the trait, percentile, risk category, and model agreement.
       </div>
     </div>
@@ -6474,11 +7227,11 @@ display(HTML(
 
   <div class="reader-guide-content">
     <div class="reader-guide-intro">
-      This report compares your genetic scores with an ancestry-matched
-      reference population and combines evidence from eligible polygenic-score
-      models. It describes inherited predisposition only. It does not diagnose
-      a condition, determine your future, or replace conventional clinical
-      risk factors.
+      The main percentile is ancestry-standardized continuously rather than
+      forcing you into one population label. This is especially useful for
+      mixed or underrepresented ancestry, although reference-panel limitations
+      still remain. The report describes inherited predisposition only and is
+      not a diagnosis.
     </div>
 
     <div class="reader-guide-principles">
@@ -6514,6 +7267,54 @@ display(HTML(
           have an equal or lower genetic score and roughly 90% have a higher
           score. It does <strong>not</strong> mean a 10% disease risk.
         </p>
+        <p>
+          The report shows three percentile normalizations. The large middle
+          value is the primary result; the two smaller values show how sensitive
+          the result is to the normalization method.
+        </p>
+
+        <div class="reader-guide-normalization">
+          <div
+            class="reader-guide-normalization-item
+                   reader-guide-normalization-primary"
+          >
+            <div class="reader-guide-normalization-name">
+              Ancestry-standardized
+              <span>Primary</span>
+            </div>
+            <div class="reader-guide-normalization-description">
+              Adjusts both average and spread across genetic ancestry. Best
+              suited to mixed or underrepresented ancestry.
+            </div>
+          </div>
+
+          <div class="reader-guide-normalization-item">
+            <div class="reader-guide-normalization-name">
+              Mean-adjusted
+              <span>Comparison</span>
+            </div>
+            <div class="reader-guide-normalization-description">
+              Adjusts ancestry-related shifts in the average score, but not its
+              spread.
+            </div>
+          </div>
+
+          <div class="reader-guide-normalization-item">
+            <div class="reader-guide-normalization-name">
+              Closest ancestry
+              <span>Comparison</span>
+            </div>
+            <div class="reader-guide-normalization-description">
+              Compares with one closest reference group; less stable for mixed
+              ancestry.
+            </div>
+          </div>
+        </div>
+
+        <div class="reader-guide-callout">
+          Ancestry-standardized drives the report; the other two values show
+          normalization sensitivity.
+        </div>
 
         <figure
           class="guide-figure"
@@ -6559,17 +7360,17 @@ display(HTML(
             <span class="guide-mini-axis"></span>
             <span class="guide-mini-range"></span>
             <span class="guide-mini-iqr"></span>
-            <span class="guide-mini-dot" style="--dot-left: 18%; --dot-top: 14px;"></span>
-            <span class="guide-mini-dot" style="--dot-left: 37%; --dot-top: 9px;"></span>
-            <span class="guide-mini-dot" style="--dot-left: 45%; --dot-top: 20px;"></span>
-            <span class="guide-mini-dot" style="--dot-left: 54%; --dot-top: 11px;"></span>
-            <span class="guide-mini-dot" style="--dot-left: 63%; --dot-top: 21px;"></span>
-            <span class="guide-mini-dot" style="--dot-left: 82%; --dot-top: 13px;"></span>
+            <span class="guide-mini-dot" style="--study-color: #5B8DC5; --dot-left: 18%; --dot-top: 14px;"></span>
+            <span class="guide-mini-dot" style="--study-color: #5B8DC5; --dot-left: 37%; --dot-top: 9px;"></span>
+            <span class="guide-mini-dot" style="--study-color: #C4778A; --dot-left: 45%; --dot-top: 20px;"></span>
+            <span class="guide-mini-dot" style="--study-color: #C4778A; --dot-left: 54%; --dot-top: 11px;"></span>
+            <span class="guide-mini-dot" style="--study-color: #5FA083; --dot-left: 63%; --dot-top: 21px;"></span>
+            <span class="guide-mini-dot" style="--study-color: #5FA083; --dot-left: 82%; --dot-top: 13px;"></span>
             <span class="guide-mini-median"></span>
           </div>
           <div class="guide-mini-legend" aria-hidden="true">
             <span class="guide-mini-legend-item">
-              <span class="guide-key-dot"></span>Each retained PGS model
+              <span class="guide-key-dot"></span>PGS model · same color = same publication
             </span>
             <span class="guide-mini-legend-item">
               <span class="guide-key-iqr"></span>Middle 50%
@@ -6582,14 +7383,14 @@ display(HTML(
             </span>
           </div>
           <figcaption>
-            Each gray dot is one retained polygenic-score model for the same
-            trait—not one person and not necessarily one publication.
+            Each colored dot is one retained polygenic-score model. Models from
+            the same development publication share a color.
           </figcaption>
         </figure>
 
         <ul>
           <li>
-            <strong>Gray dot:</strong> one retained PGS model and its result
+            <strong>Colored dot:</strong> one retained PGS model and its result
             for you.
           </li>
           <li>
@@ -6646,11 +7447,11 @@ display(HTML(
               <span class="guide-effect-range"></span>
               <span class="guide-effect-iqr"></span>
               <span class="guide-effect-zero"></span>
-              <span class="guide-effect-dot" style="--dot-left: 38%; --dot-top: 12px;"></span>
-              <span class="guide-effect-dot" style="--dot-left: 48%; --dot-top: 21px;"></span>
-              <span class="guide-effect-dot" style="--dot-left: 54%; --dot-top: 10px;"></span>
-              <span class="guide-effect-dot" style="--dot-left: 61%; --dot-top: 20px;"></span>
-              <span class="guide-effect-dot" style="--dot-left: 69%; --dot-top: 12px;"></span>
+              <span class="guide-effect-dot" style="--study-color: #5B8DC5; --dot-left: 38%; --dot-top: 12px;"></span>
+              <span class="guide-effect-dot" style="--study-color: #5B8DC5; --dot-left: 48%; --dot-top: 21px;"></span>
+              <span class="guide-effect-dot" style="--study-color: #C4778A; --dot-left: 54%; --dot-top: 10px;"></span>
+              <span class="guide-effect-dot" style="--study-color: #C4778A; --dot-left: 61%; --dot-top: 20px;"></span>
+              <span class="guide-effect-dot" style="--study-color: #5FA083; --dot-left: 69%; --dot-top: 12px;"></span>
               <span class="guide-effect-weighted"></span>
               <span class="guide-effect-median"></span>
             </div>
@@ -6661,10 +7462,9 @@ display(HTML(
             </div>
           </div>
           <figcaption>
-            In odds/hazard plots, each gray dot is an ancestry-matched
-            performance estimate for a particular PGS, evaluated outcome, and
-            cohort record. Several dots may come from the same publication,
-            so a dot should not automatically be read as one unique study.
+            In odds/hazard plots, each colored dot is an ancestry-matched
+            performance estimate. Estimates from the same validation publication
+            share a color, so repeated results from one study are easy to spot.
           </figcaption>
         </figure>
 
@@ -6674,7 +7474,7 @@ display(HTML(
             reference level.
           </li>
           <li>
-            <strong>Gray dot:</strong> one source-specific performance
+            <strong>Colored dot:</strong> one source-specific performance
             estimate included in the card.
           </li>
           <li>
@@ -6998,7 +7798,7 @@ def make_model_rows(models_df):
         rows.append(f"""
         <tr>
           <td>{model_table_value(row.get('pgs_id', np.nan))}</td>
-          <td>{model_table_value(fmt_percentile(row.get('percentile_most_similar_pop', np.nan)))}</td>
+          <td>{model_table_value(fmt_percentile(row.get('percentile_norm2', np.nan)))}</td>
           <td>{model_table_value(formatted_pgs_summary_metric(row))}</td>
           <td>{model_table_value(row.get('n_ppm_evaluations', np.nan))}</td>
           <td>{model_table_value(row.get('n_pss_evaluations', np.nan))}</td>
@@ -7148,7 +7948,7 @@ def make_models_dropdown(models_df, ppms_df):
 def percentile_values(models_df):
     if models_df is None or models_df.empty:
         return pd.Series(dtype=float)
-    return pd.to_numeric(models_df["percentile_most_similar_pop"], errors="coerce").dropna()
+    return pd.to_numeric(models_df["percentile_norm2"], errors="coerce").dropna()
 
 
 def percentile_distribution_stats(models_df):
@@ -7161,7 +7961,7 @@ def percentile_distribution_stats(models_df):
         return None
 
     values_series = pd.to_numeric(
-        models_df["percentile_most_similar_pop"],
+        models_df["percentile_norm2"],
         errors="coerce",
     ).dropna()
 
@@ -7324,7 +8124,7 @@ def make_percentile_jitter_points(models_df):
 
     rows = models_df.copy()
     rows["percentile_numeric"] = pd.to_numeric(
-        rows["percentile_most_similar_pop"],
+        rows["percentile_norm2"],
         errors="coerce",
     )
     rows = rows[rows["percentile_numeric"].notna()].reset_index(drop=True)
@@ -7340,15 +8140,20 @@ def make_percentile_jitter_points(models_df):
         pct = clamp_percentile(row["percentile_numeric"])
         top = vertical_offsets[i % len(vertical_offsets)]
         pgs_id = html.escape(str(row.get("pgs_id", "PGS model")))
+        study_key, study_label = development_study_identity(row)
+        point_color = study_color(study_key)
         points.append(
             f'<span class="percentile-model-point" '
-            f'title="{pgs_id}: {fmt_percentile(pct)} percentile" '
-            f'style="left: {pct:.2f}%; top: {top}px;"></span>'
+            f'title="{pgs_id} · {html.escape(study_label)}: '
+            f'{fmt_percentile(pct)} percentile" '
+            f'style="--study-color: {point_color}; '
+            f'left: {pct:.2f}%; top: {top}px;"></span>'
         )
 
     legend = (
         '<span class="legend-item">'
-        '<span class="legend-model-point-key"></span>Retained PGS model'
+        '<span class="legend-model-point-key"></span>'
+        'PGS model · color groups source publication'
         '</span>'
     )
 
@@ -7404,7 +8209,7 @@ def make_percentile_distribution_view(models_df, fill_class):
 
     rows = models_df.copy()
     rows["percentile_numeric"] = pd.to_numeric(
-        rows["percentile_most_similar_pop"],
+        rows["percentile_norm2"],
         errors="coerce",
     )
     rows = rows[rows["percentile_numeric"].notna()].reset_index(drop=True)
@@ -7417,11 +8222,14 @@ def make_percentile_distribution_view(models_df, fill_class):
         pct = clamp_percentile(row["percentile_numeric"])
         top = jitter_offsets[i % len(jitter_offsets)]
         pgs_id = html.escape(str(row.get("pgs_id", "PGS model")))
-        family_id = html.escape(str(row.get("family_id", "No family ID")))
+        study_key, study_label = development_study_identity(row)
+        point_color = study_color(study_key)
         jitter_points.append(
             f'<span class="percentile-distribution-point" '
-            f'title="{pgs_id} · {family_id}: {fmt_percentile(pct)} percentile" '
-            f'style="left: {pct:.2f}%; top: {top}px;"></span>'
+            f'title="{pgs_id} · {html.escape(study_label)}: '
+            f'{fmt_percentile(pct)} percentile" '
+            f'style="--study-color: {point_color}; '
+            f'left: {pct:.2f}%; top: {top}px;"></span>'
         )
 
     return f"""
@@ -7680,7 +8488,7 @@ def make_header_evidence_orbs(
     else:
         score_rows = all_models[
             pd.to_numeric(
-                all_models["percentile_most_similar_pop"],
+                all_models["percentile_norm2"],
                 errors="coerce",
             ).notna()
         ]
@@ -7741,12 +8549,51 @@ def make_header_evidence_orbs(
         else pd.DataFrame()
     )
 
+    # Re-apply the card's final retained-score set here rather than relying on
+    # upstream construction. This guarantees that Scores, Cohorts and
+    # Publications describe the same PGS models actually displayed in the card.
+    retained_score_ids = set()
+    if (
+        all_models is not None
+        and not all_models.empty
+        and "pgs_id" in all_models.columns
+    ):
+        retained_score_ids = {
+            str(value).strip()
+            for value in all_models["pgs_id"].dropna()
+            if str(value).strip()
+        }
+
+    if (
+        retained_score_ids
+        and not evaluation_ppms.empty
+        and "pgs_id" in evaluation_ppms.columns
+    ):
+        evaluation_ppms = evaluation_ppms[
+            evaluation_ppms["pgs_id"]
+            .astype(str)
+            .str.strip()
+            .isin(retained_score_ids)
+        ].copy()
+
+    if (
+        not evaluation_ppms.empty
+        and "primary_model_eligible" in evaluation_ppms.columns
+    ):
+        evaluation_ppms = evaluation_ppms[
+            evaluation_ppms["primary_model_eligible"].fillna(False)
+        ].copy()
+
     if (
         not evaluation_ppms.empty
         and "ppm_id" in evaluation_ppms.columns
     ):
+        dedupe_columns = ["ppm_id"]
+        if "pgs_id" in evaluation_ppms.columns:
+            dedupe_columns = ["pgs_id", "ppm_id"]
+
         evaluation_ppms = evaluation_ppms.drop_duplicates(
-            subset=["ppm_id"],
+            subset=dedupe_columns,
             keep="first",
         )
 
@@ -7819,14 +8666,24 @@ def record_display_context(record):
     primary = record["primary"]
     all_models = record["all_models"]
 
-    percentile = primary["percentile_most_similar_pop"]
+    percentile = primary["percentile_norm2"]
     distribution_stats = percentile_distribution_stats(all_models)
     show_distribution_view = use_distribution_percentile_view(all_models)
 
-    display_percentile = (
-        distribution_stats["median"]
-        if show_distribution_view and distribution_stats is not None
-        else percentile
+    display_percentile = display_percentile_for_column(
+        primary,
+        all_models,
+        "percentile_norm2",
+    )
+    norm1_percentile = display_percentile_for_column(
+        primary,
+        all_models,
+        "percentile_norm1",
+    )
+    most_similar_percentile = display_percentile_for_column(
+        primary,
+        all_models,
+        "percentile_most_similar_pop",
     )
 
     risk_label, risk_class, fill_class = risk_level(display_percentile)
@@ -7855,6 +8712,8 @@ def record_display_context(record):
 
     return {
         "display_percentile": float(display_percentile),
+        "norm1_percentile": norm1_percentile,
+        "most_similar_percentile": most_similar_percentile,
         "distribution_stats": distribution_stats,
         "show_distribution_view": show_distribution_view,
         "risk_label": risk_label,
@@ -8025,11 +8884,13 @@ def make_trait_card(record):
     all_models = record["all_models"]
     all_ppms = record["all_ppms"]
 
-    percentile = primary["percentile_most_similar_pop"]
+    percentile = primary["percentile_norm2"]
     context = record_display_context(record)
     distribution_stats = context["distribution_stats"]
     show_distribution_view = context["show_distribution_view"]
     display_percentile = context["display_percentile"]
+    norm1_percentile = context["norm1_percentile"]
+    most_similar_percentile = context["most_similar_percentile"]
     risk_label = context["risk_label"]
     risk_class = context["risk_class"]
     fill_class = context["fill_class"]
@@ -8155,18 +9016,46 @@ def make_trait_card(record):
         </div>
 
         <div class="pgs-percentile-hero"
-             aria-label="Percentile {fmt_percentile(display_percentile)}">
-          <div class="pgs-percentile-hero-label">
-            {"Median percentile" if show_distribution_view else "Percentile"}
+             aria-label="Ancestry-standardized percentile {fmt_percentile(display_percentile)}">
+          <div class="pgs-percentile-hero-values">
+            <div
+              class="pgs-percentile-secondary"
+              title="Mean-adjusted percentile"
+            >
+              <div class="pgs-percentile-secondary-label">Mean-adjusted</div>
+              <div class="pgs-percentile-secondary-value">
+                {fmt_percentile(norm1_percentile)}
+              </div>
+            </div>
+
+            <div class="pgs-percentile-primary">
+              <div class="pgs-percentile-hero-label">
+                {"Median percentile" if show_distribution_view else "Percentile"}
+                · Ancestry-standardized
+              </div>
+              <div class="pgs-percentile-hero-value">
+                {fmt_percentile(display_percentile)}
+              </div>
+            </div>
+
+            <div
+              class="pgs-percentile-secondary"
+              title="Closest-population ancestry-matched percentile"
+            >
+              <div class="pgs-percentile-secondary-label">
+                Closest ancestry
+              </div>
+              <div class="pgs-percentile-secondary-value">
+                {fmt_percentile(most_similar_percentile)}
+              </div>
+            </div>
           </div>
-          <div class="pgs-percentile-hero-value">
-            {fmt_percentile(display_percentile)}
-          </div>
+
           <div class="pgs-percentile-hero-badge">
             <div class="risk-badge risk-{risk_class}">{risk_label}</div>
           </div>
           <div class="pgs-percentile-hero-caption">
-            Relative to the reference population
+            Ancestry-standardized percentile is used for report ranking, model agreement, and risk category.
           </div>
           <div class="pgs-percentile-hero-rule"></div>
         </div>
@@ -8184,7 +9073,7 @@ def make_trait_card(record):
 
         <div class="percentile-block">
           <div class="percentile-topline">
-            <div class="percentile-label">{"Median percentile" if show_distribution_view else "Percentile"}</div>
+            <div class="percentile-label">{"Median percentile" if show_distribution_view else "Percentile"} · Ancestry-standardized</div>
             <div class="percentile-value">{fmt_percentile(display_percentile)}</div>
           </div>
           {percentile_bar}
@@ -8366,15 +9255,15 @@ display(HTML(
   <summary>How this report works</summary>
   <div class="method-details-content">
     <p><strong>Panel profile index.</strong> The whole-report index is the arithmetic mean of the displayed trait percentiles, with every trait receiving equal weight. It is shown as a compact 0–100 reference value and is a descriptive profile summary, not a combined clinical-risk score.</p>
-    <p><strong>Ancestry-specific validation evidence.</strong> The user's primary ancestry is mapped to a curated set of compatible labels used in <code>evaluation_sample_sets.broad_ancestry_category</code>. Because an Evaluation Sample Set can list several ancestries in one comma-separated value, the report matches recognized ancestry tokens rather than requiring the entire field to equal one label. For example, a European user can retain both <code>European</code> and mixed entries such as <code>European, African unspecified</code>; African, East Asian, South Asian, and Admixed American users similarly use curated compatible labels. Ambiguous categories such as unspecified Asian ancestry, generic admixed ancestry, Greater Middle Eastern ancestry, Oceanian ancestry, and unreported ancestry are not forced into one of SNPster's five superpopulations. Sex/gender composition is not used in this ancestry filter. The ancestry-matched cohort identifiers then restrict the performance evaluations considered for each polygenic score.</p>
+    <p><strong>Ancestry adjustment and validation evidence.</strong> The report separates two related ancestry tasks. First, the displayed genetic percentile is normalized continuously across genetic ancestry. The reader-facing <strong>Mean-adjusted</strong> value corresponds to adjustment of ancestry-related differences in the mean score, while <strong>Ancestry-standardized</strong> additionally adjusts ancestry-related differences in score variance and is the primary report value. This continuous adjustment is especially useful when a person is admixed or does not lie cleanly inside one labeled reference population. Second, validation cohorts are selected from every ancestry component above 20%, with the recorded primary ancestry retained as a fallback. This means a substantially admixed person can retain evaluation evidence from more than one ancestry group. The ESS field can contain several comma-separated ancestry labels, so recognized ancestry tokens are matched rather than requiring the full field to equal one label. The selected cohort identifiers then restrict the performance evaluations considered for each polygenic score. No ancestry adjustment can fully compensate for sparse reference data, so results remain dependent on reference-panel diversity and sample size.</p>
     <p><strong>Evidence labels.</strong> Model agreement and validation-performance badges use an ordered low-to-high scale rather than value-laden terms such as good or bad. These labels describe statistical consistency or discrimination, not whether the user's health result is favorable.</p>
     <p><strong>Card summary text.</strong> Each card currently includes a generic plain-language box that combines the personalized percentile interpretation with a temporary explanation of the trait and the statistics shown in the card. This text is designed to be replaced by curated, database-backed trait descriptions.</p>
-    <p><strong>Card grouping and performance-evaluation representation.</strong> Polygenic scores are clustered into cards using an explicit curated trait-family override when one is configured, followed by two general links: an ontology-aware key derived from <code>pgscatalog_data.efo_id</code>, and an exact match of the trimmed <code>reported_trait</code> text. Curated overrides take precedence over ontology matching so a known broad or incorrect ontology assignment cannot pull an unrelated score into the card. Outside the curated overrides, a match by either general route joins the scores and the links are applied transitively. When one or more MONDO identifiers are present, the MONDO subset defines the ontology key and accompanying EFO, HP, or PATO terms are treated as contextual modifiers. Without MONDO, PATO modifiers are ignored when another ontology identifier remains. Multiple core identifiers are preserved as an unordered set for genuinely composite endpoints. When ontology IDs are unavailable, the mapped EFO label can still provide the ontology-side link. The visible card title remains a human-readable <code>pgscatalog_data.reported_trait</code> selected from the primary PGS in the resulting card cluster. Percentile, z-score, variant match, and model agreement are represented once per polygenic score because they are properties of the user's score result rather than of an individual performance row. By contrast, odds-ratio and hazard-ratio plots retain every ancestry-matched performance evaluation that reports the corresponding effect, so more-stratified outcomes from <code>pgs_performance.reported_trait</code> remain visible. The Scores orb counts distinct retained PGS IDs contributing a datapoint to the percentile bar. The Effects orb counts the OR and HR estimates actually plotted; a performance evaluation that reports both contributes one estimate to each plot. The Cohorts orb splits compound values such as <code>JHS|CHS|ARIC</code> and counts each distinct cohort across every row in the ancestry-matched performance-evaluation table. Publications similarly counts the distinct PMID-or-DOI identifiers shown in the Literature column across the full table, including evaluations without an OR or HR. The technical dropdown separately reports the total number of ancestry-matched performance evaluations, including records without OR or HR.</p>
+    <p><strong>Card grouping and performance-evaluation representation.</strong> Polygenic scores are clustered into cards using an explicit curated trait-family override when one is configured, followed by two general links: an ontology-aware key derived from <code>pgscatalog_data.efo_id</code>, and an exact match of the trimmed <code>reported_trait</code> text. Curated overrides take precedence over ontology matching so a known broad or incorrect ontology assignment cannot pull an unrelated score into the card. Outside the curated overrides, a match by either general route joins the scores and the links are applied transitively. When one or more MONDO identifiers are present, the MONDO subset defines the ontology key and accompanying EFO, HP, or PATO terms are treated as contextual modifiers. Without MONDO, PATO modifiers are ignored when another ontology identifier remains. Multiple core identifiers are preserved as an unordered set for genuinely composite endpoints. When ontology IDs are unavailable, the mapped EFO label can still provide the ontology-side link. The visible card title remains a human-readable <code>pgscatalog_data.reported_trait</code> selected from the primary PGS in the resulting card cluster. The ancestry-standardized percentile, z-score, variant match, and model agreement are represented once per polygenic score because they are properties of the user's score result rather than of an individual performance row. By contrast, odds-ratio and hazard-ratio plots retain every ancestry-matched performance evaluation that reports the corresponding effect, so more-stratified outcomes from <code>pgs_performance.reported_trait</code> remain visible. The Scores orb counts distinct retained PGS IDs with a displayed ancestry-standardized percentile. The Effects orb counts the OR and HR estimates actually plotted; a performance evaluation that reports both contributes one estimate to each plot. The Cohorts orb counts distinct cohort names only after restricting the evidence table to the final retained PGS IDs for the card. The Publications orb counts distinct performance-publication IDs (PGP IDs, with PMID/DOI fallbacks) from those same retained ancestry-matched performance records; development publications are not used as a fallback for this count. The technical dropdown separately reports the total number of ancestry-matched performance evaluations, including records without OR or HR.</p>
     <p><strong>Validation discrimination.</strong> Within each polygenic score, every ancestry-matched performance evaluation contributes one discrimination value when available: AUROC is used when reported, otherwise the concordance statistic. These values are averaged to create one descriptive validation-discrimination value per polygenic score. For a multi-score card, the displayed overall validation statistic is then the mean of the score-level means, giving every polygenic score equal weight regardless of how many performance evaluations it has. This is a descriptive summary rather than a formal meta-analysis, particularly when AUROC and concordance statistics or endpoint definitions differ.</p>
     <p><strong>Model selection.</strong> PGS models with less than 70% matched variants or missing variant-match data are removed from the report entirely before model agreement, consensus estimates, overview figures, or card construction are calculated. The card's primary PGS is ranked by its mean ancestry-matched validation discrimination, then by the largest available evaluation sample size.</p>
     <p><strong>Model families and SNPster weighted effects.</strong> Within each development publication and reported trait, scores with the same non-missing development method receive the same descriptive family ID. For odds- and hazard-based plots only, the SNPster weighted mean uses raw weight <code>(1 / family size) × performance-record AUROC or concordance × variant-match fraction</code>. Percentile summaries remain unweighted.</p>
-    <p><strong>Model agreement.</strong> For cards with more than four retained percentile values, agreement is classified from IQR width. For cards with two to four values, agreement uses the full minimum-to-maximum distance. Spread below 5 percentile points is Very high agreement, below 10 is High, below 20 is Moderate, 20–25 is Low, and above 25 is Very low. A single retained PGS is Not assessable.</p>
-    <p><strong>Distribution display.</strong> Multi-PGS percentile cards show the IQR as the translucent band and Tukey whiskers as the skinny colored line. More extreme PGS values remain visible as gray points. Odds and hazard bars are centered on 0% change and show between-model spread rather than statistical confidence intervals.</p>
+    <p><strong>Model agreement.</strong> Agreement is calculated from the ancestry-standardized percentiles. For cards with more than four retained percentile values, agreement is classified from IQR width. For cards with two to four values, agreement uses the full minimum-to-maximum distance. Spread below 5 percentile points is Very high agreement, below 10 is High, below 20 is Moderate, 20–25 is Low, and above 25 is Very low. A single retained PGS is Not assessable.</p>
+    <p><strong>Distribution display.</strong> Multi-PGS percentile cards use ancestry-standardized percentiles and show the IQR as the translucent band and Tukey whiskers as the skinny colored line. PGS points are colored by development publication, while odds/hazard estimate points are colored by validation publication; the same publication receives the same deterministic color throughout the report. Odds and hazard bars are centered on 0% change and show between-model spread rather than statistical confidence intervals.</p>
   </div>
 </details>
 ```
@@ -8387,6 +9276,6 @@ display(HTML(
   <strong>Important limitations.</strong>
   Polygenic scores estimate inherited genetic predisposition; they are not diagnostic tests.
   AUROC/concordance summaries, odds ratios, and hazard ratios come from ancestry-matched cohort-level performance records and may still not transfer perfectly across age groups, sex, genotyping arrays, imputation pipelines, or more fine-grained ancestry differences.
-  The individualized risk-effect calculation assumes that the source odds ratio or hazard ratio is reported per standard deviation of the PRS. If the original publication used a different effect unit or comparison group, the transformed percentage may be misleading and should be flagged in your score-selection database.
+  The individualized risk-effect calculation uses the user's ancestry-standardized z-score and assumes that the source odds ratio or hazard ratio is reported per standard deviation of the PRS. If the original publication used a different effect unit or comparison group, the transformed percentage may be misleading and should be flagged in your score-selection database.
 </div>
 ```

@@ -7,7 +7,7 @@ import shutil
 from config import (
     REFERENCE_VCF_DIR, REFERENCE_VCF_PATTERN, POPULATION_PANEL_FILE, 
     DEFAULT_CHROMOSOME, K_POPULATIONS, ANCESTRY_METHOD, REFERENCE_PANEL,
-    ANCESTRY_LABELS, LEGACY_POPULATION_MAP, DB_ANCESTRY_COLUMNS
+    ANCESTRY_LABELS, LEGACY_POPULATION_MAP, DB_ANCESTRY_COLUMNS, MIN_ANCESTRY_MARKERS
 )
 from db_config import USERNAME, PASSWORD, DATABASE_NAME, HOST, PORT, PGS_EXCEL_FILEPATH
 from db_handler import DbHandler, DbUtils
@@ -15,23 +15,23 @@ from db_handler import DbHandler, DbUtils
 class AncestryEnvironmentHandler:
     def __init__(
         self,
-        vcf_file: str | None = None,
+        vcf_files: dict[str, str] | None = None,  # chromosome -> per-chromosome VCF path
         bed_file: str | None = None,
         output_dir: str = ".",
         reference_vcf_dir: str = REFERENCE_VCF_DIR,  # Your existing 1000G HGDP VCFs
         reference_vcf_pattern: str = REFERENCE_VCF_PATTERN,
         population_panel_file: str = POPULATION_PANEL_FILE,  # Population assignments
-        use_chromosomes: list = None,  # List of chromosomes to use (default: [1, 2, 21, 22])
         k_populations: int = K_POPULATIONS,  # Number of ancestral populations
         ancestry_results = None
     ):
-        self.vcf_file = vcf_file
+        if not vcf_files:
+            raise ValueError("vcf_files must contain at least one chromosome -> VCF path mapping")
+        self.vcf_files = vcf_files
         self.bed_file = bed_file
         self.output_dir = output_dir
         self.reference_vcf_dir = reference_vcf_dir
         self.reference_vcf_pattern = reference_vcf_pattern
         self.population_panel_file = population_panel_file
-        self.use_chromosomes = use_chromosomes if use_chromosomes else ['1', '2', '21', '22']
         self.k_populations = k_populations
         self.ancestry_results = ancestry_results
         os.makedirs(output_dir, exist_ok=True)
@@ -67,56 +67,11 @@ class AncestryInference:
             raise FileNotFoundError(f"Reference VCF not found: {ref_path}")
         
         return ref_path
-    
-    def _extract_sample_chr_vcf(self, input_vcf: str, chrom: str, output_vcf: str) -> str:
-        """Prepare sample VCF - recompress with bgzip if needed."""
-        print(f"Preparing sample VCF for chromosome {chrom}...")
-        
-        temp_plain = None
-        temp_idx = input_vcf + ".tbi"
-        
-        try:
-            # Test if it's bgzip by trying to index it
-            # bgzip files can be indexed, regular gzip cannot
-            test_result = subprocess.run(
-                ["bcftools", "index", "-t", "-f", input_vcf],
-                capture_output=True,
-                check=False
-            )
-            
-            if test_result.returncode != 0:
-                # File is not bgzip compressed, need to recompress
-                print(f"  Recompressing with bgzip (file was gzip compressed)...")
-                temp_plain = input_vcf.replace(".vcf.gz", ".temp.vcf")
-                
-                # Decompress to plain text
-                with open(temp_plain, 'w') as f_out:
-                    subprocess.run(["gunzip", "-c", input_vcf], 
-                                 stdout=f_out, 
-                                 check=True)
-                
-                # Recompress with bgzip to output
-                subprocess.run([
-                    "bcftools", "view",
-                    "-Oz", "-o", output_vcf,
-                    temp_plain
-                ], check=True)
-            else:
-                # Already bgzip, just copy to output location
-                import shutil
-                shutil.copy(input_vcf, output_vcf)
-            
-            # Index the output file
-            subprocess.run(["bcftools", "index", "-t", output_vcf], check=True)
-            
-        finally:
-            # Clean up temp files if created
-            if temp_plain and os.path.exists(temp_plain):
-                os.remove(temp_plain)
-            if temp_idx and os.path.exists(temp_idx):
-                os.remove(temp_idx)
-        
-        return output_vcf
+
+    def _index_vcf(self, vcf_file: str) -> str:
+        """Ensure a tabix index exists for vcf_file."""
+        subprocess.run(["bcftools", "index", "-t", "-f", vcf_file], check=True)
+        return vcf_file
     
     def _merge_sample_with_reference(self, sample_vcf: str, ref_vcf: str, output_prefix: str) -> str:
         """Merge sample and reference VCFs using only exact matching variants."""
@@ -148,6 +103,60 @@ class AncestryInference:
         subprocess.run(["bcftools", "index", "-t", merged_vcf], check=True)
         
         return merged_vcf
+
+    def _normalize_sample_order(self, vcf_files: list[str]) -> list[str]:
+        """Ensure chromosome VCFs use the same sample order before concatenation."""
+        def get_sample_ids(vcf_file: str) -> list[str]:
+            result = subprocess.run(
+                ["bcftools", "query", "-l", vcf_file],
+                check=True,
+                capture_output=True,
+                text=True
+            )
+            return result.stdout.splitlines()
+
+        canonical_ids = get_sample_ids(vcf_files[0])
+        canonical_set = set(canonical_ids)
+        normalized_vcfs = [vcf_files[0]]
+
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            dir=self.env.output_dir,
+            prefix="ancestry_sample_order_",
+            suffix=".txt"
+        ) as sample_order_file:
+            sample_order_file.write("\n".join(canonical_ids) + "\n")
+            sample_order_file.flush()
+
+            for vcf_file in vcf_files[1:]:
+                sample_ids = get_sample_ids(vcf_file)
+                if sample_ids == canonical_ids:
+                    normalized_vcfs.append(vcf_file)
+                    continue
+
+                sample_set = set(sample_ids)
+                if len(sample_ids) != len(canonical_ids) or sample_set != canonical_set:
+                    missing = sorted(canonical_set - sample_set)
+                    extra = sorted(sample_set - canonical_set)
+                    raise ValueError(
+                        f"Chromosome VCF sample set differs for {vcf_file}: "
+                        f"missing={missing[:10]}, extra={extra[:10]}"
+                    )
+
+                normalized_vcf = os.path.join(
+                    self.env.output_dir,
+                    f"{Path(vcf_file).name}.sample_ordered.vcf.gz"
+                )
+                subprocess.run([
+                    "bcftools", "view",
+                    "-S", sample_order_file.name,
+                    "-Oz", "-o", normalized_vcf,
+                    vcf_file
+                ], check=True)
+                subprocess.run(["bcftools", "index", "-t", normalized_vcf], check=True)
+                normalized_vcfs.append(normalized_vcf)
+
+        return normalized_vcfs
     
     def _convert_vcf_to_plink(self, vcf_file: str, output_prefix: str) -> str:
         """Convert VCF to PLINK format for ADMIXTURE."""
@@ -163,6 +172,34 @@ class AncestryInference:
         ], check=True)
         
         return f"{output_prefix}.bed"
+
+    def _validate_user_genotypes(self, plink_prefix: str) -> None:
+        """Reject user samples whose observed calls are effectively all heterozygous."""
+        qc_prefix = f"{plink_prefix}.genotype_qc"
+        subprocess.run([
+            "plink2",
+            "--bfile", plink_prefix,
+            "--het",
+            "--out", qc_prefix
+        ], check=True)
+
+        het_df = pd.read_csv(f"{qc_prefix}.het", sep=r'\s+')
+        user_df = het_df[het_df['IID'].str.startswith('IMPID_')].copy()
+        if user_df.empty:
+            raise ValueError("No IMPID user samples were found in the ancestry dataset")
+
+        user_df['homozygous_fraction'] = user_df['O(HOM)'] / user_df['OBS_CT']
+        invalid = user_df[
+            (user_df['OBS_CT'] >= 1000) &
+            (user_df['homozygous_fraction'] < 0.05)
+        ]
+        if not invalid.empty:
+            sample_ids = ', '.join(invalid['IID'].head(10))
+            raise ValueError(
+                "Invalid ancestry input: user genotypes are almost entirely heterozygous "
+                f"for {len(invalid)} sample(s), including {sample_ids}. "
+                "Check VCF standardization and merging before running ADMIXTURE."
+            )
     
     def _create_population_file(self, merged_bed_prefix: str, panel_file: str) -> str:
         """Create .pop file for ADMIXTURE supervised mode with dynamic population support."""
@@ -291,24 +328,17 @@ class AncestryInference:
     def run_ancestry_inference(self) -> pd.DataFrame:
         """Main workflow: infer ancestry using multiple chromosomes from 1000G HGDP VCF references."""
         
-        chromosomes = self.env.use_chromosomes
         merged_vcfs = []
-        
-        # Step 1-3: Process each chromosome separately
-        for chrom in chromosomes:
+
+        # Step 1-3: Process each chromosome's already-merged VCF separately
+        for chrom, sample_chr_vcf in self.env.vcf_files.items():
             print(f"\n=== Processing chromosome {chrom} ===")
             
             # Get reference VCF for this chromosome
             ref_vcf = self._get_reference_vcf_for_chr(chrom)
             print(f"Using reference: {ref_vcf}")
             
-            # Extract same chromosome from sample VCF
-            sample_chr_vcf = os.path.join(self.env.output_dir, f"sample_chr{chrom}.vcf.gz")
-            
-            if self.env.vcf_file:
-                self._extract_sample_chr_vcf(self.env.vcf_file, chrom, sample_chr_vcf)
-            else:
-                raise ValueError("vcf_file is required")
+            self._index_vcf(sample_chr_vcf)
             
             # Merge sample with reference at common positions
             merged_prefix = os.path.join(self.env.output_dir, f"merged_chr{chrom}")
@@ -317,6 +347,7 @@ class AncestryInference:
         
         # Step 4: Concatenate all chromosome VCFs
         print(f"\n=== Concatenating {len(merged_vcfs)} chromosome VCFs ===")
+        merged_vcfs = self._normalize_sample_order(merged_vcfs)
         combined_vcf = os.path.join(self.env.output_dir, "merged_all_chrs.vcf.gz")
         subprocess.run([
             "bcftools", "concat",
@@ -328,6 +359,20 @@ class AncestryInference:
         # Step 5: Convert to PLINK format
         plink_prefix = os.path.join(self.env.output_dir, "merged_plink")
         self._convert_vcf_to_plink(combined_vcf, plink_prefix)
+        self._validate_user_genotypes(plink_prefix)
+
+        # Guard against running (supervised) ADMIXTURE on too few markers, which
+        # produces unstable/meaningless ancestry proportions that would otherwise
+        # be silently uploaded to the database.
+        with open(f"{plink_prefix}.bim") as bim_file:
+            marker_count = sum(1 for _ in bim_file)
+        print(f"Total markers available for ADMIXTURE: {marker_count}")
+        if marker_count < MIN_ANCESTRY_MARKERS:
+            raise ValueError(
+                f"Only {marker_count} markers survived intersection with the reference "
+                f"panel (minimum required: {MIN_ANCESTRY_MARKERS}). Ancestry results would "
+                "be unreliable - check chromosome coverage and REF/ALT harmonization."
+            )
         
         # Step 6: Create population file for supervised ADMIXTURE
         self._create_population_file(plink_prefix, self.env.population_panel_file)

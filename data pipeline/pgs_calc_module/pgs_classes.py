@@ -3,13 +3,145 @@ import pandas as pd
 import os
 import shutil
 import glob
+import math
+from typing import NamedTuple
 from db_handler import DbHandler, DbUtils
 from db_config import USERNAME, PASSWORD, HOST, PORT
-from config import PGS_BACTH_SIZE, SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR, OUTPUT_DIR, REFERENCE_DATA_PATH, BCFTOOLS_THREADS, SAMPLESET_NAME, VCF_MERGE_SHEET_DIR, PGS_RESULT_DIR, NEXTFLOW_PGS_CONFIG, NEXTFLOW_VCF_MERGING_CONFIG
+from config import (
+    N_PRSC_JOBS, SCORING_FILE_SOURCE_DIR, SCORING_FILE_TARGET_DIR, NF_WORK_DIR, OUTPUT_DIR,
+    REFERENCE_DATA_PATH, BCFTOOLS_THREADS, SAMPLESET_NAME, VCF_MERGE_SHEET_DIR, PGS_RESULT_DIR,
+    NEXTFLOW_PGS_CONFIG, NEXTFLOW_PGS_RESOURCE_CONFIG, NEXTFLOW_VCF_MERGING_CONFIG,
+    PGS_TOTAL_CPUS, PGS_TOTAL_MEM_GB, PGS_MEM_SAFETY_FRACTION, PGS_MATCH_VARIANTS_CPUS,
+    PGS_MATCH_COMBINE_CPUS, PGS_COMBINE_SCOREFILES_CPUS,
+    PGS_TARGET_VARIANTS_PER_CHUNK, PGS_MAX_FILES_PER_CHUNK,
+    PGS_REFERENCE_PANEL_SAMPLES, PGS_MEM_HEADROOM_FACTOR,
+    PGS_MATCH_VARIANTS_TASK_MODEL_S, PGS_MODEL_REFERENCE_VARIANTS,
+)
 from vcf_classes import VCFUtilities
 
 
 vcf_utilities = VCFUtilities()
+
+N_AUTOSOMES = 22
+
+# Peak RSS in GB as (intercept, per_million_variants, per_thousand_samples, per_Mvariant_per_cpu).
+# Fitted to the mean observed peak in the nf_reports traces at 85M variants and 303 users + 4k
+# reference panel. Polars allocates per-thread buffers, so MATCH_VARIANTS scales with task.cpus:
+# ~31 GB at 2 threads and ~64.9 GB at 5 threads, i.e. ~11.3 GB per extra thread. MATCH_COMBINE
+# measured 52 GB at 2 threads and 51.1 GB at 6, and COMBINE_SCOREFILES is single-threaded, so
+# neither gets a cpu term. PGS_MEM_HEADROOM_FACTOR covers the run-to-run spread on top.
+# MATCH_VARIANTS runs once per chromosome, the other two are single serial tasks per chunk.
+PGS_MEMORY_MODEL_GB = {
+    "MATCH_VARIANTS": (0.6, 0.084, 0.15, 0.133),
+    "MATCH_COMBINE": (18.0, 0.39, 0.20, 0.0),
+    "COMBINE_SCOREFILES": (0.5, 0.68, 0.0, 0.0),
+}
+
+
+class ChunkPlan(NamedTuple):
+    variant_budget: int
+    match_variants_forks: int
+    match_variants_cpus: int
+    match_variants_mem_gb: int
+    match_combine_mem_gb: int
+    combine_scorefiles_mem_gb: int
+
+
+def peak_memory_gb(process: str, variants: int, samples: int = 0, cpus: int = 1) -> float:
+    intercept, variant_slope, sample_slope, cpu_slope = PGS_MEMORY_MODEL_GB[process]
+    return (intercept
+            + variant_slope * variants / 1_000_000
+            + sample_slope * samples / 1_000
+            + cpu_slope * cpus * variants / 1_000_000)
+
+
+def match_variants_stage_seconds(forks: int, cpus_per_fork: int, variants: int) -> float:
+    """Wall time of MATCH_VARIANTS, which runs N_AUTOSOMES tasks in waves of `forks`."""
+
+    serial_s, parallel_cpu_s = PGS_MATCH_VARIANTS_TASK_MODEL_S
+    task_s = serial_s + parallel_cpu_s / cpus_per_fork
+    return math.ceil(N_AUTOSOMES / forks) * task_s * variants / PGS_MODEL_REFERENCE_VARIANTS
+
+
+def plan_pgs_resources(total_cpus: int = PGS_TOTAL_CPUS,
+                       total_mem_gb: float = PGS_TOTAL_MEM_GB,
+                       safety_fraction: float = PGS_MEM_SAFETY_FRACTION,
+                       match_variants_cpus: int = PGS_MATCH_VARIANTS_CPUS,
+                       target_variants: int = PGS_TARGET_VARIANTS_PER_CHUNK,
+                       n_users: int = N_PRSC_JOBS,
+                       reference_panel_samples: int = PGS_REFERENCE_PANEL_SAMPLES,
+                       headroom_factor: float = PGS_MEM_HEADROOM_FACTOR,
+                       match_combine_cpus: int = PGS_MATCH_COMBINE_CPUS,
+                       combine_scorefiles_cpus: int = PGS_COMBINE_SCOREFILES_CPUS) -> ChunkPlan:
+    """Derives the per-chunk variant budget and process resources from the available CPU/RAM."""
+
+    samples = n_users + reference_panel_samples
+
+    def request_gb(process: str, cpus: int) -> float:
+        return peak_memory_gb(process, target_variants, samples, cpus) * headroom_factor
+
+    usable_mem_gb = total_mem_gb * safety_fraction
+    variant_budget = target_variants
+
+    serial_peak_gb = max(request_gb("MATCH_COMBINE", match_combine_cpus),
+                         request_gb("COMBINE_SCOREFILES", combine_scorefiles_cpus))
+    if variant_budget <= 0 or serial_peak_gb > usable_mem_gb:
+        raise ValueError(
+            f"{target_variants:,} variants per chunk do not fit in {usable_mem_gb:.1f} GB "
+            "of usable memory; lower PGS_TARGET_VARIANTS_PER_CHUNK or raise the memory envelope."
+        )
+
+    # every extra Polars thread costs memory, so forks and cpus-per-fork compete for the same
+    # envelope; only combinations whose concurrent total fits are eligible
+    candidates = []
+    for forks in range(1, min(N_AUTOSOMES, total_cpus) + 1):
+        for cpus in range(match_variants_cpus, max(match_variants_cpus, total_cpus // forks) + 1):
+            if forks * request_gb("MATCH_VARIANTS", cpus) > usable_mem_gb:
+                continue
+            candidates.append(
+                (match_variants_stage_seconds(forks, cpus, variant_budget), forks, cpus)
+            )
+
+    if not candidates:
+        cheapest = request_gb("MATCH_VARIANTS", match_variants_cpus)
+        raise ValueError(
+            f"a single MATCH_VARIANTS task needs {cheapest:.1f} GB at {match_variants_cpus} cpus, "
+            f"which exceeds the {usable_mem_gb:.1f} GB usable envelope; lower "
+            "PGS_MATCH_VARIANTS_CPUS or PGS_TARGET_VARIANTS_PER_CHUNK."
+        )
+
+    _, forks, cpus_per_fork = min(candidates, key=lambda c: (c[0], c[1] * c[2]))
+
+    return ChunkPlan(
+        variant_budget=variant_budget,
+        match_variants_forks=forks,
+        match_variants_cpus=cpus_per_fork,
+        match_variants_mem_gb=math.ceil(request_gb("MATCH_VARIANTS", cpus_per_fork)),
+        match_combine_mem_gb=math.ceil(request_gb("MATCH_COMBINE", match_combine_cpus)),
+        combine_scorefiles_mem_gb=math.ceil(request_gb("COMBINE_SCOREFILES", combine_scorefiles_cpus)),
+    )
+
+
+def chunk_scoring_files_by_variants(files_with_variants: list[tuple[str, int]],
+                                    variant_budget: int,
+                                    max_files_per_chunk: int = PGS_MAX_FILES_PER_CHUNK) -> list[list[str]]:
+    """First-fit-decreasing bin packing on variant count, so genome-wide scores never cluster."""
+
+    chunks: list[list[str]] = []
+    chunk_variants: list[int] = []
+
+    for path, n_variants in sorted(files_with_variants, key=lambda item: (-item[1], item[0])):
+        for index, load in enumerate(chunk_variants):
+            if load + n_variants <= variant_budget and len(chunks[index]) < max_files_per_chunk:
+                chunks[index].append(path)
+                chunk_variants[index] = load + n_variants
+                break
+        else:
+            chunks.append([path])
+            chunk_variants.append(n_variants)
+
+    return chunks
+
 
 class EnvironmentHandler:
     def __init__(self, 
@@ -29,9 +161,16 @@ class EnvironmentHandler:
                  nf_work_dir: str = NF_WORK_DIR,
                  output_dir: str = OUTPUT_DIR,
                  reference_data_path: str = REFERENCE_DATA_PATH,
-                 pgs_batch_size: int = PGS_BACTH_SIZE,
+                 chunk_plan: ChunkPlan = None,
+                 total_cpus: int = PGS_TOTAL_CPUS,
+                 match_variants_cpus: int = PGS_MATCH_VARIANTS_CPUS,
+                 match_combine_cpus: int = PGS_MATCH_COMBINE_CPUS,
+                 combine_scorefiles_cpus: int = PGS_COMBINE_SCOREFILES_CPUS,
+                 max_files_per_chunk: int = PGS_MAX_FILES_PER_CHUNK,
+                 n_prsc_jobs: int = N_PRSC_JOBS,
                  pgs_result_dir: str = PGS_RESULT_DIR,
                  nextflow_pgs_config: str = NEXTFLOW_PGS_CONFIG,
+                 nextflow_pgs_resource_config: str = NEXTFLOW_PGS_RESOURCE_CONFIG,
                  nextflow_vcf_merging_config = NEXTFLOW_VCF_MERGING_CONFIG
                  ):
         
@@ -53,9 +192,18 @@ class EnvironmentHandler:
         self.scoring_file_target_dir = scoring_file_target_dir
         self.nf_work_dir = nf_work_dir
         self.sampleset_name = sampleset_name
-        self.pgs_batch_size = pgs_batch_size
+        self.chunk_plan = chunk_plan if chunk_plan is not None else plan_pgs_resources(
+            total_cpus=total_cpus, match_variants_cpus=match_variants_cpus
+        )
+        self.total_cpus = total_cpus
+        self.match_variants_cpus = match_variants_cpus
+        self.match_combine_cpus = match_combine_cpus
+        self.combine_scorefiles_cpus = combine_scorefiles_cpus
+        self.max_files_per_chunk = max_files_per_chunk
+        self.n_prsc_jobs = n_prsc_jobs
         self.pgs_result_dir = pgs_result_dir
         self.nextflow_pgs_config = nextflow_pgs_config
+        self.nextflow_pgs_resource_config = nextflow_pgs_resource_config
         self.nextflow_vcf_merging_config = nextflow_vcf_merging_config
         
     def copy_scoring_files(self, target_dir, scoring_file_list: list) -> None:
@@ -63,6 +211,48 @@ class EnvironmentHandler:
     
         for file in scoring_file_list:
             shutil.copy2(file, target_dir)
+
+    def write_nextflow_resource_config(self) -> str:
+        """Renders the executor and per-process resources that match the current chunk plan."""
+
+        plan = self.chunk_plan
+        content = f"""executor {{
+  name = 'local'
+  cpus = {self.total_cpus}
+  memory = '{int(PGS_TOTAL_MEM_GB)} GB'
+}}
+
+process {{
+  withName: 'PGSCATALOG_PGSCCALC:PGSCCALC:MATCH:MATCH_VARIANTS' {{
+    cpus = {plan.match_variants_cpus}
+    memory = {plan.match_variants_mem_gb}.GB
+    maxForks = {plan.match_variants_forks}
+  }}
+
+  withName: 'PGSCATALOG_PGSCCALC:PGSCCALC:ANCESTRY_PROJECT:INTERSECT_VARIANTS' {{
+    cpus = 1
+    memory = 1.GB
+    maxForks = {self.total_cpus}
+  }}
+
+  withName: 'PGSCATALOG_PGSCCALC:PGSCCALC:MATCH:MATCH_COMBINE' {{
+    cpus = {min(self.match_combine_cpus, self.total_cpus)}
+    memory = {plan.match_combine_mem_gb}.GB
+    maxForks = 1
+  }}
+
+  withName: 'COMBINE_SCOREFILES' {{
+    cpus = {self.combine_scorefiles_cpus}
+    memory = {plan.combine_scorefiles_mem_gb}.GB
+    maxForks = 1
+  }}
+}}
+"""
+
+        with open(self.nextflow_pgs_resource_config, "w") as handle:
+            handle.write(content)
+
+        return self.nextflow_pgs_resource_config
 
     def connect_to_db(self) -> None:
         if not self.db_utils.db_handler.connect():
@@ -261,7 +451,7 @@ class PGSCalculator:
 
 
         """The query gets the oldest prsc job with status 'queued' and imputation job with status 'completed', and then get all other queued prsc jobs requiring the same pgs_id(s) to run together in the same NF execution, to optimize computational time from reference_population*n_prsc_ids to reference_population+n_prsc_ids"""
-        query = """WITH eligible AS (
+        query = f"""WITH eligible AS (
                         SELECT DISTINCT
                             pj.imputation_id,
                             pj.prsc_id,
@@ -307,7 +497,7 @@ class PGSCalculator:
                         SELECT prsc_id
                         FROM matching_jobs
                         ORDER BY prsc_id
-                        LIMIT 50
+                        LIMIT {self.environment_handler.n_prsc_jobs}
                     )
                     SELECT
                         e.imputation_id,
@@ -316,7 +506,8 @@ class PGSCalculator:
                         e.prsc_status,
                         pjp.pgs_id,
                         e.imputation_status,
-                        prs.scoring_file_path
+                        prs.scoring_file_path,
+                        pgs.number_of_variants
                     FROM limited_matching_jobs mj
                     JOIN eligible e
                         ON e.prsc_id = mj.prsc_id
@@ -324,6 +515,8 @@ class PGSCalculator:
                         ON pjp.prsc_id = e.prsc_id
                     JOIN snpster_users.pgs_reports_shop prs
                         ON prs.pgs_id = pjp.pgs_id
+                    LEFT JOIN data_libraries.pgscatalog_data pgs
+                        ON pgs.pgs_id = pjp.pgs_id
                     ORDER BY e.prsc_id, pjp.pgs_id;"""
 
         results = self.environment_handler.db_utils.get_pd_dataframe_from_query(query)
@@ -349,12 +542,31 @@ class PGSCalculator:
             for row in df_subset.itertuples(index=False)
         ]
         self.environment_handler.samplesheet_paths = []  # Initialize empty, will be populated by create_samplesheets()
-        
-        scoring_files = sorted(set(results["scoring_file_path"].tolist()))
-        
-        #divide into chunks of 50 to avoid memory issues
-        
-        scoring_files_chunks = [scoring_files[i:i + self.environment_handler.pgs_batch_size] for i in range(0, len(scoring_files), self.environment_handler.pgs_batch_size)]
+
+        # the cohort size is only known here, so the plan is redone with the real user count
+        self.environment_handler.chunk_plan = plan_pgs_resources(
+            total_cpus=self.environment_handler.total_cpus,
+            match_variants_cpus=self.environment_handler.match_variants_cpus,
+            n_users=len(user_ids),
+        )
+
+        plan = self.environment_handler.chunk_plan
+        scoring_files = results[["scoring_file_path", "number_of_variants"]].drop_duplicates(subset="scoring_file_path")
+        # a score with an unknown variant count is charged the full budget so it gets a chunk of its own
+        variant_counts = scoring_files["number_of_variants"].fillna(plan.variant_budget).astype(int)
+
+        scoring_files_chunks = chunk_scoring_files_by_variants(
+            list(zip(scoring_files["scoring_file_path"], variant_counts)),
+            variant_budget=plan.variant_budget,
+            max_files_per_chunk=self.environment_handler.max_files_per_chunk,
+        )
+
+        print(
+            f"Split {len(scoring_files)} scoring files ({variant_counts.sum():,} variants) into "
+            f"{len(scoring_files_chunks)} chunks of up to {plan.variant_budget:,} variants "
+            f"(MATCH_VARIANTS: {plan.match_variants_forks} forks x {plan.match_variants_cpus} cpus "
+            f"x {plan.match_variants_mem_gb} GB)"
+        )
         
         #create subdir for each chunk
         
@@ -604,10 +816,23 @@ class PGSCalculator:
                 f"{self.environment_handler.reference_data_path}. "
                 "Check the pgs_calc volume mount and REFERENCE_DATA_PATH."
             )
+
+        resume_session_path = os.path.join(
+            self.environment_handler.pgs_result_dir, ".nextflow_resume_session"
+        )
+        try:
+            with open(resume_session_path) as resume_session_file:
+                resume_session = resume_session_file.read().strip()
+        except FileNotFoundError:
+            resume_session = ""
+
+        resume_args = ["-resume", resume_session] if resume_session else ["-resume"]
     
         command = [
             "nextflow", "run",
+            *resume_args,
             "-c", self.environment_handler.nextflow_pgs_config,
+            "-c", self.environment_handler.write_nextflow_resource_config(),
             "/opt/pgsc_calc/main.nf",
                 "-work-dir", self.environment_handler.nf_work_dir,
                 "-profile", "conda",
@@ -622,6 +847,8 @@ class PGSCalculator:
         print(f"Running PGS calculation with command: {' '.join(command)}")
 
         subprocess.run(command, check=True)
+        if resume_session:
+            os.unlink(resume_session_path)
         print("PGS calculation completed successfully.")
             
 

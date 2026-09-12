@@ -53,6 +53,11 @@ RUN bcftools --version \
  && bcftools merge --help 2>&1 | grep -q -- "--no-index" \
  && nextflow -version
 
+RUN MATCH_INTERSECT=/opt/pgscatalog_utils/lib/python3.12/site-packages/pgscatalog/match/cli/intersect_cli.py \
+ && grep -q 'if "bim" in pathlib.Path(path).name:' "$MATCH_INTERSECT" \
+ && sed -i 's/if "bim" in pathlib.Path(path).name:/if pathlib.Path(path).name.endswith((".bim", ".bim.gz", ".bim.zst")):/' "$MATCH_INTERSECT" \
+ && grep -q 'name.endswith((".bim", ".bim.gz", ".bim.zst"))' "$MATCH_INTERSECT"
+
 WORKDIR /app
 
 ENV REFERENCE_DATA_PATH=/data/pgsc_HGDP+1kGP_v1.tar.zst
@@ -63,12 +68,16 @@ ENV NF_WORK_DIR=/app/work
 ENV BCFTOOLS_THREADS=8
 ENV SAMPLESET_NAME=MergedUserData
 ENV VCF_MERGE_SHEET_DIR=/app/vcf_merge_sheets
-ENV PGS_BACTH_SIZE=50
+ENV PGS_TOTAL_CPUS=11
+ENV PGS_TOTAL_MEM_GB=110
+ENV N_PRSC_JOBS=303
 ENV PGS_RESULT_DIR=/app/pgs_results
 ENV NEXTFLOW_PGS_CONFIG=/app/nextflow_pgs.config
+ENV NEXTFLOW_PGS_RESOURCE_CONFIG=/app/nextflow_pgs_resources.config
 ENV NEXTFLOW_VCF_MERGING_CONFIG=/app/nextflow_vcf_merging.config
+ENV NF_REPORT_DIR=/app/nf_reports
 
-RUN mkdir -p "$OUTPUT_DIR" "$SCORING_FILE_TARGET_DIR" "$NF_WORK_DIR" "$VCF_MERGE_SHEET_DIR" "$PGS_RESULT_DIR"
+RUN mkdir -p "$OUTPUT_DIR" "$SCORING_FILE_TARGET_DIR" "$NF_WORK_DIR" "$VCF_MERGE_SHEET_DIR" "$PGS_RESULT_DIR" "$NF_REPORT_DIR"
 
 COPY pgs_calc_module/requirements.txt /tmp/pgs_calc_requirements.txt
 COPY database_module/requirements.txt /tmp/database_requirements.txt

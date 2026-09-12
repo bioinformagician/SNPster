@@ -27,7 +27,7 @@ services:
     build: 
       context: ..
       dockerfile: docker/imputation_runner/Dockerfile
-    mem_limit: 90g
+    mem_limit: 50g
     cpuset: "11-21"
     environment:
       DB_HOST: postgres
@@ -42,6 +42,7 @@ services:
       SAMPLESHEET_PATH: /app/imputation_runner_module/samplesheet.csv
       NXF_HOME: /srv/imputed/nf_runtime/.nextflow
       NXF_WORK: /srv/imputed/nf_runtime/nf_work
+      NEXTFLOW_CPUSET: "11-21"
       BASE_OUTPUT_DIR: /srv/imputed
       IMPUTATION_DEPENDENCIES: /srv/dependencies/imputation_runner/imputer
       HARMONIZER_DEPENDENCIES: /srv/dependencies/imputation_runner/harmonizer
@@ -59,7 +60,9 @@ services:
     build:
       context: ..
       dockerfile: docker/pgs_calc/Dockerfile
-    mem_limit: 90g
+    mem_limit: 130g
+    memswap_limit: 138g
+    cpus: 11.0
     cpuset: "0-10"
     environment:
       DB_HOST: postgres
@@ -76,6 +79,10 @@ services:
       BCFTOOLS_THREADS: 1 #remove
       SAMPLESET_NAME: MergedUserData
       VCF_MERGE_SHEET_DIR: /app/vcf_merge_sheets
+      PGS_TOTAL_CPUS: 11
+      PGS_TOTAL_MEM_GB: 130
+      PGS_TARGET_VARIANTS_PER_CHUNK: 85000000
+      N_PRSC_JOBS: 303
       PYTHONPATH: /app:/app/database_module:/app/pgs_calc_module:/app/vcf_utilities_module
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -83,5 +90,11 @@ services:
       - /srv/pgs_output:/app/pgs_output  # Output directory
       - /srv/scoring_files:/srv/scoring_files:ro  # Scoring files directory
       - /srv/imputed:/srv/imputed:ro # This is where the imputation outputs are stored, mount as read-only
+      - /srv/pgs_cache/work:/app/work
+      - /srv/pgs_cache/nextflow:/app/.nextflow
+      - /srv/pgs_cache/results:/app/pgs_results
+      - /srv/pgs_cache/vcf_merge_sheets:/app/vcf_merge_sheets
+      - /srv/pgs_cache/scoring_files:/app/scoring_files
+      - /srv/pgs_cache/nf_reports:/app/nf_reports
     depends_on:
       - postgres

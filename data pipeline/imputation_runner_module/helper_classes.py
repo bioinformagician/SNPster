@@ -96,7 +96,14 @@ class DatabaseQueryHandler:
     def get_queued_jobs(self) -> pd.DataFrame:
         
         
-        query = f"""SELECT DISTINCT ON (ij.imputation_id)
+        query = f"""WITH queued_jobs AS (
+                        SELECT imputation_id
+                        FROM snpster_users.imputation_jobs
+                        WHERE imputation_status = 'queued'
+                        ORDER BY imputation_id ASC
+                        LIMIT 33
+                    )
+                    SELECT
                         uf.user_id,
                         ij.imputation_id,
                         ijp.file_id,
@@ -106,9 +113,10 @@ class DatabaseQueryHandler:
                         ON ij.imputation_id = ijp.imputation_id
                     JOIN snpster_users.user_files uf
                         ON uf.file_id = ijp.file_id
-                    WHERE ij.imputation_status = 'queued'
+                    JOIN queued_jobs qj
+                        ON qj.imputation_id = ij.imputation_id
                     ORDER BY ij.imputation_id ASC, ijp.file_id ASC
-                    LIMIT 33;"""
+                    ;"""
         
         results = self.db_utils.get_pd_dataframe_from_query(query)
         
@@ -264,7 +272,12 @@ class ImputationRunner:
                 failed_ids.append(imputation_id)
                 continue
 
-            file_count = sum(len(files) for _, _, files in os.walk(output_dir))
+            file_count = sum(
+                1
+                for _, _, files in os.walk(output_dir)
+                for file_name in files
+                if file_name.endswith(".vcf.gz")
+            )
             if file_count == 22:
                 successful_ids.append(imputation_id)
             else:

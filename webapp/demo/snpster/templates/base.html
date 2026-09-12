@@ -1,43 +1,40 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta
         name="description"
-        content="{% block meta_description %}Explore your genetic data and polygenic score reports.{% endblock %}"
+        content="{% block meta_description %}Explore your genetic data and polygenic score reports with ancestry-aware context.{% endblock %}"
     >
 
-    <title>
-        {% block title %}SNPster{% endblock %}
-    </title>
+    <title>{% block title %}SNPster{% endblock %}</title>
 
-    <link
-        rel="stylesheet"
-        href="{% static 'css/main.css' %}"
-    >
+    <script>
+        // Apply the saved/system theme before the page paints to avoid flashing.
+        (function () {
+            const saved = localStorage.getItem("snpster-theme");
+            const preferred = window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+            document.documentElement.dataset.theme = saved || preferred;
+        })();
+    </script>
 
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 
 <body>
-    <div class="page-shell">
+    <div class="site-shell">
         <header class="site-header">
             <div class="container header-inner">
-                <a
-                    class="brand"
-                    href="{% url 'home' %}"
-                    aria-label="SNPster home"
-                >
-                    <span class="brand-mark">S</span>
-
-                    <span class="brand-text">
+                <a class="brand" href="{% url 'home' %}" aria-label="SNPster home">
+                    <span class="brand-iris" aria-hidden="true">
+                        <img src="{% static 'css/images/snpster-iris.png' %}" alt="">
+                    </span>
+                    <span class="brand-copy">
                         <strong>SNPster</strong>
                         <small>Polygenic insights</small>
                     </span>
@@ -51,9 +48,7 @@
                     id="mobile-menu-button"
                 >
                     <span class="sr-only">Toggle navigation</span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span></span><span></span>
                 </button>
 
                 <nav
@@ -64,71 +59,53 @@
                     <a
                         href="{% url 'home' %}"
                         class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}"
-                    >
-                        Home
-                    </a>
+                    >Home</a>
 
                     {% if user.is_authenticated %}
-                        <a href="#">
-                            Dashboard
-                        </a>
-
-                        <a href="#">
-                            Upload data
-                        </a>
-
-                        <a href="#">
-                            Reports
-                        </a>
+                        <a href="#">Dashboard</a>
+                        <a href="#">Upload data</a>
+                        <a href="#">Reports</a>
                     {% else %}
-                        <a href="#how-it-works">
-                            How it works
-                        </a>
-
-                        <a href="#features">
-                            Features
-                        </a>
+                        <a href="{% url 'home' %}#how-it-works">How it works</a>
+                        <a href="{% url 'home' %}#method">Method</a>
+                        <a href="{% url 'home' %}#privacy">Privacy</a>
                     {% endif %}
                 </nav>
 
                 <div class="header-actions">
-                    {% if user.is_authenticated %}
-                        <div class="user-menu">
-                            <span class="user-avatar">
-                                {{ user.username|first|upper }}
-                            </span>
+                    <button
+                        class="theme-toggle"
+                        id="theme-toggle"
+                        type="button"
+                        aria-label="Switch color theme"
+                        title="Switch color theme"
+                    >
+                        <span class="theme-track" aria-hidden="true">
+                            <span class="theme-knob"></span>
+                        </span>
+                        <span class="theme-label">Theme</span>
+                    </button>
 
-                            <div class="user-details">
+                    {% if user.is_authenticated %}
+                        <div class="user-chip">
+                            <span class="user-avatar">{{ user.username|first|upper }}</span>
+                            <span class="user-chip-copy">
                                 <strong>{{ user.username }}</strong>
                                 <small>Signed in</small>
-                            </div>
+                            </span>
                         </div>
 
-                        <form
-                            method="post"
-                            action="{% url 'logout' %}"
-                        >
+                        <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}
-
-                            <button
-                                class="button button-secondary button-small"
-                                type="submit"
-                            >
+                            <button class="button button-quiet button-small" type="submit">
                                 Log out
                             </button>
                         </form>
                     {% else %}
-                        <a
-                            class="button button-secondary button-small"
-                            href="{% url 'login' %}"
-                        >
+                        <a class="button button-quiet button-small" href="{% url 'login' %}">
                             Log in
                         </a>
-
-                        <a
-                            class="button button-primary button-small"
-                            href="#"
-                        >
+                        <a class="button button-primary button-small" href="#">
                             Create account
                         </a>
                     {% endif %}
@@ -139,19 +116,9 @@
         {% if messages %}
             <div class="container message-container">
                 {% for message in messages %}
-                    <div
-                        class="message message-{{ message.tags|default:'info' }}"
-                        role="alert"
-                    >
+                    <div class="message message-{{ message.tags|default:'info' }}" role="alert">
                         <span>{{ message }}</span>
-
-                        <button
-                            class="message-close"
-                            type="button"
-                            aria-label="Close message"
-                        >
-                            &times;
-                        </button>
+                        <button class="message-close" type="button" aria-label="Close message">×</button>
                     </div>
                 {% endfor %}
             </div>
@@ -162,94 +129,76 @@
         </main>
 
         <footer class="site-footer">
-            <div class="container footer-grid">
-                <div>
-                    <a
-                        class="brand footer-brand"
-                        href="{% url 'home' %}"
-                    >
-                        <span class="brand-mark">S</span>
-
-                        <span class="brand-text">
+            <div class="container footer-top">
+                <div class="footer-brand-column">
+                    <a class="brand footer-brand" href="{% url 'home' %}">
+                        <span class="brand-iris" aria-hidden="true">
+                            <img src="{% static 'css/images/snpster-iris.png' %}" alt="">
+                        </span>
+                        <span class="brand-copy">
                             <strong>SNPster</strong>
                             <small>Polygenic insights</small>
                         </span>
                     </a>
-
-                    <p class="footer-description">
-                        A platform for processing consumer genetic data and
-                        presenting polygenic score results in a clear,
-                        transparent format.
+                    <p>
+                        Consumer genomics with the uncertainty, evidence and ancestry
+                        context left visible.
                     </p>
                 </div>
 
-                <div>
-                    <h3>Platform</h3>
-
-                    <ul class="footer-links">
-                        <li><a href="#how-it-works">How it works</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#">Supported files</a></li>
-                        <li><a href="#">Methodology</a></li>
-                    </ul>
+                <div class="footer-column">
+                    <h3>Explore</h3>
+                    <a href="{% url 'home' %}#how-it-works">How it works</a>
+                    <a href="{% url 'home' %}#method">Methodology</a>
+                    <a href="#">Supported files</a>
+                    <a href="#">Reports</a>
                 </div>
 
-                <div>
-                    <h3>Legal</h3>
-
-                    <ul class="footer-links">
-                        <li><a href="#">Privacy</a></li>
-                        <li><a href="#">Terms</a></li>
-                        <li><a href="#">Data policy</a></li>
-                        <li><a href="#">Medical disclaimer</a></li>
-                    </ul>
+                <div class="footer-column">
+                    <h3>Policy</h3>
+                    <a href="#">Privacy</a>
+                    <a href="#">Data policy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Medical disclaimer</a>
                 </div>
 
-                <div>
-                    <h3>Important</h3>
-
-                    <p class="footer-note">
-                        Polygenic scores are statistical estimates and are not
-                        medical diagnoses. Always discuss health decisions with
-                        a qualified healthcare professional.
+                <div class="footer-note-column">
+                    <span class="footer-note-rule"></span>
+                    <p>
+                        Polygenic scores are statistical estimates, not diagnoses.
+                        Health decisions should be discussed with a qualified healthcare
+                        professional.
                     </p>
                 </div>
             </div>
 
             <div class="container footer-bottom">
-                <span>
-                    &copy; {% now "Y" %} SNPster
-                </span>
-
-                <span>
-                    Built for transparent genetic interpretation
-                </span>
+                <span>© {% now "Y" %} SNPster</span>
+                <span>Genetics, interpreted in context.</span>
             </div>
         </footer>
     </div>
 
     <script>
+        const root = document.documentElement;
+        const themeToggle = document.getElementById("theme-toggle");
         const menuButton = document.getElementById("mobile-menu-button");
         const navigation = document.getElementById("primary-navigation");
 
-        if (menuButton && navigation) {
-            menuButton.addEventListener("click", () => {
-                const expanded =
-                    menuButton.getAttribute("aria-expanded") === "true";
+        themeToggle?.addEventListener("click", () => {
+            const next = root.dataset.theme === "dark" ? "light" : "dark";
+            root.dataset.theme = next;
+            localStorage.setItem("snpster-theme", next);
+        });
 
-                menuButton.setAttribute(
-                    "aria-expanded",
-                    String(!expanded)
-                );
-
-                navigation.classList.toggle("open");
-            });
-        }
+        menuButton?.addEventListener("click", () => {
+            const expanded = menuButton.getAttribute("aria-expanded") === "true";
+            menuButton.setAttribute("aria-expanded", String(!expanded));
+            navigation?.classList.toggle("open");
+        });
 
         document.querySelectorAll(".message-close").forEach((button) => {
-            button.addEventListener("click", () => {
-                button.closest(".message")?.remove();
-            });
+            button.addEventListener("click", () => button.closest(".message")?.remove());
         });
     </script>
 
