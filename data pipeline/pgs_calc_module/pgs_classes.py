@@ -282,25 +282,26 @@ process {{
             self.nf_work_dir,
             self.vcf_merge_sheet_dir,
             self.pgs_result_dir,
+            "/app/.nextflow",
         ]
 
         for directory in directories_to_clear:
             if not directory or not os.path.isdir(directory):
                 continue
 
-            for entry in os.listdir(directory):
-                path = os.path.join(directory, entry)
-                if os.path.isfile(path) or os.path.islink(path):
-                    os.unlink(path)
-                elif os.path.isdir(path):
-                    shutil.rmtree(path)
+            self._clear_directory_contents(directory)
         
-        for pattern in ["/app/.nextflow*", "/app/.nextflow.log*"]:
-            for path in glob.glob(pattern):
-                if os.path.isfile(path) or os.path.islink(path):
-                    os.unlink(path)
-                elif os.path.isdir(path):
-                    shutil.rmtree(path)
+        for path in glob.glob("/app/.nextflow.log*"):
+            if os.path.isfile(path) or os.path.islink(path):
+                os.unlink(path)
+
+    @staticmethod
+    def _clear_directory_contents(directory: str) -> None:
+        for entry in os.scandir(directory):
+            if entry.is_symlink() or entry.is_file():
+                os.unlink(entry.path)
+            elif entry.is_dir():
+                shutil.rmtree(entry.path)
     
     def clear_output_directory(self) -> None:
         """Clears the output directory."""

@@ -1,0 +1,2274 @@
+pgs_id,reported_trait,category
+PGS000192,Cholesterol,Blood & Biomarkers
+PGS001895,Cholesterol,Blood & Biomarkers
+PGS002108,Cholesterol,Blood & Biomarkers
+PGS003495,Cholesterol,Blood & Biomarkers
+PGS001318,Lipid disorders,Blood & Biomarkers
+PGS004448,Lipid disorders,Blood & Biomarkers
+PGS004518,Lipid disorders,Blood & Biomarkers
+PGS000924,Porphyrin and bilirubin metabolism disorders,Blood & Biomarkers
+PGS000303,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS000860,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS000883,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS000884,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS000885,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS002810,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS003219,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS003220,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS003221,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS003222,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS003223,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS003224,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS003225,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS003226,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS003227,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS003228,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS003377,Estimated glomerular filtration rate,Blood & Biomarkers
+PGS001182,Elevated estradiol,Blood & Biomarkers
+PGS001153,Folate (vitamin B9) level,Blood & Biomarkers
+PGS000865,Hepatic fat content,Blood & Biomarkers
+PGS000866,Hepatic fat content,Blood & Biomarkers
+PGS000936,High cholesterol,Blood & Biomarkers
+PGS002334,High cholesterol,Blood & Biomarkers
+PGS002406,High cholesterol,Blood & Biomarkers
+PGS002455,High cholesterol,Blood & Biomarkers
+PGS002504,High cholesterol,Blood & Biomarkers
+PGS002553,High cholesterol,Blood & Biomarkers
+PGS002602,High cholesterol,Blood & Biomarkers
+PGS002651,High cholesterol,Blood & Biomarkers
+PGS002700,High cholesterol,Blood & Biomarkers
+PGS000065,LDL cholesterol,Blood & Biomarkers
+PGS000115,LDL cholesterol,Blood & Biomarkers
+PGS000310,LDL cholesterol,Blood & Biomarkers
+PGS000340,LDL cholesterol,Blood & Biomarkers
+PGS000661,LDL cholesterol,Blood & Biomarkers
+PGS000814,LDL cholesterol,Blood & Biomarkers
+PGS000824,LDL cholesterol,Blood & Biomarkers
+PGS000846,LDL cholesterol,Blood & Biomarkers
+PGS000875,LDL cholesterol,Blood & Biomarkers
+PGS000886,LDL cholesterol,Blood & Biomarkers
+PGS000887,LDL cholesterol,Blood & Biomarkers
+PGS000888,LDL cholesterol,Blood & Biomarkers
+PGS000889,LDL cholesterol,Blood & Biomarkers
+PGS000890,LDL cholesterol,Blood & Biomarkers
+PGS000891,LDL cholesterol,Blood & Biomarkers
+PGS000892,LDL cholesterol,Blood & Biomarkers
+PGS000893,LDL cholesterol,Blood & Biomarkers
+PGS000894,LDL cholesterol,Blood & Biomarkers
+PGS000895,LDL cholesterol,Blood & Biomarkers
+PGS000896,LDL cholesterol,Blood & Biomarkers
+PGS000897,LDL cholesterol,Blood & Biomarkers
+PGS002274,LDL cholesterol,Blood & Biomarkers
+PGS002285,LDL cholesterol,Blood & Biomarkers
+PGS002337,LDL cholesterol,Blood & Biomarkers
+PGS002369,LDL cholesterol,Blood & Biomarkers
+PGS002409,LDL cholesterol,Blood & Biomarkers
+PGS002458,LDL cholesterol,Blood & Biomarkers
+PGS002507,LDL cholesterol,Blood & Biomarkers
+PGS002556,LDL cholesterol,Blood & Biomarkers
+PGS002605,LDL cholesterol,Blood & Biomarkers
+PGS002654,LDL cholesterol,Blood & Biomarkers
+PGS002703,LDL cholesterol,Blood & Biomarkers
+PGS003029,LDL cholesterol,Blood & Biomarkers
+PGS003030,LDL cholesterol,Blood & Biomarkers
+PGS003031,LDL cholesterol,Blood & Biomarkers
+PGS003032,LDL cholesterol,Blood & Biomarkers
+PGS003033,LDL cholesterol,Blood & Biomarkers
+PGS003034,LDL cholesterol,Blood & Biomarkers
+PGS003035,LDL cholesterol,Blood & Biomarkers
+PGS003036,LDL cholesterol,Blood & Biomarkers
+PGS003037,LDL cholesterol,Blood & Biomarkers
+PGS003038,LDL cholesterol,Blood & Biomarkers
+PGS003339,LDL cholesterol,Blood & Biomarkers
+PGS003348,LDL cholesterol,Blood & Biomarkers
+PGS003403,LDL cholesterol,Blood & Biomarkers
+PGS003404,LDL cholesterol,Blood & Biomarkers
+PGS003405,LDL cholesterol,Blood & Biomarkers
+PGS003784,LDL cholesterol,Blood & Biomarkers
+PGS003785,LDL cholesterol,Blood & Biomarkers
+PGS003786,LDL cholesterol,Blood & Biomarkers
+PGS003787,LDL cholesterol,Blood & Biomarkers
+PGS003788,LDL cholesterol,Blood & Biomarkers
+PGS003789,LDL cholesterol,Blood & Biomarkers
+PGS003790,LDL cholesterol,Blood & Biomarkers
+PGS003791,LDL cholesterol,Blood & Biomarkers
+PGS003792,LDL cholesterol,Blood & Biomarkers
+PGS003793,LDL cholesterol,Blood & Biomarkers
+PGS003794,LDL cholesterol,Blood & Biomarkers
+PGS003795,LDL cholesterol,Blood & Biomarkers
+PGS003796,LDL cholesterol,Blood & Biomarkers
+PGS003797,LDL cholesterol,Blood & Biomarkers
+PGS003798,LDL cholesterol,Blood & Biomarkers
+PGS003799,LDL cholesterol,Blood & Biomarkers
+PGS003800,LDL cholesterol,Blood & Biomarkers
+PGS003855,LDL cholesterol,Blood & Biomarkers
+PGS003869,LDL cholesterol,Blood & Biomarkers
+PGS003870,LDL cholesterol,Blood & Biomarkers
+PGS003871,LDL cholesterol,Blood & Biomarkers
+PGS003872,LDL cholesterol,Blood & Biomarkers
+PGS003873,LDL cholesterol,Blood & Biomarkers
+PGS003874,LDL cholesterol,Blood & Biomarkers
+PGS003974,LDL cholesterol,Blood & Biomarkers
+PGS003975,LDL cholesterol,Blood & Biomarkers
+PGS003976,LDL cholesterol,Blood & Biomarkers
+PGS003977,LDL cholesterol,Blood & Biomarkers
+PGS003978,LDL cholesterol,Blood & Biomarkers
+PGS004637,LDL cholesterol,Blood & Biomarkers
+PGS004638,LDL cholesterol,Blood & Biomarkers
+PGS004639,LDL cholesterol,Blood & Biomarkers
+PGS004640,LDL cholesterol,Blood & Biomarkers
+PGS004641,LDL cholesterol,Blood & Biomarkers
+PGS004642,LDL cholesterol,Blood & Biomarkers
+PGS004643,LDL cholesterol,Blood & Biomarkers
+PGS004644,LDL cholesterol,Blood & Biomarkers
+PGS004645,LDL cholesterol,Blood & Biomarkers
+PGS004646,LDL cholesterol,Blood & Biomarkers
+PGS004647,LDL cholesterol,Blood & Biomarkers
+PGS004648,LDL cholesterol,Blood & Biomarkers
+PGS004649,LDL cholesterol,Blood & Biomarkers
+PGS004650,LDL cholesterol,Blood & Biomarkers
+PGS004651,LDL cholesterol,Blood & Biomarkers
+PGS004791,LDL cholesterol,Blood & Biomarkers
+PGS004792,LDL cholesterol,Blood & Biomarkers
+PGS004793,LDL cholesterol,Blood & Biomarkers
+PGS004794,LDL cholesterol,Blood & Biomarkers
+PGS004915,LDL cholesterol,Blood & Biomarkers
+PGS004936,LDL cholesterol,Blood & Biomarkers
+PGS004969,LDL cholesterol,Blood & Biomarkers
+PGS004970,LDL cholesterol,Blood & Biomarkers
+PGS004971,LDL cholesterol,Blood & Biomarkers
+PGS004972,LDL cholesterol,Blood & Biomarkers
+PGS004973,LDL cholesterol,Blood & Biomarkers
+PGS004974,LDL cholesterol,Blood & Biomarkers
+PGS004975,LDL cholesterol,Blood & Biomarkers
+PGS004976,LDL cholesterol,Blood & Biomarkers
+PGS004977,LDL cholesterol,Blood & Biomarkers
+PGS004978,LDL cholesterol,Blood & Biomarkers
+PGS004979,LDL cholesterol,Blood & Biomarkers
+PGS004980,LDL cholesterol,Blood & Biomarkers
+PGS004981,LDL cholesterol,Blood & Biomarkers
+PGS012517,LDL cholesterol,Blood & Biomarkers
+PGS012525,LDL cholesterol,Blood & Biomarkers
+PGS019801,LDL cholesterol,Blood & Biomarkers
+PGS019825,LDL cholesterol,Blood & Biomarkers
+PGS019849,LDL cholesterol,Blood & Biomarkers
+PGS019873,LDL cholesterol,Blood & Biomarkers
+PGS019897,LDL cholesterol,Blood & Biomarkers
+PGS000126,Serum urate,Blood & Biomarkers
+PGS000712,Type 2 diabetes,Metabolism & Hormones
+PGS000063,Triglycerides,Blood & Biomarkers
+PGS000312,Triglycerides,Blood & Biomarkers
+PGS000659,Triglycerides,Blood & Biomarkers
+PGS000826,Triglycerides,Blood & Biomarkers
+PGS001979,Triglycerides,Blood & Biomarkers
+PGS002197,Triglycerides,Blood & Biomarkers
+PGS002353,Triglycerides,Blood & Biomarkers
+PGS002378,Triglycerides,Blood & Biomarkers
+PGS002425,Triglycerides,Blood & Biomarkers
+PGS002474,Triglycerides,Blood & Biomarkers
+PGS002523,Triglycerides,Blood & Biomarkers
+PGS002572,Triglycerides,Blood & Biomarkers
+PGS002621,Triglycerides,Blood & Biomarkers
+PGS002670,Triglycerides,Blood & Biomarkers
+PGS002719,Triglycerides,Blood & Biomarkers
+PGS002784,Triglycerides,Blood & Biomarkers
+PGS003144,Triglycerides,Blood & Biomarkers
+PGS003145,Triglycerides,Blood & Biomarkers
+PGS003146,Triglycerides,Blood & Biomarkers
+PGS003147,Triglycerides,Blood & Biomarkers
+PGS003148,Triglycerides,Blood & Biomarkers
+PGS003149,Triglycerides,Blood & Biomarkers
+PGS003150,Triglycerides,Blood & Biomarkers
+PGS003151,Triglycerides,Blood & Biomarkers
+PGS003152,Triglycerides,Blood & Biomarkers
+PGS003153,Triglycerides,Blood & Biomarkers
+PGS003482,Triglycerides,Blood & Biomarkers
+PGS003854,Triglycerides,Blood & Biomarkers
+PGS004845,Triglycerides,Blood & Biomarkers
+PGS004846,Triglycerides,Blood & Biomarkers
+PGS004847,Triglycerides,Blood & Biomarkers
+PGS004848,Triglycerides,Blood & Biomarkers
+PGS004916,Triglycerides,Blood & Biomarkers
+PGS004937,Triglycerides,Blood & Biomarkers
+PGS019809,Triglycerides,Blood & Biomarkers
+PGS019833,Triglycerides,Blood & Biomarkers
+PGS019857,Triglycerides,Blood & Biomarkers
+PGS019881,Triglycerides,Blood & Biomarkers
+PGS019905,Triglycerides,Blood & Biomarkers
+PGS019917,Triglycerides,Blood & Biomarkers
+PGS001305,Vitamin B12 deficiency induced anemia,Blood & Biomarkers
+PGS001045,Folate (vitamin B9) intake,Blood & Biomarkers
+PGS000702,Vitamin D level,Blood & Biomarkers
+PGS004344,Vitamin D level,Blood & Biomarkers
+PGS000929,All-cause dementia,Brain & Mental Health
+PGS004280,All-cause dementia,Brain & Mental Health
+PGS004281,All-cause dementia,Brain & Mental Health
+PGS004282,All-cause dementia,Brain & Mental Health
+PGS004283,All-cause dementia,Brain & Mental Health
+PGS004284,All-cause dementia,Brain & Mental Health
+PGS005170,All-cause dementia,Brain & Mental Health
+PGS000025,Alzheimer's disease,Brain & Mental Health
+PGS000026,Alzheimer's disease,Brain & Mental Health
+PGS000053,Alzheimer's disease,Brain & Mental Health
+PGS000054,Alzheimer's disease,Brain & Mental Health
+PGS000779,Alzheimer's disease,Brain & Mental Health
+PGS000811,Alzheimer's disease,Brain & Mental Health
+PGS000812,Alzheimer's disease,Brain & Mental Health
+PGS000823,Alzheimer's disease,Brain & Mental Health
+PGS000876,Alzheimer's disease,Brain & Mental Health
+PGS000898,Alzheimer's disease,Brain & Mental Health
+PGS001348,Alzheimer's disease,Brain & Mental Health
+PGS001349,Alzheimer's disease,Brain & Mental Health
+PGS001775,Alzheimer's disease,Brain & Mental Health
+PGS001828,Alzheimer's disease,Brain & Mental Health
+PGS002249,Alzheimer's disease,Brain & Mental Health
+PGS002280,Alzheimer's disease,Brain & Mental Health
+PGS002731,Alzheimer's disease,Brain & Mental Health
+PGS002753,Alzheimer's disease,Brain & Mental Health
+PGS003440,Alzheimer's disease,Brain & Mental Health
+PGS003441,Alzheimer's disease,Brain & Mental Health
+PGS003574,Alzheimer's disease,Brain & Mental Health
+PGS003953,Alzheimer's disease,Brain & Mental Health
+PGS003954,Alzheimer's disease,Brain & Mental Health
+PGS003955,Alzheimer's disease,Brain & Mental Health
+PGS003956,Alzheimer's disease,Brain & Mental Health
+PGS003957,Alzheimer's disease,Brain & Mental Health
+PGS003958,Alzheimer's disease,Brain & Mental Health
+PGS003992,Alzheimer's disease,Brain & Mental Health
+PGS004008,Alzheimer's disease,Brain & Mental Health
+PGS004034,Alzheimer's disease,Brain & Mental Health
+PGS004062,Alzheimer's disease,Brain & Mental Health
+PGS004092,Alzheimer's disease,Brain & Mental Health
+PGS004116,Alzheimer's disease,Brain & Mental Health
+PGS004146,Alzheimer's disease,Brain & Mental Health
+PGS004227,Alzheimer's disease,Brain & Mental Health
+PGS004228,Alzheimer's disease,Brain & Mental Health
+PGS004229,Alzheimer's disease,Brain & Mental Health
+PGS004285,Alzheimer's disease,Brain & Mental Health
+PGS004286,Alzheimer's disease,Brain & Mental Health
+PGS004287,Alzheimer's disease,Brain & Mental Health
+PGS004288,Alzheimer's disease,Brain & Mental Health
+PGS004289,Alzheimer's disease,Brain & Mental Health
+PGS004588,Alzheimer's disease,Brain & Mental Health
+PGS004589,Alzheimer's disease,Brain & Mental Health
+PGS004590,Alzheimer's disease,Brain & Mental Health
+PGS004600,Alzheimer's disease,Brain & Mental Health
+PGS004863,Alzheimer's disease,Brain & Mental Health
+PGS004898,Alzheimer's disease,Brain & Mental Health
+PGS005389,Alzheimer's disease,Brain & Mental Health
+PGS005390,Alzheimer's disease,Brain & Mental Health
+PGS005391,Alzheimer's disease,Brain & Mental Health
+PGS012548,Alzheimer's disease,Brain & Mental Health
+PGS018906,Alzheimer's disease,Brain & Mental Health
+PGS018907,Alzheimer's disease,Brain & Mental Health
+PGS018908,Alzheimer's disease,Brain & Mental Health
+PGS018909,Alzheimer's disease,Brain & Mental Health
+PGS018910,Alzheimer's disease,Brain & Mental Health
+PGS000945,Alzheimer's disease,Brain & Mental Health
+PGS001281,Migraine,Brain & Mental Health
+PGS001282,Migraine,Brain & Mental Health
+PGS004797,Migraine,Brain & Mental Health
+PGS004798,Migraine,Brain & Mental Health
+PGS004799,Migraine,Brain & Mental Health
+PGS004800,Migraine,Brain & Mental Health
+PGS018986,Migraine,Brain & Mental Health
+PGS018987,Migraine,Brain & Mental Health
+PGS018988,Migraine,Brain & Mental Health
+PGS018989,Migraine,Brain & Mental Health
+PGS018990,Migraine,Brain & Mental Health
+PGS000809,Multiple sclerosis,Brain & Mental Health
+PGS001270,Multiple sclerosis,Brain & Mental Health
+PGS001271,Multiple sclerosis,Brain & Mental Health
+PGS001831,Multiple sclerosis,Brain & Mental Health
+PGS002038,Multiple sclerosis,Brain & Mental Health
+PGS002726,Multiple sclerosis,Brain & Mental Health
+PGS004699,Multiple sclerosis,Brain & Mental Health
+PGS004700,Multiple sclerosis,Brain & Mental Health
+PGS000756,Narcolepsy,Brain & Mental Health
+PGS000757,Narcolepsy,Brain & Mental Health
+PGS001127,Never smoking,Brain & Mental Health
+PGS003479,Obstructive sleep apnea,Brain & Mental Health
+PGS003857,Obstructive sleep apnea,Brain & Mental Health
+PGS012520,Obstructive sleep apnea,Brain & Mental Health
+PGS012528,Obstructive sleep apnea,Brain & Mental Health
+PGS005219,Obstructive sleep apnea,Brain & Mental Health
+PGS003858,Obstructive sleep apnea,Brain & Mental Health
+PGS005220,Obstructive sleep apnea,Brain & Mental Health
+PGS001046,Ever smoked,Brain & Mental Health
+PGS001047,Occasional smoking history,Brain & Mental Health
+PGS001128,Former smoking,Brain & Mental Health
+PGS000133,Schizophrenia,Brain & Mental Health
+PGS000134,Schizophrenia,Brain & Mental Health
+PGS000135,Schizophrenia,Brain & Mental Health
+PGS000136,Schizophrenia,Brain & Mental Health
+PGS002785,Schizophrenia,Brain & Mental Health
+PGS002348,Smoking status,Brain & Mental Health
+PGS002375,Smoking status,Brain & Mental Health
+PGS002420,Smoking status,Brain & Mental Health
+PGS002469,Smoking status,Brain & Mental Health
+PGS002518,Smoking status,Brain & Mental Health
+PGS002567,Smoking status,Brain & Mental Health
+PGS002616,Smoking status,Brain & Mental Health
+PGS002665,Smoking status,Brain & Mental Health
+PGS002714,Smoking status,Brain & Mental Health
+PGS003044,Smoking status,Brain & Mental Health
+PGS003045,Smoking status,Brain & Mental Health
+PGS003046,Smoking status,Brain & Mental Health
+PGS003047,Smoking status,Brain & Mental Health
+PGS003048,Smoking status,Brain & Mental Health
+PGS003049,Smoking status,Brain & Mental Health
+PGS003050,Smoking status,Brain & Mental Health
+PGS003051,Smoking status,Brain & Mental Health
+PGS003052,Smoking status,Brain & Mental Health
+PGS003053,Smoking status,Brain & Mental Health
+PGS003054,Smoking status,Brain & Mental Health
+PGS003055,Smoking status,Brain & Mental Health
+PGS003056,Smoking status,Brain & Mental Health
+PGS003057,Smoking status,Brain & Mental Health
+PGS003058,Smoking status,Brain & Mental Health
+PGS003059,Smoking status,Brain & Mental Health
+PGS003060,Smoking status,Brain & Mental Health
+PGS003061,Smoking status,Brain & Mental Health
+PGS003062,Smoking status,Brain & Mental Health
+PGS003063,Smoking status,Brain & Mental Health
+PGS003064,Smoking status,Brain & Mental Health
+PGS003065,Smoking status,Brain & Mental Health
+PGS003066,Smoking status,Brain & Mental Health
+PGS003067,Smoking status,Brain & Mental Health
+PGS003068,Smoking status,Brain & Mental Health
+PGS001054,Snoring,Brain & Mental Health
+PGS002006,Snoring,Brain & Mental Health
+PGS002225,Snoring,Brain & Mental Health
+PGS000946,Unspecified dementia,Brain & Mental Health
+PGS000071,Bladder cancer,Cancer
+PGS000152,Bladder cancer,Cancer
+PGS000607,Bladder cancer,Cancer
+PGS000608,Bladder cancer,Cancer
+PGS000609,Bladder cancer,Cancer
+PGS000610,Bladder cancer,Cancer
+PGS000611,Bladder cancer,Cancer
+PGS000612,Bladder cancer,Cancer
+PGS000613,Bladder cancer,Cancer
+PGS000614,Bladder cancer,Cancer
+PGS000615,Bladder cancer,Cancer
+PGS000616,Bladder cancer,Cancer
+PGS000723,Bladder cancer,Cancer
+PGS000782,Bladder cancer,Cancer
+PGS001807,Bladder cancer,Cancer
+PGS002017,Bladder cancer,Cancer
+PGS003335,Bladder cancer,Cancer
+PGS003736,Bladder cancer,Cancer
+PGS004241,Bladder cancer,Cancer
+PGS004687,Bladder cancer,Cancer
+PGS012553,Bladder cancer,Cancer
+PGS018565,Bladder cancer,Cancer
+PGS018566,Bladder cancer,Cancer
+PGS018567,Bladder cancer,Cancer
+PGS018568,Bladder cancer,Cancer
+PGS018569,Bladder cancer,Cancer
+PGS000001,Breast cancer,Cancer
+PGS000004,Breast cancer,Cancer
+PGS000007,Breast cancer,Cancer
+PGS000015,Breast cancer,Cancer
+PGS000028,Breast cancer,Cancer
+PGS000029,Breast cancer,Cancer
+PGS000045,Breast cancer,Cancer
+PGS000050,Breast cancer,Cancer
+PGS000051,Breast cancer,Cancer
+PGS000052,Breast cancer,Cancer
+PGS000072,Breast cancer,Cancer
+PGS000153,Breast cancer,Cancer
+PGS000212,Breast cancer,Cancer
+PGS000213,Breast cancer,Cancer
+PGS000214,Breast cancer,Cancer
+PGS000215,Breast cancer,Cancer
+PGS000216,Breast cancer,Cancer
+PGS000317,Breast cancer,Cancer
+PGS000332,Breast cancer,Cancer
+PGS000335,Breast cancer,Cancer
+PGS000344,Breast cancer,Cancer
+PGS000345,Breast cancer,Cancer
+PGS000472,Breast cancer,Cancer
+PGS000473,Breast cancer,Cancer
+PGS000474,Breast cancer,Cancer
+PGS000475,Breast cancer,Cancer
+PGS000476,Breast cancer,Cancer
+PGS000477,Breast cancer,Cancer
+PGS000478,Breast cancer,Cancer
+PGS000479,Breast cancer,Cancer
+PGS000480,Breast cancer,Cancer
+PGS000481,Breast cancer,Cancer
+PGS000482,Breast cancer,Cancer
+PGS000483,Breast cancer,Cancer
+PGS000484,Breast cancer,Cancer
+PGS000485,Breast cancer,Cancer
+PGS000486,Breast cancer,Cancer
+PGS000487,Breast cancer,Cancer
+PGS000488,Breast cancer,Cancer
+PGS000489,Breast cancer,Cancer
+PGS000490,Breast cancer,Cancer
+PGS000491,Breast cancer,Cancer
+PGS000492,Breast cancer,Cancer
+PGS000493,Breast cancer,Cancer
+PGS000494,Breast cancer,Cancer
+PGS000495,Breast cancer,Cancer
+PGS000496,Breast cancer,Cancer
+PGS000497,Breast cancer,Cancer
+PGS000498,Breast cancer,Cancer
+PGS000499,Breast cancer,Cancer
+PGS000500,Breast cancer,Cancer
+PGS000501,Breast cancer,Cancer
+PGS000502,Breast cancer,Cancer
+PGS000503,Breast cancer,Cancer
+PGS000504,Breast cancer,Cancer
+PGS000505,Breast cancer,Cancer
+PGS000506,Breast cancer,Cancer
+PGS000507,Breast cancer,Cancer
+PGS000508,Breast cancer,Cancer
+PGS000509,Breast cancer,Cancer
+PGS000510,Breast cancer,Cancer
+PGS000511,Breast cancer,Cancer
+PGS000512,Breast cancer,Cancer
+PGS000513,Breast cancer,Cancer
+PGS000514,Breast cancer,Cancer
+PGS000515,Breast cancer,Cancer
+PGS000516,Breast cancer,Cancer
+PGS000517,Breast cancer,Cancer
+PGS000518,Breast cancer,Cancer
+PGS000519,Breast cancer,Cancer
+PGS000520,Breast cancer,Cancer
+PGS000521,Breast cancer,Cancer
+PGS000522,Breast cancer,Cancer
+PGS000523,Breast cancer,Cancer
+PGS000524,Breast cancer,Cancer
+PGS000525,Breast cancer,Cancer
+PGS000526,Breast cancer,Cancer
+PGS000527,Breast cancer,Cancer
+PGS000528,Breast cancer,Cancer
+PGS000529,Breast cancer,Cancer
+PGS000530,Breast cancer,Cancer
+PGS000531,Breast cancer,Cancer
+PGS000532,Breast cancer,Cancer
+PGS000533,Breast cancer,Cancer
+PGS000534,Breast cancer,Cancer
+PGS000535,Breast cancer,Cancer
+PGS000536,Breast cancer,Cancer
+PGS000537,Breast cancer,Cancer
+PGS000538,Breast cancer,Cancer
+PGS000539,Breast cancer,Cancer
+PGS000540,Breast cancer,Cancer
+PGS000773,Breast cancer,Cancer
+PGS000783,Breast cancer,Cancer
+PGS000873,Breast cancer,Cancer
+PGS001336,Breast cancer,Cancer
+PGS001778,Breast cancer,Cancer
+PGS001804,Breast cancer,Cancer
+PGS002015,Breast cancer,Cancer
+PGS002242,Breast cancer,Cancer
+PGS002294,Breast cancer,Cancer
+PGS003380,Breast cancer,Cancer
+PGS003396,Breast cancer,Cancer
+PGS003397,Breast cancer,Cancer
+PGS003398,Breast cancer,Cancer
+PGS003399,Breast cancer,Cancer
+PGS003738,Breast cancer,Cancer
+PGS003758,Breast cancer,Cancer
+PGS003759,Breast cancer,Cancer
+PGS003983,Breast cancer,Cancer
+PGS003999,Breast cancer,Cancer
+PGS004025,Breast cancer,Cancer
+PGS004040,Breast cancer,Cancer
+PGS004053,Breast cancer,Cancer
+PGS004069,Breast cancer,Cancer
+PGS004083,Breast cancer,Cancer
+PGS004107,Breast cancer,Cancer
+PGS004123,Breast cancer,Cancer
+PGS004137,Breast cancer,Cancer
+PGS004153,Breast cancer,Cancer
+PGS004166,Breast cancer,Cancer
+PGS004167,Breast cancer,Cancer
+PGS004168,Breast cancer,Cancer
+PGS004169,Breast cancer,Cancer
+PGS004170,Breast cancer,Cancer
+PGS004242,Breast cancer,Cancer
+PGS004295,Breast cancer,Cancer
+PGS004296,Breast cancer,Cancer
+PGS004297,Breast cancer,Cancer
+PGS004298,Breast cancer,Cancer
+PGS004299,Breast cancer,Cancer
+PGS004441,Breast cancer,Cancer
+PGS004511,Breast cancer,Cancer
+PGS004579,Breast cancer,Cancer
+PGS004611,Breast cancer,Cancer
+PGS004688,Breast cancer,Cancer
+PGS004737,Breast cancer,Cancer
+PGS004738,Breast cancer,Cancer
+PGS004865,Breast cancer,Cancer
+PGS004869,Breast cancer,Cancer
+PGS004893,Breast cancer,Cancer
+PGS005104,Breast cancer,Cancer
+PGS005164,Breast cancer,Cancer
+PGS005345,Breast cancer,Cancer
+PGS005346,Breast cancer,Cancer
+PGS005347,Breast cancer,Cancer
+PGS005348,Breast cancer,Cancer
+PGS005349,Breast cancer,Cancer
+PGS005378,Breast cancer,Cancer
+PGS005379,Breast cancer,Cancer
+PGS005396,Breast cancer,Cancer
+PGS018525,Breast cancer,Cancer
+PGS018526,Breast cancer,Cancer
+PGS018527,Breast cancer,Cancer
+PGS018528,Breast cancer,Cancer
+PGS018529,Breast cancer,Cancer
+PGS018530,Breast cancer,Cancer
+PGS018531,Breast cancer,Cancer
+PGS018532,Breast cancer,Cancer
+PGS018533,Breast cancer,Cancer
+PGS018534,Breast cancer,Cancer
+PGS000073,Cervical cancer,Cancer
+PGS000784,Cervical cancer,Cancer
+PGS001299,Cervical cancer,Cancer
+PGS003389,Cervical cancer,Cancer
+PGS003428,Cervical cancer,Cancer
+PGS005165,Cervical cancer,Cancer
+PGS018545,Cervical cancer,Cancer
+PGS018546,Cervical cancer,Cancer
+PGS018547,Cervical cancer,Cancer
+PGS018548,Cervical cancer,Cancer
+PGS018549,Cervical cancer,Cancer
+PGS000646,Chronic lymphocytic leukemia,Cancer
+PGS000647,Chronic lymphocytic leukemia,Cancer
+PGS000648,Chronic lymphocytic leukemia,Cancer
+PGS000649,Chronic lymphocytic leukemia,Cancer
+PGS000650,Chronic lymphocytic leukemia,Cancer
+PGS000651,Chronic lymphocytic leukemia,Cancer
+PGS000874,Chronic lymphocytic leukemia,Cancer
+PGS003453,Chronic lymphocytic leukemia,Cancer
+PGS000055,Colorectal cancer,Cancer
+PGS000074,Colorectal cancer,Cancer
+PGS000146,Colorectal cancer,Cancer
+PGS000147,Colorectal cancer,Cancer
+PGS000148,Colorectal cancer,Cancer
+PGS000149,Colorectal cancer,Cancer
+PGS000150,Colorectal cancer,Cancer
+PGS000151,Colorectal cancer,Cancer
+PGS000154,Colorectal cancer,Cancer
+PGS000367,Colorectal cancer,Cancer
+PGS000368,Colorectal cancer,Cancer
+PGS000369,Colorectal cancer,Cancer
+PGS000370,Colorectal cancer,Cancer
+PGS000371,Colorectal cancer,Cancer
+PGS000372,Colorectal cancer,Cancer
+PGS000373,Colorectal cancer,Cancer
+PGS000374,Colorectal cancer,Cancer
+PGS000375,Colorectal cancer,Cancer
+PGS000720,Colorectal cancer,Cancer
+PGS000734,Colorectal cancer,Cancer
+PGS000765,Colorectal cancer,Cancer
+PGS000785,Colorectal cancer,Cancer
+PGS000801,Colorectal cancer,Cancer
+PGS000802,Colorectal cancer,Cancer
+PGS001776,Colorectal cancer,Cancer
+PGS001802,Colorectal cancer,Cancer
+PGS002013,Colorectal cancer,Cancer
+PGS002252,Colorectal cancer,Cancer
+PGS002265,Colorectal cancer,Cancer
+PGS002742,Colorectal cancer,Cancer
+PGS002743,Colorectal cancer,Cancer
+PGS002744,Colorectal cancer,Cancer
+PGS002758,Colorectal cancer,Cancer
+PGS003386,Colorectal cancer,Cancer
+PGS003395,Colorectal cancer,Cancer
+PGS003431,Colorectal cancer,Cancer
+PGS003432,Colorectal cancer,Cancer
+PGS003433,Colorectal cancer,Cancer
+PGS003434,Colorectal cancer,Cancer
+PGS003435,Colorectal cancer,Cancer
+PGS003436,Colorectal cancer,Cancer
+PGS003439,Colorectal cancer,Cancer
+PGS003739,Colorectal cancer,Cancer
+PGS003850,Colorectal cancer,Cancer
+PGS003851,Colorectal cancer,Cancer
+PGS003852,Colorectal cancer,Cancer
+PGS003979,Colorectal cancer,Cancer
+PGS004240,Colorectal cancer,Cancer
+PGS004243,Colorectal cancer,Cancer
+PGS004300,Colorectal cancer,Cancer
+PGS004301,Colorectal cancer,Cancer
+PGS004302,Colorectal cancer,Cancer
+PGS004303,Colorectal cancer,Cancer
+PGS004304,Colorectal cancer,Cancer
+PGS004580,Colorectal cancer,Cancer
+PGS004586,Colorectal cancer,Cancer
+PGS004689,Colorectal cancer,Cancer
+PGS004880,Colorectal cancer,Cancer
+PGS004904,Colorectal cancer,Cancer
+PGS004945,Colorectal cancer,Cancer
+PGS005162,Colorectal cancer,Cancer
+PGS005275,Colorectal cancer,Cancer
+PGS005402,Colorectal cancer,Cancer
+PGS012583,Colorectal cancer,Cancer
+PGS018485,Colorectal cancer,Cancer
+PGS018486,Colorectal cancer,Cancer
+PGS018487,Colorectal cancer,Cancer
+PGS018488,Colorectal cancer,Cancer
+PGS018489,Colorectal cancer,Cancer
+PGS000002,ER-positive breast cancer,Cancer
+PGS000005,ER-positive breast cancer,Cancer
+PGS000008,ER-positive breast cancer,Cancer
+PGS004866,ER-positive breast cancer,Cancer
+PGS005105,ER-positive breast cancer,Cancer
+PGS000075,Endometrial cancer,Cancer
+PGS000786,Endometrial cancer,Cancer
+PGS002300,Endometrial cancer,Cancer
+PGS002735,Endometrial cancer,Cancer
+PGS002736,Endometrial cancer,Cancer
+PGS002737,Endometrial cancer,Cancer
+PGS004244,Endometrial cancer,Cancer
+PGS003388,Esophageal adenocarcinoma,Cancer
+PGS003387,Esophageal adenocarcinoma or Barrett’s esophagus,Cancer
+PGS003384,Glioblastoma,Cancer
+PGS003390,Head and neck squamous cell carcinoma,Cancer
+PGS012586,Head and neck squamous cell carcinoma,Cancer
+PGS000076,Kidney cancer,Cancer
+PGS000722,Kidney cancer,Cancer
+PGS000787,Kidney cancer,Cancer
+PGS004245,Kidney cancer,Cancer
+PGS004690,Kidney cancer,Cancer
+PGS004908,Kidney cancer,Cancer
+PGS003393,Lung adenocarcinoma,Cancer
+PGS005169,Lung adenocarcinoma,Cancer
+PGS000388,Lung and bronchus cancer,Cancer
+PGS000389,Lung and bronchus cancer,Cancer
+PGS000390,Lung and bronchus cancer,Cancer
+PGS000391,Lung and bronchus cancer,Cancer
+PGS000392,Lung and bronchus cancer,Cancer
+PGS000393,Lung and bronchus cancer,Cancer
+PGS000394,Lung and bronchus cancer,Cancer
+PGS000395,Lung and bronchus cancer,Cancer
+PGS000396,Lung and bronchus cancer,Cancer
+PGS000397,Lung and bronchus cancer,Cancer
+PGS000070,Lung cancer,Cancer
+PGS000078,Lung cancer,Cancer
+PGS000156,Lung cancer,Cancer
+PGS000721,Lung cancer,Cancer
+PGS000740,Lung cancer,Cancer
+PGS000789,Lung cancer,Cancer
+PGS000880,Lung cancer,Cancer
+PGS002270,Lung cancer,Cancer
+PGS002808,Lung cancer,Cancer
+PGS003391,Lung cancer,Cancer
+PGS004165,Lung cancer,Cancer
+PGS004246,Lung cancer,Cancer
+PGS004325,Lung cancer,Cancer
+PGS004691,Lung cancer,Cancer
+PGS004860,Lung cancer,Cancer
+PGS004884,Lung cancer,Cancer
+PGS004955,Lung cancer,Cancer
+PGS005163,Lung cancer,Cancer
+PGS005397,Lung cancer,Cancer
+PGS003392,Lung squamous cell carcinoma,Cancer
+PGS000077,Lymphocytic leukemia,Cancer
+PGS000788,Lymphocytic leukemia,Cancer
+PGS001111,Male genital tract cancer,Cancer
+PGS000595,Testicular cancer,Cancer
+PGS000596,Testicular cancer,Cancer
+PGS000597,Testicular cancer,Cancer
+PGS000598,Testicular cancer,Cancer
+PGS000599,Testicular cancer,Cancer
+PGS000600,Testicular cancer,Cancer
+PGS000601,Testicular cancer,Cancer
+PGS000602,Testicular cancer,Cancer
+PGS000603,Testicular cancer,Cancer
+PGS000604,Testicular cancer,Cancer
+PGS001806,Testicular cancer,Cancer
+PGS000079,Melanoma,Cancer
+PGS000118,Melanoma,Cancer
+PGS000157,Melanoma,Cancer
+PGS000732,Melanoma,Cancer
+PGS000743,Melanoma,Cancer
+PGS000744,Melanoma,Cancer
+PGS000745,Melanoma,Cancer
+PGS000790,Melanoma,Cancer
+PGS000813,Melanoma,Cancer
+PGS002246,Melanoma,Cancer
+PGS002247,Melanoma,Cancer
+PGS002253,Melanoma,Cancer
+PGS002301,Melanoma,Cancer
+PGS003412,Melanoma,Cancer
+PGS003430,Melanoma,Cancer
+PGS004247,Melanoma,Cancer
+PGS004795,Melanoma,Cancer
+PGS004796,Melanoma,Cancer
+PGS004886,Melanoma,Cancer
+PGS004953,Melanoma,Cancer
+PGS005208,Melanoma,Cancer
+PGS001304,Melanoma,Cancer
+PGS002291,Nasopharyngeal carcinoma,Cancer
+PGS001040,Non-melanoma skin cancer,Cancer
+PGS000080,Non-Hodgkin's lymphoma,Cancer
+PGS000641,Non-Hodgkin's lymphoma,Cancer
+PGS000642,Non-Hodgkin's lymphoma,Cancer
+PGS000791,Non-Hodgkin's lymphoma,Cancer
+PGS004248,Non-Hodgkin's lymphoma,Cancer
+PGS000081,Oral cavity and pharyngeal cancers,Cancer
+PGS000792,Oral cavity and pharyngeal cancers,Cancer
+PGS000048,Ovarian cancer,Cancer
+PGS000082,Ovarian cancer,Cancer
+PGS000158,Ovarian cancer,Cancer
+PGS000793,Ovarian cancer,Cancer
+PGS003741,Ovarian cancer,Cancer
+PGS004249,Ovarian cancer,Cancer
+PGS004692,Ovarian cancer,Cancer
+PGS005166,Ovarian cancer,Cancer
+PGS003385,Ovarian serous carcinoma,Cancer
+PGS000083,Pancreatic cancer,Cancer
+PGS000159,Pancreatic cancer,Cancer
+PGS000385,Pancreatic cancer,Cancer
+PGS000386,Pancreatic cancer,Cancer
+PGS000663,Pancreatic cancer,Cancer
+PGS000725,Pancreatic cancer,Cancer
+PGS000794,Pancreatic cancer,Cancer
+PGS002740,Pancreatic cancer,Cancer
+PGS003742,Pancreatic cancer,Cancer
+PGS004250,Pancreatic cancer,Cancer
+PGS004693,Pancreatic cancer,Cancer
+PGS002264,Pancreatic ductal adenocarcinoma,Cancer
+PGS003383,Prostate cancer,Cancer
+PGS000030,Prostate cancer,Cancer
+PGS000044,Prostate cancer,Cancer
+PGS000049,Prostate cancer,Cancer
+PGS000067,Prostate cancer,Cancer
+PGS000084,Prostate cancer,Cancer
+PGS000160,Prostate cancer,Cancer
+PGS000333,Prostate cancer,Cancer
+PGS000348,Prostate cancer,Cancer
+PGS000565,Prostate cancer,Cancer
+PGS000566,Prostate cancer,Cancer
+PGS000567,Prostate cancer,Cancer
+PGS000568,Prostate cancer,Cancer
+PGS000569,Prostate cancer,Cancer
+PGS000570,Prostate cancer,Cancer
+PGS000571,Prostate cancer,Cancer
+PGS000572,Prostate cancer,Cancer
+PGS000573,Prostate cancer,Cancer
+PGS000574,Prostate cancer,Cancer
+PGS000575,Prostate cancer,Cancer
+PGS000576,Prostate cancer,Cancer
+PGS000577,Prostate cancer,Cancer
+PGS000578,Prostate cancer,Cancer
+PGS000579,Prostate cancer,Cancer
+PGS000580,Prostate cancer,Cancer
+PGS000581,Prostate cancer,Cancer
+PGS000582,Prostate cancer,Cancer
+PGS000583,Prostate cancer,Cancer
+PGS000584,Prostate cancer,Cancer
+PGS000585,Prostate cancer,Cancer
+PGS000586,Prostate cancer,Cancer
+PGS000587,Prostate cancer,Cancer
+PGS000588,Prostate cancer,Cancer
+PGS000589,Prostate cancer,Cancer
+PGS000590,Prostate cancer,Cancer
+PGS000591,Prostate cancer,Cancer
+PGS000592,Prostate cancer,Cancer
+PGS000662,Prostate cancer,Cancer
+PGS000714,Prostate cancer,Cancer
+PGS000719,Prostate cancer,Cancer
+PGS000733,Prostate cancer,Cancer
+PGS000741,Prostate cancer,Cancer
+PGS000742,Prostate cancer,Cancer
+PGS000751,Prostate cancer,Cancer
+PGS000795,Prostate cancer,Cancer
+PGS000878,Prostate cancer,Cancer
+PGS000881,Prostate cancer,Cancer
+PGS001291,Prostate cancer,Cancer
+PGS001805,Prostate cancer,Cancer
+PGS002016,Prostate cancer,Cancer
+PGS002240,Prostate cancer,Cancer
+PGS002241,Prostate cancer,Cancer
+PGS002268,Prostate cancer,Cancer
+PGS002791,Prostate cancer,Cancer
+PGS002792,Prostate cancer,Cancer
+PGS002793,Prostate cancer,Cancer
+PGS002796,Prostate cancer,Cancer
+PGS002797,Prostate cancer,Cancer
+PGS002798,Prostate cancer,Cancer
+PGS002799,Prostate cancer,Cancer
+PGS003331,Prostate cancer,Cancer
+PGS003415,Prostate cancer,Cancer
+PGS003418,Prostate cancer,Cancer
+PGS003419,Prostate cancer,Cancer
+PGS003460,Prostate cancer,Cancer
+PGS003743,Prostate cancer,Cancer
+PGS003765,Prostate cancer,Cancer
+PGS003766,Prostate cancer,Cancer
+PGS003985,Prostate cancer,Cancer
+PGS004001,Prostate cancer,Cancer
+PGS004027,Prostate cancer,Cancer
+PGS004042,Prostate cancer,Cancer
+PGS004055,Prostate cancer,Cancer
+PGS004071,Prostate cancer,Cancer
+PGS004085,Prostate cancer,Cancer
+PGS004099,Prostate cancer,Cancer
+PGS004109,Prostate cancer,Cancer
+PGS004125,Prostate cancer,Cancer
+PGS004139,Prostate cancer,Cancer
+PGS004155,Prostate cancer,Cancer
+PGS004251,Prostate cancer,Cancer
+PGS004581,Prostate cancer,Cancer
+PGS004599,Prostate cancer,Cancer
+PGS004601,Prostate cancer,Cancer
+PGS004694,Prostate cancer,Cancer
+PGS004815,Prostate cancer,Cancer
+PGS004816,Prostate cancer,Cancer
+PGS004872,Prostate cancer,Cancer
+PGS005167,Prostate cancer,Cancer
+PGS005205,Prostate cancer,Cancer
+PGS005237,Prostate cancer,Cancer
+PGS005238,Prostate cancer,Cancer
+PGS005239,Prostate cancer,Cancer
+PGS005240,Prostate cancer,Cancer
+PGS005241,Prostate cancer,Cancer
+PGS005395,Prostate cancer,Cancer
+PGS018560,Prostate cancer,Cancer
+PGS018561,Prostate cancer,Cancer
+PGS018562,Prostate cancer,Cancer
+PGS018563,Prostate cancer,Cancer
+PGS018564,Prostate cancer,Cancer
+PGS000398,Skin cancer,Cancer
+PGS000399,Skin cancer,Cancer
+PGS000400,Skin cancer,Cancer
+PGS000401,Skin cancer,Cancer
+PGS000402,Skin cancer,Cancer
+PGS000403,Skin cancer,Cancer
+PGS000404,Skin cancer,Cancer
+PGS000405,Skin cancer,Cancer
+PGS000406,Skin cancer,Cancer
+PGS000407,Skin cancer,Cancer
+PGS001041,Skin cancer,Cancer
+PGS001803,Skin cancer,Cancer
+PGS002014,Skin cancer,Cancer
+PGS004833,Skin cancer,Cancer
+PGS004834,Skin cancer,Cancer
+PGS003382,Melanoma,Cancer
+PGS000086,Testicular cancer,Cancer
+PGS000796,Testicular cancer,Cancer
+PGS001164,Testicular cancer,Cancer
+PGS000087,Thyroid cancer,Cancer
+PGS000162,Thyroid cancer,Cancer
+PGS000207,Thyroid cancer,Cancer
+PGS000208,Thyroid cancer,Cancer
+PGS000209,Thyroid cancer,Cancer
+PGS000626,Thyroid cancer,Cancer
+PGS000627,Thyroid cancer,Cancer
+PGS000628,Thyroid cancer,Cancer
+PGS000629,Thyroid cancer,Cancer
+PGS000630,Thyroid cancer,Cancer
+PGS000631,Thyroid cancer,Cancer
+PGS000632,Thyroid cancer,Cancer
+PGS000633,Thyroid cancer,Cancer
+PGS000634,Thyroid cancer,Cancer
+PGS000635,Thyroid cancer,Cancer
+PGS000636,Thyroid cancer,Cancer
+PGS000797,Thyroid cancer,Cancer
+PGS001289,Thyroid cancer,Cancer
+PGS001354,Thyroid cancer,Cancer
+PGS001794,Thyroid cancer,Cancer
+PGS001799,Thyroid cancer,Cancer
+PGS001809,Thyroid cancer,Cancer
+PGS002018,Thyroid cancer,Cancer
+PGS003437,Thyroid cancer,Cancer
+PGS003746,Thyroid cancer,Cancer
+PGS004954,Thyroid cancer,Cancer
+PGS005210,Thyroid cancer,Cancer
+PGS005258,Thyroid cancer,Cancer
+PGS005259,Thyroid cancer,Cancer
+PGS005260,Thyroid cancer,Cancer
+PGS018580,Thyroid cancer,Cancer
+PGS018581,Thyroid cancer,Cancer
+PGS018582,Thyroid cancer,Cancer
+PGS018583,Thyroid cancer,Cancer
+PGS018584,Thyroid cancer,Cancer
+PGS001795,Uterine cancer,Cancer
+PGS003381,Endometrial cancer,Cancer
+PGS000753,Abdominal aortic aneurysm,Cardiovascular & Cholesterol
+PGS001784,Abdominal aortic aneurysm,Cardiovascular & Cholesterol
+PGS002054,Abdominal aortic aneurysm,Cardiovascular & Cholesterol
+PGS003429,Abdominal aortic aneurysm,Cardiovascular & Cholesterol
+PGS003972,Abdominal aortic aneurysm,Cardiovascular & Cholesterol
+PGS003973,Abdominal aortic aneurysm,Cardiovascular & Cholesterol
+PGS012563,Abdominal aortic aneurysm,Cardiovascular & Cholesterol
+PGS000703,Angina,Cardiovascular & Cholesterol
+PGS001260,Angina,Cardiovascular & Cholesterol
+PGS012540,Angina,Cardiovascular & Cholesterol
+PGS001261,Angina,Cardiovascular & Cholesterol
+PGS004457,Angina,Cardiovascular & Cholesterol
+PGS004527,Angina,Cardiovascular & Cholesterol
+PGS005047,Angina,Cardiovascular & Cholesterol
+PGS005048,Angina,Cardiovascular & Cholesterol
+PGS005049,Angina,Cardiovascular & Cholesterol
+PGS005050,Angina,Cardiovascular & Cholesterol
+PGS005051,Angina,Cardiovascular & Cholesterol
+PGS005052,Angina,Cardiovascular & Cholesterol
+PGS005053,Angina,Cardiovascular & Cholesterol
+PGS005054,Angina,Cardiovascular & Cholesterol
+PGS005055,Angina,Cardiovascular & Cholesterol
+PGS005056,Angina,Cardiovascular & Cholesterol
+PGS005057,Angina,Cardiovascular & Cholesterol
+PGS005058,Angina,Cardiovascular & Cholesterol
+PGS005059,Angina,Cardiovascular & Cholesterol
+PGS018407,Angina,Cardiovascular & Cholesterol
+PGS000016,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS000035,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS000331,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS000338,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS000727,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS001339,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS001340,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS001356,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS001841,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS002050,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS002756,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS002814,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS003461,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS003761,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004186,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004187,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004188,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004189,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004190,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004290,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004291,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004292,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004293,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004294,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004440,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004461,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004510,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004531,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004705,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004706,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004878,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004905,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004920,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS004929,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005060,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005061,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005062,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005063,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005064,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005065,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005066,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005067,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005068,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005069,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005070,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005071,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005072,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005159,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005168,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005171,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005287,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005288,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005289,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005290,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005291,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005292,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS005313,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS012531,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS012532,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS012533,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS012534,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS012535,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS012536,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS012537,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS012538,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS012577,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS012580,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS019195,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS019196,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS019197,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS019198,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS019199,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS019210,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS019211,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS019212,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS019213,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS019214,Atrial fibrillation,Cardiovascular & Cholesterol
+PGS001263,Atrial flutter,Cardiovascular & Cholesterol
+PGS000043,Blood clots (DVT or pulmonary embolism),Cardiovascular & Cholesterol
+PGS000930,Blood clots (DVT or pulmonary embolism),Cardiovascular & Cholesterol
+PGS001278,Blood clots (DVT or pulmonary embolism),Cardiovascular & Cholesterol
+PGS001796,Blood clots (DVT or pulmonary embolism),Cardiovascular & Cholesterol
+PGS002235,Blood clots (DVT or pulmonary embolism),Cardiovascular & Cholesterol
+PGS002772,Blood clots (DVT or pulmonary embolism),Cardiovascular & Cholesterol
+PGS002794,Blood clots (DVT or pulmonary embolism),Cardiovascular & Cholesterol
+PGS003332,Blood clots (DVT or pulmonary embolism),Cardiovascular & Cholesterol
+PGS003456,Blood clots (DVT or pulmonary embolism),Cardiovascular & Cholesterol
+PGS004853,Blood clots (DVT or pulmonary embolism),Cardiovascular & Cholesterol
+PGS004854,Blood clots (DVT or pulmonary embolism),Cardiovascular & Cholesterol
+PGS012519,Blood clots (DVT or pulmonary embolism),Cardiovascular & Cholesterol
+PGS012527,Blood clots (DVT or pulmonary embolism),Cardiovascular & Cholesterol
+PGS000117,Cardiovascular disease,Cardiovascular & Cholesterol
+PGS000863,Cardiovascular disease,Cardiovascular & Cholesterol
+PGS002316,Cardiovascular disease,Cardiovascular & Cholesterol
+PGS002361,Cardiovascular disease,Cardiovascular & Cholesterol
+PGS002388,Cardiovascular disease,Cardiovascular & Cholesterol
+PGS002437,Cardiovascular disease,Cardiovascular & Cholesterol
+PGS002486,Cardiovascular disease,Cardiovascular & Cholesterol
+PGS002535,Cardiovascular disease,Cardiovascular & Cholesterol
+PGS002584,Cardiovascular disease,Cardiovascular & Cholesterol
+PGS002633,Cardiovascular disease,Cardiovascular & Cholesterol
+PGS002682,Cardiovascular disease,Cardiovascular & Cholesterol
+PGS004238,Cardiovascular disease,Cardiovascular & Cholesterol
+PGS005253,Cardiovascular disease,Cardiovascular & Cholesterol
+PGS000962,Chronic ischaemic heart disease,Cardiovascular & Cholesterol
+PGS000010,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000011,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000012,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000013,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000018,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000019,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000057,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000058,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000059,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000116,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000200,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000296,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000329,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000337,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000349,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000746,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000747,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000748,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000749,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000798,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000818,Coronary heart disease,Cardiovascular & Cholesterol
+PGS000899,Coronary heart disease,Cardiovascular & Cholesterol
+PGS001355,Coronary heart disease,Cardiovascular & Cholesterol
+PGS001780,Coronary heart disease,Cardiovascular & Cholesterol
+PGS002244,Coronary heart disease,Cardiovascular & Cholesterol
+PGS002262,Coronary heart disease,Cardiovascular & Cholesterol
+PGS002809,Coronary heart disease,Cardiovascular & Cholesterol
+PGS003355,Coronary heart disease,Cardiovascular & Cholesterol
+PGS003356,Coronary heart disease,Cardiovascular & Cholesterol
+PGS003438,Coronary heart disease,Cardiovascular & Cholesterol
+PGS003446,Coronary heart disease,Cardiovascular & Cholesterol
+PGS003725,Coronary heart disease,Cardiovascular & Cholesterol
+PGS003726,Coronary heart disease,Cardiovascular & Cholesterol
+PGS003727,Coronary heart disease,Cardiovascular & Cholesterol
+PGS003866,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004196,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004197,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004198,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004199,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004200,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004237,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004305,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004306,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004307,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004308,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004309,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004321,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004443,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004513,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004595,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004596,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004696,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004697,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004698,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004743,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004744,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004745,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004746,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004879,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004921,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004925,Coronary heart disease,Cardiovascular & Cholesterol
+PGS004941,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005091,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005092,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005093,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005094,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005112,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005143,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005152,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005231,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005236,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005293,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005294,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005295,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005296,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005297,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005298,Coronary heart disease,Cardiovascular & Cholesterol
+PGS005322,Coronary heart disease,Cardiovascular & Cholesterol
+PGS012530,Coronary heart disease,Cardiovascular & Cholesterol
+PGS012542,Coronary heart disease,Cardiovascular & Cholesterol
+PGS012558,Coronary heart disease,Cardiovascular & Cholesterol
+PGS012581,Coronary heart disease,Cardiovascular & Cholesterol
+PGS018408,Coronary heart disease,Cardiovascular & Cholesterol
+PGS001264,Deep vein thrombosis,Cardiovascular & Cholesterol
+PGS001265,Deep vein thrombosis,Cardiovascular & Cholesterol
+PGS000302,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS000912,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002239,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002258,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002322,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002362,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002394,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002443,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002492,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002541,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002590,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002639,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002688,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002889,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002890,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002891,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002892,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002893,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002894,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002895,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002896,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002897,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002898,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002899,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002900,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002901,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002902,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002903,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002904,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002905,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002906,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002907,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS002908,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS003463,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS003883,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS003961,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS003962,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS003963,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS003964,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS004232,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS004233,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS004604,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS004755,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS004756,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS004757,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS004758,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS005317,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS005351,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS012515,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS012523,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS019793,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS019817,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS019841,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS019865,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS019889,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS019910,Diastolic blood pressure,Cardiovascular & Cholesterol
+PGS004861,Dilated cardiomyopathy,Cardiovascular & Cholesterol
+PGS004946,Dilated cardiomyopathy,Cardiovascular & Cholesterol
+PGS004948,Dilated cardiomyopathy,Cardiovascular & Cholesterol
+PGS004950,Dilated cardiomyopathy,Cardiovascular & Cholesterol
+PGS004862,Dilated cardiomyopathy,Cardiovascular & Cholesterol
+PGS004947,Dilated cardiomyopathy,Cardiovascular & Cholesterol
+PGS004949,Dilated cardiomyopathy,Cardiovascular & Cholesterol
+PGS004951,Dilated cardiomyopathy,Cardiovascular & Cholesterol
+PGS000957,Hypertension,Cardiovascular & Cholesterol
+PGS004456,Hypertension,Cardiovascular & Cholesterol
+PGS004526,Hypertension,Cardiovascular & Cholesterol
+PGS000709,Heart failure,Cardiovascular & Cholesterol
+PGS001790,Heart failure,Cardiovascular & Cholesterol
+PGS003969,Heart failure,Cardiovascular & Cholesterol
+PGS004462,Heart failure,Cardiovascular & Cholesterol
+PGS004532,Heart failure,Cardiovascular & Cholesterol
+PGS004598,Heart failure,Cardiovascular & Cholesterol
+PGS005097,Heart failure,Cardiovascular & Cholesterol
+PGS005285,Heart failure,Cardiovascular & Cholesterol
+PGS005299,Heart failure,Cardiovascular & Cholesterol
+PGS005300,Heart failure,Cardiovascular & Cholesterol
+PGS005301,Heart failure,Cardiovascular & Cholesterol
+PGS005302,Heart failure,Cardiovascular & Cholesterol
+PGS005303,Heart failure,Cardiovascular & Cholesterol
+PGS005304,Heart failure,Cardiovascular & Cholesterol
+PGS005305,Heart failure,Cardiovascular & Cholesterol
+PGS005306,Heart failure,Cardiovascular & Cholesterol
+PGS005319,Heart failure,Cardiovascular & Cholesterol
+PGS012544,Heart failure,Cardiovascular & Cholesterol
+PGS012552,Heart failure,Cardiovascular & Cholesterol
+PGS018409,Heart failure,Cardiovascular & Cholesterol
+PGS000706,Hypertension,Cardiovascular & Cholesterol
+PGS000958,Hypertension,Cardiovascular & Cholesterol
+PGS001320,Hypertension,Cardiovascular & Cholesterol
+PGS001838,Hypertension,Cardiovascular & Cholesterol
+PGS002047,Hypertension,Cardiovascular & Cholesterol
+PGS002296,Hypertension,Cardiovascular & Cholesterol
+PGS002335,Hypertension,Cardiovascular & Cholesterol
+PGS002407,Hypertension,Cardiovascular & Cholesterol
+PGS002456,Hypertension,Cardiovascular & Cholesterol
+PGS002505,Hypertension,Cardiovascular & Cholesterol
+PGS002554,Hypertension,Cardiovascular & Cholesterol
+PGS002603,Hypertension,Cardiovascular & Cholesterol
+PGS002652,Hypertension,Cardiovascular & Cholesterol
+PGS002701,Hypertension,Cardiovascular & Cholesterol
+PGS002765,Hypertension,Cardiovascular & Cholesterol
+PGS002777,Hypertension,Cardiovascular & Cholesterol
+PGS002778,Hypertension,Cardiovascular & Cholesterol
+PGS002994,Hypertension,Cardiovascular & Cholesterol
+PGS002995,Hypertension,Cardiovascular & Cholesterol
+PGS002996,Hypertension,Cardiovascular & Cholesterol
+PGS002997,Hypertension,Cardiovascular & Cholesterol
+PGS002998,Hypertension,Cardiovascular & Cholesterol
+PGS002999,Hypertension,Cardiovascular & Cholesterol
+PGS003000,Hypertension,Cardiovascular & Cholesterol
+PGS003001,Hypertension,Cardiovascular & Cholesterol
+PGS003002,Hypertension,Cardiovascular & Cholesterol
+PGS003003,Hypertension,Cardiovascular & Cholesterol
+PGS003004,Hypertension,Cardiovascular & Cholesterol
+PGS003005,Hypertension,Cardiovascular & Cholesterol
+PGS003006,Hypertension,Cardiovascular & Cholesterol
+PGS003007,Hypertension,Cardiovascular & Cholesterol
+PGS003008,Hypertension,Cardiovascular & Cholesterol
+PGS003009,Hypertension,Cardiovascular & Cholesterol
+PGS003010,Hypertension,Cardiovascular & Cholesterol
+PGS003011,Hypertension,Cardiovascular & Cholesterol
+PGS003012,Hypertension,Cardiovascular & Cholesterol
+PGS003013,Hypertension,Cardiovascular & Cholesterol
+PGS003014,Hypertension,Cardiovascular & Cholesterol
+PGS003015,Hypertension,Cardiovascular & Cholesterol
+PGS003016,Hypertension,Cardiovascular & Cholesterol
+PGS003017,Hypertension,Cardiovascular & Cholesterol
+PGS003018,Hypertension,Cardiovascular & Cholesterol
+PGS003019,Hypertension,Cardiovascular & Cholesterol
+PGS003020,Hypertension,Cardiovascular & Cholesterol
+PGS003021,Hypertension,Cardiovascular & Cholesterol
+PGS003022,Hypertension,Cardiovascular & Cholesterol
+PGS003023,Hypertension,Cardiovascular & Cholesterol
+PGS003024,Hypertension,Cardiovascular & Cholesterol
+PGS003025,Hypertension,Cardiovascular & Cholesterol
+PGS003026,Hypertension,Cardiovascular & Cholesterol
+PGS003027,Hypertension,Cardiovascular & Cholesterol
+PGS003028,Hypertension,Cardiovascular & Cholesterol
+PGS004191,Hypertension,Cardiovascular & Cholesterol
+PGS004192,Hypertension,Cardiovascular & Cholesterol
+PGS004193,Hypertension,Cardiovascular & Cholesterol
+PGS004194,Hypertension,Cardiovascular & Cholesterol
+PGS004195,Hypertension,Cardiovascular & Cholesterol
+PGS004234,Hypertension,Cardiovascular & Cholesterol
+PGS004236,Hypertension,Cardiovascular & Cholesterol
+PGS004455,Hypertension,Cardiovascular & Cholesterol
+PGS004525,Hypertension,Cardiovascular & Cholesterol
+PGS004785,Hypertension,Cardiovascular & Cholesterol
+PGS004786,Hypertension,Cardiovascular & Cholesterol
+PGS004787,Hypertension,Cardiovascular & Cholesterol
+PGS004788,Hypertension,Cardiovascular & Cholesterol
+PGS004934,Hypertension,Cardiovascular & Cholesterol
+PGS005144,Hypertension,Cardiovascular & Cholesterol
+PGS005153,Hypertension,Cardiovascular & Cholesterol
+PGS018411,Hypertension,Cardiovascular & Cholesterol
+PGS019126,Hypertension,Cardiovascular & Cholesterol
+PGS019127,Hypertension,Cardiovascular & Cholesterol
+PGS019128,Hypertension,Cardiovascular & Cholesterol
+PGS019129,Hypertension,Cardiovascular & Cholesterol
+PGS019130,Hypertension,Cardiovascular & Cholesterol
+PGS019131,Hypertension,Cardiovascular & Cholesterol
+PGS019132,Hypertension,Cardiovascular & Cholesterol
+PGS019133,Hypertension,Cardiovascular & Cholesterol
+PGS019134,Hypertension,Cardiovascular & Cholesterol
+PGS019135,Hypertension,Cardiovascular & Cholesterol
+PGS019136,Hypertension,Cardiovascular & Cholesterol
+PGS019137,Hypertension,Cardiovascular & Cholesterol
+PGS000739,Hypertrophic cardiomyopathy,Cardiovascular & Cholesterol
+PGS000778,Hypertrophic cardiomyopathy,Cardiovascular & Cholesterol
+PGS004910,Hypertrophic cardiomyopathy,Cardiovascular & Cholesterol
+PGS004911,Hypertrophic cardiomyopathy,Cardiovascular & Cholesterol
+PGS000039,Ischemic stroke,Cardiovascular & Cholesterol
+PGS000665,Ischemic stroke,Cardiovascular & Cholesterol
+PGS000911,Ischemic stroke,Cardiovascular & Cholesterol
+PGS002724,Ischemic stroke,Cardiovascular & Cholesterol
+PGS002725,Ischemic stroke,Cardiovascular & Cholesterol
+PGS004322,Ischemic stroke,Cardiovascular & Cholesterol
+PGS004597,Ischemic stroke,Cardiovascular & Cholesterol
+PGS004942,Ischemic stroke,Cardiovascular & Cholesterol
+PGS012545,Ischemic stroke,Cardiovascular & Cholesterol
+PGS002271,Mitral valve prolapse,Cardiovascular & Cholesterol
+PGS000710,Myocardial infarction,Cardiovascular & Cholesterol
+PGS001314,Myocardial infarction,Cardiovascular & Cholesterol
+PGS001315,Myocardial infarction,Cardiovascular & Cholesterol
+PGS001316,Myocardial infarction,Cardiovascular & Cholesterol
+PGS004458,Myocardial infarction,Cardiovascular & Cholesterol
+PGS004528,Myocardial infarction,Cardiovascular & Cholesterol
+PGS005034,Myocardial infarction,Cardiovascular & Cholesterol
+PGS005035,Myocardial infarction,Cardiovascular & Cholesterol
+PGS005036,Myocardial infarction,Cardiovascular & Cholesterol
+PGS005037,Myocardial infarction,Cardiovascular & Cholesterol
+PGS005038,Myocardial infarction,Cardiovascular & Cholesterol
+PGS005039,Myocardial infarction,Cardiovascular & Cholesterol
+PGS005040,Myocardial infarction,Cardiovascular & Cholesterol
+PGS005041,Myocardial infarction,Cardiovascular & Cholesterol
+PGS005042,Myocardial infarction,Cardiovascular & Cholesterol
+PGS005043,Myocardial infarction,Cardiovascular & Cholesterol
+PGS005044,Myocardial infarction,Cardiovascular & Cholesterol
+PGS005045,Myocardial infarction,Cardiovascular & Cholesterol
+PGS005046,Myocardial infarction,Cardiovascular & Cholesterol
+PGS018412,Myocardial infarction,Cardiovascular & Cholesterol
+PGS019160,Myocardial infarction,Cardiovascular & Cholesterol
+PGS019161,Myocardial infarction,Cardiovascular & Cholesterol
+PGS019162,Myocardial infarction,Cardiovascular & Cholesterol
+PGS019163,Myocardial infarction,Cardiovascular & Cholesterol
+PGS019164,Myocardial infarction,Cardiovascular & Cholesterol
+PGS001048,NSTEMI,Cardiovascular & Cholesterol
+PGS001025,Nonrheumatic aortic valve disorders,Cardiovascular & Cholesterol
+PGS001033,Coagulation disorders,Cardiovascular & Cholesterol
+PGS001277,Pulmonary embolism with or without DVT,Cardiovascular & Cholesterol
+PGS000961,Thrombophlebitis,Cardiovascular & Cholesterol
+PGS001844,Thrombophlebitis,Cardiovascular & Cholesterol
+PGS002056,Thrombophlebitis,Cardiovascular & Cholesterol
+PGS001279,Pulmonary embolism,Cardiovascular & Cholesterol
+PGS003861,Pulmonary embolism,Cardiovascular & Cholesterol
+PGS004460,Pulmonary embolism,Cardiovascular & Cholesterol
+PGS004530,Pulmonary embolism,Cardiovascular & Cholesterol
+PGS000038,Stroke,Cardiovascular & Cholesterol
+PGS001793,Stroke,Cardiovascular & Cholesterol
+PGS001798,Stroke,Cardiovascular & Cholesterol
+PGS002259,Stroke,Cardiovascular & Cholesterol
+PGS002770,Stroke,Cardiovascular & Cholesterol
+PGS003984,Stroke,Cardiovascular & Cholesterol
+PGS004000,Stroke,Cardiovascular & Cholesterol
+PGS004015,Stroke,Cardiovascular & Cholesterol
+PGS004026,Stroke,Cardiovascular & Cholesterol
+PGS004041,Stroke,Cardiovascular & Cholesterol
+PGS004054,Stroke,Cardiovascular & Cholesterol
+PGS004070,Stroke,Cardiovascular & Cholesterol
+PGS004084,Stroke,Cardiovascular & Cholesterol
+PGS004098,Stroke,Cardiovascular & Cholesterol
+PGS004108,Stroke,Cardiovascular & Cholesterol
+PGS004124,Stroke,Cardiovascular & Cholesterol
+PGS004138,Stroke,Cardiovascular & Cholesterol
+PGS004154,Stroke,Cardiovascular & Cholesterol
+PGS004835,Stroke,Cardiovascular & Cholesterol
+PGS004836,Stroke,Cardiovascular & Cholesterol
+PGS005156,Stroke,Cardiovascular & Cholesterol
+PGS005230,Stroke,Cardiovascular & Cholesterol
+PGS012551,Stroke,Cardiovascular & Cholesterol
+PGS012579,Stroke,Cardiovascular & Cholesterol
+PGS000301,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS000913,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS002238,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS002257,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS002275,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS002349,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS002376,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS002421,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS002470,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS002519,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS002568,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS002617,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS002666,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS002715,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS002734,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS002807,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003069,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003070,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003071,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003072,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003073,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003074,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003075,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003076,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003077,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003078,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003079,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003080,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003081,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003082,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003083,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003084,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003085,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003086,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003087,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003088,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003588,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003882,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003965,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003966,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003967,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003968,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003970,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS003971,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS004231,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS004235,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS004594,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS004603,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS004829,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS004830,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS004831,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS004832,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005008,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005009,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005010,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005011,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005012,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005013,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005014,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005015,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005016,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005017,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005018,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005019,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005020,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005120,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005321,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS005350,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS012514,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS012522,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS019806,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS019830,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS019854,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS019878,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS019902,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS019915,Systolic blood pressure,Cardiovascular & Cholesterol
+PGS000937,Varicose veins,Cardiovascular & Cholesterol
+PGS001845,Varicose veins,Cardiovascular & Cholesterol
+PGS002057,Varicose veins,Cardiovascular & Cholesterol
+PGS000938,Varicose veins,Cardiovascular & Cholesterol
+PGS004463,Varicose veins,Cardiovascular & Cholesterol
+PGS004533,Varicose veins,Cardiovascular & Cholesterol
+PGS001179,Vascular dementia,Cardiovascular & Cholesterol
+PGS001262,Angina,Cardiovascular & Cholesterol
+PGS001317,Myocardial infarction,Cardiovascular & Cholesterol
+PGS001335,Hypertension,Cardiovascular & Cholesterol
+PGS002269,Age-related macular degeneration,Eye Health
+PGS004606,Age-related macular degeneration,Eye Health
+PGS004607,Age-related macular degeneration,Eye Health
+PGS004952,Age-related macular degeneration,Eye Health
+PGS001302,Cataract,Eye Health
+PGS001837,Cataract,Eye Health
+PGS002044,Cataract,Eye Health
+PGS005142,Cataract,Eye Health
+PGS005149,Cataract,Eye Health
+PGS019046,Cataract,Eye Health
+PGS019047,Cataract,Eye Health
+PGS019048,Cataract,Eye Health
+PGS019049,Cataract,Eye Health
+PGS019050,Cataract,Eye Health
+PGS001028,Diabetic eye disease,Eye Health
+PGS001321,Glaucoma,Eye Health
+PGS000137,Glaucoma,Eye Health
+PGS001322,Glaucoma,Eye Health
+PGS001323,Glaucoma,Eye Health
+PGS001836,Glaucoma,Eye Health
+PGS002043,Glaucoma,Eye Health
+PGS002761,Glaucoma,Eye Health
+PGS004765,Glaucoma,Eye Health
+PGS004766,Glaucoma,Eye Health
+PGS019036,Glaucoma,Eye Health
+PGS019037,Glaucoma,Eye Health
+PGS019038,Glaucoma,Eye Health
+PGS019039,Glaucoma,Eye Health
+PGS019040,Glaucoma,Eye Health
+PGS002292,Keratoconus,Eye Health
+PGS001013,Macular degeneration,Eye Health
+PGS001303,Cataract,Eye Health
+PGS004454,Cataract,Eye Health
+PGS004524,Cataract,Eye Health
+PGS001029,Corneal disorders,Eye Health
+PGS001275,Retinal disorders,Eye Health
+PGS019011,Retinal disorders,Eye Health
+PGS019012,Retinal disorders,Eye Health
+PGS019013,Retinal disorders,Eye Health
+PGS019014,Retinal disorders,Eye Health
+PGS019015,Retinal disorders,Eye Health
+PGS000350,Primary open-angle glaucoma,Eye Health
+PGS000764,Primary open-angle glaucoma,Eye Health
+PGS001792,Primary open-angle glaucoma,Eye Health
+PGS001797,Primary open-angle glaucoma,Eye Health
+PGS002741,Primary open-angle glaucoma,Eye Health
+PGS004944,Primary open-angle glaucoma,Eye Health
+PGS003860,Refractive error,Eye Health
+PGS001137,Retinal detachment,Eye Health
+PGS000990,Retinal detachment,Eye Health
+PGS001276,Retinal disorders in diseases classified elsewhere,Eye Health
+PGS001267,Ankylosing spondylitis,Immune & Autoimmune
+PGS001268,Ankylosing spondylitis,Immune & Autoimmune
+PGS001876,Ankylosing spondylitis,Immune & Autoimmune
+PGS002089,Ankylosing spondylitis,Immune & Autoimmune
+PGS003420,Ankylosing spondylitis,Immune & Autoimmune
+PGS003421,Ankylosing spondylitis,Immune & Autoimmune
+PGS003422,Ankylosing spondylitis,Immune & Autoimmune
+PGS003423,Ankylosing spondylitis,Immune & Autoimmune
+PGS003424,Ankylosing spondylitis,Immune & Autoimmune
+PGS019671,Ankylosing spondylitis,Immune & Autoimmune
+PGS019672,Ankylosing spondylitis,Immune & Autoimmune
+PGS019673,Ankylosing spondylitis,Immune & Autoimmune
+PGS019674,Ankylosing spondylitis,Immune & Autoimmune
+PGS019675,Ankylosing spondylitis,Immune & Autoimmune
+PGS019676,Ankylosing spondylitis,Immune & Autoimmune
+PGS001135,Arthritis,Immune & Autoimmune
+PGS000037,Asthma,Immune & Autoimmune
+PGS000799,Asthma,Immune & Autoimmune
+PGS001341,Asthma,Immune & Autoimmune
+PGS001343,Asthma,Immune & Autoimmune
+PGS001344,Asthma,Immune & Autoimmune
+PGS001345,Asthma,Immune & Autoimmune
+PGS001346,Asthma,Immune & Autoimmune
+PGS001782,Asthma,Immune & Autoimmune
+PGS001787,Asthma,Immune & Autoimmune
+PGS001849,Asthma,Immune & Autoimmune
+PGS002061,Asthma,Immune & Autoimmune
+PGS002311,Asthma,Immune & Autoimmune
+PGS002358,Asthma,Immune & Autoimmune
+PGS002383,Asthma,Immune & Autoimmune
+PGS002432,Asthma,Immune & Autoimmune
+PGS002481,Asthma,Immune & Autoimmune
+PGS002530,Asthma,Immune & Autoimmune
+PGS002579,Asthma,Immune & Autoimmune
+PGS002628,Asthma,Immune & Autoimmune
+PGS002677,Asthma,Immune & Autoimmune
+PGS002727,Asthma,Immune & Autoimmune
+PGS002754,Asthma,Immune & Autoimmune
+PGS004176,Asthma,Immune & Autoimmune
+PGS004177,Asthma,Immune & Autoimmune
+PGS004178,Asthma,Immune & Autoimmune
+PGS004179,Asthma,Immune & Autoimmune
+PGS004180,Asthma,Immune & Autoimmune
+PGS004252,Asthma,Immune & Autoimmune
+PGS004275,Asthma,Immune & Autoimmune
+PGS004276,Asthma,Immune & Autoimmune
+PGS004277,Asthma,Immune & Autoimmune
+PGS004278,Asthma,Immune & Autoimmune
+PGS004279,Asthma,Immune & Autoimmune
+PGS004439,Asthma,Immune & Autoimmune
+PGS004467,Asthma,Immune & Autoimmune
+PGS004509,Asthma,Immune & Autoimmune
+PGS004537,Asthma,Immune & Autoimmune
+PGS004723,Asthma,Immune & Autoimmune
+PGS004724,Asthma,Immune & Autoimmune
+PGS004725,Asthma,Immune & Autoimmune
+PGS004726,Asthma,Immune & Autoimmune
+PGS004877,Asthma,Immune & Autoimmune
+PGS005121,Asthma,Immune & Autoimmune
+PGS005122,Asthma,Immune & Autoimmune
+PGS005123,Asthma,Immune & Autoimmune
+PGS005124,Asthma,Immune & Autoimmune
+PGS005125,Asthma,Immune & Autoimmune
+PGS005126,Asthma,Immune & Autoimmune
+PGS005127,Asthma,Immune & Autoimmune
+PGS005128,Asthma,Immune & Autoimmune
+PGS005129,Asthma,Immune & Autoimmune
+PGS005130,Asthma,Immune & Autoimmune
+PGS005131,Asthma,Immune & Autoimmune
+PGS005132,Asthma,Immune & Autoimmune
+PGS005133,Asthma,Immune & Autoimmune
+PGS005134,Asthma,Immune & Autoimmune
+PGS005135,Asthma,Immune & Autoimmune
+PGS005136,Asthma,Immune & Autoimmune
+PGS005137,Asthma,Immune & Autoimmune
+PGS005138,Asthma,Immune & Autoimmune
+PGS005139,Asthma,Immune & Autoimmune
+PGS005140,Asthma,Immune & Autoimmune
+PGS005141,Asthma,Immune & Autoimmune
+PGS005148,Asthma,Immune & Autoimmune
+PGS012541,Asthma,Immune & Autoimmune
+PGS002248,Childhood asthma,Immune & Autoimmune
+PGS000959,Connective tissue disorder,Immune & Autoimmune
+PGS000324,Enthesitis-related juvenile idiopathic arthritis,Immune & Autoimmune
+PGS005264,Graves' disease,Immune & Autoimmune
+PGS005265,Graves' disease,Immune & Autoimmune
+PGS005266,Graves' disease,Immune & Autoimmune
+PGS018671,Graves' disease,Immune & Autoimmune
+PGS018672,Graves' disease,Immune & Autoimmune
+PGS018673,Graves' disease,Immune & Autoimmune
+PGS018674,Graves' disease,Immune & Autoimmune
+PGS018675,Graves' disease,Immune & Autoimmune
+PGS018676,Graves' disease,Immune & Autoimmune
+PGS000941,Iridocyclitis,Immune & Autoimmune
+PGS000966,Iritis,Immune & Autoimmune
+PGS000114,Juvenile Idiopathic Arthritis,Immune & Autoimmune
+PGS000325,Oligoarticular juvenile idiopathic arthritis,Immune & Autoimmune
+PGS001309,Rheumatoid arthritis,Immune & Autoimmune
+PGS000960,Systemic connective tissue disorders,Immune & Autoimmune
+PGS001051,Polymyalgia rheumatica,Immune & Autoimmune
+PGS001878,Polymyalgia rheumatica,Immune & Autoimmune
+PGS002091,Polymyalgia rheumatica,Immune & Autoimmune
+PGS001312,Psoriasis,Immune & Autoimmune
+PGS001313,Psoriasis,Immune & Autoimmune
+PGS001871,Psoriasis,Immune & Autoimmune
+PGS002083,Psoriasis,Immune & Autoimmune
+PGS002293,Psoriasis,Immune & Autoimmune
+PGS002344,Psoriasis,Immune & Autoimmune
+PGS002416,Psoriasis,Immune & Autoimmune
+PGS002465,Psoriasis,Immune & Autoimmune
+PGS002514,Psoriasis,Immune & Autoimmune
+PGS002563,Psoriasis,Immune & Autoimmune
+PGS002612,Psoriasis,Immune & Autoimmune
+PGS002661,Psoriasis,Immune & Autoimmune
+PGS002710,Psoriasis,Immune & Autoimmune
+PGS004260,Psoriasis,Immune & Autoimmune
+PGS004261,Psoriasis,Immune & Autoimmune
+PGS004262,Psoriasis,Immune & Autoimmune
+PGS004263,Psoriasis,Immune & Autoimmune
+PGS004264,Psoriasis,Immune & Autoimmune
+PGS004315,Psoriasis,Immune & Autoimmune
+PGS004316,Psoriasis,Immune & Autoimmune
+PGS004317,Psoriasis,Immune & Autoimmune
+PGS005307,Psoriasis,Immune & Autoimmune
+PGS005308,Psoriasis,Immune & Autoimmune
+PGS005309,Psoriasis,Immune & Autoimmune
+PGS005310,Psoriasis,Immune & Autoimmune
+PGS005311,Psoriasis,Immune & Autoimmune
+PGS005312,Psoriasis,Immune & Autoimmune
+PGS019611,Psoriasis,Immune & Autoimmune
+PGS019612,Psoriasis,Immune & Autoimmune
+PGS019613,Psoriasis,Immune & Autoimmune
+PGS019614,Psoriasis,Immune & Autoimmune
+PGS019615,Psoriasis,Immune & Autoimmune
+PGS019616,Psoriasis,Immune & Autoimmune
+PGS001522,Psoriatic and enteropathic arthropathies,Immune & Autoimmune
+PGS001287,Psoriatic arthritis,Immune & Autoimmune
+PGS019623,Psoriatic arthritis,Immune & Autoimmune
+PGS019624,Psoriatic arthritis,Immune & Autoimmune
+PGS019625,Psoriatic arthritis,Immune & Autoimmune
+PGS019626,Psoriatic arthritis,Immune & Autoimmune
+PGS019627,Psoriatic arthritis,Immune & Autoimmune
+PGS019628,Psoriatic arthritis,Immune & Autoimmune
+PGS001110,Reactive arthropathies,Immune & Autoimmune
+PGS001310,Rheumatoid arthritis,Immune & Autoimmune
+PGS001875,Rheumatoid arthritis,Immune & Autoimmune
+PGS002088,Rheumatoid arthritis,Immune & Autoimmune
+PGS002260,Rheumatoid arthritis,Immune & Autoimmune
+PGS002745,Rheumatoid arthritis,Immune & Autoimmune
+PGS003994,Rheumatoid arthritis,Immune & Autoimmune
+PGS004010,Rheumatoid arthritis,Immune & Autoimmune
+PGS004021,Rheumatoid arthritis,Immune & Autoimmune
+PGS004049,Rheumatoid arthritis,Immune & Autoimmune
+PGS004064,Rheumatoid arthritis,Immune & Autoimmune
+PGS004079,Rheumatoid arthritis,Immune & Autoimmune
+PGS004094,Rheumatoid arthritis,Immune & Autoimmune
+PGS004103,Rheumatoid arthritis,Immune & Autoimmune
+PGS004118,Rheumatoid arthritis,Immune & Autoimmune
+PGS004133,Rheumatoid arthritis,Immune & Autoimmune
+PGS004148,Rheumatoid arthritis,Immune & Autoimmune
+PGS004163,Rheumatoid arthritis,Immune & Autoimmune
+PGS004255,Rheumatoid arthritis,Immune & Autoimmune
+PGS004256,Rheumatoid arthritis,Immune & Autoimmune
+PGS004257,Rheumatoid arthritis,Immune & Autoimmune
+PGS004258,Rheumatoid arthritis,Immune & Autoimmune
+PGS004259,Rheumatoid arthritis,Immune & Autoimmune
+PGS004326,Rheumatoid arthritis,Immune & Autoimmune
+PGS004817,Rheumatoid arthritis,Immune & Autoimmune
+PGS004818,Rheumatoid arthritis,Immune & Autoimmune
+PGS004819,Rheumatoid arthritis,Immune & Autoimmune
+PGS004820,Rheumatoid arthritis,Immune & Autoimmune
+PGS004873,Rheumatoid arthritis,Immune & Autoimmune
+PGS019661,Rheumatoid arthritis,Immune & Autoimmune
+PGS019662,Rheumatoid arthritis,Immune & Autoimmune
+PGS019663,Rheumatoid arthritis,Immune & Autoimmune
+PGS019664,Rheumatoid arthritis,Immune & Autoimmune
+PGS019665,Rheumatoid arthritis,Immune & Autoimmune
+PGS000194,CCP-negative rheumatoid arthritis,Immune & Autoimmune
+PGS000195,CCP-negative rheumatoid arthritis,Immune & Autoimmune
+PGS000326,RF-negative polyarticular juvenile idiopathic arthritis,Immune & Autoimmune
+PGS000922,Sarcoidosis,Immune & Autoimmune
+PGS000923,Sarcoidosis,Immune & Autoimmune
+PGS001872,Sarcoidosis,Immune & Autoimmune
+PGS002084,Sarcoidosis,Immune & Autoimmune
+PGS001311,Seropositive rheumatoid arthritis,Immune & Autoimmune
+PGS002769,Seropositive rheumatoid arthritis,Immune & Autoimmune
+PGS001308,Sjögren's syndrome,Immune & Autoimmune
+PGS000196,Systemic lupus erythematosus,Immune & Autoimmune
+PGS000328,Systemic lupus erythematosus,Immune & Autoimmune
+PGS000754,Systemic lupus erythematosus,Immune & Autoimmune
+PGS000771,Systemic lupus erythematosus,Immune & Autoimmune
+PGS000772,Systemic lupus erythematosus,Immune & Autoimmune
+PGS000803,Systemic lupus erythematosus,Immune & Autoimmune
+PGS001870,Systemic lupus erythematosus,Immune & Autoimmune
+PGS002082,Systemic lupus erythematosus,Immune & Autoimmune
+PGS003755,Systemic lupus erythematosus,Immune & Autoimmune
+PGS003756,Systemic lupus erythematosus,Immune & Autoimmune
+PGS003757,Systemic lupus erythematosus,Immune & Autoimmune
+PGS003960,Systemic lupus erythematosus,Immune & Autoimmune
+PGS004917,Systemic lupus erythematosus,Immune & Autoimmune
+PGS019599,Systemic lupus erythematosus,Immune & Autoimmune
+PGS019600,Systemic lupus erythematosus,Immune & Autoimmune
+PGS019601,Systemic lupus erythematosus,Immune & Autoimmune
+PGS019602,Systemic lupus erythematosus,Immune & Autoimmune
+PGS019603,Systemic lupus erythematosus,Immune & Autoimmune
+PGS019604,Systemic lupus erythematosus,Immune & Autoimmune
+PGS001011,Viral warts,Immune & Autoimmune
+PGS000738,Vitiligo,Immune & Autoimmune
+PGS000760,Vitiligo,Immune & Autoimmune
+PGS001536,Vitiligo,Immune & Autoimmune
+PGS001131,Shingles,Immune & Autoimmune
+PGS001332,Chronic obstructive pulmonary disease,Lung & Respiratory
+PGS001333,Chronic obstructive pulmonary disease,Lung & Respiratory
+PGS001783,Chronic obstructive pulmonary disease,Lung & Respiratory
+PGS001788,Chronic obstructive pulmonary disease,Lung & Respiratory
+PGS012564,Chronic obstructive pulmonary disease,Lung & Respiratory
+PGS001326,Emphysema,Lung & Respiratory
+PGS001801,Lung function (FEV1/FVC ratio),Lung & Respiratory
+PGS002326,Lung function (FEV1/FVC ratio),Lung & Respiratory
+PGS002398,Lung function (FEV1/FVC ratio),Lung & Respiratory
+PGS002447,Lung function (FEV1/FVC ratio),Lung & Respiratory
+PGS002496,Lung function (FEV1/FVC ratio),Lung & Respiratory
+PGS002545,Lung function (FEV1/FVC ratio),Lung & Respiratory
+PGS002594,Lung function (FEV1/FVC ratio),Lung & Respiratory
+PGS002643,Lung function (FEV1/FVC ratio),Lung & Respiratory
+PGS002692,Lung function (FEV1/FVC ratio),Lung & Respiratory
+PGS003465,Lung function (FEV1/FVC ratio),Lung & Respiratory
+PGS001800,Lung function (FEV1),Lung & Respiratory
+PGS001791,Idiopathic pulmonary fibrosis,Lung & Respiratory
+PGS004695,Idiopathic pulmonary fibrosis,Lung & Respiratory
+PGS005323,Idiopathic pulmonary fibrosis,Lung & Respiratory
+PGS012550,Idiopathic pulmonary fibrosis,Lung & Respiratory
+PGS000933,Nasal polyp,Lung & Respiratory
+PGS004465,Nasal polyp,Lung & Respiratory
+PGS004535,Nasal polyp,Lung & Respiratory
+PGS000934,Nasal polyp,Lung & Respiratory
+PGS001848,Nasal polyp,Lung & Respiratory
+PGS002060,Nasal polyp,Lung & Respiratory
+PGS001334,Chronic obstructive pulmonary disease,Lung & Respiratory
+PGS004466,Chronic obstructive pulmonary disease,Lung & Respiratory
+PGS004536,Chronic obstructive pulmonary disease,Lung & Respiratory
+PGS001251,Interstitial lung disease,Lung & Respiratory
+PGS001030,Pulmonary fibrosis,Lung & Respiratory
+PGS001369,Acute appendicitis,Metabolism & Hormones
+PGS001785,Acute appendicitis,Metabolism & Hormones
+PGS000717,Adult life body size,Metabolism & Hormones
+PGS004239,Autoimmune Addison's disease,Metabolism & Hormones
+PGS001250,Calculus of kidney and ureter,Metabolism & Hormones
+PGS004493,Calculus of kidney and ureter,Metabolism & Hormones
+PGS004563,Calculus of kidney and ureter,Metabolism & Hormones
+PGS001856,Celiac disease,Metabolism & Hormones
+PGS002067,Celiac disease,Metabolism & Hormones
+PGS004930,Celiac disease,Metabolism & Hormones
+PGS001300,"Celiac disease or gluten sensitivity, diagnosed",Metabolism & Hormones
+PGS000707,Cholecystitis,Metabolism & Hormones
+PGS000942,Cholecystitis,Metabolism & Hormones
+PGS000943,Cholecystitis,Metabolism & Hormones
+PGS001174,Gallstones,Metabolism & Hormones
+PGS004476,Gallstones,Metabolism & Hormones
+PGS004546,Gallstones,Metabolism & Hormones
+PGS005150,Gallstones,Metabolism & Hormones
+PGS012582,Gallstones,Metabolism & Hormones
+PGS019385,Gallstones,Metabolism & Hormones
+PGS019386,Gallstones,Metabolism & Hormones
+PGS019387,Gallstones,Metabolism & Hormones
+PGS019388,Gallstones,Metabolism & Hormones
+PGS019389,Gallstones,Metabolism & Hormones
+PGS002237,Chronic kidney disease (stage 3+),Metabolism & Hormones
+PGS005090,Chronic kidney disease (stage 3+),Metabolism & Hormones
+PGS001272,Chronic kidney failure,Metabolism & Hormones
+PGS004492,Chronic kidney failure,Metabolism & Hormones
+PGS004562,Chronic kidney failure,Metabolism & Hormones
+PGS000726,Cirrhosis,Metabolism & Hormones
+PGS000776,Cirrhosis,Metabolism & Hormones
+PGS004621,Cirrhosis,Metabolism & Hormones
+PGS001777,Alcohol-related cirrhosis,Metabolism & Hormones
+PGS000040,Celiac disease,Metabolism & Hormones
+PGS000041,Celiac disease,Metabolism & Hormones
+PGS000042,Celiac disease,Metabolism & Hormones
+PGS000316,Celiac disease,Metabolism & Hormones
+PGS000967,Hip osteoarthritis,Metabolism & Hormones
+PGS004478,Hip osteoarthritis,Metabolism & Hormones
+PGS004548,Hip osteoarthritis,Metabolism & Hormones
+PGS001331,Crohn's disease,Metabolism & Hormones
+PGS004254,Crohn's disease,Metabolism & Hormones
+PGS001330,Crohn's disease,Metabolism & Hormones
+PGS001327,Diabetes,Metabolism & Hormones
+PGS001050,Diaphragmatic hernia,Metabolism & Hormones
+PGS004473,Diaphragmatic hernia,Metabolism & Hormones
+PGS004543,Diaphragmatic hernia,Metabolism & Hormones
+PGS001023,Mineral metabolism disorders,Metabolism & Hormones
+PGS004614,Diverticular disease,Metabolism & Hormones
+PGS000997,Diverticular disease,Metabolism & Hormones
+PGS004474,Diverticular disease,Metabolism & Hormones
+PGS004544,Diverticular disease,Metabolism & Hormones
+PGS000996,Diverticular disease,Metabolism & Hormones
+PGS001390,Duodenal ulcer,Metabolism & Hormones
+PGS019335,Duodenal ulcer,Metabolism & Hormones
+PGS019336,Duodenal ulcer,Metabolism & Hormones
+PGS019337,Duodenal ulcer,Metabolism & Hormones
+PGS019338,Duodenal ulcer,Metabolism & Hormones
+PGS019339,Duodenal ulcer,Metabolism & Hormones
+PGS000716,Early life body size,Metabolism & Hormones
+PGS001015,Enlarged prostate,Metabolism & Hormones
+PGS001026,Forearm or wrist fracture,Metabolism & Hormones
+PGS000705,Gallstones,Metabolism & Hormones
+PGS001256,Gallstones,Metabolism & Hormones
+PGS001192,Knee osteoarthritis,Metabolism & Hormones
+PGS004479,Knee osteoarthritis,Metabolism & Hormones
+PGS004549,Knee osteoarthritis,Metabolism & Hormones
+PGS000199,Gout,Metabolism & Hormones
+PGS000711,Gout,Metabolism & Hormones
+PGS001248,Gout,Metabolism & Hormones
+PGS001249,Gout,Metabolism & Hormones
+PGS001789,Gout,Metabolism & Hormones
+PGS001822,Gout,Metabolism & Hormones
+PGS002030,Gout,Metabolism & Hormones
+PGS002307,Gout,Metabolism & Hormones
+PGS002762,Gout,Metabolism & Hormones
+PGS003329,Gout,Metabolism & Hormones
+PGS003990,Gout,Metabolism & Hormones
+PGS004006,Gout,Metabolism & Hormones
+PGS004018,Gout,Metabolism & Hormones
+PGS004032,Gout,Metabolism & Hormones
+PGS004047,Gout,Metabolism & Hormones
+PGS004060,Gout,Metabolism & Hormones
+PGS004076,Gout,Metabolism & Hormones
+PGS004090,Gout,Metabolism & Hormones
+PGS004114,Gout,Metabolism & Hormones
+PGS004130,Gout,Metabolism & Hormones
+PGS004144,Gout,Metabolism & Hormones
+PGS004160,Gout,Metabolism & Hormones
+PGS004222,Gout,Metabolism & Hormones
+PGS004265,Gout,Metabolism & Hormones
+PGS004266,Gout,Metabolism & Hormones
+PGS004267,Gout,Metabolism & Hormones
+PGS004268,Gout,Metabolism & Hormones
+PGS004269,Gout,Metabolism & Hormones
+PGS004767,Gout,Metabolism & Hormones
+PGS004768,Gout,Metabolism & Hormones
+PGS004871,Gout,Metabolism & Hormones
+PGS004931,Gout,Metabolism & Hormones
+PGS018822,Gout,Metabolism & Hormones
+PGS018823,Gout,Metabolism & Hormones
+PGS018824,Gout,Metabolism & Hormones
+PGS018825,Gout,Metabolism & Hormones
+PGS018826,Gout,Metabolism & Hormones
+PGS018827,Gout,Metabolism & Hormones
+PGS000657,Heel quantitative ultrasound speed of sound (SOS),Metabolism & Hormones
+PGS000939,Hiatus hernia,Metabolism & Hormones
+PGS002728,Hip osteoarthritis,Metabolism & Hormones
+PGS002763,Hip osteoarthritis,Metabolism & Hormones
+PGS004882,Hip osteoarthritis,Metabolism & Hormones
+PGS018417,Hip osteoarthritis,Metabolism & Hormones
+PGS001042,Hyperthyroidism,Metabolism & Hormones
+PGS001043,Hyperthyroidism,Metabolism & Hormones
+PGS000759,Hypothyroidism,Metabolism & Hormones
+PGS000761,Hypothyroidism,Metabolism & Hormones
+PGS000965,Hypothyroidism,Metabolism & Hormones
+PGS001181,Hypothyroidism,Metabolism & Hormones
+PGS001816,Hypothyroidism,Metabolism & Hormones
+PGS002024,Hypothyroidism,Metabolism & Hormones
+PGS002336,Hypothyroidism,Metabolism & Hormones
+PGS002408,Hypothyroidism,Metabolism & Hormones
+PGS002457,Hypothyroidism,Metabolism & Hormones
+PGS002506,Hypothyroidism,Metabolism & Hormones
+PGS002555,Hypothyroidism,Metabolism & Hormones
+PGS002604,Hypothyroidism,Metabolism & Hormones
+PGS002653,Hypothyroidism,Metabolism & Hormones
+PGS002702,Hypothyroidism,Metabolism & Hormones
+PGS002766,Hypothyroidism,Metabolism & Hormones
+PGS004446,Hypothyroidism,Metabolism & Hormones
+PGS004516,Hypothyroidism,Metabolism & Hormones
+PGS004789,Hypothyroidism,Metabolism & Hormones
+PGS004790,Hypothyroidism,Metabolism & Hormones
+PGS004935,Hypothyroidism,Metabolism & Hormones
+PGS005218,Hypothyroidism,Metabolism & Hormones
+PGS005267,Hypothyroidism,Metabolism & Hormones
+PGS005268,Hypothyroidism,Metabolism & Hormones
+PGS005269,Hypothyroidism,Metabolism & Hormones
+PGS018677,Hypothyroidism,Metabolism & Hormones
+PGS018678,Hypothyroidism,Metabolism & Hormones
+PGS018679,Hypothyroidism,Metabolism & Hormones
+PGS018680,Hypothyroidism,Metabolism & Hormones
+PGS018681,Hypothyroidism,Metabolism & Hormones
+PGS018682,Hypothyroidism,Metabolism & Hormones
+PGS002779,Incident type 2 diabetes,Metabolism & Hormones
+PGS002780,Incident type 2 diabetes,Metabolism & Hormones
+PGS000017,Inflammatory bowel disease,Metabolism & Hormones
+PGS001288,Inflammatory bowel disease,Metabolism & Hormones
+PGS004270,Inflammatory bowel disease,Metabolism & Hormones
+PGS004271,Inflammatory bowel disease,Metabolism & Hormones
+PGS004272,Inflammatory bowel disease,Metabolism & Hormones
+PGS004273,Inflammatory bowel disease,Metabolism & Hormones
+PGS004274,Inflammatory bowel disease,Metabolism & Hormones
+PGS003981,Inflammatory bowel disease,Metabolism & Hormones
+PGS003997,Inflammatory bowel disease,Metabolism & Hormones
+PGS004013,Inflammatory bowel disease,Metabolism & Hormones
+PGS004023,Inflammatory bowel disease,Metabolism & Hormones
+PGS004038,Inflammatory bowel disease,Metabolism & Hormones
+PGS004051,Inflammatory bowel disease,Metabolism & Hormones
+PGS004067,Inflammatory bowel disease,Metabolism & Hormones
+PGS004081,Inflammatory bowel disease,Metabolism & Hormones
+PGS004097,Inflammatory bowel disease,Metabolism & Hormones
+PGS004105,Inflammatory bowel disease,Metabolism & Hormones
+PGS004121,Inflammatory bowel disease,Metabolism & Hormones
+PGS004135,Inflammatory bowel disease,Metabolism & Hormones
+PGS004151,Inflammatory bowel disease,Metabolism & Hormones
+PGS000948,Inguinal hernia,Metabolism & Hormones
+PGS000949,Inguinal hernia,Metabolism & Hormones
+PGS001854,Inguinal hernia,Metabolism & Hormones
+PGS002065,Inguinal hernia,Metabolism & Hormones
+PGS004471,Inguinal hernia,Metabolism & Hormones
+PGS004541,Inguinal hernia,Metabolism & Hormones
+PGS019345,Inguinal hernia,Metabolism & Hormones
+PGS019346,Inguinal hernia,Metabolism & Hormones
+PGS019347,Inguinal hernia,Metabolism & Hormones
+PGS019348,Inguinal hernia,Metabolism & Hormones
+PGS019349,Inguinal hernia,Metabolism & Hormones
+PGS001296,Type 1 diabetes,Metabolism & Hormones
+PGS000940,Intestinal malabsorption,Metabolism & Hormones
+PGS002729,Knee osteoarthritis,Metabolism & Hormones
+PGS002767,Knee osteoarthritis,Metabolism & Hormones
+PGS004883,Knee osteoarthritis,Metabolism & Hormones
+PGS018416,Knee osteoarthritis,Metabolism & Hormones
+PGS001301,Celiac disease,Metabolism & Hormones
+PGS000655,Non-alcoholic fatty liver disease,Metabolism & Hormones
+PGS000872,Non-alcoholic fatty liver disease,Metabolism & Hormones
+PGS001294,Type 2 diabetes,Metabolism & Hormones
+PGS001290,Osteoarthritis,Metabolism & Hormones
+PGS001273,Osteoporosis,Metabolism & Hormones
+PGS001883,Osteoporosis,Metabolism & Hormones
+PGS002095,Osteoporosis,Metabolism & Hormones
+PGS002768,Osteoporosis,Metabolism & Hormones
+PGS004495,Osteoporosis,Metabolism & Hormones
+PGS004565,Osteoporosis,Metabolism & Hormones
+PGS004809,Osteoporosis,Metabolism & Hormones
+PGS004810,Osteoporosis,Metabolism & Hormones
+PGS005146,Osteoporosis,Metabolism & Hormones
+PGS005155,Osteoporosis,Metabolism & Hormones
+PGS001274,Osteoporosis without pathological fracture,Metabolism & Hormones
+PGS004490,Osteoporosis without pathological fracture,Metabolism & Hormones
+PGS004560,Osteoporosis without pathological fracture,Metabolism & Hormones
+PGS001516,Intestinal disorders,Metabolism & Hormones
+PGS001293,Liver disease,Metabolism & Hormones
+PGS001014,Pancreatic endocrine disorders,Metabolism & Hormones
+PGS018781,Pancreatic endocrine disorders,Metabolism & Hormones
+PGS018782,Pancreatic endocrine disorders,Metabolism & Hormones
+PGS018783,Pancreatic endocrine disorders,Metabolism & Hormones
+PGS018784,Pancreatic endocrine disorders,Metabolism & Hormones
+PGS018785,Pancreatic endocrine disorders,Metabolism & Hormones
+PGS001319,Metabolic disorders,Metabolism & Hormones
+PGS000928,Nontoxic goiter,Metabolism & Hormones
+PGS001258,Radius fracture,Metabolism & Hormones
+PGS001117,Early insulin requirement after diabetes diagnosis,Metabolism & Hormones
+PGS000021,Type 1 diabetes,Metabolism & Hormones
+PGS000022,Type 1 diabetes,Metabolism & Hormones
+PGS000023,Type 1 diabetes,Metabolism & Hormones
+PGS000024,Type 1 diabetes,Metabolism & Hormones
+PGS000833,Type 1 diabetes,Metabolism & Hormones
+PGS000869,Type 1 diabetes,Metabolism & Hormones
+PGS001297,Type 1 diabetes,Metabolism & Hormones
+PGS001817,Type 1 diabetes,Metabolism & Hormones
+PGS002025,Type 1 diabetes,Metabolism & Hormones
+PGS003749,Type 1 diabetes,Metabolism & Hormones
+PGS003750,Type 1 diabetes,Metabolism & Hormones
+PGS003993,Type 1 diabetes,Metabolism & Hormones
+PGS004009,Type 1 diabetes,Metabolism & Hormones
+PGS004020,Type 1 diabetes,Metabolism & Hormones
+PGS004035,Type 1 diabetes,Metabolism & Hormones
+PGS004063,Type 1 diabetes,Metabolism & Hormones
+PGS004078,Type 1 diabetes,Metabolism & Hormones
+PGS004093,Type 1 diabetes,Metabolism & Hormones
+PGS004102,Type 1 diabetes,Metabolism & Hormones
+PGS004117,Type 1 diabetes,Metabolism & Hormones
+PGS004132,Type 1 diabetes,Metabolism & Hormones
+PGS004147,Type 1 diabetes,Metabolism & Hormones
+PGS004162,Type 1 diabetes,Metabolism & Hormones
+PGS004171,Type 1 diabetes,Metabolism & Hormones
+PGS004172,Type 1 diabetes,Metabolism & Hormones
+PGS004173,Type 1 diabetes,Metabolism & Hormones
+PGS004174,Type 1 diabetes,Metabolism & Hormones
+PGS004175,Type 1 diabetes,Metabolism & Hormones
+PGS004874,Type 1 diabetes,Metabolism & Hormones
+PGS005398,Type 1 diabetes,Metabolism & Hormones
+PGS005399,Type 1 diabetes,Metabolism & Hormones
+PGS005400,Type 1 diabetes,Metabolism & Hormones
+PGS012555,Type 1 diabetes,Metabolism & Hormones
+PGS000014,Type 2 diabetes,Metabolism & Hormones
+PGS000020,Type 2 diabetes,Metabolism & Hormones
+PGS000031,Type 2 diabetes,Metabolism & Hormones
+PGS000032,Type 2 diabetes,Metabolism & Hormones
+PGS000033,Type 2 diabetes,Metabolism & Hormones
+PGS000036,Type 2 diabetes,Metabolism & Hormones
+PGS000125,Type 2 diabetes,Metabolism & Hormones
+PGS000330,Type 2 diabetes,Metabolism & Hormones
+PGS000713,Type 2 diabetes,Metabolism & Hormones
+PGS000729,Type 2 diabetes,Metabolism & Hormones
+PGS000804,Type 2 diabetes,Metabolism & Hormones
+PGS000805,Type 2 diabetes,Metabolism & Hormones
+PGS000806,Type 2 diabetes,Metabolism & Hormones
+PGS000807,Type 2 diabetes,Metabolism & Hormones
+PGS000808,Type 2 diabetes,Metabolism & Hormones
+PGS000832,Type 2 diabetes,Metabolism & Hormones
+PGS000848,Type 2 diabetes,Metabolism & Hormones
+PGS000849,Type 2 diabetes,Metabolism & Hormones
+PGS000850,Type 2 diabetes,Metabolism & Hormones
+PGS000851,Type 2 diabetes,Metabolism & Hormones
+PGS000852,Type 2 diabetes,Metabolism & Hormones
+PGS000853,Type 2 diabetes,Metabolism & Hormones
+PGS000854,Type 2 diabetes,Metabolism & Hormones
+PGS000855,Type 2 diabetes,Metabolism & Hormones
+PGS000856,Type 2 diabetes,Metabolism & Hormones
+PGS000857,Type 2 diabetes,Metabolism & Hormones
+PGS000858,Type 2 diabetes,Metabolism & Hormones
+PGS000864,Type 2 diabetes,Metabolism & Hormones
+PGS000868,Type 2 diabetes,Metabolism & Hormones
+PGS001295,Type 2 diabetes,Metabolism & Hormones
+PGS001357,Type 2 diabetes,Metabolism & Hormones
+PGS001781,Type 2 diabetes,Metabolism & Hormones
+PGS001818,Type 2 diabetes,Metabolism & Hormones
+PGS002026,Type 2 diabetes,Metabolism & Hormones
+PGS002243,Type 2 diabetes,Metabolism & Hormones
+PGS002277,Type 2 diabetes,Metabolism & Hormones
+PGS002308,Type 2 diabetes,Metabolism & Hormones
+PGS002354,Type 2 diabetes,Metabolism & Hormones
+PGS002379,Type 2 diabetes,Metabolism & Hormones
+PGS002426,Type 2 diabetes,Metabolism & Hormones
+PGS002475,Type 2 diabetes,Metabolism & Hormones
+PGS002524,Type 2 diabetes,Metabolism & Hormones
+PGS002573,Type 2 diabetes,Metabolism & Hormones
+PGS002622,Type 2 diabetes,Metabolism & Hormones
+PGS002671,Type 2 diabetes,Metabolism & Hormones
+PGS002720,Type 2 diabetes,Metabolism & Hormones
+PGS002733,Type 2 diabetes,Metabolism & Hormones
+PGS002771,Type 2 diabetes,Metabolism & Hormones
+PGS003089,Type 2 diabetes,Metabolism & Hormones
+PGS003090,Type 2 diabetes,Metabolism & Hormones
+PGS003091,Type 2 diabetes,Metabolism & Hormones
+PGS003092,Type 2 diabetes,Metabolism & Hormones
+PGS003093,Type 2 diabetes,Metabolism & Hormones
+PGS003094,Type 2 diabetes,Metabolism & Hormones
+PGS003095,Type 2 diabetes,Metabolism & Hormones
+PGS003096,Type 2 diabetes,Metabolism & Hormones
+PGS003097,Type 2 diabetes,Metabolism & Hormones
+PGS003098,Type 2 diabetes,Metabolism & Hormones
+PGS003099,Type 2 diabetes,Metabolism & Hormones
+PGS003100,Type 2 diabetes,Metabolism & Hormones
+PGS003101,Type 2 diabetes,Metabolism & Hormones
+PGS003102,Type 2 diabetes,Metabolism & Hormones
+PGS003103,Type 2 diabetes,Metabolism & Hormones
+PGS003104,Type 2 diabetes,Metabolism & Hormones
+PGS003105,Type 2 diabetes,Metabolism & Hormones
+PGS003106,Type 2 diabetes,Metabolism & Hormones
+PGS003107,Type 2 diabetes,Metabolism & Hormones
+PGS003108,Type 2 diabetes,Metabolism & Hormones
+PGS003109,Type 2 diabetes,Metabolism & Hormones
+PGS003110,Type 2 diabetes,Metabolism & Hormones
+PGS003111,Type 2 diabetes,Metabolism & Hormones
+PGS003112,Type 2 diabetes,Metabolism & Hormones
+PGS003113,Type 2 diabetes,Metabolism & Hormones
+PGS003114,Type 2 diabetes,Metabolism & Hormones
+PGS003115,Type 2 diabetes,Metabolism & Hormones
+PGS003116,Type 2 diabetes,Metabolism & Hormones
+PGS003117,Type 2 diabetes,Metabolism & Hormones
+PGS003118,Type 2 diabetes,Metabolism & Hormones
+PGS003119,Type 2 diabetes,Metabolism & Hormones
+PGS003120,Type 2 diabetes,Metabolism & Hormones
+PGS003121,Type 2 diabetes,Metabolism & Hormones
+PGS003122,Type 2 diabetes,Metabolism & Hormones
+PGS003123,Type 2 diabetes,Metabolism & Hormones
+PGS003353,Type 2 diabetes,Metabolism & Hormones
+PGS003402,Type 2 diabetes,Metabolism & Hormones
+PGS003443,Type 2 diabetes,Metabolism & Hormones
+PGS003444,Type 2 diabetes,Metabolism & Hormones
+PGS003445,Type 2 diabetes,Metabolism & Hormones
+PGS003728,Type 2 diabetes,Metabolism & Hormones
+PGS003729,Type 2 diabetes,Metabolism & Hormones
+PGS003730,Type 2 diabetes,Metabolism & Hormones
+PGS003731,Type 2 diabetes,Metabolism & Hormones
+PGS003732,Type 2 diabetes,Metabolism & Hormones
+PGS003733,Type 2 diabetes,Metabolism & Hormones
+PGS003734,Type 2 diabetes,Metabolism & Hormones
+PGS003735,Type 2 diabetes,Metabolism & Hormones
+PGS003751,Type 2 diabetes,Metabolism & Hormones
+PGS003752,Type 2 diabetes,Metabolism & Hormones
+PGS003867,Type 2 diabetes,Metabolism & Hormones
+PGS003982,Type 2 diabetes,Metabolism & Hormones
+PGS003998,Type 2 diabetes,Metabolism & Hormones
+PGS004014,Type 2 diabetes,Metabolism & Hormones
+PGS004024,Type 2 diabetes,Metabolism & Hormones
+PGS004039,Type 2 diabetes,Metabolism & Hormones
+PGS004052,Type 2 diabetes,Metabolism & Hormones
+PGS004068,Type 2 diabetes,Metabolism & Hormones
+PGS004082,Type 2 diabetes,Metabolism & Hormones
+PGS004106,Type 2 diabetes,Metabolism & Hormones
+PGS004122,Type 2 diabetes,Metabolism & Hormones
+PGS004136,Type 2 diabetes,Metabolism & Hormones
+PGS004152,Type 2 diabetes,Metabolism & Hormones
+PGS004181,Type 2 diabetes,Metabolism & Hormones
+PGS004182,Type 2 diabetes,Metabolism & Hormones
+PGS004183,Type 2 diabetes,Metabolism & Hormones
+PGS004184,Type 2 diabetes,Metabolism & Hormones
+PGS004185,Type 2 diabetes,Metabolism & Hormones
+PGS004223,Type 2 diabetes,Metabolism & Hormones
+PGS004225,Type 2 diabetes,Metabolism & Hormones
+PGS004226,Type 2 diabetes,Metabolism & Hormones
+PGS004310,Type 2 diabetes,Metabolism & Hormones
+PGS004311,Type 2 diabetes,Metabolism & Hormones
+PGS004312,Type 2 diabetes,Metabolism & Hormones
+PGS004313,Type 2 diabetes,Metabolism & Hormones
+PGS004314,Type 2 diabetes,Metabolism & Hormones
+PGS004323,Type 2 diabetes,Metabolism & Hormones
+PGS004499,Type 2 diabetes,Metabolism & Hormones
+PGS004569,Type 2 diabetes,Metabolism & Hormones
+PGS004602,Type 2 diabetes,Metabolism & Hormones
+PGS004615,Type 2 diabetes,Metabolism & Hormones
+PGS004616,Type 2 diabetes,Metabolism & Hormones
+PGS004617,Type 2 diabetes,Metabolism & Hormones
+PGS004618,Type 2 diabetes,Metabolism & Hormones
+PGS004619,Type 2 diabetes,Metabolism & Hormones
+PGS004620,Type 2 diabetes,Metabolism & Hormones
+PGS004837,Type 2 diabetes,Metabolism & Hormones
+PGS004838,Type 2 diabetes,Metabolism & Hormones
+PGS004839,Type 2 diabetes,Metabolism & Hormones
+PGS004840,Type 2 diabetes,Metabolism & Hormones
+PGS004859,Type 2 diabetes,Metabolism & Hormones
+PGS004868,Type 2 diabetes,Metabolism & Hormones
+PGS004870,Type 2 diabetes,Metabolism & Hormones
+PGS004887,Type 2 diabetes,Metabolism & Hormones
+PGS004923,Type 2 diabetes,Metabolism & Hormones
+PGS005021,Type 2 diabetes,Metabolism & Hormones
+PGS005022,Type 2 diabetes,Metabolism & Hormones
+PGS005023,Type 2 diabetes,Metabolism & Hormones
+PGS005024,Type 2 diabetes,Metabolism & Hormones
+PGS005025,Type 2 diabetes,Metabolism & Hormones
+PGS005026,Type 2 diabetes,Metabolism & Hormones
+PGS005027,Type 2 diabetes,Metabolism & Hormones
+PGS005028,Type 2 diabetes,Metabolism & Hormones
+PGS005029,Type 2 diabetes,Metabolism & Hormones
+PGS005030,Type 2 diabetes,Metabolism & Hormones
+PGS005031,Type 2 diabetes,Metabolism & Hormones
+PGS005032,Type 2 diabetes,Metabolism & Hormones
+PGS005033,Type 2 diabetes,Metabolism & Hormones
+PGS005108,Type 2 diabetes,Metabolism & Hormones
+PGS005110,Type 2 diabetes,Metabolism & Hormones
+PGS005111,Type 2 diabetes,Metabolism & Hormones
+PGS005115,Type 2 diabetes,Metabolism & Hormones
+PGS005116,Type 2 diabetes,Metabolism & Hormones
+PGS005117,Type 2 diabetes,Metabolism & Hormones
+PGS005118,Type 2 diabetes,Metabolism & Hormones
+PGS005119,Type 2 diabetes,Metabolism & Hormones
+PGS005147,Type 2 diabetes,Metabolism & Hormones
+PGS005157,Type 2 diabetes,Metabolism & Hormones
+PGS005242,Type 2 diabetes,Metabolism & Hormones
+PGS005243,Type 2 diabetes,Metabolism & Hormones
+PGS005244,Type 2 diabetes,Metabolism & Hormones
+PGS005245,Type 2 diabetes,Metabolism & Hormones
+PGS005246,Type 2 diabetes,Metabolism & Hormones
+PGS005247,Type 2 diabetes,Metabolism & Hormones
+PGS005314,Type 2 diabetes,Metabolism & Hormones
+PGS005324,Type 2 diabetes,Metabolism & Hormones
+PGS005325,Type 2 diabetes,Metabolism & Hormones
+PGS005326,Type 2 diabetes,Metabolism & Hormones
+PGS005327,Type 2 diabetes,Metabolism & Hormones
+PGS005328,Type 2 diabetes,Metabolism & Hormones
+PGS005329,Type 2 diabetes,Metabolism & Hormones
+PGS005330,Type 2 diabetes,Metabolism & Hormones
+PGS005333,Type 2 diabetes,Metabolism & Hormones
+PGS005334,Type 2 diabetes,Metabolism & Hormones
+PGS005335,Type 2 diabetes,Metabolism & Hormones
+PGS005336,Type 2 diabetes,Metabolism & Hormones
+PGS005341,Type 2 diabetes,Metabolism & Hormones
+PGS005342,Type 2 diabetes,Metabolism & Hormones
+PGS005343,Type 2 diabetes,Metabolism & Hormones
+PGS005344,Type 2 diabetes,Metabolism & Hormones
+PGS005353,Type 2 diabetes,Metabolism & Hormones
+PGS005354,Type 2 diabetes,Metabolism & Hormones
+PGS005355,Type 2 diabetes,Metabolism & Hormones
+PGS005356,Type 2 diabetes,Metabolism & Hormones
+PGS005357,Type 2 diabetes,Metabolism & Hormones
+PGS005358,Type 2 diabetes,Metabolism & Hormones
+PGS005359,Type 2 diabetes,Metabolism & Hormones
+PGS005360,Type 2 diabetes,Metabolism & Hormones
+PGS005361,Type 2 diabetes,Metabolism & Hormones
+PGS005362,Type 2 diabetes,Metabolism & Hormones
+PGS005363,Type 2 diabetes,Metabolism & Hormones
+PGS005364,Type 2 diabetes,Metabolism & Hormones
+PGS005365,Type 2 diabetes,Metabolism & Hormones
+PGS005366,Type 2 diabetes,Metabolism & Hormones
+PGS005367,Type 2 diabetes,Metabolism & Hormones
+PGS005368,Type 2 diabetes,Metabolism & Hormones
+PGS005369,Type 2 diabetes,Metabolism & Hormones
+PGS005370,Type 2 diabetes,Metabolism & Hormones
+PGS005371,Type 2 diabetes,Metabolism & Hormones
+PGS005372,Type 2 diabetes,Metabolism & Hormones
+PGS005373,Type 2 diabetes,Metabolism & Hormones
+PGS005374,Type 2 diabetes,Metabolism & Hormones
+PGS005375,Type 2 diabetes,Metabolism & Hormones
+PGS005376,Type 2 diabetes,Metabolism & Hormones
+PGS005377,Type 2 diabetes,Metabolism & Hormones
+PGS012547,Type 2 diabetes,Metabolism & Hormones
+PGS012554,Type 2 diabetes,Metabolism & Hormones
+PGS012578,Type 2 diabetes,Metabolism & Hormones
+PGS018413,Type 2 diabetes,Metabolism & Hormones
+PGS018418,Type 2 diabetes,Metabolism & Hormones
+PGS018723,Type 2 diabetes,Metabolism & Hormones
+PGS018724,Type 2 diabetes,Metabolism & Hormones
+PGS018725,Type 2 diabetes,Metabolism & Hormones
+PGS018726,Type 2 diabetes,Metabolism & Hormones
+PGS018727,Type 2 diabetes,Metabolism & Hormones
+PGS018728,Type 2 diabetes,Metabolism & Hormones
+PGS018746,Type 2 diabetes,Metabolism & Hormones
+PGS018747,Type 2 diabetes,Metabolism & Hormones
+PGS018748,Type 2 diabetes,Metabolism & Hormones
+PGS018749,Type 2 diabetes,Metabolism & Hormones
+PGS018750,Type 2 diabetes,Metabolism & Hormones
+PGS018751,Type 2 diabetes,Metabolism & Hormones
+PGS018752,Type 2 diabetes,Metabolism & Hormones
+PGS018753,Type 2 diabetes,Metabolism & Hormones
+PGS018754,Type 2 diabetes,Metabolism & Hormones
+PGS018755,Type 2 diabetes,Metabolism & Hormones
+PGS018756,Type 2 diabetes,Metabolism & Hormones
+PGS018757,Type 2 diabetes,Metabolism & Hormones
+PGS018758,Type 2 diabetes,Metabolism & Hormones
+PGS018759,Type 2 diabetes,Metabolism & Hormones
+PGS018760,Type 2 diabetes,Metabolism & Hormones
+PGS018761,Type 2 diabetes,Metabolism & Hormones
+PGS018762,Type 2 diabetes,Metabolism & Hormones
+PGS018763,Type 2 diabetes,Metabolism & Hormones
+PGS018764,Type 2 diabetes,Metabolism & Hormones
+PGS018765,Type 2 diabetes,Metabolism & Hormones
+PGS018766,Type 2 diabetes,Metabolism & Hormones
+PGS018767,Type 2 diabetes,Metabolism & Hormones
+PGS018768,Type 2 diabetes,Metabolism & Hormones
+PGS018769,Type 2 diabetes,Metabolism & Hormones
+PGS001306,Ulcerative colitis,Metabolism & Hormones
+PGS001307,Ulcerative colitis,Metabolism & Hormones
+PGS001855,Ulcerative colitis,Metabolism & Hormones
+PGS002066,Ulcerative colitis,Metabolism & Hormones
+PGS004253,Ulcerative colitis,Metabolism & Hormones
+PGS001329,Diabetes,Metabolism & Hormones
+PGS001032,Uterine fibroids,Metabolism & Hormones
+PGS002263,Uterine fibroids,Metabolism & Hormones
+PGS001112,Aspirin use,Other Health Conditions
+PGS001113,Aspirin use,Other Health Conditions
+PGS002272,COVID-19 infection,Other Health Conditions
+PGS002273,COVID-19 infection,Other Health Conditions
+PGS000995,Dentures,Other Health Conditions
+PGS001254,Dupuytren's contracture,Other Health Conditions
+PGS001246,High tanning response,Other Health Conditions
+PGS001247,Low tanning response / sunburn tendency,Other Health Conditions
+PGS001141,Younger-looking facial aging,Other Health Conditions
+PGS001072,Older-looking facial aging,Other Health Conditions
+PGS001044,Glucosamine use,Other Health Conditions
+PGS001092,Black hair,Other Health Conditions
+PGS001093,Blonde hair,Other Health Conditions
+PGS001094,Brown hair,Other Health Conditions
+PGS001095,Dark brown hair,Other Health Conditions
+PGS001096,Light brown hair,Other Health Conditions
+PGS001097,Other hair color,Other Health Conditions
+PGS001098,Red hair,Other Health Conditions
+PGS001136,"Hematologic disease, genetic",Other Health Conditions
+PGS001338,Enlarged prostate,Metabolism & Hormones
+PGS001865,Enlarged prostate,Metabolism & Hormones
+PGS002076,Enlarged prostate,Metabolism & Hormones
+PGS019522,Enlarged prostate,Metabolism & Hormones
+PGS019523,Enlarged prostate,Metabolism & Hormones
+PGS019524,Enlarged prostate,Metabolism & Hormones
+PGS019525,Enlarged prostate,Metabolism & Hormones
+PGS019526,Enlarged prostate,Metabolism & Hormones
+PGS002266,Cleft lip with or without cleft palate,Other Health Conditions
+PGS000932,Intervertebral disc disorders,Other Health Conditions
+PGS004486,Intervertebral disc disorders,Other Health Conditions
+PGS004556,Intervertebral disc disorders,Other Health Conditions
+PGS001255,Otosclerosis,Other Health Conditions
+PGS002046,Otosclerosis,Other Health Conditions
+PGS001280,Pulmonary embolism,Cardiovascular & Cholesterol
+PGS001115,Paracetamol use,Other Health Conditions
+PGS001140,Seborrheic keratosis,Other Health Conditions
+PGS002085,Seborrheic keratosis,Other Health Conditions
+PGS000950,Chronic sun-related skin damage,Other Health Conditions
+PGS000964,Slipped disc,Other Health Conditions
+PGS000982,Low sun-protection use,Other Health Conditions

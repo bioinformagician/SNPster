@@ -1,0 +1,19 @@
+{
+  "purpose": "User-approved supplemental accuracy reporting, not a rewrite of frozen selection gates",
+  "sources": ["EUR", "EAS_SEA", "SAS", "GME", "NAM", "OCE", "SSA"],
+  "mean_tv": {
+    "acceptable_max": 0.10,
+    "desirable_max": 0.05
+  },
+  "per_person_all_components": {
+    "acceptable_absolute_error_max": 0.10,
+    "desirable_absolute_error_max": 0.05,
+    "units": "ancestry fraction; 0.10 means ten percentage points, not ten percent relative error",
+    "minimum_coverage_fraction": null,
+    "coverage_is_reported_not_gated": true
+  },
+  "comparison_tolerance": 1e-12,
+  "minor_detection_threshold_unchanged": true,
+  "frozen_selection_gates_unchanged": true,
+  "production_promotion": false
+}

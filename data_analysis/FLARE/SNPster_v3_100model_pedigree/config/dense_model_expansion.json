@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "maximum_configurations": 100,
+  "expected_configurations": 98,
+  "seed": 20261022,
+  "flare": {
+    "reference_panels": ["full", "finecap8", "finecap", "finecap32"],
+    "array": [true],
+    "em": [false, true],
+    "generations": [5, 7, 10, 15, 20, 25, 35, 50],
+    "verified_default_generations": 10,
+    "model_file": null,
+    "update_p": false,
+    "min_maf": 0,
+    "min_mac": 0,
+    "array_alias_policy": "Pinned FLARE uses array only to select the minor-allele-count filter. With the existing explicit min-maf=0 and min-mac=0, true/false are identical effective models. Preserve the original ten outputs; reuse eight unique baselines and record both redundant array aliases."
+  },
+  "gnomix": {
+    "architecture": "fast",
+    "window_sizes_cM": [0.25, 0.5, 1, 2, 3, 4, 6, 8],
+    "crf_l2": [0.01, 0.1, 1, 10],
+    "verified_default_crf_l2": 1,
+    "reference_base_shared_across_masks_and_l2": true,
+    "calibration": false,
+    "kernel_svm": false
+  },
+  "phasefree_controls": ["phasefree_imputed_nnls", "phasefree_observed_nnls"],
+  "baseline_policy": "The original ten outputs provide eight unique configurations within the98 total. Two redundant array aliases are retained in provenance, not counted twice. Reuse requires independent verification, identical population/protocol checks, exact core-panel matching and equality of aliased predictions.",
+  "selection": "Grid frozen without inspecting prediction errors; no repeated seeds or external-holdout tuning.",
+  "unchanged": ["donors", "whole_training_families", "production_preprocessing", "genotype_gates", "marker_quality_and_spacing", "synthetic_truth", "TV_scoring", "external67_holdout"],
+  "independent_final_test": false,
+  "production_promotion": false
+}

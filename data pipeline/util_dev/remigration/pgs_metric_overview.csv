@@ -1,0 +1,40 @@
+metric_type,display_name,rows,unique_ppms,unique_scores,report_role,recommendation,example
+r2,R²,13420,9080,3934,Variance explained,Show as % variance explained for the specific evaluated outcome.,R² = 0.085264
+auroc,AUROC,5831,5831,3002,Discrimination evidence,Display by evaluated outcome; do not average across different outcomes.,0.63
+incremental_r2,Incremental R²,5124,5118,1329,Added variance explained,Show separately from total R².,R² difference (PGS+covariates vs. covariates only) = 0.00108
+odds_ratio,Dedicated OR per SD,4807,4807,1458,Personalized continuous effect,Use OR^z only when not explicitly documented as non-SD.,"1.55 [1.52,1.58]"
+beta,Dedicated beta per SD,4044,4044,1502,Continuous-trait effect evidence,"Show beta per SD; optional beta×z shift in study outcome units, clearly labeled.",1.41
+partial_correlation,Partial correlation,3380,3380,430,Adjusted association evidence,Show partial-r; outcome-specific.,"Partial Correlation (partial-r) = 0.0376 [0.0233,0.0519]"
+partial_r2,Partial R²,1256,1256,96,PGS-specific variance explained,Show separately from total/incremental R².,partial R² = 0.000154939979278917
+delta_auroc,ΔAUROC,1206,1206,257,Incremental discrimination,"Show model improvement, not absolute AUROC.",Incremental AUROC (full-covars) = -0.00144
+auroc_other,auroc_other,1202,1202,255,,,AUROC (without covariates) = 0.87
+hazard_ratio,Dedicated HR per SD,1146,1146,427,Personalized time-to-event effect,Use HR^z only when not explicitly documented as non-SD.,"1.59 [1.54,1.64]"
+c_index,C-index,762,762,236,Discrimination evidence,Display by evaluated outcome; do not mix with AUROC in one numeric average.,"0.622 [0.619,0.627]"
+pseudo_r2,Pseudo-R²,695,695,405,Model-fit evidence,Show as pseudo-R²; do not label simply as variance explained.,Nagelkerke’s R2 (estimate of variance explained by the PGS after covariate adjustment) = 0.04
+group_odds_ratio,Grouped OR,653,645,431,Published group comparison,Do not exponentiate by z; show the reported group contrast verbatim.,"OR (top 5% of individuals with the highest PRS_VTE relative to the rest of the population) = 2.89 [2.52,3.3]"
+group_hazard_ratio,Grouped HR,362,358,128,Published group comparison,Do not exponentiate by z; show the reported group contrast verbatim.,"HR (High [top 33%] vs. Low [bottom 33%] of genetic risk) = 1.35 [1.21,1.5]"
+brier_score,Brier score,309,309,305,Calibration/prediction error,Lower is better; show separately.,Brier score = 0.182
+spearman_rho,Spearman ρ,201,201,36,Rank association evidence,Show ρ; outcome-specific.,Spearman's ρ = 0.092
+p_value,P-value,121,121,56,Statistical significance,Do not use as prediction strength.,p-value (association between risk and incidence) = 0.029
+correlation,Correlation,119,119,52,Association evidence,Show r; outcome-specific.,"correlation (r) = 0.285 [0.265,0.305]"
+auprc,AUPRC,86,86,73,Classification evidence,Show separately from AUROC.,AUPRC = 0.161
+adjusted_r2,Adjusted R²,76,76,72,Variance explained,Show separately and preserve label.,adjusted R2 only by the PRS = 0.0246
+other,Other/uncategorized,69,66,30,Unstructured remainder,Retain raw text for manual review.,r (correlation between between binned quantiles of PHS-predicted and empirical age of AD onset) = 0.9
+beta_other,Nonstandard beta,60,60,20,Association/effect evidence,Keep separate unless basis is clearly defined.,"β (per 10-allele increment) = 0.54 [0.38,0.71]"
+nri,Net reclassification improvement,30,30,13,Reclassification evidence,Technical evidence only.,Overall Net Reclassification Index (NRI [%]) = 59.4
+liability_r2,Liability-scale R²,24,24,13,Variance explained on liability scale,Show separately with liability-scale label.,Liability R2 = 0.054
+relative_risk,Relative risk,24,19,15,Published group/relative effect,Show as reported; no z transformation.,"Relative Risk (RR; higest vs. lowest quartile PRS) = 2.5 [2.2,2.8]"
+ppv,Positive predictive value,19,13,5,Predictive value,Show only with cohort/outcome context.,Positive Predictive Value (PPV) = 0.954
+delta_cindex,ΔC-index,16,16,8,Incremental discrimination,"Show model improvement, not absolute C-index.","C-index improvement (with PRS) = 0.0386 [0.0259,0.0513]"
+mean_difference,mean_difference,13,13,1,,,Difference in mean cognition per decacde increase in age per 1-SD higher GRS (%) = 11.5
+relative_risk_ratio,Relative risk ratio,12,12,1,Published group/relative effect,Show as reported; no z transformation.,"Relative Risk Ratio (RRR) = 1.89 [1.4,2.55]"
+cindex_other,cindex_other,8,8,3,,,"ΔC-index between models with and without GRS = 0.0043 [0.0019,0.0067]"
+sensitivity,Sensitivity,6,6,4,Classification evidence,Technical evidence only unless clinically useful.,"Sensitivity = 0.581 [0.479,0.625]"
+f_measure,f_measure,3,3,2,,,F1 = 0.698
+incidence_rate_ratio,Incidence rate ratio,3,3,1,Published rate comparison,Show as reported; no z transformation.,"Incidence Rate Ratio (IRR, top vs bottom PGS quintiles) = 1.1 [1.04,1.16]"
+idi,idi,3,3,2,,,"Integrated discrimination improvement (vs. no PRS) = 0.027 [-0.006,0.054]"
+incidence_percent,incidence_percent,3,1,1,,,"Incidence (%) = 1.23 [1.13,1.35]"
+calibration,calibration,2,2,1,,,"Calibration (E/O) = 0.9 [0.7,1.0]"
+specificity,Specificity,2,2,2,Classification evidence,Technical evidence only unless clinically useful.,"Specificity = 0.625 [0.472,0.725]"
+youden_index,youden_index,2,2,2,,,Youden index = 0.698
+risk_difference,risk_difference,1,1,1,,,"Risk difference = 0.604 [0.418,0.79]"

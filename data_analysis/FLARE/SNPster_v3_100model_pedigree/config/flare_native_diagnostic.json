@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "seed": 20261013,
+  "selection_seed": 20261018,
+  "purpose": "Training-only mechanism diagnostic for native FLARE source confusion before a broader sweep",
+  "chromosomes": [22],
+  "masks": ["lonni", "frederik"],
+  "sources": ["EUR", "EAS_SEA", "SAS", "GME", "NAM", "OCE", "SSA"],
+  "controls": "Hash-select one pure person per source from the approved240-person dense training pool, not by ancestry errors; exclude every evaluation/reference identity",
+  "stages": ["inherited_phase", "array_phase_only"],
+  "stage_scope": "Isolate FLARE first on matched observed GTs. Future raw-GT, phase-only and phase+imputed tracks are all permitted pipeline placements; none is presumed best.",
+  "template": "Fresh reference-only native copying initialization on a selected training control; retain p/rho/theta, T=10 and uniform seven-source mu for explicit fixed-model contrasts",
+  "variants": {
+    "native_fixed": {"model": "native", "em": false},
+    "native_em": {"model": "native", "em": true},
+    "anchor90": {"model": "anchored", "anchor_fraction": 0.9, "em": false},
+    "anchor100": {"model": "anchored", "anchor_fraction": 1.0, "em": false},
+    "anchor90_theta001": {"model": "anchored", "anchor_fraction": 0.9, "theta": 0.001, "em": false}
+  },
+  "anchoring": "p=(1-anchor_fraction)*native_reference_estimated_p + anchor_fraction*named_source_to_matching_panel_identity; never assume ancestry/panel order",
+  "parameters_held_fixed": "Original exact observed-marker panels/reference IDs/GTs/genetic map/seed, rho, generation and uniform priors; only predeclared p/theta/EM contrasts change",
+  "stock_check": "Run pinned stock jar on hash-selected training SAS control per mask and compare local posteriors/global physical aggregation with the precision jar",
+  "truth": "Pure one-hot labels only; no evaluation labels or predictions used; chr22 diagnostics not whole-genome certification",
+  "production_promotion": false,
+  "independent_final_test": false,
+  "pgs_changed": false
+}

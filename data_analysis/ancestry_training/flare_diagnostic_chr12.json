@@ -1,0 +1,12 @@
+{
+  "round": 3,
+  "seed": 20261023,
+  "chromosome": 12,
+  "masks": ["lonni", "frederik"],
+  "cases": ["HG02954", "HG02028"],
+  "control_sources": [],
+  "references_by_case": {"HG02954": ["cap16"], "HG02028": ["full"]},
+  "kinship_threshold": 0.177,
+  "purpose": "Predeclared chr12 replication of genotype-only relative exclusion, including locked native parameters",
+  "independent_test": false
+}

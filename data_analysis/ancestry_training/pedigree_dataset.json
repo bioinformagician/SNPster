@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "seed": 20261025,
+  "generations": 3,
+  "minimum_reference_per_source": 5,
+  "founders": {
+    "train": {"EUR": 42, "EAS_SEA": 42, "SAS": 42, "GME": 42, "SSA": 42, "NAM": 10, "OCE": 4},
+    "calibration": {"EUR": 10, "EAS_SEA": 10, "SAS": 10, "GME": 10, "SSA": 10, "NAM": 4, "OCE": 2},
+    "validation": {"EUR": 20, "EAS_SEA": 20, "SAS": 20, "GME": 20, "SSA": 20, "NAM": 8, "OCE": 4},
+    "test": {"EUR": 20, "EAS_SEA": 20, "SAS": 20, "GME": 20, "SSA": 20, "NAM": 8, "OCE": 4}
+  }
+}

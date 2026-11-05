@@ -4,6 +4,7 @@ import time
 
 
 environment_handler = EnvironmentHandler()
+environment_handler.clear_directories()
 
 pgs_calculator_config = PGSCalculator_Config(
     environment_handler=environment_handler)

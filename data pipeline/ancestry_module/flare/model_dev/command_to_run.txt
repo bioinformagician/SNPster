@@ -1,0 +1,12 @@
+flare \
+  gt="$USER_VCF" \
+  ref="$REFERENCE_VCF" \
+  ref-panel="$REFERENCE_PANEL" \
+  map="$GENETIC_MAP" \
+  model="/path/to/flare_k18_final.model" \
+  update-p=false \
+  em=true \
+  probs=true \
+  array=false \
+  nthreads=... \
+  out="$OUTPUT"

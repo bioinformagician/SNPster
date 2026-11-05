@@ -1,0 +1,17 @@
+{
+  "selection_role": "validation",
+  "gates": {
+    "mean_tv_max": 0.14,
+    "p95_tv_max": 0.28,
+    "off_target_mass_max": 0.12,
+    "dominant_accuracy_min": 0.80
+  },
+  "require_real_hard_gates": false,
+  "real_gate_failure_penalty": 0.10,
+  "score_weights": {
+    "mean_tv": 0.50,
+    "p95_tv": 0.25,
+    "off_target_mass": 0.15,
+    "dominant_error": 0.10
+  }
+}

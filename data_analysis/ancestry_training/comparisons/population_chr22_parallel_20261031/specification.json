@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "guided_run": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/runs/master_observed_guided8_20261030a",
+  "sources": ["EUR", "EAS", "SAS", "SEA", "GME", "NAM", "OCE", "SSA"],
+  "chromosomes": [22],
+  "expected_roles": {"reference": 1908, "train": 865, "calibration": 43, "validation": 127},
+  "maximum_new_singleton_calls": 340,
+  "candidate_id": "fine_population",
+  "baseline_id": "full_em100",
+  "baseline_policy": "predeclared_guided_EM100",
+  "selection_metric": "EAS_SEA_merged_mean_person_TV_pp",
+  "parameters": "fixed native EM100: em=true,gen=10,states=100,update-p=false; change only reference-panel labels and deterministic output summation",
+  "reference_labels": "68 existing dataset-qualified fine reference populations, not country or nationality",
+  "source_mapping": "original-reference-only one-hot mapping; sum soft population probabilities into eight sources, never argmax",
+  "test_policy": "development only; never read or influence the ongoing final sweep winner lock, test predictions or test scores",
+  "execution": "user-authorized parallel chr22 pilot; 11 task CPUs and80GiB independently per orchestration; no automatic expansion",
+  "maximum_cohort": "same43 calibration and127 validation people, both observed masks; all1908 references and865 training people unchanged",
+  "small_population_policy": "retain all populations and disclose small reference counts; no country/fine-label accuracy claim"
+}

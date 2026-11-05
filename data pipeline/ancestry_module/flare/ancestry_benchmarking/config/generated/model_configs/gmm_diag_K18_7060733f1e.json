@@ -1,0 +1,22 @@
+{
+  "compact_inactive": false,
+  "covariance_type": "diag",
+  "family": "gaussian_mixture",
+  "flare_seed": 20261002,
+  "init_params": "k-means++",
+  "k": 18,
+  "max_iter": 300,
+  "min_mac": 50,
+  "min_maf": 0.005,
+  "model_seed": 20261002,
+  "n_init": 5,
+  "panel_cm": 0.5,
+  "panel_id": "panel_021861e1",
+  "pca_components": 0,
+  "refine_em": true,
+  "refinement_mode": "update_p",
+  "reg_covar": 1e-05,
+  "rep_id": "gmm_diag_K18_7060733f1e",
+  "strategy_name": "gmm_diag",
+  "tol": 0.001
+}

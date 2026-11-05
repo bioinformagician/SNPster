@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "status": "protocol_locked_optimization_rejected",
+  "guided_run": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/runs/master_observed_guided8_20261030a",
+  "original_run": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/runs/master_observed_staged96_20261026a",
+  "copying_probe": "/home/frederik/.copilot/session-state/e55bce12-d25f-4051-b029-9942928b8e45/files/final_copying_probe_20261030a",
+  "sources": ["EUR", "EAS", "SAS", "SEA", "GME", "NAM", "OCE", "SSA"],
+  "source_merging": "metric calculation only; sum EAS and SEA in both truth and prediction before computing TV",
+  "primary_selection_metric": "validation_mean_person_EAS_SEA_merged_TV_percentage_points",
+  "mask_policy": "both observed masks, averaged within person; no pooling people with masks as independent samples",
+  "maximum_finalists": 3,
+  "chromosomes": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+  "development_cohort": "same 43 calibration and 127 validation people as the completed guided8 screen; preserve all reference and training identities and original roles",
+  "finalists": {
+    "incumbent": "full-reference native EM, states100, update-p=false, initial generation10",
+    "challenger": "full-reference native fixed generation2, states100",
+    "last_slot": "one accepted copying-regularization candidate; otherwise the existing full-reference EM states280 candidate"
+  },
+  "last_optimization": {
+    "scope": "43 calibration people, both masks, chr22 only; no validation or test scoring",
+    "singleton_calls": 258,
+    "strengths": [0, 0.25, 0.5],
+    "rule": "(1-strength)*reference-estimated copying probabilities + strength*named source-to-reference-panel identity",
+    "unchanged": ["reference identities", "genotypes", "phase", "marker keys", "IBD rates", "miscopy probabilities", "seed", "states100", "update-p=false"],
+    "reset_not_reused": ["uniform initial ancestry proportions", "initial generation10"],
+    "acceptance_thresholds": {
+      "minimum_calibration_merged_TV_improvement_pp": 1,
+      "maximum_calibration_mixed_merged_TV_regression_pp": 1,
+      "maximum_calibration_EUR_SSA_component_MAE_regression_pp": 0.5,
+      "maximum_calibration_eight_source_TV_regression_pp": 2,
+      "maximum_serialized_zero_control_difference_TV_pp": 0.1
+    },
+    "if_no_candidate_passes": "stop optimizing; use the three existing native finalists"
+  },
+  "reporting": [
+    "eight-source TV and EAS/SEA-merged TV",
+    "per-source pure and mixed ancestry MAE, bias, p95 and off-target calls",
+    "EAS-versus-SEA discrimination",
+    "family-aware uncertainty and paired comparisons",
+    "mask-specific robustness"
+  ],
+  "test_policy": "lock one winner using validation only; evaluate that winner once on the original untouched test role; no additional tuning or model selection using test results",
+  "caveats": [
+    "validation has been reused during development; the leaderboard is not an independent accuracy estimate",
+    "pure-source labels are operational population annotations, not measured individual biological admixture",
+    "family components, masks and related individuals are not IID samples",
+    "no production promotion before the final results and held-out test are reviewed"
+  ],
+  "no_more_broad_sweeps": true
+}

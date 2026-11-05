@@ -1,0 +1,729 @@
+{
+  "seed": 20261005,
+  "panel_search": {
+    "panel_cm": [
+      0.5,
+      1.0
+    ],
+    "min_maf": [
+      0.005
+    ],
+    "min_mac": [
+      50
+    ]
+  },
+  "flare_model_strategies": [
+    {
+      "name": "gmm_diag",
+      "family": "gaussian_mixture",
+      "grid": {
+        "k": [
+          10,
+          12,
+          15,
+          18,
+          21,
+          24,
+          27,
+          30,
+          36
+        ],
+        "covariance_type": [
+          "diag"
+        ],
+        "init_params": [
+          "k-means++"
+        ],
+        "n_init": [
+          5,
+          10
+        ],
+        "max_iter": [
+          300
+        ],
+        "tol": [
+          0.001
+        ],
+        "reg_covar": [
+          1e-07,
+          1e-06,
+          1e-05
+        ],
+        "pca_components": [
+          0
+        ],
+        "model_seed": [
+          20261002,
+          20261003
+        ],
+        "flare_seed": [
+          20261002
+        ]
+      }
+    },
+    {
+      "name": "gmm_tied",
+      "family": "gaussian_mixture",
+      "grid": {
+        "k": [
+          12,
+          18,
+          24,
+          30,
+          36
+        ],
+        "covariance_type": [
+          "tied"
+        ],
+        "init_params": [
+          "k-means++"
+        ],
+        "n_init": [
+          5
+        ],
+        "max_iter": [
+          300
+        ],
+        "tol": [
+          0.001
+        ],
+        "reg_covar": [
+          1e-06,
+          1e-05
+        ],
+        "pca_components": [
+          0
+        ],
+        "model_seed": [
+          20261002
+        ],
+        "flare_seed": [
+          20261002
+        ]
+      }
+    },
+    {
+      "name": "gmm_spherical",
+      "family": "gaussian_mixture",
+      "grid": {
+        "k": [
+          12,
+          18,
+          24,
+          30,
+          36
+        ],
+        "covariance_type": [
+          "spherical"
+        ],
+        "init_params": [
+          "k-means++"
+        ],
+        "n_init": [
+          5
+        ],
+        "max_iter": [
+          300
+        ],
+        "tol": [
+          0.001
+        ],
+        "reg_covar": [
+          1e-06,
+          1e-05
+        ],
+        "pca_components": [
+          0
+        ],
+        "model_seed": [
+          20261002
+        ],
+        "flare_seed": [
+          20261002
+        ]
+      }
+    },
+    {
+      "name": "bgmm_dp_diag",
+      "family": "bayesian_gaussian_mixture",
+      "grid": {
+        "k": [
+          18,
+          24,
+          30,
+          36,
+          48,
+          60
+        ],
+        "covariance_type": [
+          "diag"
+        ],
+        "init_params": [
+          "k-means++"
+        ],
+        "n_init": [
+          1
+        ],
+        "max_iter": [
+          750
+        ],
+        "tol": [
+          0.001
+        ],
+        "reg_covar": [
+          1e-06
+        ],
+        "pca_components": [
+          0
+        ],
+        "weight_concentration_prior_type": [
+          "dirichlet_process"
+        ],
+        "weight_concentration_prior": [
+          null,
+          0.01,
+          0.1,
+          1.0
+        ],
+        "compact_inactive": [
+          true
+        ],
+        "min_component_weight": [
+          0.0001
+        ],
+        "model_seed": [
+          20261002,
+          20261003
+        ],
+        "flare_seed": [
+          20261002
+        ]
+      }
+    },
+    {
+      "name": "bgmm_finite_diag",
+      "family": "bayesian_gaussian_mixture",
+      "grid": {
+        "k": [
+          18,
+          24,
+          30,
+          36,
+          48
+        ],
+        "covariance_type": [
+          "diag"
+        ],
+        "init_params": [
+          "k-means++"
+        ],
+        "n_init": [
+          1
+        ],
+        "max_iter": [
+          750
+        ],
+        "tol": [
+          0.001
+        ],
+        "reg_covar": [
+          1e-06
+        ],
+        "pca_components": [
+          0
+        ],
+        "weight_concentration_prior_type": [
+          "dirichlet_distribution"
+        ],
+        "weight_concentration_prior": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "compact_inactive": [
+          true
+        ],
+        "min_component_weight": [
+          0.0001
+        ],
+        "model_seed": [
+          20261002
+        ],
+        "flare_seed": [
+          20261002
+        ]
+      }
+    },
+    {
+      "name": "kmeans",
+      "family": "kmeans",
+      "grid": {
+        "k": [
+          10,
+          12,
+          15,
+          18,
+          21,
+          24,
+          30,
+          36
+        ],
+        "n_init": [
+          10
+        ],
+        "max_iter": [
+          500
+        ],
+        "tol": [
+          0.0001
+        ],
+        "pca_components": [
+          0
+        ],
+        "model_seed": [
+          20261002,
+          20261003
+        ],
+        "flare_seed": [
+          20261002
+        ]
+      }
+    },
+    {
+      "name": "minibatch_kmeans",
+      "family": "minibatch_kmeans",
+      "grid": {
+        "k": [
+          12,
+          18,
+          24,
+          30,
+          36,
+          48
+        ],
+        "n_init": [
+          5
+        ],
+        "max_iter": [
+          500
+        ],
+        "tol": [
+          0.0001
+        ],
+        "batch_size": [
+          4096,
+          16384
+        ],
+        "pca_components": [
+          0
+        ],
+        "model_seed": [
+          20261002
+        ],
+        "flare_seed": [
+          20261002
+        ]
+      }
+    },
+    {
+      "name": "pca_gmm_diag",
+      "family": "gaussian_mixture",
+      "grid": {
+        "k": [
+          12,
+          18,
+          24,
+          30,
+          36,
+          42
+        ],
+        "covariance_type": [
+          "diag"
+        ],
+        "init_params": [
+          "k-means++"
+        ],
+        "n_init": [
+          5
+        ],
+        "max_iter": [
+          300
+        ],
+        "tol": [
+          0.001
+        ],
+        "reg_covar": [
+          1e-06
+        ],
+        "pca_components": [
+          10,
+          20,
+          40
+        ],
+        "model_seed": [
+          20261002
+        ],
+        "flare_seed": [
+          20261002
+        ]
+      }
+    },
+    {
+      "name": "pca_kmeans",
+      "family": "kmeans",
+      "grid": {
+        "k": [
+          12,
+          18,
+          24,
+          30,
+          36,
+          42
+        ],
+        "n_init": [
+          10
+        ],
+        "max_iter": [
+          500
+        ],
+        "tol": [
+          0.0001
+        ],
+        "pca_components": [
+          10,
+          20,
+          40
+        ],
+        "model_seed": [
+          20261002
+        ],
+        "flare_seed": [
+          20261002
+        ]
+      }
+    },
+    {
+      "name": "gmm_diag_unrefined",
+      "family": "gaussian_mixture",
+      "grid": {
+        "k": [
+          18,
+          24,
+          30
+        ],
+        "covariance_type": [
+          "diag"
+        ],
+        "init_params": [
+          "k-means++"
+        ],
+        "n_init": [
+          10
+        ],
+        "max_iter": [
+          300
+        ],
+        "tol": [
+          0.001
+        ],
+        "reg_covar": [
+          1e-06
+        ],
+        "pca_components": [
+          0
+        ],
+        "model_seed": [
+          20261002
+        ],
+        "flare_seed": [
+          20261002
+        ],
+        "refinement_mode": [
+          "none"
+        ],
+        "refine_em": [
+          false
+        ]
+      }
+    },
+    {
+      "name": "gmm_diag_refine_no_em",
+      "family": "gaussian_mixture",
+      "grid": {
+        "k": [
+          18,
+          24,
+          30
+        ],
+        "covariance_type": [
+          "diag"
+        ],
+        "init_params": [
+          "k-means++"
+        ],
+        "n_init": [
+          10
+        ],
+        "max_iter": [
+          300
+        ],
+        "tol": [
+          0.001
+        ],
+        "reg_covar": [
+          1e-06
+        ],
+        "pca_components": [
+          0
+        ],
+        "model_seed": [
+          20261002
+        ],
+        "flare_seed": [
+          20261002
+        ],
+        "refinement_mode": [
+          "update_p"
+        ],
+        "refine_em": [
+          false
+        ]
+      }
+    }
+  ],
+  "stage1": {
+    "retain_top_representations": 16,
+    "screen_decoder": {
+      "type": "extratrees",
+      "params": {
+        "n_estimators": 300,
+        "min_samples_leaf": 10,
+        "max_features": 1.0
+      }
+    },
+    "screen_calibrator": {
+      "type": "ridge",
+      "params": {
+        "alpha": 0.0001
+      }
+    },
+    "training_weights": {
+      "default": 1.0,
+      "pure": 50.0,
+      "mosaic": 100.0,
+      "rare": 0.0
+    },
+    "calibration_folds": 3,
+    "retain_best_per_strategy": 1
+  },
+  "stage2": {
+    "retain_top_candidates": 24,
+    "decoders": [
+      {
+        "type": "extratrees",
+        "grid": {
+          "n_estimators": [
+            200,
+            500,
+            1000
+          ],
+          "min_samples_leaf": [
+            1,
+            2,
+            5,
+            10,
+            20,
+            40
+          ],
+          "max_features": [
+            0.33,
+            0.5,
+            0.75,
+            1.0
+          ]
+        }
+      },
+      {
+        "type": "randomforest",
+        "grid": {
+          "n_estimators": [
+            300,
+            600,
+            1000
+          ],
+          "min_samples_leaf": [
+            1,
+            2,
+            5,
+            10,
+            20
+          ],
+          "max_features": [
+            0.33,
+            0.5,
+            0.75,
+            1.0
+          ]
+        }
+      },
+      {
+        "type": "histgb",
+        "grid": {
+          "learning_rate": [
+            0.02,
+            0.03,
+            0.05,
+            0.1
+          ],
+          "max_leaf_nodes": [
+            15,
+            31,
+            63
+          ],
+          "l2_regularization": [
+            0.0,
+            0.01,
+            0.1,
+            1.0
+          ]
+        }
+      },
+      {
+        "type": "mlp",
+        "grid": {
+          "hidden_layer_sizes": [
+            [
+              32
+            ],
+            [
+              64
+            ],
+            [
+              128,
+              64
+            ],
+            [
+              256,
+              128,
+              64
+            ]
+          ],
+          "alpha": [
+            1e-05,
+            0.0001,
+            0.001,
+            0.01
+          ]
+        }
+      },
+      {
+        "type": "ridge",
+        "grid": {
+          "alpha": [
+            1e-07,
+            1e-06,
+            1e-05,
+            0.0001,
+            0.001,
+            0.01,
+            0.1,
+            1.0
+          ]
+        }
+      },
+      {
+        "type": "centroid_nnls",
+        "grid": {}
+      }
+    ],
+    "calibrators": [
+      {
+        "type": "none",
+        "grid": {}
+      },
+      {
+        "type": "ridge",
+        "grid": {
+          "alpha": [
+            1e-07,
+            1e-06,
+            1e-05,
+            0.0001,
+            0.001,
+            0.01,
+            0.1
+          ]
+        }
+      }
+    ],
+    "training_weights": [
+      {
+        "default": 1.0,
+        "pure": 5.0,
+        "mosaic": 25.0,
+        "rare": 0.0
+      },
+      {
+        "default": 1.0,
+        "pure": 10.0,
+        "mosaic": 50.0,
+        "rare": 0.0
+      },
+      {
+        "default": 1.0,
+        "pure": 25.0,
+        "mosaic": 100.0,
+        "rare": 0.0
+      },
+      {
+        "default": 1.0,
+        "pure": 50.0,
+        "mosaic": 100.0,
+        "rare": 0.0
+      },
+      {
+        "default": 1.0,
+        "pure": 100.0,
+        "mosaic": 200.0,
+        "rare": 0.0
+      }
+    ],
+    "calibration_folds": 3,
+    "fixed_candidates": [
+      {
+        "candidate_id": "v1_frozen_k18",
+        "representation": "v1_frozen_k18",
+        "decoder": {
+          "type": "frozen_joblib",
+          "params": {
+            "path": "/data/flare2_test/source_model/crossfit_calibration/k18_extratrees_base.joblib"
+          }
+        },
+        "calibrator": {
+          "type": "frozen_joblib",
+          "params": {
+            "path": "/data/flare2_test/source_model/crossfit_calibration/k18_linear_calibrator.joblib"
+          }
+        },
+        "training_weights": {
+          "default": 1.0
+        },
+        "calibration_folds": 0,
+        "seed": 20261005,
+        "representation_config": {
+          "strategy_name": "v1_frozen_baseline",
+          "family": "fixed",
+          "k": 18,
+          "covariance_type": "diag",
+          "pca_components": 0,
+          "refinement_mode": "update_p",
+          "refine_em": true,
+          "description": "Exact frozen K18 v1 baseline"
+        }
+      }
+    ]
+  },
+  "stage3": {
+    "retain_finalists": 8
+  }
+}

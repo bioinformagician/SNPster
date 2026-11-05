@@ -1,0 +1,6 @@
+**
+!Dockerfile.gnomix-screen
+!requirements_gnomix_screen.txt
+!third_party/
+!third_party/gnomix/
+!third_party/gnomix/**

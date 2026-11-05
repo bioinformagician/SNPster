@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "seed": 20261013,
+  "sources": ["EUR", "EAS_SEA", "SAS", "GME", "NAM", "OCE", "SSA"],
+  "dataset_policy": "Existing samples only; no downloaded or newly simulated people, no imputed training",
+  "features": {
+    "base": 14,
+    "pca": 64,
+    "fine": 100,
+    "base_round_decimals": 12,
+    "pca_round_decimals": 8,
+    "fine_round_decimals": 12,
+    "reference_only": true,
+    "refit_preprocessing": false
+  },
+  "cv": "Reuse the verified 114 donor-purged calibration folds and identical 799 training people",
+  "ranking": ["balanced_mean_tv", "pedigree_mean_tv", "negative_pedigree_coverage_5pp", "negative_pedigree_coverage_10pp", "candidate"],
+  "n_finalists": 2,
+  "boosting": {"iterations": 300, "learning_rate": 0.05, "early_stopping": false},
+  "head": {"loss": "squared_error", "leaves": 15, "min_leaf": 10, "l2": 0},
+  "linear": {"alpha": 0.1, "minimum_weighted_scale": 0.05},
+  "models": {
+    "stable_control": {"kind": "hgb", "features": "base"},
+    "rich_pca_boost": {"kind": "hgb", "features": "pca"},
+    "rich_fine_boost": {"kind": "hgb", "features": "fine"},
+    "rich_combined_boost": {"kind": "hgb", "features": "combined"},
+    "rich_combined_blend25": {"kind": "blend", "features": "combined", "linear_fraction": 0.25},
+    "rich_combined_blend50": {"kind": "blend", "features": "combined", "linear_fraction": 0.5}
+  },
+  "array_mean_tv_diagnostic_max": 0.1,
+  "array_wait_hours": 48,
+  "independent_final_test": false,
+  "production_promotion": false,
+  "pgs_calibration_changed": false
+}

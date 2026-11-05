@@ -1,0 +1,8 @@
+{
+  "seed": 20261023,
+  "chromosome": 22,
+  "masks": ["lonni", "frederik"],
+  "cases": ["HG02954", "HG02028", "HGDP00691"],
+  "purpose": "Mechanism diagnosis, exact-baseline replay and matched ablations; not a production sweep",
+  "independent_test": false
+}

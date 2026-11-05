@@ -90,11 +90,5 @@ services:
       - /srv/pgs_output:/app/pgs_output  # Output directory
       - /srv/scoring_files:/srv/scoring_files:ro  # Scoring files directory
       - /srv/imputed:/srv/imputed:ro # This is where the imputation outputs are stored, mount as read-only
-      - /srv/pgs_cache/work:/app/work
-      - /srv/pgs_cache/nextflow:/app/.nextflow
-      - /srv/pgs_cache/results:/app/pgs_results
-      - /srv/pgs_cache/vcf_merge_sheets:/app/vcf_merge_sheets
-      - /srv/pgs_cache/scoring_files:/app/scoring_files
-      - /srv/pgs_cache/nf_reports:/app/nf_reports
     depends_on:
       - postgres

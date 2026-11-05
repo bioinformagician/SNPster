@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "guided_run": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/runs/master_observed_guided8_20261030a",
+  "predecessor": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/runs/master_observed_final3_20261030a",
+  "sources": ["EUR", "EAS", "SAS", "SEA", "GME", "NAM", "OCE", "SSA"],
+  "chromosomes": [20, 22],
+  "expected_roles": {"reference": 1908, "train": 865, "calibration": 43, "validation": 127},
+  "maximum_new_singleton_calls": 680,
+  "candidate_id": "fine_population",
+  "selection_metric": "EAS_SEA_merged_mean_person_TV_pp",
+  "parameters": "same native FLARE settings as the predecessor validation-locked winner; change reference-panel labels only",
+  "reference_labels": "existing dataset-qualified fine reference populations, not country or nationality",
+  "source_mapping": "fixed one-hot reference metadata mapping; sum all population probabilities into eight sources, never argmax",
+  "test_policy": "development only; never load test predictions or test scores, never re-use the predecessor test for this new model",
+  "execution": "explicit launch only after predecessor completion and successful cache cleanup; no background watcher, no automatic genome expansion",
+  "maximum_cohort": "same 43 calibration plus 127 validation people; preserve all reference/train people and roles",
+  "small_population_policy": "retain all populations and disclose reference counts; no oversampling, merging, fine-label accuracy claim or inferred country truth"
+}

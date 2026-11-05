@@ -1,0 +1,165 @@
+{
+  "version": 2,
+  "contract_id": "ancestry-production-fixed-tv-v2",
+  "created": "2026-10-21",
+  "status": "contract_only_not_execution_ready",
+  "supersedes_for_new_benchmarks": "ancestry_benchmark_contract.json",
+  "frozen_prior_protocols_changed": false,
+  "production_pipeline_changed": false,
+  "pgs_changed": false,
+  "purpose": "Optimize ancestry estimates for pure and mixed individuals around unchanged production phasing and imputation, using one person-level total-variation error at two reporting resolutions.",
+  "sources": {
+    "prediction": ["EUR", "EAS", "SAS", "SEA", "GME", "NAM", "OCE", "SSA"],
+    "seven_category": ["EUR", "EAS_SEA", "SAS", "GME", "NAM", "OCE", "SSA"],
+    "seven_category_members": {
+      "EUR": ["EUR"],
+      "EAS_SEA": ["EAS", "SEA"],
+      "SAS": ["SAS"],
+      "GME": ["GME"],
+      "NAM": ["NAM"],
+      "OCE": ["OCE"],
+      "SSA": ["SSA"]
+    },
+    "collapse": "Sum the named eight-category components in both prediction and truth before calculating seven-category error. Never average category-specific errors.",
+    "legacy_seven_category_models": "Seven-category baselines only; do not invent an EAS/SEA split or rank them in the eight-category leaderboard.",
+    "labels": "Audit authoritative fine-to-source labels for every reference, training and evaluation founder; use one mapping consistently, including CDX as EAS.",
+    "pgs_pooling_changed": false
+  },
+  "metric": {
+    "id": "total_variation_error_pct",
+    "input_units": "fractions",
+    "output_units": "percent_ancestry_reassigned",
+    "formula": "100 * 0.5 * sum(abs(prediction[source] - truth[source]))",
+    "range": [0, 100],
+    "same_formula_for": ["pure", "mixed"],
+    "vector_validation": {
+      "finite": true,
+      "nonnegative": true,
+      "sum": 1,
+      "sum_absolute_tolerance": 1e-10,
+      "sum_relative_tolerance": 0,
+      "silently_normalize": false,
+      "silently_clip": false,
+      "missing_source_columns": "error"
+    },
+    "acceptance_examples": [
+      {
+        "id": "pure_european_ten_percent_misassigned",
+        "truth": {"EUR": 1},
+        "prediction": {"EUR": 0.9, "EAS": 0.1},
+        "expected_eight_error_pct": 10,
+        "expected_seven_error_pct": 10
+      },
+      {
+        "id": "equal_thirds_with_european_ancestry_lost",
+        "truth": {"EAS": 0.3333333333333333, "SEA": 0.3333333333333333, "EUR": 0.3333333333333333},
+        "prediction": {"EAS": 0.4, "SEA": 0.4, "SSA": 0.2},
+        "expected_eight_error_pct": 33.33333333333333,
+        "expected_seven_error_pct": 33.33333333333333
+      },
+      {
+        "id": "within_eas_sea_confusion",
+        "truth": {"SEA": 1},
+        "prediction": {"EAS": 1},
+        "expected_eight_error_pct": 100,
+        "expected_seven_error_pct": 0
+      }
+    ]
+  },
+  "selection": {
+    "primary_resolution": "eight_category",
+    "reported_resolutions": ["eight_category", "seven_category"],
+    "headline": "mean_person_error_pct",
+    "person_weighting": "equal",
+    "mask_weighting_within_person": "equal_over_the_complete_predeclared_mask_set",
+    "order": ["aggregate_chromosome_fractions_by_physical_length", "calculate_person_mask_tv", "average_masks_within_person", "average_unique_people"],
+    "cohort_policy": "Freeze the pure/mixed case mix, source/scenario coverage, people, families and masks before any candidate results. Use the identical complete cohort for every candidate; adding easy people or dropping failed cases requires a new benchmark version.",
+    "missing_or_duplicate_predictions": "error_not_a_partial_score",
+    "tied_primary_scores": "report_tie_no_posthoc_secondary_objective",
+    "subgroup_reports": "Show the same TV error by pure/mixed, source, scenario and mask, plus its person-level distribution; diagnostic only, not alternative selection objectives.",
+    "cross_resolution_comparison": "A lower seven-category error is not evidence of improvement at eight categories.",
+    "mean_error_targets_pct": {"acceptable_max": 10, "desirable_max": 5},
+    "target_scope": "Mean across the fixed cohort, not a guarantee for every individual or source.",
+    "historical_balanced_selection": "Do not substitute legacy scenario/family-balanced_mean_tv or separately ranked pure/pedigree scores for this equal-person mean."
+  },
+  "production_preprocessing": {
+    "policy": "unchanged",
+    "source_root_relative_to_repository": "data pipeline",
+    "source_sha256": {
+      "nextflow/pipeline_orhcestrator.nf": "4646e9b9a8dc49bd1a1650fb00b361f089062a0cedf0d2a047215bc38066ba21",
+      "nextflow/nextflow.config": "48adc93ea2976f19df0d52f641b3365d27835a5134d3d78ef14ea8b47a4d61b1",
+      "imputation_module/imputation_classes.py": "4a1710dc07311a2af6b4addeff00c3a117b88a6ad4fbaa9ee97e5d004b1760c2",
+      "imputation_module/config.py": "ee107b2b48dfe3419491374b033ad65c9b9116b614feaf9806772a67a7d70d96",
+      "imputation_module/main.py": "67347341a24c7c3957d19bbb4ff1c289fc0cbe0cf2e8dc3301d9e393de5c5843"
+    },
+    "source_snapshot_role": "Identity bindings for the inspected production entry points, not a substitute for a complete resolved runtime/input manifest. Changes require explicit review and a new compatible contract.",
+    "beagle": "Use the production command, including gt/ref/map/nthreads/gp=true and its default reference-backed imputation. Do not replace it with the historical impute=false singleton diagnostic.",
+    "runtime": "Before execution, resolve and pin the production container digest, Java and Beagle jar, reference/map/input hashes, environment/arguments, sample grouping, merge/split behavior and QC. Tags such as latest and source-code defaults are not frozen runtime identities.",
+    "batching": "Reproduce production chromosome merging and sample grouping; do not silently substitute singleton processing. Freeze the same processing context for every candidate.",
+    "allowed_ancestry_inputs": {
+      "raw_harmonized": "The unchanged production harmonized output, for compatible phase-independent methods.",
+      "production_phased_imputed": "The unchanged production phased-and-imputed output with declared ancestry-specific marker/QC handling, required for FLARE and Gnomix."
+    },
+    "not_selection_tracks": ["historical_array_phase_only", "inherited_phase"],
+    "phase_rule": "FLARE/Gnomix require actual phased haplotypes. Never interpret arbitrary unphased GT allele order as phase.",
+    "ancestry_placement": "May move or branch the ancestry consumer only; do not change upstream production harmonization, phasing or imputation to improve the ancestry score.",
+    "legacy_partial_imputation": "Do not silently resume or relabel incomplete historical imputation as production-matched data."
+  },
+  "cohort_and_truth": {
+    "data_scope": "Use the current available dataset; do not invent independent people or certify unsupported source/scenario coverage.",
+    "eligibility": "Audit original founder identities against fixed production imputation-reference identities, ancestry inference references and fitting donors before expensive preprocessing.",
+    "reference_overlap": "Select eligible founders absent from the fixed imputation reference; do not modify that production reference to manufacture a disjoint test. Block independent-certification claims if adequate disjoint founders are unavailable.",
+    "training_separation": "Purge evaluation founders and relatives from model/calibrator fitting and ancestry inference references. Training-only cross-validation must purge each held-out founder family and its derivatives from fitted components and ancestry reference subsets.",
+    "simulated_inputs": "Generate masked microarray inputs from known genotypes, then use actual production preprocessing rather than passing inherited simulator phase to a deployable method.",
+    "mixed_truth": "Use realized founder-source ancestry over full half-open physical chromosome spans and both chromosome copies; never use expected pedigree fractions or retained SNP counts as truth.",
+    "pure_truth": "Use audited operational source labels; these are benchmark labels, not proof of biological or ancient ancestry purity.",
+    "integrity": "Verify CHROM/POS/REF/ALT identity, sample identity, genotype/missingness transitions and output phase. Independently assess imputed-marker concordance against known genotypes; do not apply phase-only no-added-variants invariants to production imputation.",
+    "repeated_masks_and_relatives": "Masks/chromosomes are not additional people; relatives are not independent evidence. Keep families together in splitting and any uncertainty resampling.",
+    "existing_evaluation_cohorts": "Previously inspected people remain development data, not a fresh independent certification set.",
+    "manifest": "Freeze sample/founder/family identities, training/development/test roles, source mapping, pure/mixed/scenario counts, masks, chromosome spans and truth/input hashes before candidate scoring."
+  },
+  "comparison": {
+    "maximum_initial_configurations": 10,
+    "priority": "FLARE",
+    "required_comparators": ["genuine_upstream_gnomix", "best_available_phase_independent_control"],
+    "tunable": ["ancestry_reference_composition", "ancestry_marker_selection", "ancestry_model_hyperparameters", "training_only_calibration"],
+    "not_tunable": ["production_phasing", "production_imputation", "evaluation_people", "evaluation_truth", "primary_metric"],
+    "matching": "Same people, truth and preprocessing across methods; exact shared allele panels within a matched stage/reference contrast. Declare stage-native panels and training budgets; use matched-panel controls for attribution.",
+    "calibration": "Keep native and learned-calibration configurations separately identified; fit/tune calibration using donor-purged training evidence only. Each scored configuration counts toward the initial budget.",
+    "excluded_restarts": ["ADMIXTURE", "slow_kernel_SVM_gnomix"],
+    "candidate_freeze": "Predeclare candidate IDs, inputs, training budgets, seeds and settings using training-only evidence before development scoring; lock finalists before all-autosome development reporting."
+  },
+  "completion": {
+    "chromosomes": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+    "aggregation": "Aggregate source fractions across all 22 autosomes using their full physical spans, with equal weights for the two copies, then calculate TV. Do not average chromosome TVs or weight by SNP count.",
+    "local_posteriors": "Use physical midpoint cells with common chromosome boundaries for local-to-global aggregation.",
+    "smaller_screens": "Permitted on training data or for smoke/mechanism checks; not whole-genome leaderboards.",
+    "coverage": "Require the exact frozen Cartesian candidate/person/mask/chromosome coverage with no missing, duplicate or silently omitted failed calls.",
+    "verification": "Independently reconstruct truth, aggregate predictions and recompute the same per-person and headline errors from durable published outputs before accepting completion.",
+    "promotion": "No automatic production or PGS change."
+  },
+  "orchestration": {
+    "engine": "Nextflow DSL2",
+    "controller": {
+      "runtime": "docker",
+      "named_container_required": true,
+      "name_pattern": "snpster-ancestry-v2-<run_id>",
+      "monitor_command": "docker logs -f <container_name>",
+      "progress": "Stream orchestration, task failures, independent verification and cleanup status to stdout/stderr; use -ansi-log false.",
+      "identity": "Pin orchestrator image digest, Nextflow and Java versions before launch.",
+      "task_engine": "Verify Docker CLI/daemon access and a real task-container smoke test. Task inputs/work mounts must use consistent host/controller/task absolute paths.",
+      "persistence": "Keep dedicated launch/history, work, reports and published outputs outside the controller so failures remain resumable.",
+      "lifecycle": "Report the actual controller name at launch, verify it is running/responsive, propagate failure exit codes and retain logs/exit status. Do not use --rm before provenance/logs are saved."
+    },
+    "tasks": "Pinned per-task containers with explicit inputs/outputs, seeds and resource limits; no Python process-pool or bespoke shell workflow scheduler.",
+    "cleanup": "After independent durable-output verification, clean only the exact run/session's disposable work/cache; verify results again after cleanup. Preserve results, models, input/source hashes, reports, controller logs and failure evidence. Keep failed/incomplete runs resumable; no global pruning."
+  },
+  "required_before_scientific_launch": [
+    "resolved_production_runtime_and_reference_identity_manifest",
+    "evaluation_founder_overlap_and_authoritative_eight_source_label_audit",
+    "frozen_cohort_case_mix_masks_truth_and_split_manifest",
+    "training_only_candidate_plan_with_at_most_ten_configurations",
+    "versioned_workflow_and_independent_scorer_enforcing_this_contract",
+    "named_containerized_nextflow_controller_and_real_task_container_smoke_test"
+  ]
+}

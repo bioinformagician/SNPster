@@ -1,0 +1,10 @@
+{
+  "round": 2,
+  "seed": 20261023,
+  "chromosome": 22,
+  "masks": ["lonni", "frederik"],
+  "cases": ["HG02954", "HG02028", "HGDP00691"],
+  "kinship_threshold": 0.177,
+  "purpose": "Isolate reference-relatedness and source-specific copying/rho confounding using matched donor exclusion and named-axis parameter transplants",
+  "independent_test": false
+}

@@ -1,0 +1,2 @@
+rep_id	enabled	model_path	min_maf	min_mac	flare_seed	force_keep	description
+v1_frozen_k18	true	/data/flare2_test/source_model/models/diag_K18/train.final.model	0.005	50	20261002	true	Exact frozen v1 K18 representation baseline

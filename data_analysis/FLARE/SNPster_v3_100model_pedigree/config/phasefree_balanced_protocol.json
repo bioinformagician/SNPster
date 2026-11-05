@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "seed": 20261019,
+  "decoder_seed": 20261013,
+  "dataset_policy": "Only the existing 307 pure-training founders; augmentation is not independent evidence",
+  "decoder_features": "The same stabilized 14 classifier/frequency fractions; reference preprocessing is never refitted",
+  "block_bp": 10000000,
+  "initial_replicates": {"f1": 12, "asymmetric": 10, "minor": 8, "three_way": 6, "four_way": 6},
+  "minor_fractions": [0.025, 0.03, 0.04, 0.045],
+  "minimum_safe_per_stratum_per_fold": 2,
+  "maximum_mosaics": 4096,
+  "donor_selection": "Uniform fine population, then uniform donor within source; training donors only",
+  "coverage_repair": "Add training-only donor-safe plans for undercovered strata before extracting genotypes; never use validation errors",
+  "truth": "Exact physical-base-pair fractions from saved half-open segments across both chromosome copies",
+  "simulation": "Whole-parent F1 copies; otherwise shuffled 10-Mb source tiles from actual phased founder haplotypes. Complementary founder copies preserve diploid GT wherever both chromosomes use the same donor. Not Ped-sim/meiosis certification.",
+  "profiles": {
+    "balanced": {"f1": 0.2, "asymmetric": 0.2, "minor": 0.2, "three_way": 0.2, "four_way": 0.2},
+    "minor_half": {"f1": 0.125, "asymmetric": 0.125, "minor": 0.5, "three_way": 0.125, "four_way": 0.125}
+  },
+  "models": {
+    "stable_control": {"kind": "hgb", "features": "base", "augmentation_fraction": 0.0, "profile": "balanced"},
+    "balanced20": {"kind": "hgb", "features": "base", "augmentation_fraction": 0.2, "profile": "balanced"},
+    "balanced40": {"kind": "hgb", "features": "base", "augmentation_fraction": 0.4, "profile": "balanced"},
+    "balanced60": {"kind": "hgb", "features": "base", "augmentation_fraction": 0.6, "profile": "balanced"},
+    "minor_half40": {"kind": "hgb", "features": "base", "augmentation_fraction": 0.4, "profile": "minor_half"}
+  },
+  "n_finalists": 2,
+  "rank_only_original_799_oof_people": true,
+  "independent_final_test": false,
+  "production_promotion": false,
+  "pgs_calibration_changed": false
+}

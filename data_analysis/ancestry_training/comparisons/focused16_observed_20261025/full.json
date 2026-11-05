@@ -1,0 +1,481 @@
+{
+  "allow_research_only": true,
+  "chromosomes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ],
+  "independent_test": false,
+  "interpretations": [
+    {
+      "id": "native",
+      "kind": "native",
+      "params": {}
+    },
+    {
+      "id": "simplex_map",
+      "kind": "simplex",
+      "params": {
+        "l2": 0.001
+      }
+    },
+    {
+      "id": "ridge_decoder",
+      "kind": "ridge",
+      "params": {
+        "alpha": 1
+      }
+    },
+    {
+      "id": "rf_decoder",
+      "kind": "rf",
+      "params": {
+        "max_depth": 3,
+        "min_samples_leaf": 10,
+        "n_estimators": 200
+      }
+    },
+    {
+      "id": "xgb_decoder",
+      "kind": "xgboost",
+      "params": {
+        "learning_rate": 0.03,
+        "max_depth": 2,
+        "n_estimators": 100
+      }
+    }
+  ],
+  "maps": {
+    "1": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "10": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "11": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "12": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "13": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "14": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "15": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "16": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "17": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "18": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "19": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "2": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "20": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "21": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "22": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "3": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "4": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "5": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "6": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "7": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "8": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map",
+    "9": "/srv/dependencies/ancestry/flare2_test/model_sweep_allchr/plink.autosomes.GRCh38.map"
+  },
+  "mode": "full",
+  "models": [
+    {
+      "family": "flare",
+      "id": "flare_full_fixed_g002",
+      "params": {
+        "em": false,
+        "gen": 2,
+        "panel-weight": 0.8,
+        "states": 100,
+        "update-p": false
+      }
+    },
+    {
+      "family": "flare",
+      "id": "flare_full_fixed_g005",
+      "params": {
+        "em": false,
+        "gen": 5,
+        "panel-weight": 0.8,
+        "states": 100,
+        "update-p": false
+      }
+    },
+    {
+      "family": "flare",
+      "id": "flare_full_fixed_g010",
+      "params": {
+        "em": false,
+        "gen": 10,
+        "panel-weight": 0.8,
+        "states": 100,
+        "update-p": false
+      }
+    },
+    {
+      "family": "flare",
+      "id": "flare_full_fixed_g020",
+      "params": {
+        "em": false,
+        "gen": 20,
+        "panel-weight": 0.8,
+        "states": 100,
+        "update-p": false
+      }
+    },
+    {
+      "family": "flare",
+      "id": "flare_full_em_g010",
+      "params": {
+        "em": true,
+        "gen": 10,
+        "panel-weight": 0.8,
+        "states": 100,
+        "update-p": false
+      }
+    },
+    {
+      "family": "flare",
+      "id": "flare_cap16_fixed_g002",
+      "params": {
+        "em": false,
+        "gen": 2,
+        "panel-weight": 0.8,
+        "reference_cap": 16,
+        "states": 100,
+        "update-p": false
+      }
+    },
+    {
+      "family": "flare",
+      "id": "flare_cap16_fixed_g005",
+      "params": {
+        "em": false,
+        "gen": 5,
+        "panel-weight": 0.8,
+        "reference_cap": 16,
+        "states": 100,
+        "update-p": false
+      }
+    },
+    {
+      "family": "flare",
+      "id": "flare_cap16_fixed_g010",
+      "params": {
+        "em": false,
+        "gen": 10,
+        "panel-weight": 0.8,
+        "reference_cap": 16,
+        "states": 100,
+        "update-p": false
+      }
+    },
+    {
+      "family": "flare",
+      "id": "flare_cap16_fixed_g020",
+      "params": {
+        "em": false,
+        "gen": 20,
+        "panel-weight": 0.8,
+        "reference_cap": 16,
+        "states": 100,
+        "update-p": false
+      }
+    },
+    {
+      "family": "flare",
+      "id": "flare_cap16_em_g010",
+      "params": {
+        "em": true,
+        "gen": 10,
+        "panel-weight": 0.8,
+        "reference_cap": 16,
+        "states": 100,
+        "update-p": false
+      }
+    },
+    {
+      "family": "gnomix",
+      "id": "gnomix_fast_w025_c2_0p1",
+      "params": {
+        "context_ratio": 0.5,
+        "crf_c2": 0.1,
+        "logistic_c": 1,
+        "window_size_cM": 0.25
+      }
+    },
+    {
+      "family": "gnomix",
+      "id": "gnomix_fast_w025_c2_1",
+      "params": {
+        "context_ratio": 0.5,
+        "crf_c2": 1,
+        "logistic_c": 1,
+        "window_size_cM": 0.25
+      }
+    },
+    {
+      "family": "gnomix",
+      "id": "gnomix_fast_w050_c2_0p1",
+      "params": {
+        "context_ratio": 0.5,
+        "crf_c2": 0.1,
+        "logistic_c": 1,
+        "window_size_cM": 0.5
+      }
+    },
+    {
+      "family": "gnomix",
+      "id": "gnomix_fast_w050_c2_1",
+      "params": {
+        "context_ratio": 0.5,
+        "crf_c2": 1,
+        "logistic_c": 1,
+        "window_size_cM": 0.5
+      }
+    },
+    {
+      "family": "nnls",
+      "id": "frequency_control",
+      "params": {}
+    },
+    {
+      "family": "pca_ridge",
+      "id": "pca_ridge_control",
+      "params": {
+        "alpha": 10,
+        "n_components": 16
+      }
+    }
+  ],
+  "reference": {
+    "1": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr1/bundle/reference.vcf.gz",
+    "10": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr10/bundle/reference.vcf.gz",
+    "11": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr11/bundle/reference.vcf.gz",
+    "12": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr12/bundle/reference.vcf.gz",
+    "13": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr13/bundle/reference.vcf.gz",
+    "14": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr14/bundle/reference.vcf.gz",
+    "15": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr15/bundle/reference.vcf.gz",
+    "16": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr16/bundle/reference.vcf.gz",
+    "17": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr17/bundle/reference.vcf.gz",
+    "18": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr18/bundle/reference.vcf.gz",
+    "19": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr19/bundle/reference.vcf.gz",
+    "2": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr2/bundle/reference.vcf.gz",
+    "20": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr20/bundle/reference.vcf.gz",
+    "21": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr21/bundle/reference.vcf.gz",
+    "22": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr22/bundle/reference.vcf.gz",
+    "3": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr3/bundle/reference.vcf.gz",
+    "4": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr4/bundle/reference.vcf.gz",
+    "5": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr5/bundle/reference.vcf.gz",
+    "6": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr6/bundle/reference.vcf.gz",
+    "7": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr7/bundle/reference.vcf.gz",
+    "8": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr8/bundle/reference.vcf.gz",
+    "9": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr9/bundle/reference.vcf.gz"
+  },
+  "reference_filters": {
+    "min_mac": 50,
+    "min_maf": 0.005,
+    "minimum_markers": 100
+  },
+  "routes": [
+    {
+      "id": "harmonized_lonni",
+      "stage": "harmonized",
+      "vcfs": {
+        "1": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr1/bundle/query_lonni.vcf.gz",
+        "10": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr10/bundle/query_lonni.vcf.gz",
+        "11": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr11/bundle/query_lonni.vcf.gz",
+        "12": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr12/bundle/query_lonni.vcf.gz",
+        "13": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr13/bundle/query_lonni.vcf.gz",
+        "14": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr14/bundle/query_lonni.vcf.gz",
+        "15": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr15/bundle/query_lonni.vcf.gz",
+        "16": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr16/bundle/query_lonni.vcf.gz",
+        "17": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr17/bundle/query_lonni.vcf.gz",
+        "18": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr18/bundle/query_lonni.vcf.gz",
+        "19": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr19/bundle/query_lonni.vcf.gz",
+        "2": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr2/bundle/query_lonni.vcf.gz",
+        "20": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr20/bundle/query_lonni.vcf.gz",
+        "21": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr21/bundle/query_lonni.vcf.gz",
+        "22": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr22/bundle/query_lonni.vcf.gz",
+        "3": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr3/bundle/query_lonni.vcf.gz",
+        "4": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr4/bundle/query_lonni.vcf.gz",
+        "5": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr5/bundle/query_lonni.vcf.gz",
+        "6": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr6/bundle/query_lonni.vcf.gz",
+        "7": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr7/bundle/query_lonni.vcf.gz",
+        "8": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr8/bundle/query_lonni.vcf.gz",
+        "9": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr9/bundle/query_lonni.vcf.gz"
+      }
+    },
+    {
+      "id": "harmonized_frederik",
+      "stage": "harmonized",
+      "vcfs": {
+        "1": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr1/bundle/query_frederik.vcf.gz",
+        "10": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr10/bundle/query_frederik.vcf.gz",
+        "11": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr11/bundle/query_frederik.vcf.gz",
+        "12": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr12/bundle/query_frederik.vcf.gz",
+        "13": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr13/bundle/query_frederik.vcf.gz",
+        "14": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr14/bundle/query_frederik.vcf.gz",
+        "15": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr15/bundle/query_frederik.vcf.gz",
+        "16": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr16/bundle/query_frederik.vcf.gz",
+        "17": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr17/bundle/query_frederik.vcf.gz",
+        "18": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr18/bundle/query_frederik.vcf.gz",
+        "19": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr19/bundle/query_frederik.vcf.gz",
+        "2": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr2/bundle/query_frederik.vcf.gz",
+        "20": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr20/bundle/query_frederik.vcf.gz",
+        "21": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr21/bundle/query_frederik.vcf.gz",
+        "22": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr22/bundle/query_frederik.vcf.gz",
+        "3": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr3/bundle/query_frederik.vcf.gz",
+        "4": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr4/bundle/query_frederik.vcf.gz",
+        "5": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr5/bundle/query_frederik.vcf.gz",
+        "6": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr6/bundle/query_frederik.vcf.gz",
+        "7": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr7/bundle/query_frederik.vcf.gz",
+        "8": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr8/bundle/query_frederik.vcf.gz",
+        "9": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr9/bundle/query_frederik.vcf.gz"
+      }
+    }
+  ],
+  "samples": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/metadata/samples.tsv",
+  "seed": 20261025,
+  "segments": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/metadata/segments.tsv",
+  "sources": [
+    "EUR",
+    "EAS_SEA",
+    "SAS",
+    "GME",
+    "NAM",
+    "OCE",
+    "SSA"
+  ],
+  "spans": {
+    "1": [
+      55550,
+      248924794
+    ],
+    "10": [
+      48232,
+      133766369
+    ],
+    "11": [
+      198062,
+      135075629
+    ],
+    "12": [
+      45488,
+      133202211
+    ],
+    "13": [
+      18447081,
+      114341522
+    ],
+    "14": [
+      19032163,
+      106880171
+    ],
+    "15": [
+      19809728,
+      101965906
+    ],
+    "16": [
+      34045,
+      90097181
+    ],
+    "17": [
+      163252,
+      83087394
+    ],
+    "18": [
+      11523,
+      80257298
+    ],
+    "19": [
+      253938,
+      58585794
+    ],
+    "2": [
+      12994,
+      242148847
+    ],
+    "20": [
+      81154,
+      64318093
+    ],
+    "21": [
+      10326676,
+      46680244
+    ],
+    "22": [
+      15287922,
+      50791378
+    ],
+    "3": [
+      19435,
+      198147658
+    ],
+    "4": [
+      12906,
+      190107491
+    ],
+    "5": [
+      20583,
+      181288810
+    ],
+    "6": [
+      92012,
+      170742229
+    ],
+    "7": [
+      35326,
+      159334085
+    ],
+    "8": [
+      213784,
+      145075771
+    ],
+    "9": [
+      40910,
+      138219530
+    ]
+  },
+  "tools": {
+    "beagle_jar": "/home/frederik/github_projects/SNPster/data_analysis/FLARE/SNPster_v3_100model_pedigree/results_v3_matched_global_01/beagle.jar",
+    "flare_jar": "/home/frederik/github_projects/SNPster/data_analysis/FLARE/SNPster_v3_100model_pedigree/results_v3_global_precision_01/precision.jar",
+    "gnomix_root": "/home/frederik/github_projects/SNPster/data_analysis/FLARE/SNPster_v3_100model_pedigree/third_party/gnomix"
+  },
+  "training": {
+    "1": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr1/bundle/training.vcf.gz",
+    "10": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr10/bundle/training.vcf.gz",
+    "11": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr11/bundle/training.vcf.gz",
+    "12": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr12/bundle/training.vcf.gz",
+    "13": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr13/bundle/training.vcf.gz",
+    "14": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr14/bundle/training.vcf.gz",
+    "15": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr15/bundle/training.vcf.gz",
+    "16": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr16/bundle/training.vcf.gz",
+    "17": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr17/bundle/training.vcf.gz",
+    "18": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr18/bundle/training.vcf.gz",
+    "19": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr19/bundle/training.vcf.gz",
+    "2": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr2/bundle/training.vcf.gz",
+    "20": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr20/bundle/training.vcf.gz",
+    "21": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr21/bundle/training.vcf.gz",
+    "22": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr22/bundle/training.vcf.gz",
+    "3": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr3/bundle/training.vcf.gz",
+    "4": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr4/bundle/training.vcf.gz",
+    "5": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr5/bundle/training.vcf.gz",
+    "6": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr6/bundle/training.vcf.gz",
+    "7": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr7/bundle/training.vcf.gz",
+    "8": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr8/bundle/training.vcf.gz",
+    "9": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/master_resources_v1_20261025h/full/release/panels/observed/genotypes/pipeline/chr9/bundle/training.vcf.gz"
+  },
+  "version": 1
+}

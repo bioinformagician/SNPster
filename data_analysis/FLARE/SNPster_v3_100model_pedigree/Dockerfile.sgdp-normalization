@@ -1,0 +1,4 @@
+FROM snpster-sgdp-base:08a7c550ecd61
+COPY requirements-sgdp-normalization.txt /opt/sgdp-normalization/requirements.txt
+RUN python3 -m pip install --no-cache-dir -r /opt/sgdp-normalization/requirements.txt
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1

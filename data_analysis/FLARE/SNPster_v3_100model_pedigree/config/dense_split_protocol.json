@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "base_protocol": "production_matched_protocol.json",
+  "requested_reference_people": 3033,
+  "requested_pure_training_people": 240,
+  "requested_training_families": 25,
+  "requested_training_descendants": 76,
+  "requested_original_evaluation_controls": 14,
+  "additional_pure_evaluation_donor": "HGDP00720",
+  "truth_design": "synthetic_reference_haplotype_development",
+  "truth_interpretation": "Frozen dense reference haplotypes define synthetic genomes. These are not independently observed sequencing-call truth or independent real-person certification.",
+  "evaluation_policy": "Original14 previously inspected controls plus pure SEA from an already held-out founder; no selection using predictions.",
+  "split_policy": "Remove evaluation founders and detected close relatives from all fitting roles. Keep only whole training families whose founders survive. Remove all retained simulated founder identities and their detected close relatives from benchmark imputation copies to avoid auxiliary-training self-copy.",
+  "source_policy": "Native8 authoritative source/fine labels, not the historical7-class labels. Recover local ancestry from original Ped-sim founder haplotypes and physical breakpoints.",
+  "external_observed_validation": "Reserve all67 eligible SGDP donors; do not consume them for candidate selection.",
+  "production_preprocessing_changed": false,
+  "production_resources_modified": false,
+  "independent_final_test": false,
+  "production_promotion": false
+}

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "input_manifest": "results_v3_public_sgdp_recovery_20261022_082600/summary/published_verification.json",
+  "source_build": "GRCh37_hs37d5",
+  "target_build": "GRCh38",
+  "chain_sha256": "5c0598e500ceb5a78c73086929e8ef993aec309bcafb595139b53d440b125a1d",
+  "production_preprocessing_changed": false,
+  "coordinate_policy": "VCF positions are 1-based; UCSC chain coordinates are 0-based. Map POS-1 and emit mapped_position+1. Accept one mapping on the original autosome only. Complement both alleles on reverse mappings. Match both source and target FASTA. If target REF equals mapped ALT, swap allele indices and reverse PL/AD. Reject all exact target-key collisions. Keep GT unphased and missing calls missing.",
+  "independent_verification": "Parse chain blocks independently of pyliftover, independently reproduce every retained and rejected mapping, and compare genotype nucleotide multisets, GQ/DP and reordered PL/AD against original evidence. Exact sample order, locus uniqueness, sort order and index counts must agree.",
+  "minimum_retained_fraction": 0.90,
+  "minimum_called_fraction": 0.90,
+  "relatedness": {
+    "comparison": "All16 public candidates versus every fixed production imputation reference identity, every existing ancestry-reference/training/development identity, and each other.",
+    "marker_policy": "All22 autosomes; exact CHROM/POS/REF/ALT intersection of normalized public calls, canonical ancestry markers and fixed production reference. Never fill absent or missing genotypes.",
+    "maf_min": 0.05,
+    "marker_missing_max": 0.05,
+    "ld_window_kb": 500,
+    "ld_r2_max": 0.2,
+    "minimum_pruned_markers": 20000,
+    "minimum_pair_called_markers": 10000,
+    "minimum_sample_called_fraction": 0.90,
+    "king_kinship_exclusion_threshold": 0.0442,
+    "duplicate_concordance_threshold": 0.995,
+    "policy": "Report all candidate-involving KING pairs with actual pairwise called counts and IBS; mark candidates related to existing donors ineligible, retain candidate-candidate relationships as split constraints. KING is an operational relatedness screen, not proof of genetic independence or source purity. Inadequate coverage fails explicitly."
+  },
+  "scientific_ancestry_launch_authorized": false,
+  "required_ancestry_resolutions": ["eight_category", "seven_category"],
+  "remaining_gates": ["source_label_review", "family_and_role_separated_cohort_freeze", "production_matched_preprocessing_smoke", "candidate_freeze"]
+}

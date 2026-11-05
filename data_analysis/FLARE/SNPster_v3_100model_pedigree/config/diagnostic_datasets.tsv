@@ -1,0 +1,4 @@
+dataset_id	enabled	role	input_kind	input_path	truth_path	truth_mode	weight_tag	platform	array	description
+matched_rare	false	diagnostic	vcf	/data/flare2_test/source_model/matched_rare_ancestry/matched_rare.autosomes.vcf.gz	/data/flare2_test/source_model/matched_rare_ancestry/matched_rare_metadata.tsv	auto	rare	full	false	Enable after its metadata adapter is normalized to 8-source truth columns
+same_source_null	false	diagnostic	vcf	/data/flare2_test/source_model/same_source_null/same_source_null.autosomes.vcf.gz	/data/flare2_test/source_model/same_source_null/same_source_null_metadata.tsv	auto	null	full	false	Enable after its metadata adapter is normalized to 8-source truth columns
+legacy_final_test	false	legacy	vcf	CHANGE_ME_FINAL_TEST_VCF	CHANGE_ME_FINAL_TEST_METADATA	auto	legacy	full	false	Previously examined 672-genome test; keep disabled for model tuning

@@ -1,0 +1,7 @@
+FROM eclipse-temurin:21-jre-jammy@sha256:f04fb34e053148344e83317976114ec3f37e4b830ec8bdab5a2fe3cecd7d010b AS java21
+FROM snpster-ancestry-benchmark:gnomix-screen@sha256:c4fd14a99e9d84839245b9242f36cf84306c32e67fa93b65fa5dbe5408d30e21
+
+COPY --from=java21 /opt/java/openjdk /opt/java21
+ENV JAVA_HOME=/opt/java21 \
+    PATH=/opt/java21/bin:$PATH
+RUN java -version

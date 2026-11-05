@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "seed": 20261013,
+  "priority": "FLARE; Gnomix is a required native-method comparator",
+  "purpose": "Standardized observed-only common-panel pilot, not full-array certification",
+  "sources": ["EUR", "EAS_SEA", "SAS", "GME", "NAM", "OCE", "SSA"],
+  "masks": ["lonni", "frederik"],
+  "chromosomes": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+  "panel": "Exact CHROM/POS/REF/ALT intersection of typed array sites and the frozen 197260-site common reference panel; report excluded sites and coverage",
+  "reference": "Same 3447 identity-disjoint, seven-source-labelled reference people for every method",
+  "training": "Gnomix reference-only base and existing disjoint 307-pure/492-pedigree smoother; no evaluation truth used in fitting",
+  "evaluation": "Existing hash/MILP-selected seven pure and seven balanced pedigree controls; seen-donor development pilot, not independent certification",
+  "phasing": {
+    "primary": "Singleton phase-only processing of complete typed GTs with the matching reference panel",
+    "impute": false,
+    "add_variants": false,
+    "change_diploid_gt": false,
+    "missing_gt": "Fail explicitly; never fill, pad or substitute DS",
+    "diagnostic": "Original inherited phase on exactly the same typed markers"
+  },
+  "aggregation": "Posterior means weighted by physical midpoint cells over the original half-open chromosome spans; include both copies equally",
+  "truth": "Original full-physical-span realized ancestry; never replace with marker-count truth",
+  "metrics": ["mean_tv", "p95_tv", "all_components_within_10pp", "all_components_within_5pp", "worst_component_error", "off_target_mass", "per_source_errors", "phase_switch_diagnostic", "runtime"],
+  "reporting": "Separate mask, phase condition, pure/pedigree track and native/calibrated method; no partial-autosome leaderboard or winner selection on this pilot",
+  "mean_tv_acceptable_max": 0.10,
+  "mean_tv_desirable_max": 0.05,
+  "candidates": {
+    "flare_array_fixed": {"family": "flare", "array": true, "em": false},
+    "flare_array_em": {"family": "flare", "array": true, "em": true},
+    "flare_nonarray_fixed": {"family": "flare", "array": false, "em": false},
+    "gnomix_fast_200": {"family": "gnomix", "architecture": "fast", "window_size_cM": 2.0, "smooth_size": 1, "context_ratio": 0.5}
+  },
+  "flare_policy": "Native seven-source reference panels; no inherited GMM decoder or old WGS-trained copying model; EM, when enabled, is singleton and update-p=false",
+  "gnomix_policy": "Refit on each exact observed-marker panel; genuine pinned upstream LR+CRF, no SVM, no missing-marker padding; 2 cM is predeclared for sparse arrays",
+  "calibration": "None in the initial native-method pilot; any future learned calibration is a separately named, donor-purged track",
+  "independent_final_test": false,
+  "production_promotion": false,
+  "pgs_changed": false,
+  "supersedes_imputed_array_acceptance": true,
+  "superseded_containers": [
+    "snpster-results_v3_phasefree_array_validation_01-alleles-02",
+    "snpster-results_v3_phasefree_calibration_01",
+    "snpster-results_v3_phasefree_rich_01",
+    "snpster-results_v3_phasefree_balanced_01"
+  ]
+}

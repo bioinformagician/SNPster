@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "purpose": "Explicit recovery of the four missing dense-chr1 configurations and training-only crossed-theta controls",
+  "sources": ["EUR", "EAS_SEA", "SAS", "GME", "NAM", "OCE", "SSA"],
+  "seed": 20261013,
+  "recovery": {"panel": "frederik", "chromosome": 1, "candidates": ["finecap16_fixed", "finecap16_em", "size_control_fixed", "size_control_em"], "n_predictions": 2528},
+  "theta_controls": {"chromosome": 12, "panels": ["lonni", "frederik"], "references": ["full", "finecap16", "size_control"], "em": true, "n_predictions": 3792},
+  "theta_policy": "Full-reference copying/rho with theta from the905-person finecap template; each905-person reference copying/rho with theta from the3033-person full template. Preserve named axes, T10 and uniform priors. No population/seed/marker/phase changes. Native theta baselines are reused, not refitted.",
+  "stages": ["inherited_phase", "array_phase_only"],
+  "people": "All316 locked training people (240pure,76descendants,25families); exact same prior selection. No evaluation identities, labels or expected real-person answers used for tuning.",
+  "characterization": "Before inference repeat implicit initialization, explicit fixed model twice, and implicit exported model as explicit input on the failed chr1 finecap control. Require repeated explicit predictions within1e-10, all implicit/explicit aggregate differences within1e-6 fraction, identical p/rho/theta/T and named axes. Record actual deltas and mu representation; do not rewrite or relax the old failed producer.",
+  "independent_local_aggregation_tolerance": 1e-10,
+  "reporting": "Full34128-prediction recovered three-chromosome screen and separate3792 crossed-theta predictions; per chromosome/panel/phase/track/source, family-balanced TV, tails and5/10pp coverage. No whole-genome score, automatic winner, certification or production/PGS change.",
+  "smoke": "Same configurations on hash-selected SAS training control and maximum chr22 source-count training descendant; selection uses identities/truth only, not errors.",
+  "cache_cleanup": "Only after independent published-output verification succeeds, run Nextflow clean for the exact run in its dedicated launch directory. Preserve compact results/models/local posteriors/provenance/traces/reports and original failure evidence. Failed runs keep caches for resume.",
+  "resources": {"max_cpus": 12, "max_memory_gib": 32, "inference_cpus": 6, "inference_memory_gib": 12, "max_concurrent_inference": 2},
+  "independent_final_test": false,
+  "production_promotion": false
+}

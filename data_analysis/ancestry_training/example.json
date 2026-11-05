@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "seed": 20261023,
+  "mode": "smoke",
+  "sources": ["EUR", "EAS", "SAS", "SEA", "GME", "NAM", "OCE", "SSA"],
+  "chromosomes": [22],
+  "spans": {"22": [0, 50818468]},
+  "samples": "/absolute/frozen-cohort/samples.tsv",
+  "segments": "/absolute/frozen-cohort/realized-segments.tsv",
+  "reference": {"22": "/absolute/phased-reference/chr22.vcf.gz"},
+  "training": {"22": "/absolute/labelled-training/chr22.vcf.gz"},
+  "maps": {"22": "/absolute/genetic-maps/chr22.map"},
+  "routes": [
+    {
+      "id": "array_mask1",
+      "stage": "harmonized",
+      "vcfs": {"22": "/absolute/harmonized/mask1/chr22.vcf.gz"}
+    },
+    {
+      "id": "imputed_mask1",
+      "stage": "imputed",
+      "vcfs": {"22": "/absolute/phased-imputed/mask1/chr22.vcf.gz"}
+    }
+  ],
+  "reference_filters": {"min_maf": 0.005, "min_mac": 50, "minimum_markers": 100},
+  "models": [
+    {"id": "flare_fixed10", "family": "flare", "params": {"gen": 10, "em": false}},
+    {"id": "flare_em10", "family": "flare", "params": {"gen": 10, "em": true}},
+    {"id": "gnomix_fast", "family": "gnomix", "params": {"window_size_cM": 0.5, "crf_c2": 1}},
+    {"id": "frequency_control", "family": "nnls", "params": {}},
+    {"id": "pca_linear_control", "family": "pca_ridge", "params": {"n_components": 16, "alpha": 1}}
+  ],
+  "interpretations": [
+    {"id": "native", "kind": "native", "params": {}},
+    {"id": "source_map", "kind": "simplex", "params": {"l2": 0.001}},
+    {"id": "linear_decoder", "kind": "ridge", "params": {"alpha": 1}},
+    {"id": "forest_decoder", "kind": "rf", "params": {"n_estimators": 200, "min_samples_leaf": 5}},
+    {"id": "boosted_decoder", "kind": "xgboost", "params": {"n_estimators": 200, "max_depth": 3, "learning_rate": 0.05}}
+  ],
+  "tools": {
+    "flare_jar": "/absolute/pinned-tools/flare.jar",
+    "beagle_jar": "/absolute/pinned-tools/beagle.jar",
+    "gnomix_root": "/absolute/pinned-tools/gnomix"
+  },
+  "allow_research_only": true,
+  "independent_test": false
+}

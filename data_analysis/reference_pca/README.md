@@ -1,0 +1,1 @@
+Generate pca of the reference data to project users into and calculate their weighted euclidean distances from the different population(10pop file) centroids

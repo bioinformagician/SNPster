@@ -1,0 +1,19 @@
+{
+  "compact_inactive": false,
+  "family": "kmeans",
+  "flare_seed": 20261002,
+  "k": 21,
+  "max_iter": 500,
+  "min_mac": 50,
+  "min_maf": 0.005,
+  "model_seed": 20261003,
+  "n_init": 10,
+  "panel_cm": 0.5,
+  "panel_id": "panel_021861e1",
+  "pca_components": 0,
+  "refine_em": true,
+  "refinement_mode": "update_p",
+  "rep_id": "kmeans_K21_b390c53dfd",
+  "strategy_name": "kmeans",
+  "tol": 0.0001
+}

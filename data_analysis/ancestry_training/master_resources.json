@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "seed": 20261025,
+  "reference_root": "/srv/dependencies/ancestry",
+  "project": "/home/frederik/github_projects/SNPster/data_analysis/FLARE/SNPster_v3_100model_pedigree",
+  "template_dataset": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/pedigree_observed_v1_20261025_v3/full/release",
+  "observed_dataset": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/kinship_observed_v1_20261025_v2/release",
+  "public_pedigree": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/datasets/kinship_observed_v1_20261025_v2/inputs/1000genomes.ped",
+  "public_qc": "results_v3_dense_donor_qc_20261022_192734/full",
+  "founder_design": "pedigree_dataset.json",
+  "minimum_pair_markers": 10000,
+  "minimum_pipeline_markers": 200,
+  "kinship_threshold": 0.0884,
+  "near_duplicate_threshold": 0.354,
+  "panels": ["observed", "gse77508", "gse73996", "sgdp"],
+  "ancestry_axis": ["EUR", "EAS_SEA", "SAS", "GME", "NAM", "OCE", "SSA"]
+}

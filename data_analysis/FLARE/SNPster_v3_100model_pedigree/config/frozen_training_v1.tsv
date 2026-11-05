@@ -1,0 +1,2 @@
+candidate_id	representation	candidate_dir	model_path	model_config
+v1_frozen_k18	v1_frozen_k18	/workspace/results_v3_sweep_100/stage3_full/candidate_v1_frozen_k18	/workspace/results_v3_sweep_100/models/v1_frozen_k18.final.model	/workspace/results_v3_sweep_100/models/v1_frozen_k18.config.json

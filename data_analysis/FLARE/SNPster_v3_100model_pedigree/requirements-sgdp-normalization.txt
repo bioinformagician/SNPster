@@ -1,0 +1,2 @@
+pyliftover==0.4
+zstandard==0.23.0

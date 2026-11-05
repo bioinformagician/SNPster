@@ -1,0 +1,34 @@
+{
+  "model_name": "SNPster ancestry K18 v1",
+  "status": "frozen",
+  "sources": [
+    "EUR",
+    "EAS",
+    "SAS",
+    "SEA",
+    "GME",
+    "NAM",
+    "OCE",
+    "SSA"
+  ],
+  "flare": {
+    "K": 18,
+    "covariance": "diag",
+    "update_p": false,
+    "em": false,
+    "array": false
+  },
+  "decoder": {
+    "type": "ExtraTreesRegressor",
+    "n_estimators": 200,
+    "min_samples_leaf": 10,
+    "pure_weight": 50,
+    "actual_mosaic_weight": 100
+  },
+  "calibrator": {
+    "type": "Ridge",
+    "alpha": 0.0001
+  },
+  "production_output": "calibrated",
+  "diagnostic_output": "raw"
+}

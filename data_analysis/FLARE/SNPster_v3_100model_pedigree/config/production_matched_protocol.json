@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "seed": 20261022,
+  "contract": "ancestry_benchmark_contract_v2.json",
+  "sources": ["EUR", "EAS", "SAS", "SEA", "GME", "NAM", "OCE", "SSA"],
+  "masks": ["lonni", "frederik"],
+  "chromosomes": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+  "evaluation": {
+    "pure_per_source": 1,
+    "mixed_design": "Eight distinct-source F1 controls; one transmitted chromosome copy from each of two distinct founder individuals. All eight source pairs form the fixed source-order ring.",
+    "interpretation": "Small development comparison, not independent final certification, comprehensive pedigree coverage or ancient source-purity proof. Eight founders support sixteen evaluation people in one connected founder-family component; do not claim sixteen independent genomes or a family-bootstrap confidence interval.",
+    "selection": "Genetically screened original development donors plus the thirteen screened public additions; public NAM/OCE preferred. Select lexicographically within source without using predictions.",
+    "source_truth": "Audited operational population-source labels; pure means 100% assigned operational source, not proof of ancient unadmixed genomes."
+  },
+  "training": {
+    "pure_per_source": 2,
+    "reference": "Original labelled ancestry-reference people present in the fixed dense production panel; exclude all evaluation founders and detected relatives. No evaluation labels in fitting.",
+    "smoother": "Sixteen training-only pure people, processed by the same production pipeline, separate from inference reference and evaluation founders.",
+    "no_calibration": true
+  },
+  "production": {
+    "unchanged": true,
+    "founder_phase": "Use the unchanged production imputer on known complete observed founder SNPs, then retain only the original observed loci and verify diploid genotype preservation. Never use imputed GT as simulation truth.",
+    "truth_panel": "Exact canonical allele keys available for original array-only donors, public sequencing donors and fixed reference; record exclusions and typed-mask coverage. This is available observed-marker support, not whole-genome sequencing for the legacy donors.",
+    "raw_input": "GRCh38 forward-strand 23andMe-format records with real dbSNP identifiers from the unchanged production PVAR. No invented rsIDs.",
+    "batching": "One merged chromosome batch per mask, containing sixteen evaluation people and sixteen training people. Never merge repeated masks of a person into the same imputation batch.",
+    "ancestry_branch": "Phased-and-imputed output before per-person PGS QC; execute and audit the unchanged split/QC stages separately. Do not pad QC-filtered haplotypes or replace arbitrary GT order with phase.",
+    "posterior_min": 0.9,
+    "minimum_observed_genotype_concordance": 0.995,
+    "minimum_untyped_genotype_concordance": 0.9,
+    "minimum_untyped_validation_markers": 100,
+    "minimum_harmonized_marker_retention": 0.95
+  },
+  "ancestry_panel": {
+    "shared_all_methods_after_imputation": true,
+    "selection": "Reference-only allele quality then first passing exact SNP at least 10000bp after the previous retained SNP, within frozen physical spans and production map bounds. No cap to the old canonical panel.",
+    "minimum_mac": 50,
+    "minimum_maf": 0.005,
+    "minimum_spacing_bp": 10000,
+    "fine_cap": 16
+  },
+  "candidates": {
+    "flare_full_array_fixed": {"family": "flare", "reference": "full", "array": true, "em": false},
+    "flare_full_array_em": {"family": "flare", "reference": "full", "array": true, "em": true},
+    "flare_full_nonarray_fixed": {"family": "flare", "reference": "full", "array": false, "em": false},
+    "flare_full_nonarray_em": {"family": "flare", "reference": "full", "array": false, "em": true},
+    "flare_finecap_array_fixed": {"family": "flare", "reference": "finecap", "array": true, "em": false},
+    "flare_finecap_array_em": {"family": "flare", "reference": "finecap", "array": true, "em": true},
+    "gnomix_fast_050": {"family": "gnomix", "reference": "full", "window_size_cM": 0.5},
+    "gnomix_fast_200": {"family": "gnomix", "reference": "full", "window_size_cM": 2.0},
+    "phasefree_imputed_nnls": {"family": "phasefree", "reference": "full", "input": "production_phased_imputed"},
+    "phasefree_observed_nnls": {"family": "phasefree", "reference": "full", "input": "raw_harmonized"}
+  },
+  "phasefree": "Uncalibrated nonnegative allele-frequency least-squares controls; not ADMIXTURE and not claimed to improve on the old seven-source supervised winner.",
+  "scoring": "Equal-person mean of per-person mean TV over both masks, after chromosome-length aggregation; eight-source primary and EAS+SEA collapse secondary.",
+  "independent_final_test": false,
+  "production_promotion": false,
+  "cleanup": "Only exact successful sessions after independent verification and durable publication; verify again after cleanup."
+}

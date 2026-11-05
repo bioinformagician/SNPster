@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "seed": 20261013,
+  "priority": "FLARE first; genuine Gnomix comparator",
+  "input": "Observed array SNPs only; singleton phase-only processing; impute=false; no added variants, missing-GT filling, DS substitution or changed diploid calls",
+  "reference_policy": "User-approved 3033 existing dense-reference people, subset of the original labelled identity-disjoint reference",
+  "training_policy": "User-approved 240 existing dense pure-training people plus original pedigree-training families whose entire founder set is available; selection uses identities, never performance",
+  "reference_filters": {"min_maf": 0.005, "min_mac": 50},
+  "panel_policy": "All exact typed CHROM/POS/REF/ALT keys available in dense data within original physical spans and map bounds; no artificial 197260-site cap; common reference-only quality filters for all methods",
+  "sources": ["EUR", "EAS_SEA", "SAS", "GME", "NAM", "OCE", "SSA"],
+  "masks": ["lonni", "frederik"],
+  "chromosomes": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+  "candidates": {
+    "flare_array_fixed": {"family": "flare", "array": true, "em": false},
+    "flare_array_em": {"family": "flare", "array": true, "em": true},
+    "flare_nonarray_fixed": {"family": "flare", "array": false, "em": false},
+    "gnomix_fast_050": {"family": "gnomix", "architecture": "fast", "window_size_cM": 0.5, "smooth_size": 1, "context_ratio": 0.5},
+    "gnomix_fast_200": {"family": "gnomix", "architecture": "fast", "window_size_cM": 2.0, "smooth_size": 1, "context_ratio": 0.5}
+  },
+  "flare": "Native seven-source posteriors, no GMM decoder or old dense-trained copying parameters; EM is singleton, update-p=false",
+  "gnomix": "Fresh reference-only LR base and training-only CRF per exact panel; no kernel SVM, missing padding or evaluation labels in fitting",
+  "evaluation": "Same previously inspected 14 controls, seven pure and seven balanced pedigrees, under both masks; pilot, not independent certification",
+  "truth": "Original realized physical-base-pair fractions over full half-open chromosome spans; not marker-count truth",
+  "aggregation": "Physical midpoint posterior cells, both copies equally weighted; identical across methods",
+  "primary_stage": "array_phase_only",
+  "diagnostic_stage": "inherited_phase",
+  
+  "reporting": "Separate mask, phase, pure/pedigree and native/calibrated tracks; TV, tails, 5/10-point coverage, off-target/source errors and runtime; reject partial-autosome scores",
+  "mean_tv_acceptable_max": 0.10,
+  "mean_tv_desirable_max": 0.05,
+  "calibration": "None in this native-method pilot",
+  "independent_final_test": false,
+  "production_promotion": false,
+  "pgs_changed": false,
+  "supersedes": "Imputed-array acceptance requirements; restricted common-panel pilot remains a compatibility diagnostic"
+}

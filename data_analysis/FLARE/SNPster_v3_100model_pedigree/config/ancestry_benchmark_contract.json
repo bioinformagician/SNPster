@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "purpose": "Method-independent benchmark contract; pipeline placement is selected by matched evidence rather than fixed before evaluation",
+  "sources": ["EUR", "EAS_SEA", "SAS", "GME", "NAM", "OCE", "SSA"],
+  "processing_tracks": {
+    "raw_harmonized": {
+      "input": "Observed aligned diploid microarray GTs; retain observed allele identity and missingness policy",
+      "phase_independent_methods": "Compatible when fitted to this exact observed-marker and missingness contract",
+      "FLARE_Gnomix": "Not direct inputs: both require phased haplotypes; do not invent phase from allele order"
+    },
+    "array_phase_only": {
+      "input": "Statistically phased observed GTs",
+      "invariants": "No added variants, filling of missing GTs or changed supplied diploid GTs",
+      "FLARE_Gnomix": "Compatible when reference/model axes match"
+    },
+    "phased_imputed": {
+      "input": "Statistically phased and imputed genotypes with declared retained-marker and QC policy",
+      "invariants": "Verify observed GT preservation separately; report imputed marker accuracy on known-truth controls; do not conflate DS with hard GT",
+      "FLARE_Gnomix": "Permitted, not presumed preferable; evaluate matching models and references"
+    },
+    "inherited_phase": {
+      "input": "Original simulator/reference phase on the same selected marker panel",
+      "role": "Mechanistic diagnostic, not a deployable processing stage or winner-selection shortcut"
+    }
+  },
+  "paired_comparison": {
+    "people": "Same predeclared identities and known truth in each processing track; masks, phase conditions and chromosomes are not independent extra people",
+    "labels_and_exclusions": "Same source definitions, pedigree truth, training/reference/evaluation donor exclusions and imputation-reference exclusion manifest",
+    "panels": "Same exact marker panel across methods within a stage; stage-native panels may differ and must have coverage/filters reported. Use matched-panel ablations to separate stage from marker-content effects.",
+    "truth": "Same realized physical-base-pair ancestry across full half-open chromosome spans; never replace truth with retained SNP counts",
+    "aggregation": "Posterior fractions using physical midpoint cells and equal paired-copy weights; common output schema",
+    "methods": "Report native estimates separately from learned calibration; document different training budgets and method-specific parameters",
+    "selection": "Use donor-purged training evidence to choose configurations, lock finalists before development reporting; no tuning to a real individual's expected answer",
+    "completion": "Require all22 autosomes and exact subject/method/stage coverage before a global comparison; preserve failed evidence and record explicit recovery annexes"
+  },
+  "metrics": ["mean_tv", "p95_tv", "all_components_within_10pp", "all_components_within_5pp", "worst_component_error", "off_target_mass", "per_source_and_scenario_errors", "minor_component_diagnostic_with_support", "genotype_integrity", "phase_diagnostic", "runtime", "marker_coverage"],
+  "mean_tv": {"acceptable_max": 0.10, "desirable_max": 0.05},
+  "coverage_minimum": null,
+  "stage_selection": "Prefer validated accuracy, tails and reproducibility; retain source/pure guardrails and report resource trade-offs. Do not infer an optimal placement from different people, reference identities or incomplete cohorts.",
+  "scope": "Current14-person observed-array pilot remains development-only; historic partial imputed experiments are not comparable completed tracks and are not silently resumed",
+  "production_promotion": false,
+  "pgs_changed": false,
+  "frozen_prior_protocols_changed": false
+}

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "old_run": "/home/frederik/github_projects/SNPster/data_analysis/ancestry_training/runs/master_observed_staged96_20261026a",
+  "authority": "/srv/dependencies/ancestry/flare2_test/source_model/ancestry_role_audit.tsv",
+  "chromosomes": [20, 22],
+  "sources": ["EUR", "EAS", "SAS", "SEA", "GME", "NAM", "OCE", "SSA"],
+  "maximum_singleton_calls": 4000,
+  "models": [
+    {"id": "full_em100", "family": "flare", "params": {"em": true, "gen": 10, "states": 100, "update-p": false}},
+    {"id": "full_fixed2", "family": "flare", "params": {"em": false, "gen": 2, "states": 100, "update-p": false}},
+    {"id": "full_em280", "family": "flare", "params": {"em": true, "gen": 10, "states": 280, "update-p": false}},
+    {"id": "full_em100_updatep", "family": "flare", "params": {"em": true, "gen": 10, "states": 100, "update-p": true}},
+    {"id": "balanced65_em100", "family": "flare", "params": {"em": true, "gen": 10, "states": 100, "update-p": false, "reference_source_cap": 65}}
+  ]
+}

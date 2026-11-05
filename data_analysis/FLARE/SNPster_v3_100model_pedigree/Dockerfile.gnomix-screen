@@ -1,0 +1,22 @@
+FROM snpster-ancestry-benchmark:pedigree-100
+
+USER root
+ENV TMPDIR=/opt/gnomix-build \
+    MPLCONFIGDIR=/results/.matplotlib \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    OPENBLAS_NUM_THREADS=1 \
+    OMP_NUM_THREADS=1 \
+    MKL_NUM_THREADS=1 \
+    NUMEXPR_NUM_THREADS=1
+RUN mkdir -p /opt/gnomix-build
+COPY requirements_gnomix_screen.txt /opt/gnomix-build/requirements.txt
+RUN pip3 install --no-cache-dir -r /opt/gnomix-build/requirements.txt \
+    && pip3 check
+# Academic research only; upstream LICENSE.md is retained unchanged.
+COPY third_party/gnomix /opt/gnomix
+RUN test "$(git -C /opt/gnomix rev-parse HEAD)" = cd15f65eadfca8e2bbf209eb69a82978a200c5fd \
+    && test -z "$(git -C /opt/gnomix status --porcelain --untracked-files=all)" \
+    && PYTHONPATH=/opt/gnomix MPLCONFIGDIR=/opt/gnomix-build/matplotlib \
+       python3 -c 'from src.model import Gnomix; from src.Smooth.models import CRF_Smoother; from src.Base.models import CovRSKBase'
+WORKDIR /results

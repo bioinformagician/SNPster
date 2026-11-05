@@ -1,0 +1,21 @@
+{
+  "description": "One 8-source ancestry-proportion TV objective, scenario/combination/family macro averaging. This is clean high-density validation, NOT microarray/Beagle validation.",
+  "retain_finalists": 5,
+  "min_reference_samples": 100,
+  "min_pedigree_samples": 20,
+  "required_scenarios": ["reference_source", "f1", "dilution_3pct", "four_way_balanced", "four_way_repeated_founders", "admixed_x_admixed", "four_way_uneven", "eight_way_admixed_x_admixed", "rare_3pct_multisource", "serial_admixed_mating_3pct"],
+  "absent_ancestry_max": 0.01,
+  "minor_min": 0.02,
+  "minor_max": 0.05,
+  "minor_detection_threshold": 0.01,
+  "minor_gate_min_support": 20,
+  "minor_recall_min": 0.4,
+  "max_gates": {
+    "balanced_mean_tv": 0.20,
+    "balanced_p95_tv": 0.40,
+    "balanced_off_target_mass": 0.14
+  },
+  "min_gates": {},
+  "require_real_hard_gate": true,
+  "require_any_pass": true
+}
